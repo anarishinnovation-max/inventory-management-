@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
 export async function GET(
@@ -14,40 +14,39 @@ export async function GET(
 
     const { id } = await params;
 
-    const query = `
-      SELECT 
-        i.*,
-        COALESCE(
-          json_agg(
-            json_build_object(
-              'id', s.id,
-              'quantity', s.quantity,
-              'rackId', r.id,
-              'rackName', r."rackName",
-              'shelf', r.shelf,
-              'bin', r.bin
-            )
-          ) FILTER (WHERE s.id IS NOT NULL),
-          '[]'
-        ) as stocks
-      FROM "Item" i
-      LEFT JOIN "Stock" s ON i.id = s."itemId"
-      LEFT JOIN "Rack" r ON s."rackId" = r.id
-      WHERE i.id = $1
-      GROUP BY i.id
-    `;
+    const item = await prisma.item.findUnique({
+      where: { id },
+      include: {
+        category: true,
+        inventory: true,
+        stocks: {
+          include: {
+            rack: true
+          }
+        }
+      }
+    });
 
-    const result = await pool.query(query, [id]);
-
-    if (result.rows.length === 0) {
+    if (!item) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    return NextResponse.json(result.rows[0]);
-  } catch (error) {
+    // Transform for UI consistency if needed
+    const transformedItem = {
+        ...item,
+        stocks: (item as any).stocks.map((s: any) => ({
+            id: s.id,
+            quantity: s.quantity,
+            rackId: s.rackId,
+            rackNumber: s.rack?.rackNumber || "N/A"
+        }))
+    };
+
+    return NextResponse.json(transformedItem);
+  } catch (error: any) {
     console.error("Item fetch error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error.message || "Internal server error" },
       { status: 500 }
     );
   }
@@ -65,42 +64,39 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
-    const { name, sku, category, unit, minStockLevel, isCritical } = body;
+    const { name, sku, categoryId, unit, minStockLevel, isCritical } = body;
 
     // Check if item exists
-    const checkResult = await pool.query(`SELECT 1 FROM "Item" WHERE id = $1`, [id]);
-    if (checkResult.rows.length === 0) {
+    const existingItem = await prisma.item.findUnique({ where: { id } });
+    if (!existingItem) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    // Check for SKU uniqueness (excluding current item)
-    const skuCheck = await pool.query(`
-      SELECT 1 FROM "Item" WHERE sku = $1 AND id != $2
-    `, [sku, id]);
-
-    if (skuCheck.rows.length > 0) {
-      return NextResponse.json({ error: "SKU already exists" }, { status: 400 });
+    // Check for SKU uniqueness
+    if (sku && sku !== existingItem.sku) {
+        const skuCheck = await prisma.item.findUnique({ where: { sku } });
+        if (skuCheck) {
+            return NextResponse.json({ error: "SKU already exists" }, { status: 400 });
+        }
     }
 
-    const result = await pool.query(`
-      UPDATE "Item"
-      SET 
-        name = COALESCE($1, name),
-        sku = COALESCE($2, sku),
-        category = COALESCE($3, category),
-        unit = COALESCE($4, unit),
-        "minStockLevel" = COALESCE($5, "minStockLevel"),
-        "isCritical" = COALESCE($6, "isCritical"),
-        "updatedAt" = CURRENT_TIMESTAMP
-      WHERE id = $7
-      RETURNING *
-    `, [name, sku, category, unit, minStockLevel, isCritical, id]);
+    const updatedItem = await prisma.item.update({
+      where: { id },
+      data: {
+        name: name !== undefined ? name : undefined,
+        sku: sku !== undefined ? sku : undefined,
+        category: categoryId !== undefined ? { connect: { id: categoryId } } : undefined,
+        unit: unit !== undefined ? unit : undefined,
+        minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
+        isCritical: isCritical !== undefined ? !!isCritical : undefined,
+      },
+    });
 
-    return NextResponse.json(result.rows[0]);
-  } catch (error) {
+    return NextResponse.json(updatedItem);
+  } catch (error: any) {
     console.error("Item update error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error.message || "Internal server error" },
       { status: 500 }
     );
   }
@@ -119,29 +115,28 @@ export async function DELETE(
     const { id } = await params;
 
     // Check for associated stock records
-    const stockCheck = await pool.query(`
-      SELECT 1 FROM "Stock" WHERE "itemId" = $1 LIMIT 1
-    `, [id]);
+    const stockCount = await prisma.stock.count({
+      where: { itemId: id, quantity: { gt: 0 } },
+    });
 
-    if (stockCheck.rows.length > 0) {
+    if (stockCount > 0) {
       return NextResponse.json({ 
         error: "Cannot delete item with existing stock records. Please clear stock first." 
       }, { status: 400 });
     }
 
-    const result = await pool.query(`
-      DELETE FROM "Item" WHERE id = $1 RETURNING *
-    `, [id]);
-
-    if (result.rows.length === 0) {
-      return NextResponse.json({ error: "Item not found" }, { status: 404 });
-    }
+    await prisma.$transaction([
+        prisma.inventory.deleteMany({ where: { itemId: id } }),
+        prisma.stock.deleteMany({ where: { itemId: id } }),
+        prisma.inventoryTransaction.deleteMany({ where: { itemId: id } }),
+        prisma.item.delete({ where: { id } })
+    ]);
 
     return NextResponse.json({ message: "Item deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Item delete error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error.message || "Internal server error" },
       { status: 500 }
     );
   }

@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String                 @id @default(uuid())
+  username     String                 @unique
+  password     String
+  name         String
+  role         String                 @default("employee")
+  createdAt    DateTime               @default(now())
+  transactions InventoryTransaction[]
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String @unique
+  items Item[]
+}
+
+model Item {
+  id            String                 @id @default(uuid())
+  name          String
+  sku           String                 @unique
+  categoryId    String
+  unit          String
+  createdAt     DateTime               @default(now())
+  isCritical    Boolean                @default(false)
+  minStockLevel Float                  @default(0)
+  dispatchItems DispatchItem[]
+  inventory     Inventory?
+  transactions  InventoryTransaction[]
+  category      Category               @relation(fields: [categoryId], references: [id])
+  poItems       POLineItem[]
+  stocks        Stock[]
+}
+
+model Rack {
+  id           String                 @id @default(uuid())
+  rackNumber   String                 @unique
+  zone         String?
+  createdAt    DateTime               @default(now())
+  stocks       Stock[]
+  transactions InventoryTransaction[]
+}
+
+model Stock {
+  id        String   @id @default(uuid())
+  itemId    String
+  rackId    String
+  quantity  Float    @default(0)
+  updatedAt DateTime @updatedAt
+  item      Item     @relation(fields: [itemId], references: [id])
+  rack      Rack     @relation(fields: [rackId], references: [id])
+}
+
+model Inventory {
+  id                String   @id @default(uuid())
+  itemId            String   @unique
+  quantityAvailable Float    @default(0)
+  quantityReserved  Float    @default(0)
+  quantityInTransit Float    @default(0)
+  updatedAt         DateTime @updatedAt
+  item              Item     @relation(fields: [itemId], references: [id])
+}
+
+model Vendor {
+  id             String          @id @default(uuid())
+  name           String
+  contact        String?
+  email          String?
+  purchaseOrders PurchaseOrder[]
+  transactions   InventoryTransaction[]
+}
+
+model PurchaseOrder {
+  id        String              @id @default(uuid())
+  vendorId  String
+  status    String              @default("DRAFT")
+  orderDate DateTime            @default(now())
+  createdAt DateTime            @default(now())
+  vendor    Vendor              @relation(fields: [vendorId], references: [id])
+  items     POLineItem[]
+}
+
+model POLineItem {
+  id               String        @id @default(uuid())
+  purchaseOrderId  String
+  itemId           String
+  quantityOrdered  Float
+  quantityReceived Float         @default(0)
+  costPrice        Float
+  item             Item          @relation(fields: [itemId], references: [id])
+  purchaseOrder    PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+}
+
+model Customer {
+  id             String          @id @default(uuid())
+  name           String
+  email          String?
+  contact        String?
+  address        String?
+  dispatchOrders DispatchOrder[]
+  transactions   InventoryTransaction[]
+}
+
+model DispatchOrder {
+  id         String         @id @default(uuid())
+  customerId String
+  status     String         @default("pending")
+  orderDate  DateTime       @default(now())
+  createdAt  DateTime       @default(now())
+  items      DispatchItem[]
+  customer   Customer       @relation(fields: [customerId], references: [id])
+}
+
+model DispatchItem {
+  id              String        @id @default(uuid())
+  dispatchOrderId String
+  itemId          String
+  quantity        Float
+  sellingPrice    Float
+  dispatchOrder   DispatchOrder @relation(fields: [dispatchOrderId], references: [id])
+  item            Item          @relation(fields: [itemId], references: [id])
+}
+
+model InventoryTransaction {
+  id            String   @id @default(uuid())
+  itemId        String
+  rackId        String?
+  userId        String?
+  customerId    String?
+  vendorId      String?
+  type          String
+  quantity      Float
+  referenceType String?
+  referenceId   String?
+  createdAt     DateTime @default(now())
+  item          Item     @relation(fields: [itemId], references: [id])
+  rack          Rack?    @relation(fields: [rackId], references: [id])
+  customer      Customer? @relation(fields: [customerId], references: [id])
+  vendor        Vendor?   @relation(fields: [vendorId], references: [id])
+  user          User?     @relation(fields: [userId], references: [id])
+}

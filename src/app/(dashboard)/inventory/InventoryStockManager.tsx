@@ -23,16 +23,12 @@ interface Stock {
   id: string;
   quantity: number;
   rackId: string;
-  rackName: string;
-  shelf: string;
-  bin: string;
+  rackNumber: string;
 }
 
 interface Rack {
   id: string;
-  rackName: string;
-  shelf: string;
-  bin: string;
+  rackNumber: string;
 }
 
 export default function InventoryStockManager({ itemId }: { itemId: string }) {
@@ -115,14 +111,14 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
           <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
              <MapPin className="w-5 h-5" />
           </div>
-          Stock & Locations
+          Stock Allocation
         </h3>
         <button 
           type="button"
           onClick={() => setShowAddForm(!showAddForm)}
           className="flex items-center gap-2 px-4 py-2 bg-surface-low hover:bg-surface-high rounded-xl text-xs font-black transition-colors border border-border-ghost text-foreground"
         >
-          {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Allocate Location</>}
+          {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Add Location</>}
         </button>
       </div>
 
@@ -146,7 +142,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
           <div className="p-6 bg-primary/5 rounded-2xl border border-primary/20 space-y-4 animate-in fade-in slide-in-from-top-2">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Select Target Rack</label>
+                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Rack Number</label>
                    <select 
                       value={newRackId}
                       onChange={(e) => setNewRackId(e.target.value)}
@@ -156,7 +152,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                       {allRacks
                         .filter(r => !stocks.some(s => s.rackId === r.id))
                         .map(r => (
-                          <option key={r.id} value={r.id}>{r.rackName} (Shelf {r.shelf}, Bin {r.bin})</option>
+                          <option key={r.id} value={r.id}>Rack {r.rackNumber}</option>
                         ))}
                    </select>
                 </div>
@@ -178,7 +174,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                 className="w-full py-3 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
              >
                 {updatingId === "new" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Confirm Allocation
+                Allocate Location
              </button>
           </div>
         )}
@@ -189,13 +185,12 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
             {stocks.map((stock) => (
               <div key={stock.id} className="p-5 bg-surface-low rounded-2xl border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-6 group hover:border-primary/20 transition-colors">
                 <div className="flex items-center gap-4 w-full md:w-auto">
-                   <div className="w-12 h-12 rounded-xl bg-white border border-border-ghost flex flex-col items-center justify-center text-primary shadow-sm">
-                      <span className="text-[10px] font-black leading-none">{stock.rackName.split('-')[0]}</span>
-                      <span className="text-sm font-black text-foreground">{stock.rackName.split('-')[1]}</span>
+                   <div className="w-12 h-12 rounded-xl bg-white border border-border-ghost flex items-center justify-center text-primary shadow-sm">
+                      <span className="text-xs font-black text-foreground">{stock.rackNumber}</span>
                    </div>
                    <div>
-                      <p className="text-sm font-black text-foreground">{stock.rackName}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Shelf {stock.shelf} • Bin {stock.bin}</p>
+                      <p className="text-sm font-black text-foreground">Rack {stock.rackNumber}</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Primary Warehouse Area</p>
                    </div>
                 </div>
 
@@ -240,8 +235,8 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
              <div className="w-16 h-16 rounded-full bg-surface-low flex items-center justify-center text-muted-foreground mb-4">
                 <SquareStack className="w-8 h-8 opacity-20" />
              </div>
-             <p className="font-black text-foreground">Not Allocated Anywhere</p>
-             <p className="text-sm font-medium text-muted-foreground mt-1 max-w-xs">This SKU currently has no recorded physical presence in the warehouse zones.</p>
+             <p className="font-black text-foreground">No Stock Allocation</p>
+             <p className="text-sm font-medium text-muted-foreground mt-1 max-w-xs">This item has no recorded physical presence in your warehouse zones.</p>
           </div>
         )}
       </div>

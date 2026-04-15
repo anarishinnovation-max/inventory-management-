@@ -1,18 +1,5 @@
-import { 
-  Package, 
-  Search, 
-  Filter, 
-  PlusCircle,
-  TrendingUp,
-  Image as ImageIcon,
-  Eye,
-  Edit,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-  MoreVertical
-} from "lucide-react";
-import pool from "@/lib/db";
+import { Package, Search, Filter, PlusCircle, TrendingUp, ImageIcon, Eye, Edit, Trash2, ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
+import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -24,66 +11,73 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const dynamic = "force-dynamic";
+
 async function getInventory(q?: string, status?: string, category?: string) {
-  let whereClauses = [];
-  let params = [];
-  let paramIndex = 1;
+  const items = await (prisma as any).item.findMany({
+    where: {
+      AND: [
+        q ? {
+          OR: [
+            { name: { contains: q, mode: 'insensitive' } },
+            { sku: { contains: q, mode: 'insensitive' } },
+          ]
+        } : {},
+        category && category !== 'all' && category !== 'All Categories' ? {
+          category: { name: category }
+        } : {},
+      ]
+    },
+    include: {
+      category: true,
+      inventory: true,
+      stocks: {
+        include: {
+          rack: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
 
-  if (q) {
-    whereClauses.push(`(i.name ILIKE $${paramIndex} OR i.sku ILIKE $${paramIndex})`);
-    params.push(`%${q}%`);
-    paramIndex++;
-  }
+  // Map Prisma models to the structure expected by the UI
+  let mappedItems = items.map((item: any) => ({
+    id: item.id,
+    name: item.name,
+    sku: item.sku,
+    category: item.category?.name || "Uncategorized",
+    unit: item.unit,
+    minStockLevel: item.minStockLevel ?? 0,
+    isCritical: item.isCritical,
+    // Quantity: sum from Stock table (per-rack), fall back to Inventory summary if no rack records
+    totalStock: (item.stocks || []).length > 0
+      ? (item.stocks || []).reduce((acc: number, s: any) => acc + s.quantity, 0)
+      : (item.inventory?.quantityAvailable ?? 0),
+    stocks: (item.stocks || []).map((s: any) => ({
+      id: s.id,
+      quantity: s.quantity,
+      rack: {
+        id: s.rack?.id || "unknown",
+        rackNumber: s.rack?.rackNumber || "N/A"
+      }
+    }))
+  }));
 
-  if (category && category !== 'all' && category !== 'All Categories') {
-    whereClauses.push(`i.category = $${paramIndex}`);
-    params.push(category);
-    paramIndex++;
-  }
-
-  const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
-
-  const query = `
-    SELECT 
-      i.id, i.name, i.sku, i.category, i.unit, i."minStockLevel", i."isCritical",
-      COALESCE(
-        json_agg(
-          json_build_object(
-            'id', s.id,
-            'quantity', s.quantity,
-            'rack', json_build_object(
-              'id', r.id,
-              'rackName', r."rackName",
-              'shelf', r.shelf,
-              'bin', r.bin
-            )
-          )
-        ) FILTER (WHERE s.id IS NOT NULL),
-        '[]'
-      ) as stocks
-    FROM "Item" i
-    LEFT JOIN "Stock" s ON i.id = s."itemId"
-    LEFT JOIN "Rack" r ON s."rackId" = r.id
-    ${whereSql}
-    GROUP BY i.id
-    ORDER BY i."updatedAt" DESC
-  `;
-  
-  const result = await pool.query(query, params);
-  let items = result.rows;
-
-  // Manual status filtering because it depends on the aggregated stock
+  // Status filtering
   if (status && status !== 'all') {
-    items = items.filter((item: any) => {
-      const totalStock = item.stocks.reduce((acc: number, curr: any) => acc + curr.quantity, 0);
-      const isLowStock = totalStock <= item.minStockLevel;
+    mappedItems = mappedItems.filter((item: any) => {
+      const total = item.totalStock;
+      const isLowStock = total > 0 && total <= item.minStockLevel;
       if (status === 'low') return isLowStock;
-      if (status === 'instock') return totalStock > 0;
+      if (status === 'instock') return total > 0;
+      if (status === 'outofstock') return total === 0;
       return true;
     });
   }
 
-  return items;
+  return mappedItems;
 }
 
 export default async function InventoryPage({
@@ -96,10 +90,12 @@ export default async function InventoryPage({
   const status = typeof sParams.status === 'string' ? sParams.status : 'all';
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
 
-  const items = await getInventory(q, status, category).catch(() => []);
-
-  // Use the unique category set from the database if there's any logic you'd like later
-  // Currently, we're returning everything in the template directly
+  const items = await getInventory(q, status, category).catch((e) => {
+    console.error("DEBUG: Inventory fetch error:", e);
+    return [];
+  });
+  const allCategories = await prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } });
+  const categoryNames = allCategories.map(c => c.name);
   
   return (
     <div className="space-y-8 pb-10">
@@ -122,7 +118,11 @@ export default async function InventoryPage({
 
       {/* Bento Filters & Search */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <InventoryFilters currentStatus={status} currentCategory={category} />
+        <InventoryFilters 
+          currentStatus={status} 
+          currentCategory={category} 
+          categories={categoryNames} 
+        />
         
         <div className="md:col-span-1 p-6 bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost flex items-center gap-5">
           <div className="w-14 h-14 rounded-2xl bg-success/10 flex items-center justify-center text-success transition-transform hover:scale-110">
@@ -154,10 +154,12 @@ export default async function InventoryPage({
             </thead>
             <tbody className="divide-y divide-border-ghost">
               {items.length > 0 ? items.map((item:any) => {
-                const totalStock = item.stocks.reduce((acc: number, curr: any) => acc + curr.quantity, 0);
-                const isLowStock = totalStock <= item.minStockLevel;
-                const rackLocations = Array.from(new Set(item.stocks.map((s: any) => `${s.rack.rackName}-${s.rack.shelf}${s.rack.bin}`))).join(", ");
-
+                const totalStock = item.totalStock;
+                const isLowStock = totalStock > 0 && totalStock <= item.minStockLevel;
+                const isOutOfStock = totalStock === 0;
+                const rackLocations = (item.stocks || []).length > 0
+                  ? Array.from(new Set(item.stocks.map((s: any) => s.rack.rackNumber))).join(", ")
+                  : (item.totalStock > 0 ? "Inventory" : "N/A");
                 return (
                   <tr key={item.id} className="group hover:bg-surface-low/40 transition-colors cursor-pointer">
                     <td className="px-8 py-6">
@@ -183,7 +185,12 @@ export default async function InventoryPage({
                        {rackLocations || "N/A"}
                     </td>
                     <td className="px-8 py-6">
-                      {isLowStock ? (
+                      {isOutOfStock ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-widest border border-gray-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                          Out of Stock
+                        </span>
+                      ) : isLowStock ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-black uppercase tracking-widest border border-error/20">
                           <span className="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
                           Low Stock

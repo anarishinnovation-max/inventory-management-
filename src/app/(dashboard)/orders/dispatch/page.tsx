@@ -3,124 +3,149 @@ import {
   User, 
   Search, 
   UserPlus,
-  ChevronRight
+  ChevronRight,
+  Clock,
+  CheckCircle2,
+  Plus
 } from "lucide-react";
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
+import Link from "next/link";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-async function getDispatchData() {
-  const query = `
-    SELECT 
-      t.*,
-      json_build_object('name', i.name, 'sku', i.sku) as item,
-      json_build_object('rackName', r."rackName") as rack,
-      CASE WHEN c.id IS NOT NULL THEN json_build_object('name', c.name) ELSE null END as customer
-    FROM "Transaction" t
-    JOIN "Item" i ON t."itemId" = i.id
-    JOIN "Rack" r ON t."rackId" = r.id
-    LEFT JOIN "Customer" c ON t."customerId" = c.id
-    WHERE t.type = 'OUTWARD'
-    ORDER BY t."createdAt" DESC
-  `;
-  const result = await pool.query(query);
-  return result.rows;
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+async function getDispatchOrders() {
+  const orders = await prisma.dispatchOrder.findMany({
+    include: {
+      customer: true,
+      items: {
+        include: {
+          item: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
+  return orders;
 }
 
 export default async function DispatchPage() {
-  const dispatches = await getDispatchData().catch(() => []);
+  const orders = await getDispatchOrders().catch(() => []);
+
+  // Calculate stats
+  const pendingCount = orders.filter(o => o.status === "pending").length;
+  const dispatchedCount = orders.filter(o => o.status === "dispatched").length;
 
   return (
-    <div className="space-y-10">
-      <header className="flex items-center justify-between">
+    <div className="space-y-10 pb-10">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="heading-xl">Customer Fulfillment</h1>
-          <p className="text-muted-foreground mt-1 text-lg">Manage outbound dispatches and issue inventory to customers.</p>
+          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
+            <span>Fulfillment</span>
+            <span>/</span>
+            <span className="text-primary">Dispatch Orders</span>
+          </nav>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Customer Fulfillment</h1>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">Manage outbound dispatches and verify customer shipments.</p>
         </div>
-        <button className="btn-primary">
-          <Truck className="w-5 h-5" />
-          Create New Dispatch
+        <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <Plus className="w-5 h-5" />
+          <span>Create New Dispatch</span>
         </button>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-surface-lowest rounded-3xl shadow-ambient border border-border-ghost overflow-hidden">
-             <div className="px-8 py-5 border-b border-border-ghost flex items-center justify-between bg-surface-low/30">
-                <h3 className="font-bold text-foreground">Recent Shipments</h3>
-                <span className="text-xs font-bold text-muted-foreground uppercase">{dispatches.length} Total Dispatches</span>
-             </div>
-             <div className="overflow-x-auto">
+      {/* Stats row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-orange-500/30 transition-all">
+           <div className="flex justify-between items-start">
+              <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-500">
+                 <Clock className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-black text-orange-600">PENDING PICKING</span>
+           </div>
+           <div className="mt-8">
+              <h2 className="text-4xl font-black text-foreground tracking-tighter">{pendingCount}</h2>
+              <p className="text-sm font-bold text-muted-foreground mt-1">Orders awaiting fulfillment</p>
+           </div>
+        </div>
+
+        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-emerald-500/30 transition-all">
+           <div className="flex justify-between items-start">
+              <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500">
+                 <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-black text-emerald-600">COMPLETED</span>
+           </div>
+           <div className="mt-8">
+              <h2 className="text-4xl font-black text-foreground tracking-tighter">{dispatchedCount}</h2>
+              <p className="text-sm font-bold text-muted-foreground mt-1">Successfully shipped items</p>
+           </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="lg:col-span-3 space-y-6">
+           <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">
+              <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="table-header">
-                      <th className="table-cell-header py-4">Customer</th>
-                      <th className="table-cell-header py-4">SKU / Item</th>
-                      <th className="table-cell-header py-4 text-right">Qty</th>
-                      <th className="table-cell-header py-4 text-center">Status</th>
-                      <th className="table-cell-header py-4">Date</th>
+                    <tr className="bg-surface-low/30 border-b border-border-ghost">
+                      <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Order Identity</th>
+                      <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Recipient</th>
+                      <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Line Items</th>
+                      <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Fulfillment Status</th>
+                      <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
+                      <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
-                    {dispatches.length > 0 ? dispatches.map((d) => (
-                      <tr key={d.id} className="hover:bg-surface-low/30 transition-colors">
-                        <td className="px-8 py-5">
-                          <p className="font-bold text-foreground">{d.customer?.name || "Retail Walk-in"}</p>
+                    {orders.length > 0 ? orders.map((order: any) => (
+                      <tr key={order.id} className="hover:bg-surface-low/30 transition-colors group cursor-pointer">
+                        <td className="px-8 py-6">
+                           <span className="font-mono font-bold text-foreground">#{order.id.split('-')[0].toUpperCase()}</span>
                         </td>
-                        <td className="px-8 py-5">
-                           <p className="font-semibold text-foreground text-sm">{d.item.name}</p>
-                           <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-tighter">{d.item.sku}</p>
+                        <td className="px-8 py-6">
+                           <div className="flex flex-col">
+                              <span className="font-black text-foreground">{order.customer.name}</span>
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase">{order.customer.email || "No Email Registered"}</span>
+                           </div>
                         </td>
-                        <td className="px-8 py-5 text-right">
-                           <span className="text-lg font-bold text-foreground">{d.quantity}</span>
+                        <td className="px-8 py-6">
+                           <span className="text-sm font-bold text-foreground">{order.items.length} Units</span>
                         </td>
-                        <td className="px-8 py-5 text-center">
-                           <span className="badge-status bg-success/10 text-success border-success/20 !text-[10px] !px-3 tracking-widest">
-                              Dispatched
+                        <td className="px-8 py-6">
+                           <span className={cn(
+                             "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border",
+                             order.status === "pending" ? "bg-orange-50 text-orange-600 border-orange-100" : "bg-emerald-50 text-emerald-600 border-emerald-100"
+                           )}>
+                              {order.status}
                            </span>
                         </td>
-                        <td className="px-8 py-5 text-sm text-muted-foreground font-medium">
-                           {new Date(d.createdAt).toLocaleDateString()}
+                        <td className="px-8 py-6">
+                           <span className="text-sm font-bold text-muted-foreground">{new Date(order.createdAt).toLocaleDateString()}</span>
+                        </td>
+                        <td className="px-8 py-6 text-right">
+                           <Link href={`/orders/dispatch/${order.id}`} className="px-4 py-2 bg-surface-low text-primary font-black text-[10px] uppercase rounded-xl border border-transparent hover:border-primary/20 transition-all">
+                              Manage Dispatch
+                           </Link>
                         </td>
                       </tr>
                     )) : (
                       <tr>
-                        <td colSpan={5} className="px-8 py-20 text-center text-muted-foreground font-medium italic">
-                           No dispatches recorded in the current period.
+                        <td colSpan={6} className="px-8 py-32 text-center text-muted-foreground font-medium italic">
+                           No outbound orders found in the registry.
                         </td>
                       </tr>
                     )}
                   </tbody>
                 </table>
-             </div>
-          </div>
-        </div>
-
-        <div className="space-y-8">
-           <div className="card-premium space-y-6">
-              <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-                 <User className="w-5 h-5 text-primary" />
-                 Active Recipients
-              </h3>
-              <div className="relative">
-                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                 <input 
-                   type="text" 
-                   placeholder="Find customer..." 
-                   className="w-full pl-10 pr-4 py-3 bg-surface-low rounded-xl border-none outline-none focus:ring-2 focus:ring-primary transition-all text-sm"
-                 />
               </div>
-              <div className="space-y-3">
-                 <div className="p-4 rounded-2xl bg-surface-low/50 border border-border-ghost flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all">
-                    <div>
-                       <p className="font-bold text-foreground">Global Logistics Inc.</p>
-                       <p className="text-xs text-muted-foreground">3 active pending dispatches</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
-                 </div>
-              </div>
-              <button className="w-full py-4 rounded-2xl border border-dashed border-border-ghost text-muted-foreground font-bold hover:bg-surface-low hover:text-primary hover:border-primary/50 transition-all flex items-center justify-center gap-2">
-                 <UserPlus className="w-5 h-5" />
-                 Register Small Business
-              </button>
            </div>
         </div>
       </div>

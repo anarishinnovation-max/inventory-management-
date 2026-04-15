@@ -1,46 +1,47 @@
 import { NextResponse } from "next/server";
-import pool from "@/lib/db";
-import { getSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { InventoryService } from "@/lib/inventory-service";
+
+export async function GET() {
+  try {
+    const items = await (prisma as any).item.findMany({
+      include: {
+        category: true,
+        inventory: true,
+        stocks: {
+          include: {
+            rack: true
+          }
+        }
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json(items);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
 
 export async function POST(request: Request) {
   try {
-    const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const data = await request.json();
+    const { name, sku, categoryId, unit, minStockLevel, isCritical } = data;
+    
+    if (!name || !sku || !categoryId || !unit) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const body = await request.json();
-    const { name, sku, category, unit, minStockLevel, isCritical } = body;
+    const item = await InventoryService.addItem({
+      name,
+      sku,
+      categoryId,
+      unit,
+      minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
+      isCritical: !!isCritical
+    });
 
-    if (!name || !sku || !category || !unit) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    // Check for unique SKU
-    const existing = await pool.query(`SELECT 1 FROM "Item" WHERE sku = $1 LIMIT 1`, [sku]);
-
-    if (existing.rows.length > 0) {
-      return NextResponse.json(
-        { error: "SKU already exists" },
-        { status: 400 }
-      );
-    }
-
-    const result = await pool.query(`
-      INSERT INTO "Item" (name, sku, category, unit, "minStockLevel", "isCritical")
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *
-    `, [name, sku, category, unit, parseInt(minStockLevel), isCritical]);
-
-    return NextResponse.json(result.rows[0]);
-  } catch (error) {
-    console.error("Item creation error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json(item, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

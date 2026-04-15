@@ -1,45 +1,35 @@
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import pool from "@/lib/db";
 import { login } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
 
-    const userQuery = await pool.query(`SELECT * FROM "User" WHERE username = $1 LIMIT 1`, [username]);
-    const user = userQuery.rows[0];
-
-    // Hardcoded bypass for rapid testing
-    if (username === "admin" && password === "admin") {
-      await login(user?.id || "admin-dev-id", "admin", user?.role || "OWNER");
-      return NextResponse.json({ success: true });
+    if (!username || !password) {
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
+
+    const user = await prisma.user.findUnique({
+      where: { username },
+    });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      );
+    if (!passwordMatch) {
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
     await login(user.id, user.username, user.role);
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
+    return NextResponse.json({ success: true, user: { id: user.id, username: user.username, role: user.role } });
+  } catch (error: any) {
     console.error("Login error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

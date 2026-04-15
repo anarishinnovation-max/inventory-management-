@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { processTransaction } from "@/lib/transactions";
-import { TransactionType } from "@/lib/types";
+import { InventoryService } from "@/lib/inventory-service";
 
 export async function POST(request: Request) {
   try {
@@ -19,21 +18,24 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await processTransaction({
+    const result = await InventoryService.dispatchManual({
       itemId,
       rackId,
       userId: session.id,
-      type: TransactionType.OUTWARD,
-      quantity: Math.abs(quantity),
+      quantity: Math.abs(parseFloat(quantity)),
       customerId,
-      remarks: remarks || "Customer dispatch fulfillment",
+      remarks: remarks || "Manual physical stock dispatch",
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+        success: true,
+        transactionId: result.id,
+        message: "Manual dispatch processed and logged."
+    });
   } catch (error: any) {
-    console.error("Dispatch error:", error);
+    console.error("Manual Dispatch API Error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to process dispatch" },
+      { error: error.message || "Failed to process manual dispatch" },
       { status: 400 }
     );
   }

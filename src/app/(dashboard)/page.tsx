@@ -7,7 +7,6 @@ import {
   ArrowDownLeft,
   IndianRupee,
   Truck,
-  Users,
   Search,
   FileDown,
   PlusSquare,
@@ -15,7 +14,7 @@ import {
   Zap,
   BellRing
 } from "lucide-react";
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -23,93 +22,101 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const dynamic = "force-dynamic";
+
 async function getDashboardAnalytics() {
   // 1. Total Items
-  const itemsCount = await pool.query('SELECT COUNT(*)::int as count FROM "Item"');
+  const itemsCount = await prisma.item.count();
 
-  // 2. Stock Value (Using preferred vendor price or 0 if not available)
-  const stockValue = await pool.query(`
-    SELECT SUM(vi.price * s.quantity)::numeric(15,2) as total 
-    FROM "Stock" s 
-    JOIN "VendorItem" vi ON s."itemId" = vi."itemId" 
-    WHERE vi."isPreferred" = true
-  `);
+  // 2. Stock Value (Derived from POLineItems cost price or fallback to 0)
+  // We'll take the average cost price for each item if multiple POs exist
+  const stockValueResult = await prisma.$queryRaw<any[]>`
+    SELECT SUM(t.avg_cost * inv."quantityAvailable")::numeric(15,2) as total
+    FROM "Inventory" inv
+    JOIN (
+      SELECT "itemId", AVG("costPrice") as avg_cost 
+      FROM "POLineItem" 
+      GROUP BY "itemId"
+    ) t ON inv."itemId" = t."itemId"
+  `;
+  const stockValue = stockValueResult[0]?.total || 0;
 
-  // 3. Low Stock Count
-  const lowStock = await pool.query(`
+  // 3. Low Stock Count (Custom Query for precise comparison)
+  const lowStockResult = await prisma.$queryRaw<any[]>`
     SELECT COUNT(*)::int as count 
-    FROM (
-      SELECT i.id FROM "Item" i 
-      LEFT JOIN "Stock" s ON i.id = s."itemId" 
-      GROUP BY i.id 
-      HAVING COALESCE(SUM(s.quantity), 0) < i."minStockLevel"
-    ) as low_items
-  `);
+    FROM "Item" i 
+    JOIN "Inventory" inv ON i.id = inv."itemId" 
+    WHERE inv."quantityAvailable" < i."minStockLevel"
+  `;
 
   // 4. Vendor Count
-  const vendorsCount = await pool.query('SELECT COUNT(*)::int as count FROM "Vendor"');
+  const vendorsCount = await prisma.vendor.count();
 
   // 5. Stock Flow Dynamics (Last 30 days)
-  const flowQuery = await pool.query(`
+  const flowResult = await prisma.$queryRaw<any[]>`
     SELECT 
       date_trunc('day', t."createdAt") as day,
-      SUM(CASE WHEN t.type = 'INWARD' THEN t.quantity ELSE 0 END)::int as inbound,
-      SUM(CASE WHEN t.type = 'OUTWARD' THEN t.quantity ELSE 0 END)::int as outbound
-    FROM "Transaction" t
+      SUM(CASE WHEN t.type IN ('PURCHASE', 'ADJUSTMENT_IN') THEN ABS(t.quantity) ELSE 0 END)::int as inbound,
+      SUM(CASE WHEN t.type IN ('SALE', 'ADJUSTMENT_OUT') THEN ABS(t.quantity) ELSE 0 END)::int as outbound
+    FROM "InventoryTransaction" t
     WHERE t."createdAt" > NOW() - INTERVAL '30 days'
     GROUP BY 1
     ORDER BY 1 DESC
     LIMIT 10
-  `);
+  `;
 
   // 6. Recent Stock Activity
-  const activityQuery = await pool.query(`
-    SELECT 
-      t.id, t.type, t.quantity, t."createdAt",
-      i.name as item_name, i.sku
-    FROM "Transaction" t
-    JOIN "Item" i ON t."itemId" = i.id
-    ORDER BY t."createdAt" DESC
-    LIMIT 5
-  `);
+  const recentActivity = await prisma.inventoryTransaction.findMany({
+    take: 5,
+    orderBy: { createdAt: 'desc' },
+    include: {
+        item: true
+    }
+  });
 
-  // 7. Velocity Analysis (Top 4 items)
-  const velocityQuery = await pool.query(`
+  // 7. Velocity Analysis (Sum of SALE quantities)
+  const velocityResult = await prisma.$queryRaw<any[]>`
     SELECT 
       i.name, 
-      SUM(t.quantity)::int as units
-    FROM "Transaction" t
+      SUM(ABS(t.quantity))::int as units
+    FROM "InventoryTransaction" t
     JOIN "Item" i ON t."itemId" = i.id
-    WHERE t.type = 'OUTWARD' AND t."createdAt" > NOW() - INTERVAL '30 days'
+    WHERE t.type = 'SALE' AND t."createdAt" > NOW() - INTERVAL '30 days'
     GROUP BY i.id, i.name
     ORDER BY units DESC
     LIMIT 4
-  `);
+  `;
 
   // 8. Priority Replenish (Low items list)
-  const replenishItems = await pool.query(`
+  const replenishItems = await prisma.$queryRaw<any[]>`
     SELECT 
       i.name, i.sku, i."minStockLevel",
-      COALESCE(SUM(s.quantity), 0)::int as current_qty
+      inv."quantityAvailable"::int as current_qty
     FROM "Item" i
-    LEFT JOIN "Stock" s ON i.id = s."itemId"
-    GROUP BY i.id, i.name, i.sku, i."minStockLevel"
-    HAVING COALESCE(SUM(s.quantity), 0) < i."minStockLevel"
-    ORDER BY current_qty ASC
+    JOIN "Inventory" inv ON i.id = inv."itemId"
+    WHERE inv."quantityAvailable" < i."minStockLevel"
+    ORDER BY inv."quantityAvailable" ASC
     LIMIT 3
-  `);
+  `;
 
   return {
     kpis: {
-      totalItems: itemsCount.rows[0].count || 0,
-      stockValue: stockValue.rows[0].total || 0,
-      lowStockCount: lowStock.rows[0].count || 0,
-      vendorsCount: vendorsCount.rows[0].count || 0,
+      totalItems: itemsCount,
+      stockValue: stockValue,
+      lowStockCount: lowStockResult[0]?.count || 0,
+      vendorsCount: vendorsCount,
     },
-    flow: flowQuery.rows.reverse(),
-    recentActivity: activityQuery.rows,
-    velocity: velocityQuery.rows,
-    replenish: replenishItems.rows
+    flow: flowResult.reverse(),
+    recentActivity: recentActivity.map(tx => ({
+        id: tx.id,
+        type: tx.type,
+        quantity: Math.abs(tx.quantity),
+        createdAt: tx.createdAt,
+        item_name: tx.item.name,
+        sku: tx.item.sku
+    })),
+    velocity: velocityResult,
+    replenish: replenishItems
   };
 }
 
@@ -313,9 +320,9 @@ export default async function DashboardPage() {
                     <td className="px-8 py-6">
                       <div className={cn(
                           "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl font-black text-[10px] tracking-widest border transition-colors",
-                          tx.type === 'INWARD' ? "bg-success/10 text-success border-success/20" : "bg-indigo-500/10 text-indigo-500 border-indigo-500/20"
+                          tx.type.includes('IN') || tx.type === 'PURCHASE' ? "bg-success/10 text-success border-success/20" : "bg-indigo-500/10 text-indigo-500 border-indigo-500/20"
                       )}>
-                        {tx.type === 'INWARD' ? <ArrowDownLeft className="w-3 h-3" /> : <ArrowUpRight className="w-3 h-3" />}
+                        {tx.type.includes('IN') || tx.type === 'PURCHASE' ? <ArrowDownLeft className="w-3 h-3" /> : <ArrowUpRight className="w-3 h-3" />}
                         {tx.type}
                       </div>
                     </td>
@@ -326,7 +333,7 @@ export default async function DashboardPage() {
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                        <span className="text-lg font-black text-foreground">{tx.type === 'INWARD' ? '+' : '-'}{tx.quantity}</span>
+                        <span className="text-lg font-black text-foreground">{tx.type.includes('IN') || tx.type === 'PURCHASE' ? '+' : '-'}{tx.quantity}</span>
                     </td>
                     <td className="px-8 py-6 text-right">
                       <span className="text-[10px] font-black text-success px-3 py-1 rounded-full border border-success/20 bg-success/5 shadow-sm">AUTHENTICATED</span>

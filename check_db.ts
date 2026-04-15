@@ -1,14 +1,10 @@
-import pool from "./src/lib/db";
+import prisma from "./src/lib/prisma";
 
-async function checkItems() {
-  try {
-    const result = await pool.query('SELECT name, sku FROM "Item"');
-    console.log("Current Items:", JSON.stringify(result.rows, null, 2));
-  } catch (err) {
-    console.error("DB Error:", err);
-  } finally {
-    process.exit();
-  }
+async function check() {
+    const count = await prisma.item.count();
+    const items = await prisma.item.findMany({ take: 5, include: { category: true } });
+    console.log("ITEM COUNT:", count);
+    console.log("SAMPLE ITEMS:", JSON.stringify(items, null, 2));
 }
 
-checkItems();
+check().catch(console.error).finally(() => prisma.$disconnect());

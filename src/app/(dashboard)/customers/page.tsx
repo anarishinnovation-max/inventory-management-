@@ -8,7 +8,7 @@ import {
   Search,
   Plus
 } from "lucide-react";
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -17,29 +17,50 @@ function cn(...inputs: ClassValue[]) {
 }
 
 async function getCustomersWithStats() {
-  const query = `
-    SELECT 
-      c.id, c.name, c.contact, c.address,
-      COUNT(t.id) as "totalTransactions",
-      MAX(t."createdAt") as "lastInteraction"
-    FROM "Customer" c
-    LEFT JOIN "Transaction" t ON c.id = t."customerId"
-    GROUP BY c.id
-    ORDER BY c.name ASC
-  `;
-  const result = await pool.query(query);
-  return result.rows;
+  const customers = await prisma.customer.findMany({
+    include: {
+      transactions: {
+        select: {
+          id: true,
+          createdAt: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      }
+    },
+    orderBy: {
+      name: 'asc'
+    }
+  });
+
+  return customers.map(c => ({
+    id: c.id,
+    name: c.name,
+    contact: c.contact,
+    address: c.address,
+    totalTransactions: c.transactions.length,
+    lastInteraction: c.transactions[0]?.createdAt || null
+  }));
 }
 
 export default async function CustomersPage() {
-  const customers = await getCustomersWithStats().catch(() => []);
+  const customers = await getCustomersWithStats().catch((e) => {
+    console.error("Failed to fetch customers:", e);
+    return [];
+  });
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="heading-xl">Customer Success</h1>
-          <p className="text-muted-foreground mt-1 text-lg">Manage accounts, track interactions, and drive retention.</p>
+          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
+             <span>Main</span>
+             <span>/</span>
+             <span className="text-primary">Accounts</span>
+          </nav>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Executive CRM</h1>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">Strategic account management and interaction tracking.</p>
         </div>
         <div className="flex items-center gap-3">
             <div className="relative group">
@@ -47,10 +68,10 @@ export default async function CustomersPage() {
                 <input 
                     type="text" 
                     placeholder="Search accounts..." 
-                    className="pl-11 pr-4 py-3 bg-surface-lowest border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all w-64 shadow-ambient"
+                    className="pl-11 pr-4 py-3 bg-surface-lowest border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all w-64 shadow-ambient font-bold text-sm"
                 />
             </div>
-            <button className="btn-primary flex items-center gap-2">
+            <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-black text-sm shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
                 <Plus className="w-4 h-4" />
                 Add Account
             </button>
@@ -68,15 +89,15 @@ export default async function CustomersPage() {
               <div key={customer.id} className="p-5 bg-surface-lowest rounded-2xl border border-border-ghost shadow-ambient hover:border-primary/50 transition-all cursor-pointer group">
                 <div className="flex items-start justify-between">
                     <div>
-                        <p className="font-bold text-foreground text-lg">{customer.name}</p>
-                        <p className="text-xs font-bold text-muted-foreground uppercase mt-1">{customer.contact}</p>
+                        <p className="font-bold text-foreground text-lg truncate max-w-[120px]">{customer.name}</p>
+                        <p className="text-[10px] font-black text-muted-foreground uppercase mt-1 tracking-widest">{customer.contact || "No Contact"}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center font-bold text-primary group-hover:bg-primary/10 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center font-black text-primary group-hover:bg-primary/10 transition-colors border border-border-ghost">
                         {customer.name[0]}
                     </div>
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                  <span className="badge-status bg-primary/10 text-primary border-primary/20">
+                  <span className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">
                     {customer.totalTransactions} Orders
                   </span>
                   <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -89,7 +110,7 @@ export default async function CustomersPage() {
 
         <div className="lg:col-span-3 space-y-8">
            <div className="flex items-center justify-between">
-             <h2 className="heading-lg flex items-center gap-3">
+             <h2 className="text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
                Detailed Accounts Overview
              </h2>
              <div className="flex items-center gap-2">
@@ -99,68 +120,71 @@ export default async function CustomersPage() {
              </div>
            </div>
 
-           <div className="bg-surface-lowest rounded-3xl shadow-ambient border border-border-ghost overflow-hidden">
+           <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="table-header">
-                      <th className="table-cell-header text-xs">Customer Details</th>
-                      <th className="table-cell-header text-xs">Primary Contact</th>
-                      <th className="table-cell-header text-xs">Office Address</th>
-                      <th className="table-cell-header text-xs">Activity</th>
-                      <th className="table-cell-header text-xs">Status</th>
+                    <tr className="bg-surface-low/30 border-b border-border-ghost">
+                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Customer Details</th>
+                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Primary Contact</th>
+                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Office Address</th>
+                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Activity</th>
+                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
                     {customers.length > 0 ? customers.map((c) => (
-                      <tr key={c.id} className="hover:bg-surface-low/30 transition-colors group">
+                      <tr key={c.id} className="hover:bg-surface-low/30 transition-colors group cursor-pointer">
                         <td className="px-8 py-6">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl primary-gradient flex items-center justify-center font-bold text-white shadow-ambient">
+                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20">
                                {c.name[0]}
                             </div>
                             <div>
-                                <p className="font-bold text-foreground text-lg leading-tight">{c.name}</p>
-                                <p className="text-sm text-muted-foreground mt-0.5">ID: {c.id.slice(0, 8)}...</p>
+                                <p className="font-black text-foreground text-lg leading-tight group-hover:text-primary transition-colors">{c.name}</p>
+                                <p className="text-[10px] font-bold text-muted-foreground mt-0.5 uppercase tracking-widest">ID: {c.id.slice(0, 8)}</p>
                             </div>
                           </div>
                         </td>
                         <td className="px-8 py-6">
-                           <div className="flex items-center gap-2 text-foreground font-medium">
-                              <Phone className="w-4 h-4 text-primary" />
-                              <span>{c.contact}</span>
+                           <div className="flex items-center gap-2 text-foreground font-black text-sm">
+                              <Phone className="w-4 h-4 text-primary opacity-60" />
+                              <span>{c.contact || "N/A"}</span>
                            </div>
                         </td>
                         <td className="px-8 py-6">
                           <div className="flex items-start gap-2 text-muted-foreground max-w-[200px]">
-                             <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                             <span className="text-sm line-clamp-2">{c.address}</span>
+                             <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 opacity-60" />
+                             <span className="text-sm font-medium line-clamp-2">{c.address || "No address provided"}</span>
                           </div>
                         </td>
                         <td className="px-8 py-6">
                           <div className="space-y-1">
-                             <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase">
+                             <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                                 <Calendar className="w-3 h-3" />
-                                <span>Last Transaction</span>
+                                <span>Pulse Check</span>
                              </div>
-                             <p className="text-sm font-semibold text-foreground">
+                             <p className="text-sm font-black text-foreground">
                                 {c.lastInteraction ? new Date(c.lastInteraction).toLocaleDateString() : 'No activity'}
                              </p>
                           </div>
                         </td>
                         <td className="px-8 py-6">
                           <span className={cn(
-                             "badge-status",
-                             c.totalTransactions > 10 ? "bg-success/10 text-success border-success/20" : "bg-primary/10 text-primary border-primary/20"
+                             "text-[10px] font-black px-3 py-1.5 rounded-full border uppercase tracking-widest",
+                             c.totalTransactions > 10 ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-indigo-50 text-indigo-600 border-indigo-100"
                           )}>
-                             {c.totalTransactions > 10 ? 'VIP Account' : 'Standard'}
+                             {c.totalTransactions > 10 ? 'VIP / Key Entity' : 'Standard'}
                           </span>
                         </td>
                       </tr>
                     )) : (
                       <tr>
-                         <td colSpan={5} className="px-8 py-32 text-center text-muted-foreground font-medium">
-                            No customer records found in the database.
+                         <td colSpan={5} className="px-8 py-40 text-center text-muted-foreground font-medium">
+                            <div className="flex flex-col items-center gap-4 opacity-30">
+                                <Users className="w-16 h-16" />
+                                <p className="text-2xl font-black text-foreground">No records indexed.</p>
+                            </div>
                          </td>
                       </tr>
                     )}
@@ -170,32 +194,32 @@ export default async function CustomersPage() {
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-8 rounded-3xl bg-surface-lowest border border-border-ghost shadow-ambient space-y-4">
-                 <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-                    <Users className="w-6 h-6" />
+              <div className="p-8 rounded-[2rem] bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
+                 <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center transition-transform group-hover:scale-110">
+                    <Users className="w-7 h-7" />
                  </div>
                  <div>
-                    <p className="text-3xl font-bold text-foreground">{customers.length}</p>
-                    <p className="text-muted-foreground font-medium">Total Accounts</p>
+                    <p className="text-4xl font-black text-foreground tracking-tighter">{customers.length}</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">Active Accounts Indexed</p>
                  </div>
               </div>
-              <div className="p-8 rounded-3xl bg-surface-lowest border border-border-ghost shadow-ambient space-y-4">
-                 <div className="w-12 h-12 rounded-2xl bg-success/10 text-success flex items-center justify-center">
-                    <Calendar className="w-6 h-6" />
+              <div className="p-8 rounded-[2rem] bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
+                 <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition-transform group-hover:scale-110 border border-emerald-100">
+                    <Calendar className="w-7 h-7" />
                  </div>
                  <div>
-                    <p className="text-3xl font-bold text-foreground">
+                    <p className="text-4xl font-black text-foreground tracking-tighter">
                         {customers.filter(c => c.totalTransactions > 0).length}
                     </p>
-                    <p className="text-muted-foreground font-medium">Active Accounts</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">Accounts with Pulse</p>
                  </div>
               </div>
-              <div className="p-8 rounded-3xl bg-surface-lowest border border-border-ghost shadow-ambient space-y-4">
-                 <div className="w-12 h-12 rounded-2xl bg-warning/10 text-warning flex items-center justify-center">
-                    <Plus className="w-6 h-6" />
+              <div className="p-8 rounded-[2rem] bg-orange-50 border border-orange-100 shadow-ambient space-y-5 group hover:scale-[1.02] transition-all">
+                 <div className="w-14 h-14 rounded-2xl bg-orange-600 text-white flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-orange-200">
+                    <Plus className="w-7 h-7" />
                  </div>
                  <div>
-                    <p className="text-3xl font-bold text-foreground">
+                    <p className="text-4xl font-black text-orange-900 tracking-tighter">
                         {customers.filter(c => {
                             const last = c.lastInteraction ? new Date(c.lastInteraction) : null;
                             if (!last) return false;
@@ -204,7 +228,7 @@ export default async function CustomersPage() {
                             return last < thirtyDaysAgo;
                         }).length}
                     </p>
-                    <p className="text-muted-foreground font-medium">Dormant Accounts</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-orange-700 mt-2">Dormant / Needs Outreach</p>
                  </div>
               </div>
            </div>

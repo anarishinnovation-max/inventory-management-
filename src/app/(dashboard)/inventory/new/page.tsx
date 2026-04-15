@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, 
@@ -20,15 +20,33 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const CATEGORIES = ["Electronics", "Mechanical", "Raw Materials", "Packaging"];
-
 export default function NewItemPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [fetchingCategories, setFetchingCategories] = useState(true);
   const [error, setError] = useState("");
 
-  const [category, setCategory] = useState("Mechanical");
+  const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [isCritical, setIsCritical] = useState(false);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch("/api/categories");
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+          if (data.length > 0) setSelectedCategoryId(data[0].id);
+        }
+      } catch (err) {
+        console.error("Failed to load categories", err);
+      } finally {
+        setFetchingCategories(false);
+      }
+    }
+    loadCategories();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,9 +57,9 @@ export default function NewItemPage() {
     const data = {
       name: formData.get("name"),
       sku: formData.get("sku"),
-      category: category,
+      categoryId: selectedCategoryId,
       unit: formData.get("unit"),
-      minStockLevel: parseInt(formData.get("minStockLevel") as string),
+      minStockLevel: parseFloat(formData.get("minStockLevel") as string),
       isCritical: isCritical,
     };
 
@@ -82,7 +100,7 @@ export default function NewItemPage() {
           <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
             Discard
           </Link>
-          <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-gradient-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
+          <button type="submit" disabled={loading || fetchingCategories} className="px-8 py-3 text-sm font-black text-white bg-gradient-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Save Changes
           </button>
@@ -138,22 +156,26 @@ export default function NewItemPage() {
               <div>
                 <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">Category</label>
                 <div className="flex flex-wrap gap-2">
-                   {CATEGORIES.map(cat => (
+                   {fetchingCategories ? (
+                       <div className="flex items-center gap-2 text-muted-foreground text-xs font-bold px-4 py-2">
+                           <Loader2 className="w-4 h-4 animate-spin" /> Fetching categories...
+                       </div>
+                   ) : categories.map(cat => (
                       <button 
-                        key={cat} 
+                        key={cat.id} 
                         type="button"
-                        onClick={() => setCategory(cat)}
+                        onClick={() => setSelectedCategoryId(cat.id)}
                         className={cn(
                            "px-5 py-2.5 rounded-xl text-xs font-black transition-colors border",
-                           category === cat 
-                              ? "border-primary bg-primary/10 text-primary" 
-                              : "border-border-ghost text-muted-foreground hover:bg-surface-low"
+                           selectedCategoryId === cat.id 
+                               ? "border-primary bg-primary/10 text-primary" 
+                               : "border-border-ghost text-muted-foreground hover:bg-surface-low"
                         )}
                       >
-                         {cat}
+                         {cat.name}
                       </button>
                    ))}
-                  <button type="button" className="px-5 py-2.5 rounded-xl bg-surface-low text-muted-foreground text-xs font-black flex items-center gap-2 hover:bg-surface-high transition-colors">
+                   <button type="button" className="px-5 py-2.5 rounded-xl bg-surface-low text-muted-foreground text-xs font-black flex items-center gap-2 hover:bg-surface-high transition-colors">
                     <span>+</span> New
                   </button>
                 </div>
@@ -249,7 +271,7 @@ export default function NewItemPage() {
               <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">Smart Insight</span>
             </div>
             <p className="text-[15px] font-medium leading-relaxed relative z-10">
-               Based on similar items in the <span className="font-black">{category}</span> category, we recommend a <span className="font-black">Bin size of L3</span> and a <span className="font-black drop-shadow-md">Safety Stock of 40 units</span> to avoid stockouts.
+               Based on similar items in the system, we recommend a <span className="font-black">Bin size of L3</span> and a <span className="font-black drop-shadow-md">Safety Stock of 40 units</span> to avoid stockouts.
             </p>
             <button type="button" className="mt-8 text-xs font-black py-3 px-5 bg-white text-primary rounded-xl transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 relative z-10 shadow-lg">
                 Apply Optimizations 

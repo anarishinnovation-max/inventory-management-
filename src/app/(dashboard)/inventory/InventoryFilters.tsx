@@ -12,10 +12,12 @@ function cn(...inputs: ClassValue[]) {
 
 export default function InventoryFilters({ 
   currentStatus, 
-  currentCategory 
+  currentCategory,
+  categories = []
 }: { 
   currentStatus: string; 
-  currentCategory: string 
+  currentCategory: string;
+  categories?: string[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -62,10 +64,19 @@ export default function InventoryFilters({
             onClick={() => setFilter("status", "low")}
             className={cn(
               "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'low' ? "bg-primary text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              currentStatus === 'low' ? "bg-error text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
             )}
           >
             Low Stock
+          </button>
+          <button 
+            onClick={() => setFilter("status", "outofstock")}
+            className={cn(
+              "px-4 py-2 rounded-full text-xs font-bold transition-all",
+              currentStatus === 'outofstock' ? "bg-gray-700 text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+            )}
+          >
+            Out of Stock
           </button>
         </div>
       </div>
@@ -83,10 +94,9 @@ export default function InventoryFilters({
               )}
             >
               <option value="all">All Categories</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Mechanical">Mechanical</option>
-              <option value="Packaging">Packaging</option>
-              <option value="Raw Materials">Raw Materials</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
             </select>
             <select className="bg-transparent border-none text-sm font-bold text-foreground p-0 focus:ring-0 cursor-pointer w-full max-w-[160px]">
               <option>Zone A (Main)</option>

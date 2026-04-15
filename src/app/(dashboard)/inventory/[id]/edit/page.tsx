@@ -22,8 +22,6 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const CATEGORIES = ["Electronics", "Mechanical", "Raw Materials", "Packaging"];
-
 export default function EditItemPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
@@ -32,30 +30,38 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState("");
   
-  const [category, setCategory] = useState("Mechanical");
+  const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [isCritical, setIsCritical] = useState(false);
   const [itemData, setItemData] = useState<any>(null);
 
   useEffect(() => {
-    const fetchItem = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`/api/items/${id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setItemData(data);
-          setCategory(data.category);
-          setIsCritical(data.isCritical);
+        const [itemRes, catRes] = await Promise.all([
+            fetch(`/api/items/${id}`),
+            fetch("/api/categories")
+        ]);
+
+        if (itemRes.ok && catRes.ok) {
+          const item = await itemRes.json();
+          const cats = await catRes.json();
+          
+          setItemData(item);
+          setCategories(cats);
+          setSelectedCategoryId(item.categoryId);
+          setIsCritical(item.isCritical);
         } else {
-          setError("Failed to fetch item data.");
+          setError("Failed to fetch necessary data.");
         }
       } catch (err) {
-        setError("An unexpected error occurred while fetching item.");
+        setError("An unexpected error occurred while fetching data.");
       } finally {
         setFetching(false);
       }
     };
 
-    fetchItem();
+    fetchData();
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,9 +73,9 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     const data = {
       name: formData.get("name"),
       sku: formData.get("sku"),
-      category: category,
+      categoryId: selectedCategoryId,
       unit: formData.get("unit"),
-      minStockLevel: parseInt(formData.get("minStockLevel") as string),
+      minStockLevel: parseFloat(formData.get("minStockLevel") as string),
       isCritical: isCritical,
     };
 
@@ -150,12 +156,8 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
          </div>
       )}
 
-      {/* Bento Grid Form Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Left Column: Primary Information */}
         <div className="lg:col-span-7 space-y-8">
-          
           <div className="bg-surface-lowest p-8 rounded-[2rem] shadow-ambient border border-border-ghost space-y-8">
             <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
@@ -192,19 +194,19 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               <div>
                 <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">Category</label>
                 <div className="flex flex-wrap gap-2">
-                   {CATEGORIES.map(cat => (
+                   {categories.map(cat => (
                       <button 
-                        key={cat} 
+                        key={cat.id} 
                         type="button"
-                        onClick={() => setCategory(cat)}
+                        onClick={() => setSelectedCategoryId(cat.id)}
                         className={cn(
                            "px-5 py-2.5 rounded-xl text-xs font-black transition-colors border",
-                           category === cat 
+                           selectedCategoryId === cat.id 
                                ? "border-primary bg-primary/10 text-primary" 
                                : "border-border-ghost text-muted-foreground hover:bg-surface-low"
                         )}
                       >
-                         {cat}
+                         {cat.name}
                       </button>
                    ))}
                 </div>
@@ -221,7 +223,6 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           </div>
         </div>
 
-        {/* Right Column: Operational Controls */}
         <div className="lg:col-span-5 space-y-8">
           <div className="bg-surface-lowest p-8 rounded-[2rem] shadow-ambient border border-border-ghost space-y-8">
             <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
@@ -241,7 +242,6 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right pr-16 text-foreground" type="number" min="0" />
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-black text-muted-foreground">PCS</span>
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-3 font-bold">Current configuration triggers "Low Stock" when units drop below this level.</p>
               </div>
 
               <div className="flex items-center justify-between p-5 bg-surface-low rounded-2xl border border-border-ghost">
@@ -263,19 +263,6 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   )}></div>
                 </button>
               </div>
-
-              <div className="pt-4 border-t border-border-ghost">
-                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4">Storage Allocation</label>
-                <div className="p-4 bg-surface-low rounded-xl border border-border-ghost flex items-center gap-4">
-                   <div className="w-10 h-10 rounded-lg bg-surface-lowest flex items-center justify-center text-muted-foreground">
-                      <Package className="w-5 h-5" />
-                   </div>
-                   <div>
-                      <p className="text-xs font-black text-foreground">Dynamic Location Management</p>
-                      <p className="text-[10px] font-medium text-muted-foreground">Location adjustments must be made via Rack Management</p>
-                   </div>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -286,17 +273,14 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">Optimization Info</span>
             </div>
             <p className="text-[15px] font-medium leading-relaxed relative z-10">
-               Stock analytics show that items in <span className="font-black">{category}</span> have increased turnover recently. Consider increasing safety thresholds.
+               Stock analytics show that items in this category have increased turnover recently. Consider increasing safety thresholds.
             </p>
           </div>
-
         </div>
       </div>
 
-      {/* Stock & Location Management Section */}
       <InventoryStockManager itemId={id} />
 
-      {/* Bottom Sticky Footer */}
       <div className="mt-12 flex flex-col md:flex-row items-center justify-between p-6 bg-surface-lowest rounded-2xl border border-border-ghost shadow-ambient gap-6">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-success/10 text-success rounded-xl">
@@ -311,7 +295,6 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
            {loading ? "Syncing..." : "Apply Global Changes"}
         </button>
       </div>
-
     </form>
   );
 }

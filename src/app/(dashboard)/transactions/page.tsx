@@ -4,9 +4,10 @@ import {
   ArrowDownLeft, 
   RefreshCcw, 
   Truck,
-  Users as UsersIcon
+  Users as UsersIcon,
+  MapPin
 } from "lucide-react";
-import pool from "@/lib/db";
+import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -15,123 +16,130 @@ function cn(...inputs: ClassValue[]) {
 }
 
 async function getTransactions() {
-  const query = `
-    SELECT 
-      t.*,
-      json_build_object('name', i.name, 'sku', i.sku) as item,
-      json_build_object('rackName', r."rackName") as rack,
-      json_build_object('name', u.name) as "user",
-      CASE WHEN c.id IS NOT NULL THEN json_build_object('name', c.name) ELSE null END as customer,
-      CASE WHEN v.id IS NOT NULL THEN json_build_object('name', v.name) ELSE null END as vendor
-    FROM "Transaction" t
-    JOIN "Item" i ON t."itemId" = i.id
-    JOIN "Rack" r ON t."rackId" = r.id
-    JOIN "User" u ON t."userId" = u.id
-    LEFT JOIN "Customer" c ON t."customerId" = c.id
-    LEFT JOIN "Vendor" v ON t."vendorId" = v.id
-    ORDER BY t."createdAt" DESC
-  `;
-  const result = await pool.query(query);
-  return result.rows;
+  const transactions = await (prisma as any).inventoryTransaction.findMany({
+    include: {
+      item: true,
+      rack: true,
+      customer: true,
+      vendor: true,
+      user: true,
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
+  return transactions;
 }
 
 export default async function TransactionsPage() {
-  const transactions = await getTransactions().catch(() => []);
+  const transactions = await getTransactions().catch((e) => {
+      console.error("Audit log fetch error:", e);
+      return [];
+  });
 
   return (
-    <div className="space-y-10">
-      <header className="flex items-center justify-between">
+    <div className="space-y-10 pb-10">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="heading-xl">Transaction Registry</h1>
-          <p className="text-muted-foreground mt-1 text-lg">Immutable audit trail of all warehouse stock movements.</p>
+          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
+            <span>Audit</span>
+            <span>/</span>
+            <span className="text-primary">Ledger</span>
+          </nav>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Unified Audit Registry</h1>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">Immutable real-time ledger of all warehouse operations and stock movements.</p>
         </div>
-        <button className="btn-secondary">
-          <History className="w-5 h-5" />
-          Export Logs
+        <button className="flex items-center gap-2 px-6 py-3 bg-surface-lowest text-foreground text-sm font-bold rounded-2xl shadow-ambient border border-border-ghost hover:bg-surface-low transition-all">
+          <History className="w-5 h-5 text-primary" />
+          Export Audit Trail
         </button>
       </header>
 
-      <div className="bg-surface-lowest rounded-3xl shadow-ambient border border-border-ghost overflow-hidden">
+      <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">
+        <div className="px-8 py-5 border-b border-border-ghost bg-surface-low/30 flex items-center justify-between">
+           <h3 className="text-sm font-black text-foreground uppercase tracking-widest">Global Operations Log</h3>
+           <span className="text-[10px] font-black text-muted-foreground bg-white px-3 py-1 rounded-full border border-border-ghost">{transactions.length} Records Verified</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="table-header">
-                <th className="table-cell-header">Type</th>
-                <th className="table-cell-header">Item / SKU</th>
-                <th className="table-cell-header text-right">Qty</th>
-                <th className="table-cell-header">Location</th>
-                <th className="table-cell-header">Entity</th>
-                <th className="table-cell-header">Operator</th>
-                <th className="table-cell-header">Timestamp</th>
+              <tr className="bg-surface-low/20">
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Operation Type</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Asset Details</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Volume</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Location</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Entity / Authority</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Timestamp</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
-              {transactions.length > 0 ? transactions.map((tx) => (
+              {transactions.length > 0 ? transactions.map((tx: any) => (
                 <tr key={tx.id} className="hover:bg-surface-low/30 transition-colors group">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-3">
-                      {tx.type === "INWARD" || tx.type === "RETURN" ? (
-                        <div className="p-2 rounded-lg bg-success/10 text-success">
+                      {tx.type.includes("IN") || tx.type === "PURCHASE" ? (
+                        <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
                           <ArrowDownLeft className="w-5 h-5" />
                         </div>
-                      ) : tx.type === "OUTWARD" ? (
-                        <div className="p-2 rounded-lg bg-orange-600/10 text-orange-600">
-                          <ArrowUpRight className="w-4 h-4" />
-                        </div>
                       ) : (
-                        <div className="p-2 rounded-lg bg-surface-dim text-muted-foreground">
-                          <RefreshCcw className="w-4 h-4" />
+                        <div className="p-2.5 rounded-xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center">
+                          <ArrowUpRight className="w-5 h-5" />
                         </div>
                       )}
                       <div>
-                        <p className="font-bold text-foreground leading-none">{tx.type}</p>
-                        {tx.remarks && <p className="text-[10px] text-muted-foreground mt-1 truncate max-w-[100px]">{tx.remarks}</p>}
+                        <p className="font-black text-foreground text-[13px] tracking-tight">{tx.type}</p>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{tx.referenceType || "System"}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-8 py-6">
                     <div>
-                      <p className="font-bold text-foreground">{tx.item.name}</p>
-                      <p className="text-xs text-muted-foreground font-mono">{tx.item.sku}</p>
+                      <p className="font-black text-foreground text-sm group-hover:text-primary transition-colors">{tx.item.name}</p>
+                      <p className="text-[10px] text-muted-foreground font-mono font-bold mt-0.5">{tx.item.sku}</p>
                     </div>
                   </td>
                   <td className="px-8 py-6 text-right">
                     <span className={cn(
-                      "text-xl font-bold tracking-tight",
-                      tx.type === "INWARD" || tx.type === "RETURN" ? "text-success" : "text-foreground"
+                      "text-xl font-black tracking-tighter",
+                      tx.quantity > 0 ? "text-emerald-600" : "text-foreground"
                     )}>
-                      {tx.type === "INWARD" || tx.type === "RETURN" ? "+" : "-"}{tx.quantity}
+                      {tx.quantity > 0 ? "+" : ""}{tx.quantity}
                     </span>
                   </td>
                   <td className="px-8 py-6">
-                    <span className="text-sm font-bold text-primary bg-primary/5 px-2 py-1 rounded-lg border border-primary/10">
-                      {tx.rack.rackName}
-                    </span>
+                    {tx.rack ? (
+                       <div className="flex items-center gap-2">
+                          <MapPin className="w-3.5 h-3.5 text-primary opacity-50" />
+                          <span className="text-sm font-bold text-foreground">
+                            {tx.rack.rackName}
+                          </span>
+                       </div>
+                    ) : (
+                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">In-Transit</span>
+                    )}
                   </td>
                   <td className="px-8 py-6">
                     {tx.customer ? (
-                      <span className="text-sm font-semibold text-foreground flex items-center gap-2">
-                        <UsersIcon className="w-3 h-3 opacity-50" />
-                        {tx.customer.name}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <UsersIcon className="w-4 h-4 text-indigo-500 opacity-60" />
+                        <span className="text-sm font-bold text-foreground">{tx.customer.name}</span>
+                      </div>
                     ) : tx.vendor ? (
-                       <span className="text-sm font-semibold text-foreground flex items-center gap-2">
-                        <Truck className="w-3 h-3 opacity-50" />
-                        {tx.vendor.name}
-                      </span>
+                       <div className="flex items-center gap-2">
+                        <Truck className="w-4 h-4 text-orange-500 opacity-60" />
+                        <span className="text-sm font-bold text-foreground">{tx.vendor.name}</span>
+                      </div>
                     ) : (
-                      <span className="text-sm text-muted-foreground">Self/System</span>
+                      <span className="text-xs font-bold text-muted-foreground">Internal Ledger Update</span>
                     )}
-                  </td>
-                  <td className="px-8 py-6 font-medium text-foreground">
-                    {tx.user.name}
                   </td>
                   <td className="px-8 py-6">
                     <div className="text-right">
-                      <p className="text-sm font-bold text-foreground">
+                      <p className="text-sm font-black text-foreground">
                         {new Date(tx.createdAt).toLocaleDateString()}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
                         {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
@@ -139,10 +147,15 @@ export default async function TransactionsPage() {
                 </tr>
               )) : (
                 <tr>
-                   <td colSpan={7} className="px-8 py-32 text-center text-muted-foreground">
-                      <div className="flex flex-col items-center gap-4 opacity-30">
-                         <History className="w-16 h-16" />
-                         <p className="text-xl font-bold">Registry currently empty.</p>
+                   <td colSpan={6} className="px-8 py-40 text-center">
+                      <div className="flex flex-col items-center gap-6 max-w-sm mx-auto">
+                         <div className="w-20 h-20 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center text-muted-foreground opacity-20">
+                            <History className="w-10 h-10" />
+                         </div>
+                         <div>
+                            <p className="text-2xl font-black text-foreground tracking-tight">Registry Empty</p>
+                            <p className="text-[15px] font-medium text-muted-foreground mt-2">Historical operations will be progressively indexed here as they are authenticated.</p>
+                         </div>
                       </div>
                    </td>
                 </tr>

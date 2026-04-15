@@ -27,19 +27,20 @@ export interface Item {
   id: string;
   name: string;
   sku: string;
-  category: string;
+  categoryId: string;
+  category?: { id: string; name: string };
   unit: string;
   minStockLevel: number;
   isCritical: boolean;
   createdAt: Date;
   updatedAt: Date;
+  stocks?: any[];
+  inventory?: any;
 }
 
 export interface Rack {
   id: string;
-  rackName: string;
-  shelf: string;
-  bin: string;
+  rackNumber: string;
 }
 
 export interface Stock {
