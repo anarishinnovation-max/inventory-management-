@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #f7f9fb;
+  --color-foreground: #191c1e;
+  
+  --color-primary: #004ac6;
+  --color-primary-container: #2563eb;
+  --color-on-primary: #ffffff;
+  
+  --color-surface-low: #f2f4f6;
+  --color-surface-lowest: #ffffff;
+  --color-surface-dim: #d8dadc;
+  
+  --color-success: #006329;
+  --color-error: #ba1a1a;
+  
+  --color-muted-foreground: #64748b;
+  --color-border-ghost: rgba(195, 198, 215, 0.15);
+  
+  --radius-xl: 1rem;
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  
+  --font-sans: "Inter", var(--font-geist-sans);
+}
+
+:root {
+  --background: #f7f9fb;
+  --foreground: #191c1e;
+  
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.shadow-ambient {
+  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+}
+
+.primary-gradient {
+  background: linear-gradient(135deg, #004ac6 0%, #2563eb 100%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Semantic UI Classes */
+
+.card-premium {
+  @apply bg-surface-lowest p-8 rounded-3xl border border-border-ghost transition-all duration-300;
+  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+}
+
+.btn-primary {
+  @apply px-6 py-3 rounded-2xl text-white font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50;
+  background: linear-gradient(135deg, #004ac6 0%, #2563eb 100%);
+  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-2xl bg-surface-lowest text-foreground font-semibold hover:bg-surface-low transition-all border border-border-ghost flex items-center justify-center gap-2;
+  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+}
+.btn-ghost {
+  @apply p-4 rounded-2xl bg-surface-lowest border border-border-ghost hover:text-foreground transition-all;
+  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+}
+
+.input-field {
+  @apply w-full px-5 py-4 bg-surface-low border-none rounded-2xl focus:ring-2 focus:ring-primary transition-all outline-none font-medium;
+}
+
+.heading-xl {
+  @apply text-3xl font-bold tracking-tight text-foreground;
+}
+
+.heading-lg {
+  @apply text-2xl font-bold tracking-tight text-foreground;
+}
+
+.badge-status {
+  @apply inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold border;
+}
+
+.table-header {
+  @apply bg-surface-low/50;
+}
+
+.table-cell-header {
+  @apply px-8 py-5 text-xs font-bold  text-gray-500 uppercase tracking-wider;
+}
