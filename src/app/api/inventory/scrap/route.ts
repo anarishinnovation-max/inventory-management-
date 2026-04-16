@@ -1,0 +1,29 @@
+import { NextResponse } from "next/server";
+import { InventoryService } from "@/lib/inventory-service";
+import { getSession } from "@/lib/auth";
+
+export async function POST(request: Request) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { itemId, quantity, reason } = await request.json();
+
+    if (!itemId || !quantity) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const result = await InventoryService.scrapInventory(itemId, quantity, reason);
+
+    return NextResponse.json({ 
+      success: true, 
+      message: "Inventory scrapped successfully",
+      inventory: result 
+    });
+  } catch (error: any) {
+    console.error("[SCRAP_ERROR]", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

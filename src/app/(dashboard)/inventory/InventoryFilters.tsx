@@ -55,7 +55,7 @@ export default function InventoryFilters({
             onClick={() => setFilter("status", "instock")}
             className={cn(
               "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'instock' ? "bg-primary text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              currentStatus === 'instock' ? "bg-success text-white shadow-lg shadow-success/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
             )}
           >
             In Stock
@@ -64,7 +64,7 @@ export default function InventoryFilters({
             onClick={() => setFilter("status", "low")}
             className={cn(
               "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'low' ? "bg-error text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              currentStatus === 'low' ? "bg-warning text-white shadow-lg shadow-warning/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
             )}
           >
             Low Stock
@@ -73,7 +73,7 @@ export default function InventoryFilters({
             onClick={() => setFilter("status", "outofstock")}
             className={cn(
               "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'outofstock' ? "bg-gray-700 text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              currentStatus === 'outofstock' ? "bg-error text-white shadow-lg shadow-error/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
             )}
           >
             Out of Stock

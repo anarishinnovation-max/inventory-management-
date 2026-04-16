@@ -54,10 +54,10 @@ export default async function DispatchPage() {
           <h1 className="text-4xl font-black text-foreground tracking-tight">Customer Fulfillment</h1>
           <p className="text-muted-foreground mt-2 text-lg font-medium">Manage outbound dispatches and verify customer shipments.</p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+        <Link href="/orders/dispatch/new" className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
           <Plus className="w-5 h-5" />
           <span>Create New Dispatch</span>
-        </button>
+        </Link>
       </header>
 
       {/* Stats row */}

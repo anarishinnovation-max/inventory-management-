@@ -6,6 +6,7 @@ import { twMerge } from "tailwind-merge";
 import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableActions";
 import InventoryFilters from "@/app/(dashboard)/inventory/InventoryFilters";
 import InventorySearch from "@/app/(dashboard)/inventory/InventorySearch";
+import InventoryPagination from "@/app/(dashboard)/inventory/InventoryPagination";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,21 +14,26 @@ function cn(...inputs: ClassValue[]) {
 
 export const dynamic = "force-dynamic";
 
-async function getInventory(q?: string, status?: string, category?: string) {
-  const items = await (prisma as any).item.findMany({
-    where: {
-      AND: [
-        q ? {
-          OR: [
-            { name: { contains: q, mode: 'insensitive' } },
-            { sku: { contains: q, mode: 'insensitive' } },
-          ]
-        } : {},
-        category && category !== 'all' && category !== 'All Categories' ? {
-          category: { name: category }
-        } : {},
-      ]
-    },
+const PAGE_SIZE = 10;
+
+async function getInventory(q?: string, status?: string, category?: string, page: number = 1) {
+  const where: any = {
+    AND: [
+      q ? {
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          { sku: { contains: q, mode: 'insensitive' } },
+        ]
+      } : {},
+      category && category !== 'all' && category !== 'All Categories' ? {
+        category: { name: category }
+      } : {},
+    ]
+  };
+
+  // Fetch all potential matches for q and category first (memory filtering is safer for minStockLevel comparison)
+  const allItems = await (prisma as any).item.findMany({
+    where,
     include: {
       category: true,
       inventory: true,
@@ -42,8 +48,8 @@ async function getInventory(q?: string, status?: string, category?: string) {
     }
   });
 
-  // Map Prisma models to the structure expected by the UI
-  let mappedItems = items.map((item: any) => ({
+  // Map and calculate stock levels
+  let mappedItems = allItems.map((item: any) => ({
     id: item.id,
     name: item.name,
     sku: item.sku,
@@ -51,7 +57,6 @@ async function getInventory(q?: string, status?: string, category?: string) {
     unit: item.unit,
     minStockLevel: item.minStockLevel ?? 0,
     isCritical: item.isCritical,
-    // Quantity: sum from Stock table (per-rack), fall back to Inventory summary if no rack records
     totalStock: (item.stocks || []).length > 0
       ? (item.stocks || []).reduce((acc: number, s: any) => acc + s.quantity, 0)
       : (item.inventory?.quantityAvailable ?? 0),
@@ -65,19 +70,22 @@ async function getInventory(q?: string, status?: string, category?: string) {
     }))
   }));
 
-  // Status filtering
+  // Apply Status Filtering in memory for 100% accuracy against minStockLevel
   if (status && status !== 'all') {
     mappedItems = mappedItems.filter((item: any) => {
       const total = item.totalStock;
       const isLowStock = total > 0 && total <= item.minStockLevel;
       if (status === 'low') return isLowStock;
-      if (status === 'instock') return total > 0;
+      if (status === 'instock') return total > item.minStockLevel;
       if (status === 'outofstock') return total === 0;
       return true;
     });
   }
 
-  return mappedItems;
+  const totalItems = mappedItems.length;
+  const paginatedItems = mappedItems.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  return { items: paginatedItems, totalItems };
 }
 
 export default async function InventoryPage({
@@ -89,11 +97,13 @@ export default async function InventoryPage({
   const q = typeof sParams.q === 'string' ? sParams.q : '';
   const status = typeof sParams.status === 'string' ? sParams.status : 'all';
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
+  const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const items = await getInventory(q, status, category).catch((e) => {
+  const { items, totalItems } = await getInventory(q, status, category, page).catch((e) => {
     console.error("DEBUG: Inventory fetch error:", e);
-    return [];
+    return { items: [], totalItems: 0 };
   });
+  
   const allCategories = await prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } });
   const categoryNames = allCategories.map(c => c.name);
   
@@ -186,13 +196,13 @@ export default async function InventoryPage({
                     </td>
                     <td className="px-8 py-6">
                       {isOutOfStock ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-widest border border-gray-200">
-                          <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-black uppercase tracking-widest border border-error/20">
+                          <span className="w-1.5 h-1.5 rounded-full bg-error"></span>
                           Out of Stock
                         </span>
                       ) : isLowStock ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-black uppercase tracking-widest border border-error/20">
-                          <span className="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning/10 text-warning text-[10px] font-black uppercase tracking-widest border border-warning/20">
+                          <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse"></span>
                           Low Stock
                         </span>
                       ) : (
@@ -231,22 +241,11 @@ export default async function InventoryPage({
       </div>
 
       {/* Pagination Footer */}
-      <div className="p-6 bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Showing <span className="text-foreground">1 to {Math.min(items.length, 10)}</span> of {items.length} SKUs</span>
-        <div className="flex items-center gap-1.5">
-          <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground disabled:opacity-30 border border-transparent hover:border-border-ghost transition-all" disabled>
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-primary text-white text-xs font-black shadow-md hover:brightness-110 transition-all">1</button>
-          <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground text-xs font-bold border border-transparent hover:border-border-ghost transition-all">2</button>
-          <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground text-xs font-bold border border-transparent hover:border-border-ghost transition-all">3</button>
-          <span className="px-2 text-muted-foreground font-bold tracking-widest">...</span>
-          <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground text-xs font-bold border border-transparent hover:border-border-ghost transition-all">14</button>
-          <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground transition-all border border-transparent hover:border-border-ghost">
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+      <InventoryPagination 
+        totalItems={totalItems} 
+        pageSize={PAGE_SIZE} 
+        currentPage={page} 
+      />
     </div>
   );
 }

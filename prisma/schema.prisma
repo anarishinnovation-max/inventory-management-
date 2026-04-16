@@ -8,13 +8,15 @@ datasource db {
 }
 
 model User {
-  id           String                 @id @default(uuid())
-  username     String                 @unique
-  password     String
-  name         String
-  role         String                 @default("employee")
-  createdAt    DateTime               @default(now())
-  transactions InventoryTransaction[]
+  id               String                 @id @default(uuid())
+  username         String                 @unique
+  password         String
+  name             String
+  role             String                 @default("employee")
+  emailAlerts      Boolean                @default(true)
+  twoFactorEnabled Boolean                @default(false)
+  createdAt        DateTime               @default(now())
+  transactions     InventoryTransaction[]
 }
 
 model Category {

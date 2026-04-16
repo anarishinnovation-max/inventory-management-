@@ -42,8 +42,8 @@ export const InventoryService = {
    * Updates quantities received, adds inventory transactions, and updates the cached snapshot.
    */
   async receiveGoods(poId: string, itemQuantities: { itemId: string; receivedQty: number }[], userId?: string) {
-    return await prisma.$transaction(async (tx) => {
-      const po = await (tx as any).purchaseOrder.findUnique({
+    return await prisma.$transaction(async (tx: any) => {
+      const po = await tx.purchaseOrder.findUnique({
         where: { id: poId },
         include: { items: true },
       });
@@ -55,7 +55,7 @@ export const InventoryService = {
         if (!poItem) continue;
 
         // 1. Update PO Item received quantity
-        await (tx as any).pOLineItem.update({
+        await tx.pOLineItem.update({
           where: { id: poItem.id },
           data: {
             quantityReceived: { increment: update.receivedQty },
@@ -63,9 +63,9 @@ export const InventoryService = {
         });
 
         // 2. Create Inventory Transaction (PURCHASE)
-        const userExists = userId ? await (tx as any).user.findUnique({ where: { id: userId } }) : null;
+        const userExists = userId ? await tx.user.findUnique({ where: { id: userId } }) : null;
 
-        await (tx as any).inventoryTransaction.create({
+        await tx.inventoryTransaction.create({
           data: {
             item: { connect: { id: update.itemId } },
             vendor: { connect: { id: po.vendorId } },
@@ -78,35 +78,43 @@ export const InventoryService = {
         });
 
         // 3. Update Cached Inventory summary
-        // Increase available, decrease in-transit
-        await (tx as any).inventory.upsert({
+        // Increase available, decrease in-transit without going below 0
+        const currentInv = await tx.inventory.findUnique({
           where: { itemId: update.itemId },
-          create: {
-            itemId: update.itemId,
-            quantityAvailable: update.receivedQty,
-            quantityInTransit: 0,
-            quantityReserved: 0,
-          },
-          update: {
-            quantityAvailable: { increment: update.receivedQty },
-            quantityInTransit: { decrement: update.receivedQty },
-          },
         });
 
+        if (currentInv) {
+          await tx.inventory.update({
+            where: { itemId: update.itemId },
+            data: {
+              quantityAvailable: { increment: update.receivedQty },
+              quantityInTransit: { decrement: Math.min(currentInv.quantityInTransit || 0, update.receivedQty) },
+            },
+          });
+        } else {
+          await tx.inventory.create({
+            data: {
+              itemId: update.itemId,
+              quantityAvailable: update.receivedQty,
+              quantityInTransit: 0,
+              quantityReserved: 0,
+            },
+          });
+        }
+
         // 3b. Update Stock table (per-rack) — inventory page reads from here
-        // Default receiving rack is rack "1". Upsert so repeated receipts accumulate.
-        const defaultRack = await (tx as any).rack.findFirst({ orderBy: { rackNumber: "asc" } });
+        const defaultRack = await tx.rack.findFirst({ orderBy: { rackNumber: "asc" } });
         if (defaultRack) {
-          const existingStock = await (tx as any).stock.findFirst({
+          const existingStock = await tx.stock.findFirst({
             where: { itemId: update.itemId, rackId: defaultRack.id },
           });
           if (existingStock) {
-            await (tx as any).stock.update({
+            await tx.stock.update({
               where: { id: existingStock.id },
               data: { quantity: { increment: update.receivedQty } },
             });
           } else {
-            await (tx as any).stock.create({
+            await tx.stock.create({
               data: { itemId: update.itemId, rackId: defaultRack.id, quantity: update.receivedQty },
             });
           }
@@ -114,7 +122,7 @@ export const InventoryService = {
       }
 
       // 4. Update overall PO Status
-      const finalItems = await (tx as any).pOLineItem.findMany({
+      const finalItems = await tx.pOLineItem.findMany({
         where: { purchaseOrderId: poId }
       });
 
@@ -123,12 +131,12 @@ export const InventoryService = {
       
       const newStatus = allReceived ? "RECEIVED" : (someReceived ? "PARTIAL" : "ORDERED");
 
-      await (tx as any).purchaseOrder.update({
+      await tx.purchaseOrder.update({
         where: { id: poId },
         data: { status: newStatus }
       });
 
-      return await (tx as any).purchaseOrder.findUnique({
+      return await tx.purchaseOrder.findUnique({
         where: { id: poId },
         include: { items: { include: { item: true } } },
       });
@@ -136,11 +144,58 @@ export const InventoryService = {
   },
 
   /**
+   * Creates a new Dispatch Order and reserves stock immediately.
+   * Decrements quantityAvailable to prevent overallocation.
+   */
+  async createDispatchOrder(data: { customerId: string; items: any[] }) {
+    return await prisma.$transaction(async (tx: any) => {
+      // 1. Validation & Availability Check
+      for (const item of data.items) {
+        const inv = await tx.inventory.findUnique({
+          where: { itemId: item.itemId },
+        });
+
+        if (!inv || inv.quantityAvailable < item.quantity) {
+          throw new Error(`Insufficient available stock for item ID: ${item.itemId}. Requested: ${item.quantity}, Available: ${inv?.quantityAvailable || 0}`);
+        }
+      }
+
+      // 2. Create Order
+      const order = await tx.dispatchOrder.create({
+        data: {
+          customerId: data.customerId,
+          status: "pending",
+          items: {
+            create: data.items.map((item: any) => ({
+              itemId: item.itemId,
+              quantity: item.quantity,
+              sellingPrice: item.sellingPrice,
+            })),
+          },
+        },
+      });
+
+      // 3. Move from Available to Reserved
+      for (const item of data.items) {
+        await tx.inventory.update({
+          where: { itemId: item.itemId },
+          data: {
+            quantityAvailable: { decrement: item.quantity },
+            quantityReserved: { increment: item.quantity },
+          },
+        });
+      }
+
+      return order;
+    });
+  },
+
+  /**
    * Dispatches a sales order.
-   * Creates sale transactions and updates cached inventory.
+   * Creates sale transactions, decrements reserved inventory, and specific rack stock.
    */
   async dispatchGoods(dispatchId: string) {
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: any) => {
       const order = await tx.dispatchOrder.findUnique({
         where: { id: dispatchId },
         include: { items: true },
@@ -150,17 +205,36 @@ export const InventoryService = {
       if (order.status === "dispatched") throw new Error("Order already dispatched");
 
       for (const line of order.items) {
-        // 1. Validate Available Stock
-        const inv = await (tx as any).inventory.findUnique({
+        // 1. Update Inventory summary (Only Reserved, Available was already decremented at order creation)
+        await tx.inventory.update({
           where: { itemId: line.itemId },
+          data: {
+            quantityReserved: { decrement: line.quantity },
+          },
         });
 
-        if (!inv || inv.quantityAvailable < line.quantity) {
-          throw new Error(`Insufficient stock for item ${line.itemId}`);
+        // 2. Deduct from Racks (Greedy Approach)
+        let remainingToDeduct = line.quantity;
+        const availableStocks = await tx.stock.findMany({
+          where: { itemId: line.itemId, quantity: { gt: 0 } },
+          orderBy: { quantity: "desc" },
+        });
+
+        let usedRackId = null;
+        for (const stock of availableStocks) {
+          if (remainingToDeduct <= 0) break;
+
+          const deduction = Math.min(stock.quantity, remainingToDeduct);
+          await tx.stock.update({
+            where: { id: stock.id },
+            data: { quantity: { decrement: deduction } },
+          });
+          remainingToDeduct -= deduction;
+          usedRackId = stock.rackId;
         }
 
-        // 2. Create Inventory Transaction (SALE)
-        await (tx as any).inventoryTransaction.create({
+        // 3. Create Inventory Transaction (SALE)
+        await tx.inventoryTransaction.create({
           data: {
             item: { connect: { id: line.itemId } },
             customer: order.customerId ? { connect: { id: order.customerId } } : undefined,
@@ -168,21 +242,12 @@ export const InventoryService = {
             quantity: -line.quantity,
             referenceType: "DISPATCH",
             referenceId: dispatchId,
-          },
-        });
-
-        // 3. Update Cached Inventory
-        // Decrease available and decrease reserved (assuming it was reserved on order creation)
-        await (tx as any).inventory.update({
-          where: { itemId: line.itemId },
-          data: {
-            quantityAvailable: { decrement: line.quantity },
-            quantityReserved: { decrement: line.quantity },
+            rackId: usedRackId
           },
         });
       }
 
-      const updatedOrder = await (tx as any).dispatchOrder.update({
+      const updatedOrder = await tx.dispatchOrder.update({
         where: { id: dispatchId },
         data: { status: "dispatched" },
       });

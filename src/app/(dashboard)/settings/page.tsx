@@ -1,10 +1,8 @@
 import { 
-  User, 
+  User as UserIcon, 
   Lock, 
   Bell, 
-  Eye, 
   ShieldCheck, 
-  Smartphone,
   ChevronRight,
   LogOut,
   Moon,
@@ -12,6 +10,8 @@ import {
   Palette
 } from "lucide-react";
 import { getSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { SettingToggle } from "./SettingToggle";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -21,16 +21,17 @@ function cn(...inputs: ClassValue[]) {
 
 export default async function SettingsPage() {
   const session = await getSession();
+  const user = session?.id ? await prisma.user.findUnique({ where: { id: session.id } }) : null;
 
   const sections = [
     {
       id: "profile",
       title: "Public Profile",
       description: "Manage your personal information and how others see you.",
-      icon: User,
+      icon: UserIcon,
       color: "bg-blue-500",
       fields: [
-        { label: "Display Name", value: session?.username || "Admin User", type: "text" },
+        { label: "Display Name", value: user?.name || session?.username || "Admin User", type: "text" },
         { label: "Account ID", value: session?.id || "N/A", type: "readonly" },
         { label: "Organization Role", value: session?.role || "OWNER", type: "badge" },
       ]
@@ -43,7 +44,7 @@ export default async function SettingsPage() {
       color: "bg-emerald-500",
       fields: [
         { label: "Password", value: "********", type: "password_action" },
-        { label: "Two-Factor Auth", value: "Disabled", type: "toggle" },
+        { label: "Two-Factor Auth", value: user?.twoFactorEnabled ? "Enabled" : "Disabled", type: "toggle", key: "twoFactorEnabled" },
       ]
     },
     {
@@ -53,7 +54,7 @@ export default async function SettingsPage() {
       icon: Bell,
       color: "bg-amber-500",
       fields: [
-        { label: "Email Alerts", value: "On", type: "toggle" },
+        { label: "Email Alerts", value: user?.emailAlerts ? "On" : "Off", type: "toggle", key: "emailAlerts" },
         { label: "In-App Mentions", value: "On", type: "toggle" },
         { label: "Push Notifications", value: "Off", type: "toggle" },
       ]
@@ -107,10 +108,18 @@ export default async function SettingsPage() {
                     </div>
                  </div>
                  
-                 <button className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-error hover:bg-error/10 transition-all font-bold">
-                    <LogOut className="w-5 h-5" />
-                    Sign Out
-                 </button>
+                 <form action={async () => {
+                   "use server";
+                   const { logout } = await import("@/lib/auth");
+                   const { redirect } = await import("next/navigation");
+                   await logout();
+                   redirect("/login");
+                 }}>
+                     <button type="submit" className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-error hover:bg-error/10 transition-all font-bold">
+                        <LogOut className="w-5 h-5" />
+                        Sign Out
+                     </button>
+                 </form>
             </div>
         </aside>
 
@@ -150,15 +159,11 @@ export default async function SettingsPage() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     {field.type === 'toggle' && (
-                                        <div className={cn(
-                                            "w-12 h-6 rounded-full p-1 transition-colors relative cursor-pointer",
-                                            field.value === 'On' ? "bg-primary" : "bg-surface-low"
-                                        )}>
-                                            <div className={cn(
-                                                "w-4 h-4 bg-white rounded-full shadow-sm transition-transform",
-                                                field.value === 'On' ? "translate-x-6" : "translate-x-0"
-                                            )} />
-                                        </div>
+                                        <SettingToggle 
+                                            label={field.label}
+                                            initialValue={field.value === 'On' || field.value === 'Enabled'}
+                                            type={(field as any).key}
+                                        />
                                     )}
                                     {field.type === 'password_action' && (
                                         <button className="text-sm font-bold text-primary hover:underline">Change Password</button>

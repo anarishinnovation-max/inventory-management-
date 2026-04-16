@@ -2,7 +2,6 @@ import {
   History, 
   ArrowUpRight, 
   ArrowDownLeft, 
-  RefreshCcw, 
   Truck,
   Users as UsersIcon,
   MapPin
@@ -10,6 +9,7 @@ import {
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { ExportButton } from "./ExportButton";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -50,10 +50,7 @@ export default async function TransactionsPage() {
           <h1 className="text-4xl font-black text-foreground tracking-tight">Unified Audit Registry</h1>
           <p className="text-muted-foreground mt-2 text-lg font-medium">Immutable real-time ledger of all warehouse operations and stock movements.</p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-3 bg-surface-lowest text-foreground text-sm font-bold rounded-2xl shadow-ambient border border-border-ghost hover:bg-surface-low transition-all">
-          <History className="w-5 h-5 text-primary" />
-          Export Audit Trail
-        </button>
+        <ExportButton data={transactions} />
       </header>
 
       <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">

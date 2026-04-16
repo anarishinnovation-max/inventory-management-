@@ -5,8 +5,6 @@ import {
   Calendar,
   ChevronRight,
   MoreVertical,
-  Search,
-  Plus
 } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
@@ -16,8 +14,14 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-async function getCustomersWithStats() {
+import { CustomerSearch } from "./CustomerSearch";
+import { CustomerModal } from "./CustomerModal";
+
+async function getCustomersWithStats(query?: string) {
   const customers = await prisma.customer.findMany({
+    where: query ? {
+      name: { contains: query, mode: "insensitive" }
+    } : undefined,
     include: {
       transactions: {
         select: {
@@ -25,12 +29,12 @@ async function getCustomersWithStats() {
           createdAt: true
         },
         orderBy: {
-          createdAt: 'desc'
+          createdAt: "desc"
         }
       }
     },
     orderBy: {
-      name: 'asc'
+      name: "asc"
     }
   });
 
@@ -44,8 +48,9 @@ async function getCustomersWithStats() {
   }));
 }
 
-export default async function CustomersPage() {
-  const customers = await getCustomersWithStats().catch((e) => {
+export default async function CustomersPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const { q } = await searchParams;
+  const customers = await getCustomersWithStats(q).catch((e) => {
     console.error("Failed to fetch customers:", e);
     return [];
   });
@@ -59,22 +64,12 @@ export default async function CustomersPage() {
              <span>/</span>
              <span className="text-primary">Accounts</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Executive CRM</h1>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Customers</h1>
           <p className="text-muted-foreground mt-2 text-lg font-medium">Strategic account management and interaction tracking.</p>
         </div>
         <div className="flex items-center gap-3">
-            <div className="relative group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                <input 
-                    type="text" 
-                    placeholder="Search accounts..." 
-                    className="pl-11 pr-4 py-3 bg-surface-lowest border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all w-64 shadow-ambient font-bold text-sm"
-                />
-            </div>
-            <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-black text-sm shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
-                <Plus className="w-4 h-4" />
-                Add Account
-            </button>
+            <CustomerSearch />
+            <CustomerModal />
         </div>
       </header>
 
@@ -82,7 +77,7 @@ export default async function CustomersPage() {
         <div className="lg:col-span-1 space-y-6">
           <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
-            Client Directory
+            Customers Directory
           </h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-2">
             {customers.map(customer => (
@@ -216,7 +211,7 @@ export default async function CustomersPage() {
               </div>
               <div className="p-8 rounded-[2rem] bg-orange-50 border border-orange-100 shadow-ambient space-y-5 group hover:scale-[1.02] transition-all">
                  <div className="w-14 h-14 rounded-2xl bg-orange-600 text-white flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-orange-200">
-                    <Plus className="w-7 h-7" />
+                    <Calendar className="w-7 h-7" />
                  </div>
                  <div>
                     <p className="text-4xl font-black text-orange-900 tracking-tighter">

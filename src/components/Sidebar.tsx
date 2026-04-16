@@ -43,7 +43,7 @@ export default function Sidebar() {
         <div className="w-10 h-10 rounded-xl primary-gradient flex items-center justify-center shadow-ambient">
           <Package className="text-white w-6 h-6" />
         </div>
-        <span className="font-bold text-xl tracking-tight text-foreground">Logistix</span>
+        <span className="font-bold text-xl tracking-tight text-foreground">SS Cutting Tools</span>
       </div>
 
       <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto no-scrollbar">
