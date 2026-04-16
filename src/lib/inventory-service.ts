@@ -88,6 +88,7 @@ export const InventoryService = {
             where: { itemId: update.itemId },
             data: {
               quantityAvailable: { increment: update.receivedQty },
+              incomingQty: { decrement: Math.min(currentInv.incomingQty || 0, update.receivedQty) },
               quantityInTransit: { decrement: Math.min(currentInv.quantityInTransit || 0, update.receivedQty) },
             },
           });
@@ -96,6 +97,7 @@ export const InventoryService = {
             data: {
               itemId: update.itemId,
               quantityAvailable: update.receivedQty,
+              incomingQty: 0,
               quantityInTransit: 0,
               quantityReserved: 0,
             },
@@ -129,12 +131,59 @@ export const InventoryService = {
       const allReceived = finalItems.every((i: { quantityReceived: number; quantityOrdered: number; }) => i.quantityReceived >= i.quantityOrdered);
       const someReceived = finalItems.some((i: { quantityReceived: number; }) => i.quantityReceived > 0);
       
-      const newStatus = allReceived ? "RECEIVED" : (someReceived ? "PARTIAL" : "ORDERED");
+      const newStatus = allReceived ? "DELIVERED" : (someReceived ? "PARTIAL" : "ORDERED");
 
       await tx.purchaseOrder.update({
         where: { id: poId },
         data: { status: newStatus }
       });
+
+      // When an order is fully delivered, create batch rows once (idempotent on retries).
+      // Inventory quantities are already updated above during receipt operations.
+      if (allReceived && String(po.status || "").toUpperCase() !== "DELIVERED") {
+        const inventories = await tx.inventory.findMany({
+          where: { itemId: { in: finalItems.map((entry: any) => entry.itemId) } },
+          select: { id: true, itemId: true },
+        });
+        const inventoryIdByItemId = new Map<string, string>(
+          inventories.map((inv: any) => [inv.itemId, inv.id])
+        );
+
+        const batchRows = finalItems
+          .map((line: any) => {
+            const inventoryId = inventoryIdByItemId.get(line.itemId);
+            if (!inventoryId) return null;
+
+            return {
+              inventoryId,
+              vendorId: po.vendorId,
+              quantity: line.quantityReceived,
+              remainingQty: line.quantityReceived,
+              costPerUnit: line.costPrice,
+              purchaseDate: po.orderDate,
+              purchaseOrderId: poId,
+            };
+          })
+          .filter(Boolean);
+
+        if (batchRows.length > 0) {
+          try {
+            await tx.inventoryBatch.createMany({
+              data: batchRows,
+              skipDuplicates: true,
+            });
+          } catch (error: unknown) {
+            const code = (error as { code?: string } | null)?.code;
+            // Common prod footgun: code updated but DB not migrated yet.
+            if (code === "P2021") {
+              throw new Error(
+                "Inventory batch tracking is not migrated in the database yet. Run `npx prisma migrate dev` (or `npx prisma migrate deploy`) and then `npx prisma generate`."
+              );
+            }
+            throw error;
+          }
+        }
+      }
 
       return await tx.purchaseOrder.findUnique({
         where: { id: poId },

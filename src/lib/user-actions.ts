@@ -31,3 +31,17 @@ export async function createCustomer(data: { name: string, contact?: string, ema
   revalidatePath("/customers");
   return customer;
 }
+
+export async function createVendor(data: { name: string, contact?: string, email?: string, preferredPaymentMode?: string }) {
+  const session = await getSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const vendor = await prisma.vendor.create({
+    data: data
+  });
+
+  revalidatePath("/vendors");
+  return vendor;
+}

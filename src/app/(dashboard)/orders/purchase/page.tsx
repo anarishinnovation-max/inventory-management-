@@ -14,6 +14,21 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+function formatDate(value: string | Date) {
+  return new Date(value).toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatTime(value: string | Date) {
+  return new Date(value).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 async function getPurchaseOrders() {
   const orders = await prisma.purchaseOrder.findMany({
     include: {
@@ -38,7 +53,7 @@ export default async function PurchaseOrdersPage() {
   // Calculate stats
   const pendingCount = pos.filter(o => o.status.toUpperCase() === "PENDING").length;
   const orderedCount = pos.filter(o => o.status.toUpperCase() === "ORDERED").length;
-  const receivedCount = pos.filter(o => o.status.toUpperCase() === "RECEIVED").length;
+  const receivedCount = pos.filter(o => ["RECEIVED", "DELIVERED"].includes(o.status.toUpperCase())).length;
 
   return (
     <div className="space-y-10 pb-10">
@@ -116,6 +131,10 @@ export default async function PurchaseOrdersPage() {
               {pos.length > 0 ? pos.map((po: any) => {
                 const totalValue = po.items.reduce((acc: number, curr: any) => acc + (Number(curr.costPrice) * curr.quantityOrdered), 0);
                 const status = po.status.toUpperCase();
+                const paymentMode = po.paymentMode || "Cash";
+                const expectedDeliveryLabel = po.expectedDelivery
+                  ? `${formatDate(po.expectedDelivery)} | ${formatTime(po.expectedDelivery)}`
+                  : "Not scheduled";
                 
                 return (
                   <tr key={po.id} className="group hover:bg-surface-low/40 transition-colors cursor-pointer">
@@ -143,6 +162,12 @@ export default async function PurchaseOrdersPage() {
                         ) : (
                            <span className="text-foreground font-black text-sm">{po.items.length} Primary Line Items</span>
                         )}
+                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">
+                          Payment: <span className="text-foreground">{paymentMode}</span>
+                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                          ETA: <span className="text-foreground">{expectedDeliveryLabel}</span>
+                        </div>
                       </div>
                     </td>
                     <td className="px-8 py-6">
@@ -157,14 +182,14 @@ export default async function PurchaseOrdersPage() {
                       )}>
                         {status === "PENDING" && <Clock className="w-3.5 h-3.5" />}
                         {status === "ORDERED" && <Truck className="w-3.5 h-3.5" />}
-                        {status === "RECEIVED" && <CheckCircle2 className="w-3.5 h-3.5" />}
-                        {status}
+                        {(status === "RECEIVED" || status === "DELIVERED") && <CheckCircle2 className="w-3.5 h-3.5" />}
+                        {status === "DELIVERED" ? "RECEIVED" : status}
                       </span>
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex flex-col">
-                         <span className="text-sm font-bold text-foreground">{new Date(po.createdAt).toLocaleDateString()}</span>
-                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{new Date(po.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                         <span className="text-sm font-bold text-foreground">{formatDate(po.createdAt)}</span>
+                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{formatTime(po.createdAt)}</span>
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">

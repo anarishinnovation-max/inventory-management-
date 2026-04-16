@@ -13,7 +13,8 @@ export enum TransactionType {
 export enum POStatus {
   PENDING = 'PENDING',
   ORDERED = 'ORDERED',
-  RECEIVED = 'RECEIVED'
+  RECEIVED = 'RECEIVED',
+  DELIVERED = 'DELIVERED'
 }
 
 export interface User {

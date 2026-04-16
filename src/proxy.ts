@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
 
 const publicRoutes = ["/login", "/api/auth/login"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (publicRoutes.includes(pathname)) {
@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     const payload = await decrypt(session);
-    
+
     // RBAC Example: Protect owner-only routes
     if (pathname.startsWith("/admin") && payload.role !== "OWNER") {
       return NextResponse.redirect(new URL("/", request.url));

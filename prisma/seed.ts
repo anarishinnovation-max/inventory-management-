@@ -35,13 +35,21 @@ async function main() {
     },
   });
 
-  // Create a default Customer
-  await prisma.customer.create({
-    data: {
-      name: "Local Retailers Inc",
-      email: "contact@localretailers.com",
-    },
-  });
+  // Create default Racks
+  const racks = [
+    { rackNumber: "A-01", zone: "A" },
+    { rackNumber: "A-02", zone: "A" },
+    { rackNumber: "B-01", zone: "B" },
+    { rackNumber: "C-01", zone: "C" },
+  ];
+
+  for (const rack of racks) {
+    await prisma.rack.upsert({
+      where: { rackNumber: rack.rackNumber },
+      update: {},
+      create: rack,
+    });
+  }
 
   console.log("Seed data created successfully");
 }

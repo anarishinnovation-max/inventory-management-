@@ -15,6 +15,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+import { VendorModal } from "./VendorModal";
+
 async function getVendorsWithPricing() {
   const vendors = await (prisma as any).vendor.findMany({
     include: {
@@ -71,9 +73,7 @@ export default async function VendorsPage() {
           <h1 className="heading-xl">Strategic Sourcing</h1>
           <p className="text-muted-foreground mt-1 text-lg">Manage vendor relationships and analyze procurement pricing.</p>
         </div>
-        <button className="btn-primary">
-          + Onboard Vendor
-        </button>
+        <VendorModal />
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -85,8 +85,16 @@ export default async function VendorsPage() {
           <div className="space-y-3">
             {vendors.map((vendor: any) => (
               <div key={vendor.id} className="p-5 bg-surface-lowest rounded-2xl border border-border-ghost shadow-ambient hover:border-primary/50 transition-all cursor-pointer group">
-                <p className="font-bold text-foreground text-lg">{vendor.name}</p>
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-bold text-foreground text-lg">{vendor.name}</p>
+                    <p className="text-[10px] font-black text-primary uppercase mt-1 tracking-widest">{vendor.preferredPaymentMode || "Cash"}</p>
+                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-surface-low flex items-center justify-center font-bold text-primary group-hover:bg-primary/10 transition-colors border border-border-ghost">
+                    {vendor.name[0]}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-4">
                   <span className="text-xs font-bold text-muted-foreground uppercase">{vendor.items.length} Contracts</span>
                   <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>

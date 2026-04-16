@@ -13,14 +13,32 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(orders);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const { vendorId, items } = await request.json(); // items: { itemId, quantityOrdered, costPrice }[]
+    const body = (await request.json()) as {
+      vendorId?: string;
+      items?: Array<{ itemId: string; quantityOrdered: number | string; costPrice: number | string }>;
+      paymentMode?: string;
+      expectedDelivery?: string | null;
+    };
+    const { vendorId, items, paymentMode, expectedDelivery } = body; // items: { itemId, quantityOrdered, costPrice }[]
+    const normalizedPaymentMode = typeof paymentMode === "string" && paymentMode.trim()
+      ? paymentMode.trim()
+      : "Cash";
+
+    let normalizedExpectedDelivery: Date | null = null;
+    if (expectedDelivery) {
+      normalizedExpectedDelivery = new Date(expectedDelivery);
+      if (Number.isNaN(normalizedExpectedDelivery.getTime())) {
+        return NextResponse.json({ error: "Invalid expected delivery date/time" }, { status: 400 });
+      }
+    }
 
     if (!vendorId || !items || !items.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -30,23 +48,34 @@ export async function POST(request: Request) {
       const po = await tx.purchaseOrder.create({
         data: {
           vendorId,
+          paymentMode: normalizedPaymentMode,
+          expectedDelivery: normalizedExpectedDelivery,
           status: "ORDERED", // Direct to ORDERED for simplicity
           items: {
-            create: items.map((item: any) => ({
+            create: items.map((item) => ({
               itemId: item.itemId,
-              quantityOrdered: parseFloat(item.quantityOrdered),
-              costPrice: parseFloat(item.costPrice),
+              quantityOrdered: Number(item.quantityOrdered),
+              costPrice: Number(item.costPrice),
             })),
           },
         },
       });
 
-      // Increase quantityInTransit for each item
+      // Increase incoming quantities for each item (incomingQty is used by inventory UI; quantityInTransit kept for backwards compatibility).
       for (const item of items) {
-        await tx.inventory.update({
+        const qty = Number(item.quantityOrdered);
+        await tx.inventory.upsert({
           where: { itemId: item.itemId },
-          data: {
-            quantityInTransit: { increment: parseFloat(item.quantityOrdered) },
+          create: {
+            item: { connect: { id: item.itemId } },
+            quantityAvailable: 0,
+            incomingQty: qty,
+            quantityInTransit: qty,
+            quantityReserved: 0,
+          },
+          update: {
+            incomingQty: { increment: qty },
+            quantityInTransit: { increment: qty },
           },
         });
       }
@@ -55,7 +84,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(order, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

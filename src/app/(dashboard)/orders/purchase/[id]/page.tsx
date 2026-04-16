@@ -21,6 +21,21 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+function formatDateTime(value: string | Date | null | undefined) {
+  if (!value) return "Not scheduled";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "Not scheduled";
+
+  return `${parsed.toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })} | ${parsed.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  })}`;
+}
+
 export default function PODetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
@@ -123,6 +138,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
   }
 
   const isFullyReceived = order.items.every((i: any) => i.quantityReceived >= i.quantityOrdered);
+  const isDelivered = order.status.toUpperCase() === "DELIVERED";
 
   return (
     <div className="p-8 lg:p-12 space-y-10 max-w-7xl mx-auto pb-24">
@@ -137,9 +153,9 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
              <h1 className="text-4xl font-black tracking-tight text-foreground">PO #{order.id.split('-')[0].toUpperCase()}</h1>
              <span className={cn(
                 "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border",
-                order.status.toUpperCase() === "RECEIVED" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-blue-50 text-blue-600 border-blue-100"
+                (order.status.toUpperCase() === "RECEIVED" || isDelivered) ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-blue-50 text-blue-600 border-blue-100"
              )}>
-                {order.status}
+                {isDelivered ? "RECEIVED" : order.status}
              </span>
           </div>
           <p className="text-muted-foreground text-lg font-medium">Verified supply source: <span className="text-foreground font-black">{order.vendor.name}</span></p>
@@ -155,7 +171,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                  Inbound Line Items
               </h3>
 
-              {!isFullyReceived && order.status.toUpperCase() !== "RECEIVED" && (
+              {!isFullyReceived && !isDelivered && order.status.toUpperCase() !== "RECEIVED" && (
                  <div className="mb-6 flex justify-end">
                    <button 
                     onClick={handleMarkAllReceived}
@@ -195,7 +211,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Receive Now</p>
                              <input 
                                 type="number"
-                                disabled={item.quantityReceived >= item.quantityOrdered || order.status.toUpperCase() === "RECEIVED"}
+                                disabled={item.quantityReceived >= item.quantityOrdered || isDelivered || order.status.toUpperCase() === "RECEIVED"}
                                 value={receiveForm[item.itemId] || 0}
                                 onChange={(e) => setReceiveForm({...receiveForm, [item.itemId]: parseFloat(e.target.value)})}
                                 className="w-20 bg-white border border-border-ghost rounded-lg px-2 py-1 text-center font-bold text-sm focus:ring-2 focus:ring-primary outline-none disabled:opacity-50"
@@ -219,6 +235,18 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                     <p className="text-lg font-black text-foreground">{order.vendor.name}</p>
                     <p className="text-xs font-medium text-muted-foreground mt-1">Ready for inbound verification.</p>
                  </div>
+
+                 <div className="p-6 rounded-2xl bg-surface-low border border-border-ghost space-y-4">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Order Meta</p>
+                    <div>
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Payment Mode</p>
+                      <p className="text-sm font-black text-foreground mt-1">{order.paymentMode || "Cash"}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Expected Delivery</p>
+                      <p className="text-sm font-black text-foreground mt-1">{formatDateTime(order.expectedDelivery)}</p>
+                    </div>
+                  </div>
 
                  {isFullyReceived ? (
                     <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center gap-4">

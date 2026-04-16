@@ -2,15 +2,36 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
 
+function computeInventoryStatus(params: {
+  totalQty: number;
+  incomingQty: number;
+  minStockLevel: number;
+}) {
+  const { totalQty, incomingQty, minStockLevel } = params;
+  if (totalQty === 0 && incomingQty > 0) return "ORDERED";
+  if (totalQty > 0 && totalQty <= minStockLevel) return "LOW_STOCK";
+  return totalQty > 0 ? "IN_STOCK" : "OUT_OF_STOCK";
+}
+
 export async function GET() {
   try {
     const inventory = await prisma.inventory.findMany({
       include: { item: { include: { category: true } } },
       orderBy: { item: { name: "asc" } },
     });
-    return NextResponse.json(inventory);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+
+    const mapped = inventory.map((inv) => {
+      const totalQty = Number(inv.quantityAvailable || 0);
+      const incomingQty = Number(inv.incomingQty || 0);
+      const minStockLevel = Number(inv.item?.minStockLevel || 0);
+      const status = computeInventoryStatus({ totalQty, incomingQty, minStockLevel });
+      return { ...inv, totalQty, incomingQty, status };
+    });
+
+    return NextResponse.json(mapped);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -22,7 +43,8 @@ export async function POST(request: Request) {
 
     const updated = await InventoryService.scrapInventory(itemId, parseFloat(quantity), reason);
     return NextResponse.json(updated);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

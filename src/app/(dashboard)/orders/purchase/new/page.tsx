@@ -27,6 +27,8 @@ interface LineItem {
   costPrice: number;
 }
 
+const PAYMENT_MODE_OPTIONS = ["Cash", "Bank Transfer", "UPI", "Credit"];
+
 export default function NewPurchaseOrderPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -37,6 +39,8 @@ export default function NewPurchaseOrderPage() {
   const [items, setItems] = useState<any[]>([]);
   
   const [selectedVendor, setSelectedVendor] = useState("");
+  const [paymentMode, setPaymentMode] = useState("Cash");
+  const [expectedDelivery, setExpectedDelivery] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantityOrdered: 1, costPrice: 0 }
   ]);
@@ -64,6 +68,14 @@ export default function NewPurchaseOrderPage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!selectedVendor) return;
+    const vendor = vendors.find((entry) => entry.id === selectedVendor);
+    if (vendor?.preferredPaymentMode) {
+      setPaymentMode(vendor.preferredPaymentMode);
+    }
+  }, [selectedVendor, vendors]);
+
   const addLineItem = () => {
     setLineItems([...lineItems, { itemId: "", quantityOrdered: 1, costPrice: 0 }]);
   };
@@ -89,8 +101,8 @@ export default function NewPurchaseOrderPage() {
     return lineItems.reduce((acc, curr) => acc + (curr.quantityOrdered * curr.costPrice), 0);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
     if (!selectedVendor) {
       setError("Please select a vendor source.");
       return;
@@ -104,12 +116,24 @@ export default function NewPurchaseOrderPage() {
     setError("");
 
     try {
+      const normalizedExpectedDelivery = expectedDelivery
+        ? new Date(expectedDelivery).toISOString()
+        : null;
+
+      if (expectedDelivery && Number.isNaN(new Date(expectedDelivery).getTime())) {
+        setError("Please provide a valid expected delivery date and time.");
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch("/api/purchase-orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           vendorId: selectedVendor,
-          items: lineItems
+          items: lineItems,
+          paymentMode,
+          expectedDelivery: normalizedExpectedDelivery
         }),
       });
 
@@ -257,6 +281,32 @@ export default function NewPurchaseOrderPage() {
                      <option key={v.id} value={v.id}>{v.name}</option>
                    ))}
                  </select>
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Payment Mode</label>
+                 <select 
+                   value={paymentMode}
+                   onChange={(e) => setPaymentMode(e.target.value)}
+                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                 >
+                   {PAYMENT_MODE_OPTIONS.map((mode) => (
+                     <option key={mode} value={mode}>{mode}</option>
+                   ))}
+                   {!PAYMENT_MODE_OPTIONS.includes(paymentMode) && (
+                     <option value={paymentMode}>{paymentMode}</option>
+                   )}
+                 </select>
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Expected Delivery (Date & Time)</label>
+                 <input
+                   type="datetime-local"
+                   value={expectedDelivery}
+                   onChange={(e) => setExpectedDelivery(e.target.value)}
+                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none"
+                 />
               </div>
 
               <div className="pt-6 border-t border-border-ghost space-y-5">

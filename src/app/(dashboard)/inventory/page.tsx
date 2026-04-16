@@ -60,6 +60,7 @@ async function getInventory(q?: string, status?: string, category?: string, page
     totalStock: (item.stocks || []).length > 0
       ? (item.stocks || []).reduce((acc: number, s: any) => acc + s.quantity, 0)
       : (item.inventory?.quantityAvailable ?? 0),
+    incomingQty: item.inventory?.incomingQty ?? 0,
     stocks: (item.stocks || []).map((s: any) => ({
       id: s.id,
       quantity: s.quantity,
@@ -74,10 +75,11 @@ async function getInventory(q?: string, status?: string, category?: string, page
   if (status && status !== 'all') {
     mappedItems = mappedItems.filter((item: any) => {
       const total = item.totalStock;
+      const incoming = item.incomingQty ?? 0;
       const isLowStock = total > 0 && total <= item.minStockLevel;
       if (status === 'low') return isLowStock;
       if (status === 'instock') return total > item.minStockLevel;
-      if (status === 'outofstock') return total === 0;
+      if (status === 'outofstock') return total === 0 && incoming === 0;
       return true;
     });
   }
@@ -165,8 +167,10 @@ export default async function InventoryPage({
             <tbody className="divide-y divide-border-ghost">
               {items.length > 0 ? items.map((item:any) => {
                 const totalStock = item.totalStock;
+                const incomingQty = Number(item.incomingQty || 0);
                 const isLowStock = totalStock > 0 && totalStock <= item.minStockLevel;
                 const isOutOfStock = totalStock === 0;
+                const isOrdered = totalStock === 0 && incomingQty > 0;
                 const rackLocations = (item.stocks || []).length > 0
                   ? Array.from(new Set(item.stocks.map((s: any) => s.rack.rackNumber))).join(", ")
                   : (item.totalStock > 0 ? "Inventory" : "N/A");
@@ -189,13 +193,25 @@ export default async function InventoryPage({
                       </span>
                     </td>
                     <td className="px-8 py-6 text-right">
-                       <span className="text-xl font-black text-foreground">{totalStock}</span>
+                       <div className="flex flex-col items-end leading-tight">
+                         <span className="text-xl font-black text-foreground">{totalStock}</span>
+                         {incomingQty > 0 && (
+                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">
+                             (+{incomingQty} incoming)
+                           </span>
+                         )}
+                       </div>
                     </td>
                     <td className="px-8 py-6 text-sm font-bold text-muted-foreground">
                        {rackLocations || "N/A"}
                     </td>
                     <td className="px-8 py-6">
-                      {isOutOfStock ? (
+                      {isOrdered ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest border border-blue-100">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                          Ordered
+                        </span>
+                      ) : isOutOfStock ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-black uppercase tracking-widest border border-error/20">
                           <span className="w-1.5 h-1.5 rounded-full bg-error"></span>
                           Out of Stock
@@ -213,7 +229,12 @@ export default async function InventoryPage({
                       )}
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <InventoryTableActions itemId={item.id} />
+                      <InventoryTableActions 
+                        itemId={item.id} 
+                        itemName={item.name} 
+                        totalStock={totalStock}
+                        incomingQty={incomingQty}
+                      />
                     </td>
                   </tr>
                 );

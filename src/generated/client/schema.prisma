@@ -8,13 +8,15 @@ datasource db {
 }
 
 model User {
-  id           String                 @id @default(uuid())
-  username     String                 @unique
-  password     String
-  name         String
-  role         String                 @default("employee")
-  createdAt    DateTime               @default(now())
-  transactions InventoryTransaction[]
+  id               String                 @id @default(uuid())
+  username         String                 @unique
+  password         String
+  name             String
+  role             String                 @default("employee")
+  emailAlerts      Boolean                @default(true)
+  twoFactorEnabled Boolean                @default(false)
+  createdAt        DateTime               @default(now())
+  transactions     InventoryTransaction[]
 }
 
 model Category {
@@ -44,7 +46,6 @@ model Rack {
   id           String                 @id @default(uuid())
   rackNumber   String                 @unique
   zone         String?
-  createdAt    DateTime               @default(now())
   stocks       Stock[]
   transactions InventoryTransaction[]
 }
@@ -60,32 +61,59 @@ model Stock {
 }
 
 model Inventory {
-  id                String   @id @default(uuid())
-  itemId            String   @unique
-  quantityAvailable Float    @default(0)
-  quantityReserved  Float    @default(0)
-  quantityInTransit Float    @default(0)
-  updatedAt         DateTime @updatedAt
-  item              Item     @relation(fields: [itemId], references: [id])
+  id                String           @id @default(uuid())
+  itemId            String           @unique
+  quantityAvailable Float            @default(0)
+  incomingQty       Float            @default(0)
+  quantityReserved  Float            @default(0)
+  quantityInTransit Float            @default(0)
+  updatedAt         DateTime         @updatedAt
+  item              Item             @relation(fields: [itemId], references: [id])
+  batches           InventoryBatch[]
 }
 
 model Vendor {
-  id             String                 @id @default(uuid())
-  name           String
-  contact        String?
-  email          String?
-  purchaseOrders PurchaseOrder[]
-  transactions   InventoryTransaction[]
+  id                   String                 @id @default(uuid())
+  name                 String
+  contact              String?
+  email                String?
+  preferredPaymentMode String?                @default("Cash")
+  purchaseOrders       PurchaseOrder[]
+  transactions         InventoryTransaction[]
+  batches              InventoryBatch[]
 }
 
 model PurchaseOrder {
-  id        String       @id @default(uuid())
-  vendorId  String
-  status    String       @default("DRAFT")
-  orderDate DateTime     @default(now())
-  createdAt DateTime     @default(now())
-  vendor    Vendor       @relation(fields: [vendorId], references: [id])
-  items     POLineItem[]
+  id               String           @id @default(uuid())
+  vendorId         String
+  status           String           @default("DRAFT")
+  paymentMode      String?          @default("Cash")
+  expectedDelivery DateTime?
+  orderDate        DateTime         @default(now())
+  createdAt        DateTime         @default(now())
+  vendor           Vendor           @relation(fields: [vendorId], references: [id])
+  items            POLineItem[]
+  batches          InventoryBatch[]
+}
+
+model InventoryBatch {
+  id              String   @id @default(uuid())
+  inventoryId     String
+  vendorId        String
+  quantity        Float
+  remainingQty    Float
+  costPerUnit     Float
+  purchaseDate    DateTime
+  purchaseOrderId String?
+  createdAt       DateTime @default(now())
+
+  inventory     Inventory      @relation(fields: [inventoryId], references: [id])
+  vendor        Vendor         @relation(fields: [vendorId], references: [id])
+  purchaseOrder PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
+
+  @@unique([purchaseOrderId, inventoryId])
+  @@index([inventoryId, purchaseDate])
+  @@index([vendorId])
 }
 
 model POLineItem {

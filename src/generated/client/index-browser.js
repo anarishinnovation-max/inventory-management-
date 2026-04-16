@@ -126,6 +126,8 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   name: 'name',
   role: 'role',
+  emailAlerts: 'emailAlerts',
+  twoFactorEnabled: 'twoFactorEnabled',
   createdAt: 'createdAt'
 };
 
@@ -148,8 +150,7 @@ exports.Prisma.ItemScalarFieldEnum = {
 exports.Prisma.RackScalarFieldEnum = {
   id: 'id',
   rackNumber: 'rackNumber',
-  zone: 'zone',
-  createdAt: 'createdAt'
+  zone: 'zone'
 };
 
 exports.Prisma.StockScalarFieldEnum = {
@@ -164,6 +165,7 @@ exports.Prisma.InventoryScalarFieldEnum = {
   id: 'id',
   itemId: 'itemId',
   quantityAvailable: 'quantityAvailable',
+  incomingQty: 'incomingQty',
   quantityReserved: 'quantityReserved',
   quantityInTransit: 'quantityInTransit',
   updatedAt: 'updatedAt'
@@ -173,14 +175,29 @@ exports.Prisma.VendorScalarFieldEnum = {
   id: 'id',
   name: 'name',
   contact: 'contact',
-  email: 'email'
+  email: 'email',
+  preferredPaymentMode: 'preferredPaymentMode'
 };
 
 exports.Prisma.PurchaseOrderScalarFieldEnum = {
   id: 'id',
   vendorId: 'vendorId',
   status: 'status',
+  paymentMode: 'paymentMode',
+  expectedDelivery: 'expectedDelivery',
   orderDate: 'orderDate',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InventoryBatchScalarFieldEnum = {
+  id: 'id',
+  inventoryId: 'inventoryId',
+  vendorId: 'vendorId',
+  quantity: 'quantity',
+  remainingQty: 'remainingQty',
+  costPerUnit: 'costPerUnit',
+  purchaseDate: 'purchaseDate',
+  purchaseOrderId: 'purchaseOrderId',
   createdAt: 'createdAt'
 };
 
@@ -256,6 +273,7 @@ exports.Prisma.ModelName = {
   Inventory: 'Inventory',
   Vendor: 'Vendor',
   PurchaseOrder: 'PurchaseOrder',
+  InventoryBatch: 'InventoryBatch',
   POLineItem: 'POLineItem',
   Customer: 'Customer',
   DispatchOrder: 'DispatchOrder',
