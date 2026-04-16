@@ -1,23 +1,40 @@
-import { Package, Search, Filter, PlusCircle, TrendingUp, ImageIcon, Eye, Edit, Trash2, ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
-import prisma from "@/lib/prisma";
-import Link from "next/link";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableActions";
 import InventoryFilters from "@/app/(dashboard)/inventory/InventoryFilters";
-import InventorySearch from "@/app/(dashboard)/inventory/InventorySearch";
 import InventoryPagination from "@/app/(dashboard)/inventory/InventoryPagination";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import InventorySearch from "@/app/(dashboard)/inventory/InventorySearch";
+import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableActions";
+import prisma from "@/lib/prisma";
+import { ImageIcon, Package, PlusCircle, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+interface MappedStock {
+  id: string;
+  quantity: number;
+  rack: {
+    id: string;
+    rackNumber: string;
+  };
+}
+
+interface MappedItem {
+  id: string;
+  name: string;
+  sku: string;
+  category: string;
+  unit: string;
+  minStockLevel: number;
+  isCritical: boolean;
+  totalStock: number;
+  incomingQty: number;
+  quantityInTransit: number;
+  stocks: MappedStock[];
+}
 
 const PAGE_SIZE = 10;
 
 async function getInventory(q?: string, status?: string, category?: string, page: number = 1) {
-  const where: any = {
+  const where: Record<string, unknown> = {
     AND: [
       q ? {
         OR: [
@@ -32,7 +49,7 @@ async function getInventory(q?: string, status?: string, category?: string, page
   };
 
   // Fetch all potential matches for q and category first (memory filtering is safer for minStockLevel comparison)
-  const allItems = await (prisma as any).item.findMany({
+  const allItems = await prisma.item.findMany({
     where,
     include: {
       category: true,
@@ -49,7 +66,7 @@ async function getInventory(q?: string, status?: string, category?: string, page
   });
 
   // Map and calculate stock levels
-  let mappedItems = allItems.map((item: any) => ({
+  let mappedItems = allItems.map((item) => ({
     id: item.id,
     name: item.name,
     sku: item.sku,
@@ -58,10 +75,11 @@ async function getInventory(q?: string, status?: string, category?: string, page
     minStockLevel: item.minStockLevel ?? 0,
     isCritical: item.isCritical,
     totalStock: (item.stocks || []).length > 0
-      ? (item.stocks || []).reduce((acc: number, s: any) => acc + s.quantity, 0)
+      ? (item.stocks || []).reduce((acc: number, s) => acc + s.quantity, 0)
       : (item.inventory?.quantityAvailable ?? 0),
     incomingQty: item.inventory?.incomingQty ?? 0,
-    stocks: (item.stocks || []).map((s: any) => ({
+    quantityInTransit: item.inventory?.quantityInTransit ?? 0,
+    stocks: (item.stocks || []).map((s) => ({
       id: s.id,
       quantity: s.quantity,
       rack: {
@@ -73,13 +91,14 @@ async function getInventory(q?: string, status?: string, category?: string, page
 
   // Apply Status Filtering in memory for 100% accuracy against minStockLevel
   if (status && status !== 'all') {
-    mappedItems = mappedItems.filter((item: any) => {
+    mappedItems = mappedItems.filter((item) => {
       const total = item.totalStock;
-      const incoming = item.incomingQty ?? 0;
+      const incoming = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
       const isLowStock = total > 0 && total <= item.minStockLevel;
-      if (status === 'low') return isLowStock;
-      if (status === 'instock') return total > item.minStockLevel;
+      if (status === 'low') return isLowStock && incoming === 0;
+      if (status === 'instock') return total > item.minStockLevel && incoming === 0;
       if (status === 'outofstock') return total === 0 && incoming === 0;
+      if (status === 'ordered') return incoming > 0;
       return true;
     });
   }
@@ -122,7 +141,7 @@ export default async function InventoryPage({
           <h2 className="text-4xl font-black text-foreground tracking-tight">Inventory List</h2>
           <p className="text-muted-foreground mt-2 font-medium">Manage and monitor stock levels across all zones.</p>
         </div>
-        <Link href="/inventory/new" className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
+        <Link href="/inventory/new" className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
           <PlusCircle className="w-5 h-5" />
           <span>Add Item</span>
         </Link>
@@ -136,7 +155,7 @@ export default async function InventoryPage({
           categories={categoryNames} 
         />
         
-        <div className="md:col-span-1 p-6 bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost flex items-center gap-5">
+        <div className="md:col-span-1 p-6 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex items-center gap-5">
           <div className="w-14 h-14 rounded-2xl bg-success/10 flex items-center justify-center text-success transition-transform hover:scale-110">
             <TrendingUp className="w-7 h-7" />
           </div>
@@ -150,7 +169,7 @@ export default async function InventoryPage({
       <InventorySearch defaultValue={q} />
 
       {/* Data Table */}
-      <div className="bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost overflow-hidden pb-4">
+      <div className="bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost overflow-hidden pb-4">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -165,14 +184,14 @@ export default async function InventoryPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
-              {items.length > 0 ? items.map((item:any) => {
+              {items.length > 0 ? items.map((item: MappedItem) => {
                 const totalStock = item.totalStock;
-                const incomingQty = Number(item.incomingQty || 0);
-                const isLowStock = totalStock > 0 && totalStock <= item.minStockLevel;
-                const isOutOfStock = totalStock === 0;
-                const isOrdered = totalStock === 0 && incomingQty > 0;
+                const incomingQty = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
+                const isOrdered = incomingQty > 0;
+                const isOutOfStock = totalStock === 0 && incomingQty === 0;
+                const isLowStock = !isOrdered && totalStock > 0 && totalStock <= item.minStockLevel;
                 const rackLocations = (item.stocks || []).length > 0
-                  ? Array.from(new Set(item.stocks.map((s: any) => s.rack.rackNumber))).join(", ")
+                  ? Array.from(new Set(item.stocks.map((s) => s.rack.rackNumber))).join(", ")
                   : (item.totalStock > 0 ? "Inventory" : "N/A");
                 return (
                   <tr key={item.id} className="group hover:bg-surface-low/40 transition-colors cursor-pointer">

@@ -1,9 +1,9 @@
 "use client";
 
-import { Filter } from "lucide-react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
 import { clsx, type ClassValue } from "clsx";
+import { Filter } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -39,7 +39,7 @@ export default function InventoryFilters({
 
   return (
     <>
-      <div className="md:col-span-1 p-5 bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost flex flex-col justify-center space-y-4">
+      <div className="md:col-span-1 p-5 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex flex-col justify-center space-y-4">
         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground font-sans">Stock Status</label>
         <div className="flex flex-wrap gap-2">
           <button 
@@ -78,10 +78,19 @@ export default function InventoryFilters({
           >
             Out of Stock
           </button>
+          <button 
+            onClick={() => setFilter("status", "ordered")}
+            className={cn(
+              "px-4 py-2 rounded-full text-xs font-bold transition-all",
+              currentStatus === 'ordered' ? "bg-info text-white shadow-lg shadow-info/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+            )}
+          >
+            Ordered
+          </button>
         </div>
       </div>
 
-      <div className="md:col-span-2 p-5 bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost flex items-center justify-between">
+      <div className="md:col-span-2 p-5 bg-surface-lowest rounded-4xladow-ambient border border-border-ghost flex items-center justify-between">
         <div className="space-y-4 flex-1">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block text-left font-sans">Categories</label>
           <div className="flex gap-4">
@@ -89,7 +98,7 @@ export default function InventoryFilters({
               value={currentCategory}
               onChange={(e) => setFilter("category", e.target.value)}
               className={cn(
-                "bg-transparent border-none text-sm font-bold text-foreground p-0 focus:ring-0 cursor-pointer w-full max-w-[140px] transition-opacity",
+                "bg-transparent border-none text-sm font-bold text-foreground p-0 focus:ring-0 cursor-pointer w-full max-w-35 transition-opacity",
                 isPending && "opacity-50"
               )}
             >
@@ -98,7 +107,7 @@ export default function InventoryFilters({
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
-            <select className="bg-transparent border-none text-sm font-bold text-foreground p-0 focus:ring-0 cursor-pointer w-full max-w-[160px]">
+            <select className="bg-transparent border-none text-sm font-bold text-foreground p-0 focus:ring-0 cursor-pointer w-full max-w-40">
               <option>Zone A (Main)</option>
               <option>Zone B (Cold Storage)</option>
               <option>Zone C (Hazardous)</option>
