@@ -29,7 +29,98 @@ interface LineItem {
 
 interface InventoryItem {
   id: string;
+  itemId?: string;
   quantityAvailable: number;
+  incomingQty: number;
+  reservedQty: number;
+  status: string;
+}
+
+interface ShortageInfo {
+  index: number;
+  item: any;
+  requested: number;
+  current: number;
+  incoming: number;
+}
+
+function ShortagePopup({ 
+  info, 
+  onClose, 
+  onAction 
+}: { 
+  info: ShortageInfo; 
+  onClose: () => void; 
+  onAction: (action: "PO" | "LATER" | "ANYWAY") => void 
+}) {
+  const totalAvailable = info.current + info.incoming;
+  const shortageAmount = info.requested - totalAvailable;
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-foreground/30 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-300">
+        <div className="p-10 space-y-8">
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 rounded-2xl bg-error/10 flex items-center justify-center text-error shadow-inner">
+               <AlertCircle className="w-8 h-8" />
+            </div>
+            <div>
+               <h2 className="text-3xl font-black text-foreground tracking-tighter leading-none">Stock Shortage Detected</h2>
+               <p className="text-muted-foreground font-bold mt-2 uppercase text-[10px] tracking-widest">Action Required for Fulfillment</p>
+            </div>
+          </div>
+
+          <div className="bg-surface-low/50 rounded-3xl p-6 border border-border-ghost space-y-4">
+             <div className="flex justify-between items-center text-sm font-bold">
+                <span className="text-muted-foreground">Order Quantity</span>
+                <span className="text-foreground">{info.requested} Units</span>
+             </div>
+             <div className="flex justify-between items-center text-sm font-bold">
+                <span className="text-muted-foreground">Current Stock</span>
+                <span className="text-foreground">{info.current} Units</span>
+             </div>
+             <div className="flex justify-between items-center text-sm font-bold">
+                <span className="text-muted-foreground">Incoming Stock</span>
+                <span className="text-foreground">{info.incoming} Units</span>
+             </div>
+             <div className="pt-4 border-t border-border-ghost flex justify-between items-center">
+                <span className="text-xs font-black uppercase tracking-widest text-error">Shortage Amount</span>
+                <span className="text-2xl font-black text-error">{shortageAmount} Units</span>
+             </div>
+          </div>
+
+          <div className="space-y-3">
+             <button 
+               onClick={() => onAction("PO")}
+               className="w-full py-4 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+             >
+               <Package className="w-4 h-4" />
+               Create Purchase Order Now
+             </button>
+             <div className="grid grid-cols-2 gap-3">
+               <button 
+                 onClick={() => onAction("LATER")}
+                 className="py-4 bg-surface-low text-foreground border border-border-ghost rounded-2xl font-black text-xs hover:bg-surface-lowest transition-all"
+               >
+                 Create Later
+               </button>
+               <button 
+                 onClick={() => onAction("ANYWAY")}
+                 className="py-4 bg-surface-low text-foreground border border-border-ghost rounded-2xl font-black text-xs hover:bg-surface-lowest transition-all"
+               >
+                 Continue Anyway
+               </button>
+             </div>
+          </div>
+        </div>
+        <footer className="px-10 py-6 bg-surface-low border-t border-border-ghost flex justify-center">
+           <button onClick={onClose} className="text-xs font-black text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">
+             Cancel Order Operation
+           </button>
+        </footer>
+      </div>
+    </div>
+  );
 }
 
 export default function NewDispatchOrderPage() {
@@ -50,6 +141,8 @@ export default function NewDispatchOrderPage() {
   const [itemSearches, setItemSearches] = useState<Record<number, string>>({});
   const [openDropdowns, setOpenDropdowns] = useState<Record<number, boolean>>({});
 
+  const [shortageInfo, setShortageInfo] = useState<ShortageInfo | null>(null);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -67,9 +160,12 @@ export default function NewDispatchOrderPage() {
           const inventoryData = await invRes.json();
           const map = new Map<string, InventoryItem>();
           inventoryData.forEach((inv: any) => {
-            map.set(inv.itemId, {
-              id: inv.itemId,
-              quantityAvailable: inv.quantityAvailable || 0
+            map.set(inv.itemId || inv.id, {
+              id: inv.itemId || inv.id,
+              quantityAvailable: inv.quantityAvailable || 0,
+              incomingQty: inv.incomingQty || 0,
+              reservedQty: inv.quantityReserved || 0,
+              status: inv.status
             });
           });
           setInventoryMap(map);
@@ -122,22 +218,46 @@ export default function NewDispatchOrderPage() {
     return lineItems.reduce((acc, curr) => acc + (curr.quantity * curr.sellingPrice), 0);
   };
 
+  const getInventoryData = (itemId: string): InventoryItem | undefined => {
+    return inventoryMap.get(itemId);
+  };
+
   const getAvailableStock = (itemId: string) => {
-    return inventoryMap.get(itemId)?.quantityAvailable || 0;
+    return getInventoryData(itemId)?.quantityAvailable || 0;
+  };
+
+  const getIncomingStock = (itemId: string) => {
+    return getInventoryData(itemId)?.incomingQty || 0;
   };
 
   const checkStockAvailability = () => {
-    for (const item of lineItems) {
+    for (let i = 0; i < lineItems.length; i++) {
+      const item = lineItems[i];
       if (!item.itemId) continue;
+      
       const available = getAvailableStock(item.itemId);
-      if (item.quantity > available) {
+      const incoming = getIncomingStock(item.itemId);
+      const totalAvailable = available + incoming;
+
+      if (item.quantity > totalAvailable) {
+        const itemObj = items.find(it => it.id === item.itemId);
         return {
           isValid: false,
-          message: `Insufficient stock for item. Requested: ${item.quantity}, Available: ${available}`
+          needsPopup: true,
+          shortageInfo: {
+            index: i,
+            item: itemObj,
+            requested: item.quantity,
+            current: available,
+            incoming: incoming
+          }
         };
+      } else if (item.quantity > available) {
+        // Technically has enough (current + incoming), but might still want to warn?
+        // Let's stick to the prompt: shortage if exceeds (current + incoming)
       }
     }
-    return { isValid: true, message: "" };
+    return { isValid: true, needsPopup: false };
   };
 
   const getFilteredItems = (searchQuery: string) => {
@@ -160,8 +280,8 @@ export default function NewDispatchOrderPage() {
     setOpenDropdowns({ ...openDropdowns, [index]: true });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent, customStatus?: string) => {
+    if (e) e.preventDefault();
     if (!selectedCustomer) {
       setError("Please select a customer recipient.");
       return;
@@ -171,11 +291,17 @@ export default function NewDispatchOrderPage() {
       return;
     }
 
-    // Check stock availability before submitting
-    const stockCheck = checkStockAvailability();
-    if (!stockCheck.isValid) {
-      setError(stockCheck.message);
-      return;
+    if (!customStatus) {
+      // Check stock availability before submitting
+      const stockCheck = checkStockAvailability();
+      if (!stockCheck.isValid) {
+        if (stockCheck.needsPopup) {
+            setShortageInfo(stockCheck.shortageInfo as ShortageInfo);
+            return;
+        }
+        setError("Fulfillment logic error.");
+        return;
+      }
     }
 
     setLoading(true);
@@ -188,7 +314,8 @@ export default function NewDispatchOrderPage() {
         body: JSON.stringify({
           customerId: selectedCustomer,
           paymentMode: paymentMode,
-          items: lineItems
+          items: lineItems,
+          status: customStatus || "pending"
         }),
       });
 
@@ -206,6 +333,23 @@ export default function NewDispatchOrderPage() {
     }
   };
 
+  const handleShortageAction = (action: "PO" | "LATER" | "ANYWAY") => {
+    const info = shortageInfo;
+    setShortageInfo(null);
+    if (!info) return;
+
+    if (action === "PO") {
+        const itemId = info.item.id;
+        const totalAvail = info.current + info.incoming;
+        const shortage = info.requested - totalAvail;
+        router.push(`/orders/purchase/new?itemId=${itemId}&quantity=${shortage}`);
+    } else if (action === "LATER") {
+        handleSubmit(undefined, "Pending Procurement");
+    } else if (action === "ANYWAY") {
+        handleSubmit(undefined, "Backordered");
+    }
+  };
+
   if (fetching) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
@@ -217,6 +361,13 @@ export default function NewDispatchOrderPage() {
 
   return (
     <div className="p-8 lg:p-12 max-w-7xl mx-auto pb-24">
+      {shortageInfo && (
+        <ShortagePopup 
+          info={shortageInfo} 
+          onClose={() => setShortageInfo(null)}
+          onAction={handleShortageAction}
+        />
+      )}
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div className="space-y-4">

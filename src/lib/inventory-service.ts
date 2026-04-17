@@ -196,16 +196,21 @@ export const InventoryService = {
    * Creates a new Dispatch Order and reserves stock immediately.
    * Decrements quantityAvailable to prevent overallocation.
    */
-  async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[] }) {
+  async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[], status?: string }) {
+    const status = data.status || "pending";
+    const isShortageAllowed = status === "Backordered" || status === "Pending Procurement";
+
     return await prisma.$transaction(async (tx: any) => {
       // 1. Validation & Availability Check
-      for (const item of data.items) {
-        const inv = await tx.inventory.findUnique({
-          where: { itemId: item.itemId },
-        });
+      if (!isShortageAllowed) {
+        for (const item of data.items) {
+          const inv = await tx.inventory.findUnique({
+            where: { itemId: item.itemId },
+          });
 
-        if (!inv || inv.quantityAvailable < item.quantity) {
-          throw new Error(`Insufficient available stock for item ID: ${item.itemId}. Requested: ${item.quantity}, Available: ${inv?.quantityAvailable || 0}`);
+          if (!inv || inv.quantityAvailable < item.quantity) {
+            throw new Error(`Insufficient available stock for item ID: ${item.itemId}. Requested: ${item.quantity}, Available: ${inv?.quantityAvailable || 0}`);
+          }
         }
       }
 
@@ -213,7 +218,7 @@ export const InventoryService = {
       const order = await tx.dispatchOrder.create({
         data: {
           customerId: data.customerId,
-          status: "pending",
+          status: status,
           paymentMode: data.paymentMode || "Cash",
           items: {
             create: data.items.map((item: any) => ({
@@ -227,13 +232,35 @@ export const InventoryService = {
 
       // 3. Move from Available to Reserved
       for (const item of data.items) {
-        await tx.inventory.update({
+        const inv = await tx.inventory.findUnique({
           where: { itemId: item.itemId },
-          data: {
-            quantityAvailable: { decrement: item.quantity },
-            quantityReserved: { increment: item.quantity },
-          },
         });
+
+        const currentAvailable = inv?.quantityAvailable || 0;
+        const decrementQty = isShortageAllowed 
+          ? Math.min(currentAvailable, item.quantity) 
+          : item.quantity;
+
+        if (inv) {
+          await tx.inventory.update({
+            where: { itemId: item.itemId },
+            data: {
+              quantityAvailable: { decrement: decrementQty },
+              quantityReserved: { increment: item.quantity },
+            },
+          });
+        } else {
+          // Should theoretically not happen if items are selected from registry
+          await tx.inventory.create({
+            data: {
+              itemId: item.itemId,
+              quantityAvailable: 0,
+              quantityReserved: item.quantity,
+              incomingQty: 0,
+              quantityInTransit: 0,
+            }
+          });
+        }
       }
 
       return order;
@@ -292,7 +319,7 @@ export const InventoryService = {
             quantity: -line.quantity,
             referenceType: "DISPATCH",
             referenceId: dispatchId,
-            rackId: usedRackId
+            rack: usedRackId ? { connect: { id: usedRackId } } : undefined
           },
         });
       }

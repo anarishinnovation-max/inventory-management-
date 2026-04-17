@@ -27,6 +27,7 @@ interface MappedItem {
   isCritical: boolean;
   totalStock: number;
   incomingQty: number;
+  quantityReserved: number;
   quantityInTransit: number;
   stocks: MappedStock[];
 }
@@ -78,6 +79,7 @@ async function getInventory(q?: string, status?: string, category?: string, page
       ? (item.stocks || []).reduce((acc: number, s) => acc + s.quantity, 0)
       : (item.inventory?.quantityAvailable ?? 0),
     incomingQty: item.inventory?.incomingQty ?? 0,
+    quantityReserved: item.inventory?.quantityReserved ?? 0,
     quantityInTransit: item.inventory?.quantityInTransit ?? 0,
     stocks: (item.stocks || []).map((s) => ({
       id: s.id,
@@ -94,11 +96,15 @@ async function getInventory(q?: string, status?: string, category?: string, page
     mappedItems = mappedItems.filter((item) => {
       const total = item.totalStock;
       const incoming = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
-      const isLowStock = total > 0 && total <= item.minStockLevel;
-      if (status === 'low') return isLowStock && incoming === 0;
-      if (status === 'instock') return total > item.minStockLevel && incoming === 0;
+      const reserved = item.quantityReserved;
+      const netAvailable = (total + incoming) - reserved;
+
+      if (status === 'shortage') return netAvailable < 0;
+      if (status === 'partial') return total > 0 && total < reserved;
+      if (status === 'low') return total > 0 && total <= item.minStockLevel && netAvailable >= 0;
+      if (status === 'instock') return total > item.minStockLevel && total >= reserved;
       if (status === 'outofstock') return total === 0 && incoming === 0;
-      if (status === 'ordered') return incoming > 0;
+      if (status === 'ordered') return incoming > 0 && netAvailable >= 0;
       return true;
     });
   }
@@ -187,9 +193,14 @@ export default async function InventoryPage({
               {items.length > 0 ? items.map((item: MappedItem) => {
                 const totalStock = item.totalStock;
                 const incomingQty = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
-                const isOrdered = incomingQty > 0;
+                const reservedQty = item.quantityReserved;
+                const netAvailable = (totalStock + incomingQty) - reservedQty;
+                
+                const isShortage = netAvailable < 0;
+                const isPartial = totalStock > 0 && totalStock < reservedQty;
+                const isOrdered = incomingQty > 0 && !isShortage;
                 const isOutOfStock = totalStock === 0 && incomingQty === 0;
-                const isLowStock = !isOrdered && totalStock > 0 && totalStock <= item.minStockLevel;
+                const isLowStock = !isOrdered && !isShortage && !isPartial && totalStock > 0 && totalStock <= item.minStockLevel;
                 const rackLocations = (item.stocks || []).length > 0
                   ? Array.from(new Set(item.stocks.map((s) => s.rack.rackNumber))).join(", ")
                   : (item.totalStock > 0 ? "Inventory" : "N/A");
@@ -219,13 +230,28 @@ export default async function InventoryPage({
                              (+{incomingQty} incoming)
                            </span>
                          )}
+                         {reservedQty > 0 && (
+                            <span className="text-[9px] font-bold uppercase tracking-tighter text-error/60 mt-0.5">
+                              {reservedQty} reserved
+                            </span>
+                         )}
                        </div>
                     </td>
                     <td className="px-8 py-6 text-sm font-bold text-muted-foreground">
                        {rackLocations || "N/A"}
                     </td>
                     <td className="px-8 py-6">
-                      {isOrdered ? (
+                      {isShortage ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-black uppercase tracking-widest border border-error/20">
+                          <span className="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                          Shortage
+                        </span>
+                      ) : isPartial ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning/10 text-warning text-[10px] font-black uppercase tracking-widest border border-warning/20">
+                          <span className="w-1.5 h-1.5 rounded-full bg-warning"></span>
+                          Partial
+                        </span>
+                      ) : isOrdered ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest border border-blue-100">
                           <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                           Ordered

@@ -67,7 +67,7 @@ export default async function PurchaseOrdersPage() {
           <h1 className="text-4xl font-black text-foreground tracking-tight">Purchase Orders</h1>
           <p className="text-muted-foreground mt-2 text-lg font-medium">Manage orders from vendors</p>
         </div>
-        <Link href="/orders/purchase/new" className="flex items-center gap-2 px-6 py-3 bg-linear-to-rrom-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+        <Link href="/orders/purchase/new" className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
           <Plus className="w-5 h-5" />
           <span>New Order</span>
         </Link>
@@ -211,7 +211,7 @@ export default async function PurchaseOrdersPage() {
                           <p className="text-2xl font-black text-foreground tracking-tight">No Active Procurement Records</p>
                           <p className="text-[15px] font-medium text-muted-foreground mt-2 max-w-sm mx-auto">Purchase orders will be indexed here as they are generated for verification.</p>
                         </div>
-                        <Link href="/orders/purchase/new" className="px-8 py-3.5 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl hover:scale-105 transition-transform">
+                        <Link href="/orders/purchase/new" className="px-8 py-3.5 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
                           Initialize First PO
                         </Link>
                       </div>

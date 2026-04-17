@@ -13,6 +13,7 @@ import {
   AlertCircle,
   CheckCircle2
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -31,6 +32,7 @@ const PAYMENT_MODE_OPTIONS = ["Cash", "Bank Transfer", "UPI", "Credit"];
 
 export default function NewPurchaseOrderPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState("");
@@ -54,8 +56,22 @@ export default function NewPurchaseOrderPage() {
         ]);
         
         if (vMsg.ok && iMsg.ok) {
-          setVendors(await vMsg.json());
-          setItems(await iMsg.json());
+          const vendorsData = await vMsg.json();
+          const itemsData = await iMsg.json();
+          setVendors(vendorsData);
+          setItems(itemsData);
+
+          // Auto-fill from query params
+          const qItemId = searchParams.get("itemId");
+          const qQuantity = searchParams.get("quantity");
+          
+          if (qItemId) {
+            setLineItems([{ 
+              itemId: qItemId, 
+              quantityOrdered: qQuantity ? parseFloat(qQuantity) : 1, 
+              costPrice: 0 
+            }]);
+          }
         } else {
           setError("Failed to initialize procurement catalogs.");
         }
@@ -66,7 +82,7 @@ export default function NewPurchaseOrderPage() {
       }
     }
     fetchData();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (!selectedVendor) return;
@@ -179,7 +195,7 @@ export default function NewPurchaseOrderPage() {
            <button 
              onClick={handleSubmit}
              disabled={loading}
-             className="px-8 py-3.5 text-sm font-black text-white bg-foreground rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
+             className="px-8 py-3.5 text-sm font-black text-white bg-primary rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
            >
              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShoppingCart className="w-4 h-4" />}
              {loading ? "Transmitting..." : "Execute Purchase Order"}
