@@ -11,6 +11,7 @@ import {
     X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface BreakdownEntry {
   vendor: string;
@@ -54,8 +55,13 @@ export function ItemBreakdownModal({
   const [breakdown, setBreakdown] = useState<BreakdownEntry[]>([]);
   const [incomingPOs, setIncomingPOs] = useState<IncomingPOEntry[]>([]);
   const [customerOrders, setCustomerOrders] = useState<CustomerOrderEntry[]>([]);
-  const [reservedQty, setReservedQty] = useState(0);
-  const [netAvailable, setNetAvailable] = useState(0);
+  const [totalVisibility, setTotalVisibility] = useState(0);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -71,8 +77,7 @@ export function ItemBreakdownModal({
             const incomingOrdersRaw = Array.isArray(root.incomingPurchaseOrders) ? root.incomingPurchaseOrders : [];
             const customerOrdersRaw = Array.isArray(root.linkedCustomerOrders) ? root.linkedCustomerOrders : [];
 
-            setReservedQty(root.reservedQty || 0);
-            setNetAvailable(root.netAvailable || 0);
+            setTotalVisibility(root.totalVisibility || 0);
 
             setBreakdown(
               batchesRaw.map((batch: any) => ({
@@ -111,244 +116,180 @@ export function ItemBreakdownModal({
     }
   }, [isOpen, itemId]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/20 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-300">
-        <header className="px-12 pt-12 pb-8 flex items-start justify-between border-b border-border-ghost">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-foreground/30 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
+        <header className="px-10 py-8 bg-surface-lowest border-b border-border-ghost sticky top-0 z-20 flex items-start justify-between shrink-0">
           <div className="flex gap-6">
-            <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner shrink-0 rotate-2 group-hover:rotate-0 transition-transform">
                <Layers className="w-8 h-8" />
             </div>
             <div>
-               <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
-                  <span className="text-primary/60">Stock</span>
+               <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-2">
+                  <span>Inventory HUB</span>
                   <span className="opacity-30">/</span>
-                  <span>History</span>
+                  <span className="text-muted-foreground">Detailed Specs</span>
                </nav>
-               <h2 className="text-4xl font-black text-foreground tracking-tighter leading-none">{itemName}</h2>
-                <div className="flex flex-wrap items-center gap-4 mt-3">
-                  <div className="flex items-center gap-2 px-3 py-1 bg-surface-low rounded-lg border border-border-ghost">
-                    <Package className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-xs font-black text-foreground">
-                      {totalStock} Units on Hand
-                    </span>
+               <h2 className="text-3xl font-black text-foreground tracking-tighter leading-tight mb-3">{itemName}</h2>
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-lg border border-border-ghost shadow-sm">
+                    <Package className="w-4 h-4 text-primary" />
+                    <span className="text-[11px] font-black text-foreground">{totalStock} Physical</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-1 bg-surface-low rounded-lg border border-border-ghost">
-                    <Truck className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-xs font-black text-foreground">
-                      {incomingQty} Incoming
-                    </span>
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-lg border border-border-ghost shadow-sm">
+                    <Truck className="w-4 h-4 text-indigo-600" />
+                    <span className="text-[11px] font-black text-foreground">{incomingQty} Incoming</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-1 bg-surface-low rounded-lg border border-border-ghost">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-xs font-black text-foreground">
-                      {reservedQty} Reserved
-                    </span>
-                  </div>
-                  <div className={`flex items-center gap-2 px-3 py-1 rounded-lg border ${
-                    netAvailable < 0 
-                      ? 'bg-error/10 border-error/20 text-error' 
-                      : 'bg-success/10 border-success/20 text-success'
-                  }`}>
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/20 text-primary rounded-lg shadow-sm">
                     <ShieldCheck className="w-4 h-4" />
-                    <span className="text-xs font-black uppercase tracking-tighter">
-                      Net Available: {netAvailable}
-                    </span>
+                    <span className="text-[11px] font-black uppercase tracking-tighter">Total Visibility: {totalVisibility}</span>
                   </div>
                 </div>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-4 rounded-2xl hover:bg-surface-low text-muted-foreground hover:text-foreground transition-all border border-transparent hover:border-border-ghost"
+            className="p-3 rounded-xl hover:bg-surface-low text-muted-foreground hover:text-foreground transition-all border border-transparent hover:border-border-ghost"
           >
-             <X className="w-8 h-8" />
+             <X className="w-7 h-7" />
           </button>
         </header>
-
-        <div className="p-12 overflow-y-auto max-h-[60vh] no-scrollbar">
+  
+        <div className="flex-1 overflow-y-auto p-10 no-scrollbar">
            {loading ? (
              <div className="py-32 flex flex-col items-center justify-center gap-6">
                 <Loader2 className="w-12 h-12 animate-spin text-primary" />
-                <p className="text-lg font-bold text-muted-foreground animate-pulse">Loading stock details...</p>
+                <p className="text-lg font-black text-muted-foreground animate-pulse">Syncing Specifications...</p>
              </div>
            ) : (breakdown.length > 0 || incomingPOs.length > 0 || customerOrders.length > 0) ? (
              <div className="space-y-12">
                 {breakdown.length > 0 && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-black text-foreground flex items-center gap-3">
-                          <History className="w-5 h-5 text-primary" />
-                          Stock Breakdown
-                      </h3>
-                      <span className="text-xs font-bold text-muted-foreground italic">Current stock from all sources</span>
+                  <section className="space-y-6">
+                    <div className="flex items-center justify-between border-b border-border-ghost pb-4">
+                      <div className="flex items-center gap-3">
+                        <History className="w-5 h-5 text-primary" />
+                        <h3 className="text-xl font-black text-foreground tracking-tight">Acquisition Timeline</h3>
+                      </div>
+                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest italic opacity-60">FIFO Batching Enabled</span>
                     </div>
 
                     <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden">
                       <table className="w-full text-left">
                           <thead>
-                            <tr className="bg-surface-low/50 border-b border-border-ghost">
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Vendor Name</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Quantity</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Cost per Unit</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Purchase Date</th>
+                            <tr className="bg-surface-low/50 border-b border-border-ghost text-muted-foreground">
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Vendor</th>
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Quantity</th>
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Cost</th>
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Date</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-border-ghost">
-                            {breakdown.map((entry, idx) => {
-                              return (
-                                <tr key={idx} className="group hover:bg-white transition-colors">
-                                  <td className="px-8 py-6">
-                                    <div className="flex items-center gap-2">
-                                      <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center font-black text-primary text-[10px] border border-primary/10">
-                                        {entry.vendor?.[0] || "V"}
-                                      </div>
-                                      <span className="font-bold text-foreground text-sm">{entry.vendor}</span>
-                                    </div>
-                                  </td>
-                                  <td className="px-8 py-6">
-                                    <span className="px-3 py-1 bg-surface-lowest rounded-lg border border-border-ghost font-black text-xs text-foreground">
-                                        {entry.quantity}
-                                    </span>
-                                  </td>
-                                  <td className="px-8 py-6 text-right font-black text-foreground">
-                                    {Number(entry.costPerUnit || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                                  </td>
-                                  <td className="px-8 py-6">
-                                    <div className="flex items-center gap-3 text-sm font-bold text-foreground">
-                                      <Calendar className="w-4 h-4 text-primary opacity-40" />
-                                      {new Date(entry.purchaseDate).toLocaleDateString(undefined, { month: "short", day: "2-digit", year: "numeric" })}
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-
-                {customerOrders.length > 0 && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-black text-foreground flex items-center gap-3">
-                          <Package className="w-5 h-5 text-indigo-600" />
-                          Linked Customer Orders (Reserved)
-                      </h3>
-                      <span className="text-xs font-bold text-muted-foreground italic">Current demand for this item</span>
-                    </div>
-
-                    <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden">
-                      <table className="w-full text-left">
-                          <thead>
-                            <tr className="bg-surface-low/50 border-b border-border-ghost">
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Order ID</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Customer</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Quantity</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Order Date</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-border-ghost">
-                            {customerOrders.map((order) => (
-                              <tr key={order.orderId} className="group hover:bg-white transition-colors">
-                                <td className="px-8 py-6 font-mono font-bold text-xs text-foreground">#{order.orderId.split("-")[0].toUpperCase()}</td>
-                                <td className="px-8 py-6 font-bold text-sm text-foreground">{order.customer}</td>
-                                <td className="px-8 py-6 font-black text-sm text-foreground">{order.quantity}</td>
+                            {breakdown.map((entry, idx) => (
+                              <tr key={idx} className="group hover:bg-white transition-all duration-300">
                                 <td className="px-8 py-6">
-                                  <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded ${
-                                    order.status === 'Backordered' ? 'bg-error/10 text-error' : 
-                                    order.status === 'Pending Procurement' ? 'bg-warning/10 text-warning' :
-                                    'bg-surface-low text-muted-foreground'
-                                  }`}>
-                                    {order.status}
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center font-black text-primary text-[10px] border border-primary/10">
+                                      {entry.vendor?.[0] || "V"}
+                                    </div>
+                                    <span className="font-bold text-foreground text-[14px]">{entry.vendor}</span>
+                                  </div>
+                                </td>
+                                <td className="px-8 py-6">
+                                  <span className="px-3 py-1 bg-surface-lowest rounded-lg border border-border-ghost font-black text-xs text-foreground">
+                                      {entry.quantity} Units
                                   </span>
                                 </td>
-                                <td className="px-8 py-6 text-sm font-bold text-foreground">
-                                  {new Date(order.orderDate).toLocaleDateString()}
+                                <td className="px-8 py-6 text-right font-black text-foreground tabular-nums text-[14px]">
+                                  {Number(entry.costPerUnit || 0).toLocaleString(undefined, { style: 'currency', currency: 'INR', minimumFractionDigits: 1 })}
+                                </td>
+                                <td className="px-8 py-6 text-right">
+                                  <div className="flex items-center justify-end gap-2 text-[12px] font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                                    <Calendar className="w-4 h-4 opacity-40" />
+                                    {new Date(entry.purchaseDate).toLocaleDateString(undefined, { month: "short", day: "2-digit", year: "numeric" })}
+                                  </div>
                                 </td>
                               </tr>
                             ))}
                           </tbody>
                       </table>
                     </div>
-                  </div>
+                  </section>
                 )}
 
-                {incomingPOs.length > 0 && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-black text-foreground flex items-center gap-3">
-                          <Truck className="w-5 h-5 text-primary" />
-                          Incoming Purchase Orders
-                      </h3>
-                    </div>
-                    <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden">
-                      <table className="w-full text-left">
-                        <thead>
-                          <tr className="bg-surface-low/50 border-b border-border-ghost">
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">PO ID</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Vendor</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Quantity</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
-                            <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Expected Delivery</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border-ghost">
-                          {incomingPOs.map((po) => (
-                            <tr key={po.poId} className="group hover:bg-white transition-colors">
-                              <td className="px-8 py-6 font-mono font-bold text-xs text-foreground">#{po.poId.split("-")[0].toUpperCase()}</td>
-                              <td className="px-8 py-6 font-bold text-sm text-foreground">{po.vendor}</td>
-                              <td className="px-8 py-6">
-                                <span className="px-3 py-1 bg-surface-lowest rounded-lg border border-border-ghost font-black text-xs text-foreground">
-                                  {po.quantity}
-                                </span>
-                              </td>
-                              <td className="px-8 py-6">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{po.status}</span>
-                              </td>
-                              <td className="px-8 py-6 text-sm font-bold text-foreground">
-                                {po.expectedDelivery
-                                  ? new Date(po.expectedDelivery).toLocaleString([], { month: "short", day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })
-                                  : "N/A"}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  {customerOrders.length > 0 && (
+                    <section className="space-y-6">
+                      <div className="flex items-center gap-3 border-b border-border-ghost pb-4">
+                        <Package className="w-5 h-5 text-indigo-600" />
+                        <h3 className="text-lg font-black text-foreground tracking-tight">Active Demand</h3>
+                      </div>
+                      <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden divide-y divide-border-ghost">
+                        {customerOrders.map((order) => (
+                          <div key={order.orderId} className="px-6 py-5 flex items-center justify-between hover:bg-white transition-colors">
+                            <div className="flex flex-col">
+                              <span className="font-bold text-foreground text-sm">{order.customer}</span>
+                              <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60 font-mono tracking-tighter">ORDER #{order.orderId.split("-")[0].toUpperCase()}</span>
+                            </div>
+                            <div className="flex items-center gap-4">
+                               <span className="text-sm font-black text-foreground">{order.quantity} Units</span>
+                               <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {incomingPOs.length > 0 && (
+                    <section className="space-y-6">
+                      <div className="flex items-center gap-3 border-b border-border-ghost pb-4">
+                        <Truck className="w-5 h-5 text-primary" />
+                        <h3 className="text-lg font-black text-foreground tracking-tight">Replenishment Pipelne</h3>
+                      </div>
+                      <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden divide-y divide-border-ghost">
+                        {incomingPOs.map((po) => (
+                          <div key={po.poId} className="px-6 py-5 flex items-center justify-between hover:bg-white transition-colors">
+                            <div className="flex flex-col">
+                              <span className="font-bold text-foreground text-sm">{po.vendor}</span>
+                              <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60 tracking-widest">ETA: {po.expectedDelivery ? new Date(po.expectedDelivery).toLocaleDateString() : 'TBD'}</span>
+                            </div>
+                            <span className="text-sm font-black text-primary">+{po.quantity} Units</span>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+                </div>
              </div>
            ) : (
-                <div className="py-24 flex flex-col items-center justify-center text-center gap-6 opacity-30">
-                <div className="w-24 h-24 rounded-full bg-surface-low flex items-center justify-center">
-                  <Truck className="w-12 h-12" />
+                <div className="py-24 flex flex-col items-center justify-center text-center gap-8 opacity-30 group">
+                <div className="w-24 h-24 rounded-full bg-surface-low flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                  <Layers className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-foreground">No Active Operations</h3>
-                  <p className="font-medium mt-2 max-w-sm">There are no linked customer orders or purchase orders for this item.</p>
+                  <h3 className="text-2xl font-black text-foreground tracking-tight">No Operational Activity</h3>
+                  <p className="text-sm font-bold mt-2 max-w-xs mx-auto">This item currently has no batch history or pending requirements.</p>
                 </div>
              </div>
            )}
         </div>
-
-        <footer className="px-12 py-10 bg-surface-low/30 border-t border-border-ghost flex justify-between items-center text-sm font-bold text-muted-foreground italic">
-           <div className="flex items-center gap-2">
+  
+        <footer className="px-10 py-8 bg-surface-low/30 border-t border-border-ghost shrink-0 flex flex-col sm:flex-row justify-between items-center gap-6">
+           <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground italic">
               <ShieldCheck className="w-5 h-5 text-success" />
-              Fully Audit-Compliant Records
+              Enterprise Audit Mode Active
            </div>
            <button 
              onClick={onClose}
-             className="px-8 py-3 bg-foreground text-surface-lowest rounded-2xl font-black shadow-xl hover:scale-[1.05] active:scale-95 transition-all text-[12px] uppercase tracking-widest"
+             className="w-full sm:w-auto px-10 py-3 bg-foreground text-surface-lowest rounded-xl font-black shadow-xl hover:scale-[1.02] active:scale-95 transition-all text-xs uppercase tracking-[0.2em]"
            >
-              Close Ledger
+              Return to Hub
            </button>
         </footer>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

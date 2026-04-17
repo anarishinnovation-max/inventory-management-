@@ -59,13 +59,13 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
+          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
              <span>Main</span>
-             <span>/</span>
-             <span className="text-primary">Customers</span>
+             <span className="opacity-30">/</span>
+             <span className="text-primary">Entity management</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Customers</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">View and manage customers</p>
+          <h1 className="heading-xl tracking-tight">Active Accounts</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Verified customer registry and transaction indices.</p>
         </div>
         <div className="flex items-center gap-3">
             <CustomerSearch />
@@ -74,102 +74,95 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1 space-y-6">
-          <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary" />
-            Customers
+        <div className="lg:col-span-1 space-y-4">
+          <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
+            <Users className="w-3 h-3 text-primary" />
+            Selection
           </h2>
-          <div className="space-y-3 max-h-150 overflow-y-auto no-scrollbar pr-2">
+          <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-1">
             {customers.map(customer => (
-              <div key={customer.id} className="p-5 bg-surface-lowest rounded-2xl border border-border-ghost shadow-ambient hover:border-primary/50 transition-all cursor-pointer group">
-                <div className="flex items-start justify-between">
-                    <div>
-                        <p className="font-bold text-foreground text-lg truncate max-w-30">{customer.name}</p>
-                        <p className="text-[10px] font-black text-muted-foreground uppercase mt-1 tracking-widest">{customer.contact || "No Phone"}</p>
+              <div key={customer.id} className="p-4 card-premium group hover:border-primary/30 transition-all cursor-pointer bg-white/50">
+                <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                        <p className="font-bold text-foreground text-sm truncate">{customer.name}</p>
+                        <p className="text-[9px] font-black text-muted-foreground uppercase mt-1 tracking-widest truncate">{customer.contact || "No contact"}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center font-black text-primary group-hover:bg-primary/10 transition-colors border border-border-ghost">
+                    <div className="w-8 h-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center font-black text-xs text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
                         {customer.name[0]}
                     </div>
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                  <span className="text-[10px] font-black px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">
+                  <span className="badge px-2 py-0.5 rounded-md bg-primary/5 text-primary border-primary/10 text-[9px]">
                     {customer.totalTransactions} Orders
                   </span>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
                 </div>
               </div>
             ))}
-            {customers.length === 0 && <p className="text-center py-10 text-muted-foreground italic">No customers found.</p>}
+            {customers.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No matching accounts.</p>}
           </div>
         </div>
 
-        <div className="lg:col-span-3 space-y-8">
+        <div className="lg:col-span-3 space-y-6">
            <div className="flex items-center justify-between">
-             <h2 className="text-2xl font-black text-foreground tracking-tight flex items-center gap-3">
-               Detailed Accounts Overview
+             <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-3">
+               Account details
              </h2>
              <div className="flex items-center gap-2">
-                <button className="p-2 rounded-xl hover:bg-surface-low text-muted-foreground transition-all">
-                    <MoreVertical className="w-5 h-5" />
+                <button className="p-2 rounded-lg hover:bg-surface-low text-muted-foreground transition-all border border-transparent hover:border-border-ghost">
+                    <MoreVertical className="w-4 h-4" />
                 </button>
              </div>
            </div>
 
-           <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">
+           <div className="card-premium !p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="bg-surface-low/30 border-b border-border-ghost">
-                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Customer Details</th>
-                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Primary Contact</th>
-                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Office Address</th>
-                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Activity</th>
-                      <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Status</th>
+                    <tr className="table-header">
+                      <th className="table-cell-header">Identified entity</th>
+                      <th className="table-cell-header">Contact</th>
+                      <th className="table-cell-header">Base Location</th>
+                      <th className="table-cell-header">Market Pulse</th>
+                      <th className="table-cell-header">Reliability</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
                     {customers.length > 0 ? customers.map((c) => (
-                      <tr key={c.id} className="hover:bg-surface-low/30 transition-colors group cursor-pointer">
-                        <td className="px-8 py-6">
+                      <tr key={c.id} className="hover:bg-surface-low/30 transition-all group cursor-pointer border-b border-border-ghost last:border-0">
+                        <td className="px-8 py-5">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20">
+                            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20 text-xs">
                                {c.name[0]}
                             </div>
                             <div>
-                                <p className="font-black text-foreground text-lg leading-tight group-hover:text-primary transition-colors">{c.name}</p>
-                                <p className="text-[10px] font-bold text-muted-foreground mt-0.5 uppercase tracking-widest">ID: {c.id.slice(0, 8)}</p>
+                                <p className="font-bold text-foreground text-sm leading-tight group-hover:text-primary transition-colors">{c.name}</p>
+                                <p className="text-[9px] font-black text-muted-foreground mt-0.5 uppercase tracking-widest">IDX-{c.id.slice(0, 4).toUpperCase()}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-8 py-6">
-                           <div className="flex items-center gap-2 text-foreground font-black text-sm">
-                              <Phone className="w-4 h-4 text-primary opacity-60" />
-                              <span>{c.contact || "N/A"}</span>
+                        <td className="px-8 py-5 text-xs font-bold text-foreground">
+                            {c.contact || "—"}
+                        </td>
+                        <td className="px-8 py-5">
+                          <div className="flex items-start gap-2 text-muted-foreground group-hover:text-foreground transition-colors max-w-[200px]">
+                             <MapPin className="w-3 h-3 mt-0.5 shrink-0 opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all" />
+                             <span className="text-xs font-medium line-clamp-1">{c.address || "Pending location data"}</span>
+                          </div>
+                        </td>
+                        <td className="px-8 py-5">
+                           <div className="flex flex-col">
+                              <span className="text-xs font-black text-foreground">{c.lastInteraction ? new Date(c.lastInteraction).toLocaleDateString() : 'Inactive'}</span>
+                              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">Last touchpoint</span>
                            </div>
                         </td>
-                        <td className="px-8 py-6">
-                          <div className="flex items-start gap-2 text-muted-foreground max-w-50">
-                             <MapPin className="w-4 h-4 mt-0.5 shrink-0 opacity-60" />
-                             <span className="text-sm font-medium line-clamp-2">{c.address || "No address provided"}</span>
-                          </div>
-                        </td>
-                        <td className="px-8 py-6">
-                          <div className="space-y-1">
-                             <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                                <Calendar className="w-3 h-3" />
-                                <span>Pulse Check</span>
-                             </div>
-                             <p className="text-sm font-black text-foreground">
-                                {c.lastInteraction ? new Date(c.lastInteraction).toLocaleDateString() : 'No activity'}
-                             </p>
-                          </div>
-                        </td>
-                        <td className="px-8 py-6">
+                        <td className="px-8 py-5">
                           <span className={cn(
-                             "text-[10px] font-black px-3 py-1.5 rounded-full border uppercase tracking-widest",
-                             c.totalTransactions > 10 ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-indigo-50 text-indigo-600 border-indigo-100"
+                             "badge rounded-lg gap-1.5 border-none",
+                             c.totalTransactions > 10 ? "bg-success/10 text-success" : "bg-primary/10 text-primary"
                           )}>
-                             {c.totalTransactions > 10 ? 'VIP / Key Entity' : 'Standard'}
+                             <div className="w-1.5 h-1.5 rounded-full bg-current" />
+                             {c.totalTransactions > 10 ? 'VIP / Growth' : 'Standard'}
                           </span>
                         </td>
                       </tr>
@@ -189,32 +182,32 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-8 rounded-4xl bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
-                 <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center transition-transform group-hover:scale-110">
-                    <Users className="w-7 h-7" />
+              <div className="card-premium flex items-center gap-5 group border-primary/5">
+                 <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner">
+                    <Users className="w-5 h-5" />
                  </div>
                  <div>
-                    <p className="text-4xl font-black text-foreground tracking-tighter">{customers.length}</p>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">Active Accounts Indexed</p>
+                    <p className="text-3xl font-black text-foreground tracking-tighter">{customers.length}</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total database load</p>
                  </div>
               </div>
-              <div className="p-8 rounded-4xl bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
-                 <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition-transform group-hover:scale-110 border border-emerald-100">
-                    <Calendar className="w-7 h-7" />
+              <div className="card-premium flex items-center gap-5 group border-success/5">
+                 <div className="w-12 h-12 rounded-xl bg-success/10 text-success flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner">
+                    <Calendar className="w-5 h-5" />
                  </div>
                  <div>
-                    <p className="text-4xl font-black text-foreground tracking-tighter">
+                    <p className="text-3xl font-black text-foreground tracking-tighter">
                         {customers.filter(c => c.totalTransactions > 0).length}
                     </p>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">Accounts with Pulse</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Converted Accounts</p>
                  </div>
               </div>
-              <div className="p-8 rounded-4xl bg-orange-50 border border-orange-100 shadow-ambient space-y-5 group hover:scale-[1.02] transition-all">
-                 <div className="w-14 h-14 rounded-2xl bg-orange-600 text-white flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-orange-200">
-                    <Calendar className="w-7 h-7" />
+              <div className="card-premium bg-error/[0.02] border-error/5 flex items-center gap-5 group">
+                 <div className="w-12 h-12 rounded-xl bg-error text-white flex items-center justify-center transition-transform group-hover:rotate-12 shadow-lg shadow-error/10">
+                    <Calendar className="w-5 h-5" />
                  </div>
                  <div>
-                    <p className="text-4xl font-black text-orange-900 tracking-tighter">
+                    <p className="text-3xl font-black text-error tracking-tighter">
                         {customers.filter(c => {
                             const last = c.lastInteraction ? new Date(c.lastInteraction) : null;
                             if (!last) return false;
@@ -223,7 +216,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                             return last < thirtyDaysAgo;
                         }).length}
                     </p>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-orange-700 mt-2">Dormant / Needs Outreach</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-error/60 mt-1">At Risk / Dormant</p>
                  </div>
               </div>
            </div>

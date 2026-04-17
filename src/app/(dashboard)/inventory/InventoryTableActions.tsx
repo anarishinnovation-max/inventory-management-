@@ -50,6 +50,7 @@ export default function InventoryTableActions({
       <button 
         onClick={() => setShowBreakdown(true)}
         className="p-2 hover:bg-white rounded-xl text-primary transition-all border border-transparent hover:border-border-ghost shadow-sm hover:shadow-md"
+        suppressHydrationWarning
       >
         <Eye className="w-5 h-5" />
       </button>
@@ -72,6 +73,7 @@ export default function InventoryTableActions({
         onClick={handleDelete}
         disabled={isDeleting}
         className="p-2 hover:bg-error/10 rounded-xl text-error transition-colors disabled:opacity-50"
+        suppressHydrationWarning
       >
         {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
       </button>

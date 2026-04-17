@@ -57,75 +57,95 @@ export default async function RacksPage() {
   return (
     <div className="space-y-8 pb-10">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
+          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Main</span>
-            <span>/</span>
-            <span className="text-primary">Warehouse</span>
+            <span className="opacity-30">/</span>
+            <span className="text-primary">Warehouse Control</span>
           </nav>
-          <h2 className="text-4xl font-black text-foreground tracking-tight mb-1">Rack Management</h2>
-          <p className="text-muted-foreground text-sm font-medium">Manage and monitor storage locations across your facility.</p>
+          <h2 className="heading-xl tracking-tight">Rack Topography</h2>
+          <p className="text-muted-foreground mt-2 font-medium">Coordinate storage layout and spatial optimization.</p>
         </div>
-        <AddRackButton />
+        <div className="flex gap-3">
+            <button className="btn-secondary">
+                <MapPin className="w-4 h-4 text-primary" />
+                View 3D Map
+            </button>
+            <AddRackButton />
+        </div>
       </div>
 
-      {/* Bento Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-surface-lowest p-6 rounded-2xl flex flex-col gap-1 border border-border-ghost shadow-ambient">
-          <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Total Capacity</span>
-          <span className="text-3xl font-black tracking-tighter text-primary mt-1">72.4%</span>
-          <div className="w-full bg-surface-low h-1.5 rounded-full mt-3 overflow-hidden">
-             <div className="bg-primary h-full w-[72%]"></div>
+      {/* Modern Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="card-premium group">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Volumetric Fill</span>
+            <TrendingUp className="w-3 h-3 text-success" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black tracking-tighter text-foreground">72.4%</span>
+            <span className="text-[10px] font-bold text-success">+2.1%</span>
+          </div>
+          <div className="w-full bg-surface-low h-1.5 rounded-full mt-4 overflow-hidden shadow-inner">
+             <div className="bg-primary h-full w-[72%] shadow-[0_0_8px_oklch(0.55_0.18_250)]"></div>
           </div>
         </div>
         
-        <div className="bg-surface-lowest p-6 rounded-2xl flex flex-col gap-1 border border-border-ghost shadow-ambient">
-          <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Active Racks</span>
-          <span className="text-3xl font-black tracking-tighter text-foreground mt-1">{racks.length}</span>
-          <span className="text-[10px] text-success flex items-center gap-1 mt-2 font-black tracking-widest uppercase">
-             <TrendingUp className="w-3 h-3" /> +5 this week
-          </span>
+        <div className="card-premium group">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Provisioned Slots</span>
+          </div>
+          <span className="text-3xl font-black tracking-tighter text-foreground">{racks.length}</span>
+          <p className="text-[10px] text-muted-foreground mt-4 font-bold uppercase tracking-widest">Active nodes in Zone A</p>
         </div>
         
-        <div className="bg-surface-lowest p-6 rounded-2xl flex flex-col gap-1 border border-border-ghost shadow-ambient">
-          <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Empty Locations</span>
-          <span className="text-3xl font-black tracking-tighter text-foreground mt-1">12</span>
-          <span className="text-[10px] text-muted-foreground mt-2 font-black tracking-widest uppercase">Available for stock</span>
+        <div className="card-premium group border-warning/5 bg-warning/[0.01]">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Cold Spots</span>
+            <div className="w-2 h-2 rounded-full bg-warning animate-pulse"></div>
+          </div>
+          <span className="text-3xl font-black tracking-tighter text-foreground">12</span>
+          <p className="text-[10px] text-warning/70 mt-4 font-bold uppercase tracking-widest leading-none">Unallocated storage</p>
         </div>
         
-        <div className="bg-surface-lowest p-6 rounded-2xl flex flex-col gap-1 border border-primary/20 shadow-ambient">
-          <span className="text-[10px] uppercase font-black tracking-widest text-primary">Optimization Rank</span>
-          <span className="text-3xl font-black tracking-tighter text-primary mt-1">A+</span>
-          <span className="text-[10px] text-primary flex items-center gap-1 mt-2 font-black tracking-widest uppercase">Highly Efficient</span>
+        <div className="card-premium group border-primary/10 bg-primary/[0.02]">
+          <div className="flex justify-between items-start mb-4">
+            <span className="text-[10px] uppercase font-black tracking-widest text-primary">Efficiency Index</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-3xl font-black tracking-tighter text-primary">A++</span>
+            <div className="badge bg-primary text-white text-[9px] border-none shadow-glow py-0 px-2 h-5">LEAN</div>
+          </div>
+          <p className="text-[10px] text-primary/60 mt-4 font-bold uppercase tracking-widest leading-none">Optimal Pathing enabled</p>
         </div>
       </div>
 
-      {/* Table Section */}
-      <div className="bg-surface-lowest rounded-4xl overflow-hidden shadow-ambient border border-border-ghost">
-        <div className="px-8 py-5 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
+      {/* Control Strip */}
+      <div className="card-premium !p-0 overflow-hidden">
+        <div className="px-8 py-4 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
           <div className="flex items-center gap-4">
-            <span className="text-[15px] font-black text-foreground">Storage Locations</span>
-            <div className="flex items-center gap-2 bg-surface hover:bg-surface-high transition-colors cursor-pointer px-3 py-1.5 rounded-lg border border-border-ghost text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                <Filter className="w-3 h-3" />
-                Sort & Filter
+            <span className="text-[13px] font-black text-foreground uppercase tracking-wider">Spatial Inventory</span>
+            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-border-ghost text-[9px] font-black text-muted-foreground uppercase tracking-widest shadow-sm hover:border-primary/20 transition-all cursor-pointer">
+                <Filter className="w-3 h-3 text-primary" />
+                Refine View
             </div>
           </div>
-          <div className="flex gap-2">
-            <button className="p-2 hover:bg-surface-low rounded-xl transition-colors text-muted-foreground"><Download className="w-4 h-4" /></button>
-            <button className="p-2 hover:bg-surface-low rounded-xl transition-colors text-muted-foreground"><Printer className="w-4 h-4" /></button>
+          <div className="flex gap-1">
+            <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Download className="w-3.5 h-3.5" /></button>
+            <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Printer className="w-3.5 h-3.5" /></button>
           </div>
         </div>
         
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-surface-low/30">
-              <tr>
-                <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Rack Number</th>
-                <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Zone/Area</th>
-                <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Items Stored</th>
-                <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Fill Factor</th>
-                <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Actions</th>
+            <thead>
+              <tr className="table-header">
+                <th className="table-cell-header">Location ID</th>
+                <th className="table-cell-header">Zone Assignment</th>
+                <th className="table-cell-header">Allocated Assets</th>
+                <th className="table-cell-header text-right">Fill Factor</th>
+                <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
@@ -135,14 +155,14 @@ export default async function RacksPage() {
                 const itemList = row.items && row.items.length > 0 ? row.items.map((it: any) => it.name).join(", ") : "Empty";
                 
                 return (
-                  <tr key={row.id} className="hover:bg-surface-low/40 transition-colors group cursor-pointer">
+                  <tr key={row.id} className="hover:bg-surface-low/40 transition-all group cursor-pointer border-b border-border-ghost last:border-0">
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center font-black text-xs border border-primary/20">
+                        <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center font-black text-xs border border-primary/20 shadow-inner group-hover:bg-primary group-hover:text-white transition-all">
                            {row.rackNumber}
                         </div>
                         <div>
-                          <p className="text-[15px] font-black text-foreground group-hover:text-primary transition-colors">Rack {row.rackNumber}</p>
+                          <p className="text-sm font-black text-foreground group-hover:text-primary transition-all">Rack {row.rackNumber}</p>
                           <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Primary Storage</p>
                         </div>
                       </div>
@@ -158,11 +178,11 @@ export default async function RacksPage() {
                        </p>
                     </td>
                     <td className="px-8 py-5 text-right">
-                      <div className="flex flex-col items-end gap-1.5">
-                        <span className="text-[10px] font-black text-foreground">{Math.round(fillPercent)}%</span>
-                        <div className="w-24 bg-surface-low border border-border-ghost h-1.5 rounded-full overflow-hidden">
+                      <div className="flex flex-col items-end gap-2">
+                        <span className="text-[10px] font-black text-foreground uppercase tracking-widest">{Math.round(fillPercent)}% Full</span>
+                        <div className="w-20 bg-surface-low border border-border-ghost h-1 rounded-full overflow-hidden shadow-inner">
                           <div className={cn(
-                            "h-full transition-all duration-500",
+                            "h-full transition-all duration-700 ease-out shadow-[0_0_8px_currentColor]",
                             fillPercent > 90 ? "bg-error" : fillPercent > 50 ? "bg-primary" : "bg-success"
                           )} style={{ width: `${fillPercent}%` }}></div>
                         </div>

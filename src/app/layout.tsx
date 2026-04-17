@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Logistix | Warehouse Inventory Management",
+  title: "SS Cuttings | Enterprise Inventory Management",
   description: "Precision inventory management for the modern built environment.",
 };
 
@@ -22,6 +22,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full">
         <Providers>{children}</Providers>

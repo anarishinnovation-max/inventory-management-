@@ -137,37 +137,37 @@ export default async function InventoryPage({
   return (
     <div className="space-y-8 pb-10">
       {/* Header & Actions */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
+          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Main</span>
-            <span>/</span>
+            <span className="opacity-30">/</span>
             <span className="text-primary">Inventory</span>
           </nav>
-          <h2 className="text-4xl font-black text-foreground tracking-tight">Inventory List</h2>
-          <p className="text-muted-foreground mt-2 font-medium">Manage and monitor stock levels across all zones.</p>
+          <h2 className="heading-xl">Inventory Hub</h2>
+          <p className="text-muted-foreground mt-2 font-medium">Global stock visibility and SKU management.</p>
         </div>
-        <Link href="/inventory/new" className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
-          <PlusCircle className="w-5 h-5" />
-          <span>Add Item</span>
+        <Link href="/inventory/new" className="btn-primary shadow-glow">
+          <PlusCircle className="w-4 h-4" />
+          <span>Onboard SKU</span>
         </Link>
       </div>
 
-      {/* Bento Filters & Search */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Bento Stats & Filters */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <InventoryFilters 
           currentStatus={status} 
           currentCategory={category} 
           categories={categoryNames} 
         />
         
-        <div className="md:col-span-1 p-6 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex items-center gap-5">
-          <div className="w-14 h-14 rounded-2xl bg-success/10 flex items-center justify-center text-success transition-transform hover:scale-110">
-            <TrendingUp className="w-7 h-7" />
+        <div className="md:col-span-1 card-premium flex items-center gap-5 !p-6">
+          <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center text-success transition-transform hover:rotate-12">
+            <TrendingUp className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-3xl font-black text-foreground tracking-tighter">{items.length}</p>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Found Units</p>
+            <p className="text-2xl font-black text-foreground tracking-tight">{items.length}</p>
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Found Records</p>
           </div>
         </div>
       </div>
@@ -175,105 +175,88 @@ export default async function InventoryPage({
       <InventorySearch defaultValue={q} />
 
       {/* Data Table */}
-      <div className="bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost overflow-hidden pb-4">
+      <div className="card-premium !p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-surface-low/30 border-b border-border-ghost">
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Item Name</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">SKU</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Category</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Quantity</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Rack</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Actions</th>
+              <tr className="table-header">
+                <th className="table-cell-header">Identified SKU</th>
+                <th className="table-cell-header">Category</th>
+                <th className="table-cell-header text-right">Stock Level</th>
+                <th className="table-cell-header">Location</th>
+                <th className="table-cell-header">Reliability</th>
+                <th className="table-cell-header text-right">Ops</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
               {items.length > 0 ? items.map((item: MappedItem) => {
                 const totalStock = item.totalStock;
                 const incomingQty = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
-                const reservedQty = item.quantityReserved;
-                const netAvailable = (totalStock + incomingQty) - reservedQty;
                 
-                const isShortage = netAvailable < 0;
-                const isPartial = totalStock > 0 && totalStock < reservedQty;
-                const isOrdered = incomingQty > 0 && !isShortage;
-                const isOutOfStock = totalStock === 0 && incomingQty === 0;
-                const isLowStock = !isOrdered && !isShortage && !isPartial && totalStock > 0 && totalStock <= item.minStockLevel;
+                // Reliability logic based on physical on-hand stock
+                const isShortage = totalStock <= 0;
+                const isOrdered = incomingQty > 0;
+                const isLowStock = !isOrdered && totalStock > 0 && totalStock <= item.minStockLevel;
                 const rackLocations = (item.stocks || []).length > 0
                   ? Array.from(new Set(item.stocks.map((s) => s.rack.rackNumber))).join(", ")
-                  : (item.totalStock > 0 ? "Inventory" : "N/A");
+                  : (item.totalStock > 0 ? "General" : "N/A");
                 return (
-                  <tr key={item.id} className="group hover:bg-surface-low/40 transition-colors cursor-pointer">
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-surface-low flex items-center justify-center text-muted-foreground group-hover:bg-primary/5 group-hover:text-primary transition-colors border border-border-ghost">
-                          <ImageIcon className="w-5 h-5 opacity-50 text-foreground group-hover:opacity-100 group-hover:text-primary" />
+                  <tr key={item.id} className="group hover:bg-surface-low/30 transition-colors cursor-pointer border-b border-border-ghost last:border-0">
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center text-muted-foreground border border-border-ghost transition-colors group-hover:bg-primary/5 group-hover:border-primary/20">
+                          <ImageIcon className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:text-primary" />
                         </div>
-                        <span className="font-bold text-foreground text-[15px] group-hover:text-primary transition-colors">{item.name}</span>
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{item.sku}</span>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6 text-sm font-mono font-bold text-muted-foreground">
-                       {item.sku}
-                    </td>
-                    <td className="px-8 py-6">
-                      <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">
+                    <td className="px-6 py-5">
+                      <span className="badge bg-indigo-50/50 text-indigo-600 border-indigo-100">
                          {item.category}
                       </span>
                     </td>
-                    <td className="px-8 py-6 text-right">
-                       <div className="flex flex-col items-end leading-tight">
-                         <span className="text-xl font-black text-foreground">{totalStock}</span>
+                    <td className="px-6 py-5 text-right">
+                       <div className="flex flex-col items-end">
+                         <span className={`text-base font-black tracking-tight ${
+                             isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"
+                         }`}>
+                             {totalStock} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
+                         </span>
                          {incomingQty > 0 && (
-                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">
-                             (+{incomingQty} incoming)
-                           </span>
-                         )}
-                         {reservedQty > 0 && (
-                            <span className="text-[9px] font-bold uppercase tracking-tighter text-error/60 mt-0.5">
-                              {reservedQty} reserved
+                            <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
+                               +{incomingQty} On Order
                             </span>
                          )}
                        </div>
                     </td>
-                    <td className="px-8 py-6 text-sm font-bold text-muted-foreground">
-                       {rackLocations || "N/A"}
+                    <td className="px-6 py-5">
+                       <span className="text-xs font-bold text-muted-foreground bg-surface-low px-2 py-1 rounded-md">
+                          {rackLocations || "N/A"}
+                       </span>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-5">
                       {isShortage ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-black uppercase tracking-widest border border-error/20">
-                          <span className="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                        <span className="badge bg-error/10 text-error border-error/20 ring-4 ring-error/5">
                           Shortage
                         </span>
-                      ) : isPartial ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning/10 text-warning text-[10px] font-black uppercase tracking-widest border border-warning/20">
-                          <span className="w-1.5 h-1.5 rounded-full bg-warning"></span>
-                          Partial
-                        </span>
                       ) : isOrdered ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest border border-blue-100">
-                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                          Ordered
-                        </span>
-                      ) : isOutOfStock ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/10 text-error text-[10px] font-black uppercase tracking-widest border border-error/20">
-                          <span className="w-1.5 h-1.5 rounded-full bg-error"></span>
-                          Out of Stock
+                        <span className="badge bg-primary/5 text-primary border-primary/10">
+                          Incoming
                         </span>
                       ) : isLowStock ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-warning/10 text-warning text-[10px] font-black uppercase tracking-widest border border-warning/20">
-                          <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse"></span>
-                          Low Stock
+                        <span className="badge bg-warning/10 text-warning border-warning/20 italic">
+                          Low Level
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-success/10 text-success text-[10px] font-black uppercase tracking-widest border border-success/20">
-                          <span className="w-1.5 h-1.5 rounded-full bg-success"></span>
-                          In Stock
+                        <span className="badge bg-success/10 text-success border-success/20">
+                          Optimal
                         </span>
                       )}
                     </td>
-                    <td className="px-8 py-6 text-right">
+                    <td className="px-6 py-5 text-right">
                       <InventoryTableActions 
                         itemId={item.id} 
                         itemName={item.name} 

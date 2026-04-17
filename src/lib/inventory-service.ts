@@ -212,10 +212,10 @@ export const InventoryService = {
   },
 
   /**
-   * Creates a new Dispatch Order and reserves stock immediately.
-   * Decrements quantityAvailable to prevent overallocation.
+   * Creates a new Dispatch Order.
+   * Note: In this project, stock is NOT reserved ahead of time.
    */
-  async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[], status?: string }) {
+  async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date }) {
     const status = data.status || "pending";
     const isShortageAllowed = status === "Backordered" || status === "Pending Procurement";
 
@@ -239,6 +239,7 @@ export const InventoryService = {
           customerId: data.customerId,
           status: status,
           paymentMode: data.paymentMode || "Cash",
+          expectedDelivery: data.expectedDelivery ? new Date(data.expectedDelivery) : null,
           items: {
             create: data.items.map((item: any) => ({
               itemId: item.itemId,
@@ -249,50 +250,7 @@ export const InventoryService = {
         },
       });
 
-      // 3. Move from Available to Reserved
-      for (const item of data.items) {
-        const inv = await tx.inventory.findUnique({
-          where: { itemId: item.itemId },
-        });
-
-        const currentAvailable = inv?.quantityAvailable || 0;
-        const decrementQty = isShortageAllowed 
-          ? Math.min(currentAvailable, item.quantity) 
-          : item.quantity;
-
-        if (inv) {
-          await tx.inventory.update({
-            where: { itemId: item.itemId },
-            data: {
-              quantityAvailable: { decrement: decrementQty },
-              quantityReserved: { increment: item.quantity },
-            },
-          });
-        } else {
-          // Should theoretically not happen if items are selected from registry
-          await tx.inventory.create({
-            data: {
-              itemId: item.itemId,
-              quantityAvailable: 0,
-              quantityReserved: item.quantity,
-              incomingQty: 0,
-              quantityInTransit: 0,
-            }
-          });
-        }
-
-        // 4. Create Audit Log for Reservation
-        await tx.inventoryTransaction.create({
-          data: {
-            item: { connect: { id: item.itemId } },
-            type: "RESERVE",
-            quantity: item.quantity,
-            referenceType: "DISPATCH",
-            referenceId: order.id,
-          },
-        });
-      }
-
+      // Stock is not reserved during the pending phase as per project requirements.
       return order;
     });
   },
@@ -312,11 +270,11 @@ export const InventoryService = {
       if (order.status === "dispatched") throw new Error("Order already dispatched");
 
       for (const line of order.items) {
-        // 1. Update Inventory summary (Only Reserved, Available was already decremented at order creation)
+        // 1. Update Inventory summary (Decrement Available directly upon physical dispatch)
         await tx.inventory.update({
           where: { itemId: line.itemId },
           data: {
-            quantityReserved: { decrement: line.quantity },
+            quantityAvailable: { decrement: line.quantity },
           },
         });
 
@@ -512,28 +470,7 @@ export const InventoryService = {
       if (order.status === "dispatched") throw new Error("Cannot cancel a dispatched order");
       if (order.status === "cancelled") return order;
 
-      for (const line of order.items) {
-        // 1. Update Inventory summary
-        await tx.inventory.update({
-          where: { itemId: line.itemId },
-          data: {
-            quantityAvailable: { increment: line.quantity },
-            quantityReserved: { decrement: line.quantity },
-          },
-        });
-
-        // 2. Create Audit Log for Release
-        await tx.inventoryTransaction.create({
-          data: {
-            item: { connect: { id: line.itemId } },
-            type: "RELEASE_RESERVE",
-            quantity: -line.quantity,
-            referenceType: "DISPATCH",
-            referenceId: orderId,
-          },
-        });
-      }
-
+      // No stock was held/reserved, so no release is needed.
       return await tx.dispatchOrder.update({
         where: { id: orderId },
         data: { status: "cancelled" },

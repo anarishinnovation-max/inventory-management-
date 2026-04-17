@@ -4,19 +4,14 @@ import prisma from "@/lib/prisma";
 function computeInventoryStatus(params: {
   totalQty: number;
   incomingQty: number;
-  reservedQty: number;
   minStockLevel: number;
 }) {
-  const { totalQty, incomingQty, reservedQty, minStockLevel } = params;
+  const { totalQty, incomingQty, minStockLevel } = params;
   
-  // Net availability = (Physical + Incoming) - Reserved
-  const netAvailable = (totalQty + incomingQty) - reservedQty;
-  
-  if (netAvailable < 0) return "SHORTAGE";
-  if (totalQty === 0 && incomingQty > 0) return "ORDERED";
-  if (totalQty > 0 && totalQty < reservedQty) return "PARTIAL";
-  if (totalQty > 0 && totalQty <= minStockLevel) return "LOW_STOCK";
-  return totalQty > 0 ? "IN_STOCK" : "OUT_OF_STOCK";
+  if (totalQty <= 0 && incomingQty > 0) return "ON_ORDER";
+  if (totalQty <= 0) return "OUT_OF_STOCK";
+  if (totalQty <= minStockLevel) return "LOW_STOCK";
+  return "IN_STOCK";
 }
 
 export async function GET(
@@ -107,7 +102,6 @@ export async function GET(
     const status = computeInventoryStatus({ 
       totalQty, 
       incomingQty, 
-      reservedQty, 
       minStockLevel 
     });
 
@@ -122,8 +116,7 @@ export async function GET(
       inventory: item.inventory,
       totalQty,
       incomingQty,
-      reservedQty,
-      netAvailable: (totalQty + incomingQty) - reservedQty,
+      totalVisibility: totalQty + incomingQty,
       status,
       incomingPurchaseOrders,
       linkedCustomerOrders

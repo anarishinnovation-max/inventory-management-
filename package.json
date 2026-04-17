@@ -1,5 +1,5 @@
 {
-  "name": "logistix-wims",
+  "name": "ss-cuttings-ims",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,8 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "prisma db seed",
-    "seed:old": "node database/seed.js",
-    "backfill:batches": "tsx scripts/backfill-inventory-batches.ts"
+    "backfill:batches": "tsx scripts/backfill-inventory-batches.ts",
+    "postinstall": "prisma generate",
+    "db:migrate:prod": "prisma migrate deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

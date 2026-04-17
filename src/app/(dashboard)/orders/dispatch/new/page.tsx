@@ -135,6 +135,7 @@ export default function NewDispatchOrderPage() {
   
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [paymentMode, setPaymentMode] = useState("Cash");
+  const [expectedDelivery, setExpectedDelivery] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantity: 1, sellingPrice: 0 }
   ]);
@@ -314,6 +315,7 @@ export default function NewDispatchOrderPage() {
         body: JSON.stringify({
           customerId: selectedCustomer,
           paymentMode: paymentMode,
+          expectedDelivery: expectedDelivery || null,
           items: lineItems,
           status: customStatus || "pending"
         }),
@@ -564,6 +566,16 @@ export default function NewDispatchOrderPage() {
                    <option value="Digital Wallet">Digital Wallet</option>
                    <option value="UPI">UPI</option>
                  </select>
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Expected Delivery</label>
+                 <input 
+                   type="datetime-local"
+                   value={expectedDelivery}
+                   onChange={(e) => setExpectedDelivery(e.target.value)}
+                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                 />
               </div>
 
               <div className="pt-6 border-t border-border-ghost space-y-5">

@@ -59,72 +59,71 @@ export default async function PurchaseOrdersPage() {
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
+          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Procurement</span>
-            <span>/</span>
-            <span className="text-primary">Purchase Orders</span>
+            <span className="opacity-30">/</span>
+            <span className="text-primary">Supply Chain Flow</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Purchase Orders</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">Manage orders from vendors</p>
+          <h1 className="heading-xl tracking-tight">Purchase Orders</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Coordinate inbound asset flow from verified suppliers.</p>
         </div>
-        <Link href="/orders/purchase/new" className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
-          <Plus className="w-5 h-5" />
-          <span>New Order</span>
+        <Link href="/orders/purchase/new" className="btn-primary shadow-glow">
+          <Plus className="w-4 h-4" />
+          <span>Onboard PO</span>
         </Link>
       </header>
 
       {/* KPI Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-orange-500/30 transition-all">
+        <div className="card-premium group border-warning/5 bg-warning/[0.01]">
            <div className="flex justify-between items-start">
-              <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-500 transition-transform group-hover:scale-110">
-                 <Clock className="w-6 h-6" />
+              <div className="p-3 rounded-xl bg-warning/10 text-warning transition-transform group-hover:scale-110">
+                 <Clock className="w-5 h-5" />
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-2 py-1 rounded-md bg-orange-50 w-fit">Pending</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{pendingCount}</h2>
+              <p className="text-[9px] font-black text-warning uppercase tracking-widest">Active Drafts</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingCount}</h2>
            </div>
         </div>
         
-        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-blue-500/30 transition-all">
+        <div className="card-premium group border-primary/5 bg-primary/[0.01]">
            <div className="flex justify-between items-start">
-              <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 transition-transform group-hover:scale-110">
-                 <Truck className="w-6 h-6" />
+              <div className="p-3 rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
+                 <Truck className="w-5 h-5" />
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-2 py-1 rounded-md bg-blue-50 w-fit">On Order</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{orderedCount}</h2>
+              <p className="text-[9px] font-black text-primary uppercase tracking-widest">In Transit</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{orderedCount}</h2>
            </div>
         </div>
 
-        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-emerald-500/30 transition-all">
+        <div className="card-premium group border-success/5 bg-success/[0.01]">
            <div className="flex justify-between items-start">
-              <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 transition-transform group-hover:scale-110">
-                 <CheckCircle2 className="w-6 h-6" />
+              <div className="p-3 rounded-xl bg-success/10 text-success transition-transform group-hover:scale-110">
+                 <CheckCircle2 className="w-5 h-5" />
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-2 py-1 rounded-md bg-emerald-50 w-fit">Verified Inbound</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{receivedCount}</h2>
+              <p className="text-[9px] font-black text-success uppercase tracking-widest">Verified Inbound</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{receivedCount}</h2>
            </div>
         </div>
       </div>
 
       {/* Main Table Container */}
-      <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">
+      <div className="card-premium !p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-surface-low/30 border-b border-border-ghost">
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Order Identity</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Supplier Source</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Logistics Summary</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Financial Volume</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pipeline Status</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Timestamp</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Actions</th>
+              <tr className="table-header">
+                <th className="table-cell-header">PO Identity</th>
+                <th className="table-cell-header">Logistics flow</th>
+                <th className="table-cell-header text-right">Financial Exposure</th>
+                <th className="table-cell-header">Pipeline Status</th>
+                <th className="table-cell-header">Timestamp</th>
+                <th className="table-cell-header text-right">Ops</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
@@ -137,65 +136,65 @@ export default async function PurchaseOrdersPage() {
                   : "Not scheduled";
                 
                 return (
-                  <tr key={po.id} className="group hover:bg-surface-low/40 transition-colors cursor-pointer">
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center border border-border-ghost group-hover:bg-primary/5 transition-colors">
-                           <span className="text-[10px] font-black text-muted-foreground group-hover:text-primary tracking-widest">ID</span>
+                  <tr key={po.id} className="group hover:bg-surface-low/30 transition-all cursor-pointer border-b border-border-ghost last:border-0">
+                    <td className="px-8 py-5">
+                      <div className="flex gap-4 min-w-[200px]">
+                        <div className="w-10 h-10 shrink-0 rounded-xl bg-surface-low flex items-center justify-center border border-border-ghost group-hover:bg-primary group-hover:text-white transition-all text-[10px] font-black text-muted-foreground group-hover:border-primary">
+                           ID
                         </div>
-                        <span className="font-mono font-bold text-foreground text-sm tracking-tighter">#{po.id.split('-')[0].toUpperCase()}</span>
+                        <div className="flex flex-col">
+                           <span className="font-mono font-black text-foreground text-sm tracking-tighter">#{po.id.split('-')[0].toUpperCase()}</span>
+                           <span className="font-bold text-foreground text-sm group-hover:text-primary transition-all mt-0.5">{po.vendor.name}</span>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <div className="flex flex-col">
-                        <span className="font-black text-foreground text-[15px] group-hover:text-primary transition-colors">{po.vendor.name}</span>
-                        <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Verified Supplier</span>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <div className="flex flex-col gap-1">
+                    <td className="px-8 py-5">
+                      <div className="flex flex-col gap-1.5">
                         {po.items.length === 1 ? (
                            <div className="flex items-center gap-1.5">
-                              <span className="text-foreground font-bold text-sm">{po.items[0].item.name}</span>
-                              <span className="text-[10px] font-black text-muted-foreground bg-surface-low px-1.5 py-0.5 rounded-md">+{po.items[0].quantityOrdered} {po.items[0].item.unit}</span>
+                              <span className="text-foreground font-bold text-xs">{po.items[0].item.name}</span>
+                              <span className="text-[9px] font-black text-muted-foreground bg-surface-low px-1.5 py-0.5 rounded-md border border-border-ghost">{po.items[0].quantityOrdered} Units</span>
                            </div>
                         ) : (
-                           <span className="text-foreground font-black text-sm">{po.items.length} Primary Line Items</span>
+                           <span className="text-foreground font-black text-xs">{po.items.length} Primary Assets</span>
                         )}
-                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">
-                          Payment: <span className="text-foreground">{paymentMode}</span>
-                        </div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                          ETA: <span className="text-foreground">{expectedDeliveryLabel}</span>
+                        <div className="flex items-center gap-3">
+                            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                                <span className="opacity-50">PAY:</span> <span className="text-foreground">{paymentMode}</span>
+                            </div>
+                            <div className="w-1 h-1 rounded-full bg-border-ghost" />
+                            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                                <span className="opacity-50">ETA:</span> <span className="text-foreground">{po.expectedDelivery ? formatDate(po.expectedDelivery) : 'Unscheduled'}</span>
+                            </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <span className="text-xl font-black text-foreground">₹{totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                    <td className="px-8 py-5 text-right">
+                      <span className="text-lg font-black text-foreground tracking-tighter">₹{totalValue.toLocaleString()}</span>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-8 py-5">
                       <span className={cn(
-                        "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors shadow-sm",
-                        status === "PENDING" ? "bg-orange-50 text-orange-600 border-orange-100" :
-                        status === "ORDERED" ? "bg-blue-50 text-blue-600 border-blue-100" :
-                        "bg-emerald-50 text-emerald-600 border-emerald-100"
+                        "badge rounded-lg gap-1.5 border-none transition-all group-hover:scale-105",
+                        status === "PENDING" ? "bg-warning/10 text-warning shadow-[0_2px_8px_oklch(0.85_0.15_85_/_0.1)]" :
+                        status === "ORDERED" ? "bg-primary/10 text-primary shadow-[0_2px_8px_oklch(0.55_0.2_250_/_0.1)]" :
+                        "bg-success/10 text-success shadow-[0_2px_8px_oklch(0.65_0.2_150_/_0.1)]"
                       )}>
-                        {status === "PENDING" && <Clock className="w-3.5 h-3.5" />}
-                        {status === "ORDERED" && <Truck className="w-3.5 h-3.5" />}
-                        {(status === "RECEIVED" || status === "DELIVERED") && <CheckCircle2 className="w-3.5 h-3.5" />}
+                        {status === "PENDING" && <Clock className="w-3 h-3" />}
+                        {status === "ORDERED" && <Truck className="w-3 h-3" />}
+                        {(status === "RECEIVED" || status === "DELIVERED") && <CheckCircle2 className="w-3 h-3" />}
                         {status === "DELIVERED" ? "RECEIVED" : status}
                       </span>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="px-8 py-5">
                       <div className="flex flex-col">
-                         <span className="text-sm font-bold text-foreground">{formatDate(po.createdAt)}</span>
-                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{formatTime(po.createdAt)}</span>
+                         <span className="text-xs font-bold text-foreground">{formatDate(po.createdAt)}</span>
+                         <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{formatTime(po.createdAt)}</span>
                       </div>
                     </td>
-                    <td className="px-8 py-6 text-right">
-                      <Link href={`/orders/purchase/${po.id}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-low text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm">
+                    <td className="px-8 py-5 text-right">
+                      <Link href={`/orders/purchase/${po.id}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-low text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm border border-transparent hover:border-primary">
                         <Eye className="w-3 h-3" />
-                        Audit Details
+                        Audit
                       </Link>
                     </td>
                   </tr>

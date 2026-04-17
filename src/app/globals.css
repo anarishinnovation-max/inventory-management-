@@ -1,58 +1,70 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #f7f9fb;
-  --color-foreground: #191c1e;
+  /* HSL Neutrals */
+  --color-background: oklch(0.98 0.01 247);
+  --color-foreground: oklch(0.15 0.02 247);
   
-  --color-primary: #004ac6;
-  --color-primary-container: #2563eb;
-  --color-on-primary: #ffffff;
+  /* HSL Brand */
+  --color-primary: oklch(0.55 0.18 250);
+  --color-primary-container: oklch(0.65 0.2 250);
+  --color-on-primary: oklch(1 0 0);
   
-  --color-surface-low: #f2f4f6;
-  --color-surface-lowest: #ffffff;
-  --color-surface-dim: #d8dadc;
+  /* Surfaces */
+  --color-surface-low: oklch(0.96 0.01 247);
+  --color-surface-lowest: oklch(1 0 0);
+  --color-surface-dim: oklch(0.9 0.02 247);
   
-  --color-success: #006329;
-  --color-warning: #f59e0b;
-  --color-error: #ba1a1a;
-  --color-info: #0ea5e9;
+  /* Semantics */
+  --color-success: oklch(0.65 0.2 150);
+  --color-warning: oklch(0.8 0.15 80);
+  --color-error: oklch(0.55 0.2 25);
+  --color-info: oklch(0.7 0.15 220);
   
-  --color-muted-foreground: #64748b;
+  /* Tokens */
+  --color-muted-foreground: oklch(0.5 0.03 247);
   --color-border-ghost: rgba(195, 198, 215, 0.15);
   
+  --radius-4xl: 2rem;
+  --radius-3xl: 1.5rem;
+  --radius-2xl: 1.25rem;
   --radius-xl: 1rem;
   --radius-lg: 0.75rem;
   --radius-md: 0.5rem;
   
-  --font-sans: "Inter", var(--font-geist-sans);
+  --font-sans: "Inter", "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Input Sans", monospace;
 }
 
 :root {
-  --background: #f7f9fb;
-  --foreground: #191c1e;
-  
+  --background: oklch(0.98 0.01 247);
+  --foreground: oklch(0.15 0.02 247);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Inter", sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
 }
+
+/* Premium Layout Utilities */
 
 .glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  @apply bg-white/80 backdrop-blur-xl border border-white/30;
 }
 
-.shadow-ambient {
-  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+.shadow-premium {
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04), 0px 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.shadow-glow {
+  box-shadow: 0px 0px 20px oklch(0.55 0.18 250 / 0.15);
 }
 
 .primary-gradient {
-  background: linear-gradient(135deg, #004ac6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, oklch(0.55 0.18 250) 0%, oklch(0.65 0.2 250) 100%);
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -63,52 +75,64 @@ body {
   scrollbar-width: none;
 }
 
-/* Semantic UI Classes */
+/* Premium Component Classes */
 
 .card-premium {
-  @apply bg-surface-lowest p-8 rounded-3xl border border-border-ghost transition-all duration-300;
-  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+  @apply bg-surface-lowest p-6 rounded-3xl border border-border-ghost transition-all duration-300;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.card-premium:hover {
+  @apply border-primary/20 scale-[1.01];
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary {
-  @apply px-6 py-3 rounded-2xl text-white font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50;
-  background: linear-gradient(135deg, #004ac6 0%, #2563eb 100%);
-  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
-}
-
-.btn-primary:hover:not(:disabled) {
-  opacity: 0.9;
+  @apply px-5 py-2.5 rounded-xl text-white font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95;
+  background: linear-gradient(135deg, oklch(0.55 0.18 250) 0%, oklch(0.65 0.2 250) 100%);
+  box-shadow: 0px 2px 8px oklch(0.55 0.18 250 / 0.2);
 }
 
 .btn-secondary {
-  @apply px-6 py-3 rounded-2xl bg-surface-lowest text-foreground font-semibold hover:bg-surface-low transition-all border border-border-ghost flex items-center justify-center gap-2;
-  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+  @apply px-5 py-2.5 rounded-xl bg-surface-lowest text-foreground font-semibold hover:bg-surface-low transition-all border border-border-ghost flex items-center justify-center gap-2 active:scale-95;
 }
+
 .btn-ghost {
-  @apply p-4 rounded-2xl bg-surface-lowest border border-border-ghost hover:text-foreground transition-all;
-  box-shadow: 0px 4px 24px rgba(25, 28, 30, 0.06);
+  @apply p-2.5 rounded-xl text-muted-foreground hover:bg-surface-low hover:text-foreground transition-all active:scale-95;
 }
 
 .input-field {
-  @apply w-full px-5 py-4 bg-surface-low border-none rounded-2xl focus:ring-2 focus:ring-primary transition-all outline-none font-medium;
+  @apply w-full px-4 py-3 bg-surface-low/50 border border-transparent rounded-xl focus:bg-surface-lowest focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all outline-none font-medium placeholder:text-muted-foreground/50;
+}
+
+.badge {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border;
 }
 
 .heading-xl {
-  @apply text-3xl font-bold tracking-tight text-foreground;
+  @apply text-4xl font-black tracking-tight text-foreground;
 }
 
 .heading-lg {
   @apply text-2xl font-bold tracking-tight text-foreground;
 }
 
-.badge-status {
-  @apply inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold border;
-}
-
 .table-header {
-  @apply bg-surface-low/50;
+  @apply bg-surface-low/30 border-b border-border-ghost;
 }
 
 .table-cell-header {
-  @apply px-8 py-5 text-xs font-bold  text-gray-500 uppercase tracking-wider;
+  @apply px-6 py-4 text-[10px] font-black  text-muted-foreground uppercase tracking-widest;
 }
+
+/* Animations */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+

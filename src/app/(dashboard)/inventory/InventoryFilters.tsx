@@ -1,7 +1,7 @@
 "use client";
 
 import { clsx, type ClassValue } from "clsx";
-import { Filter } from "lucide-react";
+import { Filter, Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";
@@ -39,95 +39,94 @@ export default function InventoryFilters({
 
   return (
     <>
-      <div className="md:col-span-2 p-5 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex flex-col justify-center space-y-4">
-        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground font-sans">Filter by Status</label>
+      <div className="md:col-span-2 card-premium flex flex-col justify-center gap-4 border-primary/5">
+        <div className="flex items-center justify-between">
+            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Status filter</label>
+            {isPending && <span className="text-[10px] font-bold text-primary animate-pulse">Updating...</span>}
+        </div>
         <div className="flex flex-wrap gap-2">
           <button 
             onClick={() => setFilter("status", "all")}
             className={cn(
-              "px-4 py-2 rounded-full text-xs font-bold transition-all shadow-sm",
-              currentStatus === 'all' ? "bg-primary text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              "badge py-2 px-4 transition-all active:scale-95",
+              currentStatus === 'all' ? "bg-primary text-white border-primary shadow-glow" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
             )}
+            suppressHydrationWarning
           >
-            All Items
+            <span>All records</span>
           </button>
           <button 
             onClick={() => setFilter("status", "instock")}
             className={cn(
-              "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'instock' ? "bg-success text-white shadow-lg shadow-success/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              "badge py-2 px-4 transition-all active:scale-95",
+              currentStatus === 'instock' ? "bg-success text-white border-success shadow-[0_0_12px_oklch(0.65_0.2_150_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
             )}
+            suppressHydrationWarning
           >
-            In Stock
+            <span>Optimal</span>
           </button>
           <button 
             onClick={() => setFilter("status", "low")}
             className={cn(
-              "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'low' ? "bg-warning text-white shadow-lg shadow-warning/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              "badge py-2 px-4 transition-all active:scale-95",
+              currentStatus === 'low' ? "bg-warning text-white border-warning shadow-[0_0_12px_oklch(0.8_0.15_80_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
             )}
+            suppressHydrationWarning
           >
-            Low Stock
-          </button>
-          <button 
-            onClick={() => setFilter("status", "outofstock")}
-            className={cn(
-              "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'outofstock' ? "bg-error text-white shadow-lg shadow-error/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
-            )}
-          >
-            Out of Stock
+            <span>Low stock</span>
           </button>
           <button 
             onClick={() => setFilter("status", "shortage")}
             className={cn(
-              "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'shortage' ? "bg-error text-white shadow-lg shadow-error/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              "badge py-2 px-4 transition-all active:scale-95",
+              currentStatus === 'shortage' ? "bg-error text-white border-error shadow-[0_0_12px_oklch(0.55_0.2_25_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
             )}
+            suppressHydrationWarning
           >
-            Shortage
+            <span>Shortage</span>
           </button>
           <button 
             onClick={() => setFilter("status", "ordered")}
             className={cn(
-              "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'ordered' ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              "badge py-2 px-4 transition-all active:scale-95",
+              currentStatus === 'ordered' ? "bg-indigo-600 text-white border-indigo-600 shadow-[0_0_12px_rgba(79,70,229,0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
             )}
+            suppressHydrationWarning
           >
-            On Order
+            <span>On Order</span>
           </button>
         </div>
       </div>
 
-      <div className="md:col-span-1 p-5 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex items-center justify-between">
+      <div className="md:col-span-1 card-premium flex items-center justify-between !p-6">
         <div className="space-y-4 flex-1">
-          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block text-left font-sans">Categories</label>
-          <div className="flex gap-4">
-            <select 
-              value={currentCategory}
-              onChange={(e) => setFilter("category", e.target.value)}
-              className={cn(
-                "bg-transparent border-none text-sm font-bold text-foreground p-0 focus:ring-0 cursor-pointer w-full max-w-35 transition-opacity",
-                isPending && "opacity-50"
-              )}
-            >
-              <option value="all">All Categories</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-            <select className="bg-transparent border-none text-sm font-bold text-foreground p-0 focus:ring-0 cursor-pointer w-full max-w-40">
-              <option>Zone A (Main)</option>
-              <option>Zone B (Cold Storage)</option>
-              <option>Zone C (Hazardous)</option>
-            </select>
+          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block text-left">Grouping</label>
+          <div className="flex flex-col gap-3">
+            <div className="relative">
+                <select 
+                  value={currentCategory}
+                  onChange={(e) => setFilter("category", e.target.value)}
+                  className={cn(
+                    "w-full bg-surface-low/50 border border-transparent rounded-lg px-3 py-2 text-xs font-bold text-foreground outline-none focus:border-primary/20 appearance-none cursor-pointer group-hover:bg-white transition-all",
+                    isPending && "opacity-50"
+                  )}
+                  suppressHydrationWarning
+                >
+                  <option value="all">Global categories</option>
+                  {categories.map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+                <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
+            </div>
           </div>
         </div>
-        <div className="h-12 w-px bg-border-ghost mx-6"></div>
-        <button className="p-4 text-muted-foreground hover:bg-surface-low rounded-2xl transition-colors border border-transparent hover:border-border-ghost">
-          <Filter className={cn("w-5 h-5", isPending && "animate-spin text-primary")} />
-        </button>
+        <div className="h-10 w-px bg-border-ghost mx-5"></div>
+        <div className="p-3 text-primary bg-primary/5 rounded-xl">
+           <Search className={cn("w-4 h-4", isPending && "animate-pulse")} />
+        </div>
       </div>
     </>
   );
 }
+

@@ -43,7 +43,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl primary-gradient shadow-ambient mb-4">
             <Lock className="text-white w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Logistix Core</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">SS Cuttings</h1>
           <p className="text-muted-foreground mt-2">Warehouse Management System</p>
         </div>
 

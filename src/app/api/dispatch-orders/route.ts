@@ -21,7 +21,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { customerId, items, paymentMode, status } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
+    const { customerId, items, paymentMode, status, expectedDelivery } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
 
     if (!customerId || !items || !items.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
       customerId,
       paymentMode: paymentMode || "Cash",
       status: status || "pending",
+      expectedDelivery: expectedDelivery,
       items: items.map((item: any) => ({
         itemId: item.itemId,
         quantity: parseFloat(item.quantity),

@@ -58,7 +58,10 @@ model Stock {
   updatedAt DateTime @updatedAt
   item      Item     @relation(fields: [itemId], references: [id])
   rack      Rack     @relation(fields: [rackId], references: [id])
-}
+ 
+   @@index([itemId])
+   @@index([rackId])
+ }
 
 model Inventory {
   id                String   @id @default(uuid())
@@ -92,9 +95,12 @@ model PurchaseOrder {
   orderDate        DateTime     @default(now())
   createdAt        DateTime     @default(now())
   vendor           Vendor       @relation(fields: [vendorId], references: [id])
-  items            POLineItem[]
-  batches          InventoryBatch[]
-}
+   items            POLineItem[]
+   batches          InventoryBatch[]
+ 
+   @@index([status])
+   @@index([vendorId])
+ }
 
 model InventoryBatch {
   id              String       @id @default(uuid())
@@ -141,12 +147,16 @@ model DispatchOrder {
   id          String         @id @default(uuid())
   customerId  String
   status      String         @default("pending")
-  paymentMode String?        @default("Cash")
-  orderDate   DateTime       @default(now())
+  paymentMode      String?        @default("Cash")
+  expectedDelivery DateTime?
+  orderDate        DateTime       @default(now())
   createdAt   DateTime       @default(now())
   items       DispatchItem[]
-  customer    Customer       @relation(fields: [customerId], references: [id])
-}
+   customer    Customer       @relation(fields: [customerId], references: [id])
+ 
+   @@index([status])
+   @@index([customerId])
+ }
 
 model DispatchItem {
   id              String        @id @default(uuid())
@@ -175,4 +185,8 @@ model InventoryTransaction {
   customer      Customer? @relation(fields: [customerId], references: [id])
   vendor        Vendor?   @relation(fields: [vendorId], references: [id])
   user          User?     @relation(fields: [userId], references: [id])
-}
+ 
+   @@index([itemId])
+   @@index([type])
+   @@index([createdAt])
+ }

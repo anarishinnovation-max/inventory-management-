@@ -42,104 +42,104 @@ export default async function TransactionsPage() {
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
-            <span>Audit</span>
-            <span>/</span>
-            <span className="text-primary">History</span>
+          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+            <span>Systems audit</span>
+            <span className="opacity-30">/</span>
+            <span className="text-primary">Ledger history</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Transaction History</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">View all stock movements and updates</p>
+          <h1 className="heading-xl tracking-tight">System Ledger</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Immutable audit trail of all asset movements and state changes.</p>
         </div>
         <ExportButton data={transactions} />
       </header>
 
-      <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">
-        <div className="px-8 py-5 border-b border-border-ghost bg-surface-low/30 flex items-center justify-between">
-           <h3 className="text-sm font-black text-foreground uppercase tracking-widest">All Transactions</h3>
-           <span className="text-[10px] font-black text-muted-foreground bg-white px-3 py-1 rounded-full border border-border-ghost">{transactions.length} Transactions</span>
+      <div className="card-premium !p-0 overflow-hidden">
+        <div className="px-8 py-4 border-b border-border-ghost bg-surface-low/30 flex items-center justify-between">
+           <h3 className="text-[11px] font-black text-foreground uppercase tracking-wider">Transaction sequence</h3>
+           <div className="badge border-none bg-white shadow-sm text-[9px] px-2.5 h-6">
+              {transactions.length} RECORDS
+           </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-surface-low/20">
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Type</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Item</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Quantity</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Location</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">From/To</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Date</th>
+              <tr className="table-header border-y-0">
+                <th className="table-cell-header">Entry Type</th>
+                <th className="table-cell-header">Asset Detail</th>
+                <th className="table-cell-header text-right">Delta</th>
+                <th className="table-cell-header">Node</th>
+                <th className="table-cell-header">Entity focus</th>
+                <th className="table-cell-header text-right">Timestamp</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
               {transactions.length > 0 ? transactions.map((tx: any) => (
-                <tr key={tx.id} className="hover:bg-surface-low/30 transition-colors group">
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-3">
+                <tr key={tx.id} className="hover:bg-surface-low/30 transition-all group border-b border-border-ghost last:border-0">
+                  <td className="px-8 py-5">
+                    <div className="flex items-center gap-4">
                       {tx.type.includes("IN") || tx.type === "PURCHASE" ? (
-                        <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
-                          <ArrowDownLeft className="w-5 h-5" />
+                        <div className="w-9 h-9 rounded-lg bg-success/10 text-success flex items-center justify-center shadow-inner">
+                          <ArrowDownLeft className="w-4 h-4" />
                         </div>
                       ) : (
-                        <div className="p-2.5 rounded-xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center">
-                          <ArrowUpRight className="w-5 h-5" />
+                        <div className="w-9 h-9 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center shadow-inner">
+                          <ArrowUpRight className="w-4 h-4" />
                         </div>
                       )}
                       <div>
-                        <p className="font-black text-foreground text-[13px] tracking-tight">{tx.type}</p>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{tx.referenceType || "System"}</p>
+                        <p className="font-black text-foreground text-[11px] tracking-tight group-hover:text-primary transition-all">{tx.type}</p>
+                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.1em] mt-0.5">{tx.referenceType || "CORE"}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-8 py-6">
-                    <div>
-                      <p className="font-black text-foreground text-sm group-hover:text-primary transition-colors">{tx.item.name}</p>
-                      <p className="text-[10px] text-muted-foreground font-mono font-bold mt-0.5">{tx.item.sku}</p>
+                  <td className="px-8 py-5">
+                    <div className="flex flex-col">
+                      <p className="font-bold text-foreground text-xs leading-tight">{tx.item.name}</p>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {tx.item.sku}</p>
                     </div>
                   </td>
-                  <td className="px-8 py-6 text-right">
+                  <td className="px-8 py-5 text-right">
                     <span className={cn(
-                      "text-xl font-black tracking-tighter",
-                      tx.quantity > 0 ? "text-emerald-600" : "text-foreground"
+                      "text-base font-black tracking-tight",
+                      tx.quantity > 0 ? "text-success" : "text-foreground"
                     )}>
                       {tx.quantity > 0 ? "+" : ""}{tx.quantity}
                     </span>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-8 py-5">
                     {tx.rack ? (
                        <div className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 text-primary opacity-50" />
-                          <span className="text-sm font-bold text-foreground">
-                            {tx.rack.rackNumber}
+                          <div className="w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary transition-all" />
+                          <span className="text-[11px] font-bold text-foreground">
+                            NODE-{tx.rack.rackNumber}
                           </span>
                        </div>
                     ) : (
-                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">In-Transit</span>
+                       <span className="badge bg-surface-low text-muted-foreground text-[8px] h-5 border-none">TRANSIENT</span>
                     )}
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-8 py-5">
                     {tx.customer ? (
                       <div className="flex items-center gap-2">
-                        <UsersIcon className="w-4 h-4 text-indigo-500 opacity-60" />
-                        <span className="text-sm font-bold text-foreground">{tx.customer.name}</span>
+                        <UsersIcon className="w-3.5 h-3.5 text-indigo-500 opacity-40 group-hover:opacity-100 transition-all" />
+                        <span className="text-[11px] font-bold text-foreground">{tx.customer.name}</span>
                       </div>
                     ) : tx.vendor ? (
                        <div className="flex items-center gap-2">
-                        <Truck className="w-4 h-4 text-orange-500 opacity-60" />
-                        <span className="text-sm font-bold text-foreground">{tx.vendor.name}</span>
+                        <Truck className="w-3.5 h-3.5 text-orange-500 opacity-40 group-hover:opacity-100 transition-all" />
+                        <span className="text-[11px] font-bold text-foreground">{tx.vendor.name}</span>
                       </div>
                     ) : (
-                      <span className="text-xs font-bold text-muted-foreground">Internal Ledger Update</span>
+                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-30 italic">Internal Update</span>
                     )}
                   </td>
-                  <td className="px-8 py-6">
-                    <div className="text-right">
-                      <p className="text-sm font-black text-foreground">
+                  <td className="px-8 py-5 text-right">
+                      <p className="text-[11px] font-black text-foreground">
                         {new Date(tx.createdAt).toLocaleDateString()}
                       </p>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
+                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
                         {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
-                    </div>
                   </td>
                 </tr>
               )) : (
