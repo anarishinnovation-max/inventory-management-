@@ -196,7 +196,7 @@ export const InventoryService = {
    * Creates a new Dispatch Order and reserves stock immediately.
    * Decrements quantityAvailable to prevent overallocation.
    */
-  async createDispatchOrder(data: { customerId: string; items: any[] }) {
+  async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[] }) {
     return await prisma.$transaction(async (tx: any) => {
       // 1. Validation & Availability Check
       for (const item of data.items) {
@@ -214,6 +214,7 @@ export const InventoryService = {
         data: {
           customerId: data.customerId,
           status: "pending",
+          paymentMode: data.paymentMode || "Cash",
           items: {
             create: data.items.map((item: any) => ({
               itemId: item.itemId,

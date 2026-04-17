@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Edit, Trash2, Loader2 } from "lucide-react";
+import { Edit, Eye, Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export default function InventoryTableActions({
   const [showBreakdown, setShowBreakdown] = useState(false);
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this item? This action cannot be undone and will only work if there is no stock associated.")) {
+    if (!confirm("Delete this item? This cannot be undone and only works if there is no stock.")) {
       return;
     }
 
@@ -36,7 +36,7 @@ export default function InventoryTableActions({
         router.refresh();
       } else {
         const error = await res.json();
-        alert(error.error || "Failed to delete item");
+        alert(error.error || "Could not delete item");
       }
     } catch {
       alert("An unexpected error occurred.");

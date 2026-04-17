@@ -1,21 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { 
-  ArrowLeft, 
-  Plus, 
-  Trash2, 
-  Package, 
-  Truck, 
-  IndianRupee,
-  Loader2,
+import { clsx, type ClassValue } from "clsx";
+import {
   AlertCircle,
+  ArrowLeft,
   CheckCircle2,
-  Send
+  Loader2,
+  Package,
+  Plus,
+  Search,
+  Send,
+  Trash2
 } from "lucide-react";
 import Link from "next/link";
-import { clsx, type ClassValue } from "clsx";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -28,6 +27,11 @@ interface LineItem {
   sellingPrice: number;
 }
 
+interface InventoryItem {
+  id: string;
+  quantityAvailable: number;
+}
+
 export default function NewDispatchOrderPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -36,41 +40,39 @@ export default function NewDispatchOrderPage() {
   
   const [customers, setCustomers] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
+  const [inventoryMap, setInventoryMap] = useState<Map<string, InventoryItem>>(new Map());
   
   const [selectedCustomer, setSelectedCustomer] = useState("");
+  const [paymentMode, setPaymentMode] = useState("Cash");
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantity: 1, sellingPrice: 0 }
   ]);
+  const [itemSearches, setItemSearches] = useState<Record<number, string>>({});
+  const [openDropdowns, setOpenDropdowns] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [cMsg, iMsg] = await Promise.all([
+        const [cRes, iRes, invRes] = await Promise.all([
           fetch("/api/customers"),
-          fetch("/api/inventory") // Need inventory to show available quantity if desired, but items route exists. Let's use items.
+          fetch("/api/items"),
+          fetch("/api/inventory")
         ]);
-        
-        let fetchedCustomers = [];
-        let fetchedItems = [];
 
-        if (cMsg.ok) {
-           fetchedCustomers = await cMsg.json();
-        } else {
-           // If customers fetch fails (maybe no route yet), we will just have empty. 
-           // Wait, is there a /api/customers route? Yes, from the audit list.
-        }
-
-        if (iMsg.ok) {
-           fetchedItems = await iMsg.json();
-           // since we hit /api/inventory, we might get the inventory mapped structs. Let's hit /api/items instead.
-        }
-        
-        const cRes = await fetch("/api/customers");
-        const iRes = await fetch("/api/items");
-
-        if (cRes.ok && iRes.ok) {
+        if (cRes.ok && iRes.ok && invRes.ok) {
           setCustomers(await cRes.json());
           setItems(await iRes.json());
+          
+          // Build inventory map for quick lookup
+          const inventoryData = await invRes.json();
+          const map = new Map<string, InventoryItem>();
+          inventoryData.forEach((inv: any) => {
+            map.set(inv.itemId, {
+              id: inv.itemId,
+              quantityAvailable: inv.quantityAvailable || 0
+            });
+          });
+          setInventoryMap(map);
         } else {
           setError("Failed to initialize order catalogs.");
         }
@@ -81,6 +83,18 @@ export default function NewDispatchOrderPage() {
       }
     }
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('[data-item-search]')) {
+        setOpenDropdowns({});
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const addLineItem = () => {
@@ -108,6 +122,44 @@ export default function NewDispatchOrderPage() {
     return lineItems.reduce((acc, curr) => acc + (curr.quantity * curr.sellingPrice), 0);
   };
 
+  const getAvailableStock = (itemId: string) => {
+    return inventoryMap.get(itemId)?.quantityAvailable || 0;
+  };
+
+  const checkStockAvailability = () => {
+    for (const item of lineItems) {
+      if (!item.itemId) continue;
+      const available = getAvailableStock(item.itemId);
+      if (item.quantity > available) {
+        return {
+          isValid: false,
+          message: `Insufficient stock for item. Requested: ${item.quantity}, Available: ${available}`
+        };
+      }
+    }
+    return { isValid: true, message: "" };
+  };
+
+  const getFilteredItems = (searchQuery: string) => {
+    if (!searchQuery.trim()) return items;
+    const query = searchQuery.toLowerCase();
+    return items.filter(item => 
+      item.sku.toLowerCase().includes(query) || 
+      item.name.toLowerCase().includes(query)
+    );
+  };
+
+  const handleItemSelect = (index: number, itemId: string, itemName: string) => {
+    updateLineItem(index, "itemId", itemId);
+    setItemSearches({ ...itemSearches, [index]: itemName });
+    setOpenDropdowns({ ...openDropdowns, [index]: false });
+  };
+
+  const handleSearchChange = (index: number, query: string) => {
+    setItemSearches({ ...itemSearches, [index]: query });
+    setOpenDropdowns({ ...openDropdowns, [index]: true });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCustomer) {
@@ -116,6 +168,13 @@ export default function NewDispatchOrderPage() {
     }
     if (lineItems.some(i => !i.itemId || i.quantity <= 0)) {
       setError("Please ensure all line items have valid specifications.");
+      return;
+    }
+
+    // Check stock availability before submitting
+    const stockCheck = checkStockAvailability();
+    if (!stockCheck.isValid) {
+      setError(stockCheck.message);
       return;
     }
 
@@ -128,6 +187,7 @@ export default function NewDispatchOrderPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerId: selectedCustomer,
+          paymentMode: paymentMode,
           items: lineItems
         }),
       });
@@ -183,8 +243,8 @@ export default function NewDispatchOrderPage() {
       </div>
 
       {error && (
-        <div className="p-5 mb-8 rounded-[1.5rem] bg-error/10 border border-error/20 text-error font-bold flex items-center gap-4 animate-in fade-in slide-in-from-top-4">
-          <AlertCircle className="w-6 h-6 flex-shrink-0" />
+        <div className="p-5 mb-8 rounded-3xl bg-error/10 border border-error/20 text-error font-bold flex items-center gap-4 animate-in fade-in slide-in-from-top-4">
+          <AlertCircle className="w-6 h-6 shrink-0" />
           <p>{error}</p>
         </div>
       )}
@@ -210,51 +270,111 @@ export default function NewDispatchOrderPage() {
             </div>
 
             <div className="space-y-6">
-              {lineItems.map((item, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 bg-surface-low/30 rounded-3xl border border-border-ghost group relative hover:border-primary/20 transition-all">
-                  <div className="md:col-span-5">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Specification</label>
-                    <select 
-                      value={item.itemId}
-                      onChange={(e) => updateLineItem(index, "itemId", e.target.value)}
-                      className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer"
-                    >
-                      <option value="">Select Item</option>
-                      {items.map(i => (
-                        <option key={i.id} value={i.id}>{i.sku} - {i.name}</option>
-                      ))}
-                    </select>
+              {lineItems.map((item, index) => {
+                const available = getAvailableStock(item.itemId);
+                const isExceeding = item.itemId && item.quantity > available;
+                
+                return (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 bg-surface-low/30 rounded-3xl border border-border-ghost group relative hover:border-primary/20 transition-all">
+                    <div className="md:col-span-5 relative" data-item-search>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Specification</label>
+                      <div className="relative">
+                        <div className="absolute left-4 top-3.5 text-muted-foreground pointer-events-none">
+                          <Search className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Search items..."
+                          value={itemSearches[index] || ""}
+                          onChange={(e) => handleSearchChange(index, e.target.value)}
+                          onFocus={() => setOpenDropdowns({ ...openDropdowns, [index]: true })}
+                          className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-10 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
+                        />
+                        
+                        {/* Dropdown List */}
+                        {openDropdowns[index] && (
+                          <div className="absolute top-full left-0 right-0 mt-2 bg-surface-lowest border border-border-ghost rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto">
+                            {getFilteredItems(itemSearches[index] || "").length > 0 ? (
+                              getFilteredItems(itemSearches[index] || "").map(i => (
+                                <button
+                                  key={i.id}
+                                  onClick={() => handleItemSelect(index, i.id, `${i.sku} - ${i.name}`)}
+                                  className="w-full text-left px-4 py-3 hover:bg-primary/10 border-b border-border-ghost/50 last:border-b-0 transition-colors font-bold text-sm"
+                                >
+                                  <div className="flex justify-between items-start">
+                                    <div>
+                                      <div className="font-bold">{i.sku} - {i.name}</div>
+                                      <div className="text-xs text-muted-foreground">{i.unit}</div>
+                                    </div>
+                                    <div className={`text-xs font-bold px-2 py-1 rounded ${
+                                      getAvailableStock(i.id) > 0 
+                                        ? 'bg-emerald-500/10 text-emerald-700' 
+                                        : 'bg-error/10 text-error'
+                                    }`}>
+                                      {getAvailableStock(i.id)} units
+                                    </div>
+                                  </div>
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-4 py-3 text-sm text-muted-foreground text-center">
+                                No items found
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {item.itemId && (
+                        <div className="mt-2 text-xs font-bold">
+                          <span className={`inline-block px-3 py-1 rounded-lg ${
+                            available > 0 
+                              ? 'bg-emerald-500/10 text-emerald-700' 
+                              : 'bg-error/10 text-error'
+                          }`}>
+                            Available: {available} units
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="md:col-span-3">
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Quantity</label>
+                      <input 
+                        type="number" 
+                        min="1"
+                        value={item.quantity}
+                        onChange={(e) => updateLineItem(index, "quantity", e.target.value)}
+                        className={`w-full bg-surface-lowest border rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 outline-none ${
+                          isExceeding 
+                            ? 'border-error/50 focus:ring-error/50' 
+                            : 'border-border-ghost focus:ring-primary'
+                        }`}
+                      />
+                      {isExceeding && (
+                        <p className="text-[10px] text-error font-bold mt-1">⚠️ Exceeds available stock</p>
+                      )}
+                    </div>
+                    <div className="md:col-span-3">
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Selling Price (₹)</label>
+                      <input 
+                        type="number" 
+                        min="0"
+                        value={item.sellingPrice}
+                        onChange={(e) => updateLineItem(index, "sellingPrice", e.target.value)}
+                        className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
+                      />
+                    </div>
+                    <div className="md:col-span-1 flex items-end justify-center pb-1">
+                      <button 
+                        onClick={() => removeLineItem(index)}
+                        className="w-10 h-10 rounded-xl bg-error/5 text-error flex items-center justify-center hover:bg-error/10 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="md:col-span-3">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Quantity</label>
-                    <input 
-                      type="number" 
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => updateLineItem(index, "quantity", e.target.value)}
-                      className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
-                    />
-                  </div>
-                  <div className="md:col-span-3">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Selling Price (₹)</label>
-                    <input 
-                      type="number" 
-                      min="0"
-                      value={item.sellingPrice}
-                      onChange={(e) => updateLineItem(index, "sellingPrice", e.target.value)}
-                      className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
-                    />
-                  </div>
-                  <div className="md:col-span-1 flex items-end justify-center pb-1">
-                    <button 
-                      onClick={() => removeLineItem(index)}
-                      className="w-10 h-10 rounded-xl bg-error/5 text-error flex items-center justify-center hover:bg-error/10 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -275,6 +395,23 @@ export default function NewDispatchOrderPage() {
                    {customers.map(c => (
                      <option key={c.id} value={c.id}>{c.name}</option>
                    ))}
+                 </select>
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Mode of Payment</label>
+                 <select 
+                   value={paymentMode}
+                   onChange={(e) => setPaymentMode(e.target.value)}
+                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                 >
+                   <option value="Cash">Cash</option>
+                   <option value="Credit Card">Credit Card</option>
+                   <option value="Debit Card">Debit Card</option>
+                   <option value="Bank Transfer">Bank Transfer</option>
+                   <option value="Check">Check</option>
+                   <option value="Digital Wallet">Digital Wallet</option>
+                   <option value="UPI">UPI</option>
                  </select>
               </div>
 

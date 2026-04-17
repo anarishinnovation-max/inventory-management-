@@ -63,10 +63,10 @@ export default async function RacksPage() {
             <span>/</span>
             <span className="text-primary">Warehouse</span>
           </nav>
-          <h2 className="text-4xl font-black text-foreground tracking-tight mb-1">Rack Inventory</h2>
+          <h2 className="text-4xl font-black text-foreground tracking-tight mb-1">Rack Management</h2>
           <p className="text-muted-foreground text-sm font-medium">Manage and monitor storage locations across your facility.</p>
         </div>
-        <button className="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
+        <button className="bg-linear-to-r from-primary to-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
           <Plus className="w-5 h-5" />
           Add New Rack
         </button>
@@ -96,7 +96,7 @@ export default async function RacksPage() {
           <span className="text-[10px] text-muted-foreground mt-2 font-black tracking-widest uppercase">Available for stock</span>
         </div>
         
-        <div className="bg-surface-lowest p-6 rounded-2xl flex flex-col gap-1 border border-primary/20 bg-primary/5 shadow-ambient">
+        <div className="bg-surface-lowest p-6 rounded-2xl flex flex-col gap-1 border border-primary/20 shadow-ambient">
           <span className="text-[10px] uppercase font-black tracking-widest text-primary">Optimization Rank</span>
           <span className="text-3xl font-black tracking-tighter text-primary mt-1">A+</span>
           <span className="text-[10px] text-primary flex items-center gap-1 mt-2 font-black tracking-widest uppercase">Highly Efficient</span>
@@ -104,7 +104,7 @@ export default async function RacksPage() {
       </div>
 
       {/* Table Section */}
-      <div className="bg-surface-lowest rounded-[2rem] overflow-hidden shadow-ambient border border-border-ghost">
+      <div className="bg-surface-lowest rounded-4xl overflow-hidden shadow-ambient border border-border-ghost">
         <div className="px-8 py-5 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
           <div className="flex items-center gap-4">
             <span className="text-[15px] font-black text-foreground">Storage Locations</span>
@@ -155,7 +155,7 @@ export default async function RacksPage() {
                        </span>
                     </td>
                     <td className="px-8 py-5">
-                       <p className="text-xs text-muted-foreground font-medium truncate max-w-[250px]" title={itemList}>
+                       <p className="text-xs text-muted-foreground font-medium truncate max-w-62.5" title={itemList}>
                           {itemList}
                        </p>
                     </td>

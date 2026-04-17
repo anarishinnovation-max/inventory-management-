@@ -40,7 +40,7 @@ export default function InventoryFilters({
   return (
     <>
       <div className="md:col-span-1 p-5 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex flex-col justify-center space-y-4">
-        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground font-sans">Stock Status</label>
+        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground font-sans">Filter by Status</label>
         <div className="flex flex-wrap gap-2">
           <button 
             onClick={() => setFilter("status", "all")}
@@ -49,7 +49,7 @@ export default function InventoryFilters({
               currentStatus === 'all' ? "bg-primary text-white" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
             )}
           >
-            All Stock
+            All Items
           </button>
           <button 
             onClick={() => setFilter("status", "instock")}
@@ -85,7 +85,7 @@ export default function InventoryFilters({
               currentStatus === 'ordered' ? "bg-info text-white shadow-lg shadow-info/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
             )}
           >
-            Ordered
+            On Order
           </button>
         </div>
       </div>

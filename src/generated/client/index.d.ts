@@ -14882,6 +14882,7 @@ export namespace Prisma {
     id: string | null
     customerId: string | null
     status: string | null
+    paymentMode: string | null
     orderDate: Date | null
     createdAt: Date | null
   }
@@ -14890,6 +14891,7 @@ export namespace Prisma {
     id: string | null
     customerId: string | null
     status: string | null
+    paymentMode: string | null
     orderDate: Date | null
     createdAt: Date | null
   }
@@ -14898,6 +14900,7 @@ export namespace Prisma {
     id: number
     customerId: number
     status: number
+    paymentMode: number
     orderDate: number
     createdAt: number
     _all: number
@@ -14908,6 +14911,7 @@ export namespace Prisma {
     id?: true
     customerId?: true
     status?: true
+    paymentMode?: true
     orderDate?: true
     createdAt?: true
   }
@@ -14916,6 +14920,7 @@ export namespace Prisma {
     id?: true
     customerId?: true
     status?: true
+    paymentMode?: true
     orderDate?: true
     createdAt?: true
   }
@@ -14924,6 +14929,7 @@ export namespace Prisma {
     id?: true
     customerId?: true
     status?: true
+    paymentMode?: true
     orderDate?: true
     createdAt?: true
     _all?: true
@@ -15005,6 +15011,7 @@ export namespace Prisma {
     id: string
     customerId: string
     status: string
+    paymentMode: string | null
     orderDate: Date
     createdAt: Date
     _count: DispatchOrderCountAggregateOutputType | null
@@ -15030,6 +15037,7 @@ export namespace Prisma {
     id?: boolean
     customerId?: boolean
     status?: boolean
+    paymentMode?: boolean
     orderDate?: boolean
     createdAt?: boolean
     items?: boolean | DispatchOrder$itemsArgs<ExtArgs>
@@ -15041,6 +15049,7 @@ export namespace Prisma {
     id?: boolean
     customerId?: boolean
     status?: boolean
+    paymentMode?: boolean
     orderDate?: boolean
     createdAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -15050,6 +15059,7 @@ export namespace Prisma {
     id?: boolean
     customerId?: boolean
     status?: boolean
+    paymentMode?: boolean
     orderDate?: boolean
     createdAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -15059,11 +15069,12 @@ export namespace Prisma {
     id?: boolean
     customerId?: boolean
     status?: boolean
+    paymentMode?: boolean
     orderDate?: boolean
     createdAt?: boolean
   }
 
-  export type DispatchOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "status" | "orderDate" | "createdAt", ExtArgs["result"]["dispatchOrder"]>
+  export type DispatchOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "status" | "paymentMode" | "orderDate" | "createdAt", ExtArgs["result"]["dispatchOrder"]>
   export type DispatchOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | DispatchOrder$itemsArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -15086,6 +15097,7 @@ export namespace Prisma {
       id: string
       customerId: string
       status: string
+      paymentMode: string | null
       orderDate: Date
       createdAt: Date
     }, ExtArgs["result"]["dispatchOrder"]>
@@ -15516,6 +15528,7 @@ export namespace Prisma {
     readonly id: FieldRef<"DispatchOrder", 'String'>
     readonly customerId: FieldRef<"DispatchOrder", 'String'>
     readonly status: FieldRef<"DispatchOrder", 'String'>
+    readonly paymentMode: FieldRef<"DispatchOrder", 'String'>
     readonly orderDate: FieldRef<"DispatchOrder", 'DateTime'>
     readonly createdAt: FieldRef<"DispatchOrder", 'DateTime'>
   }
@@ -18502,6 +18515,7 @@ export namespace Prisma {
     id: 'id',
     customerId: 'customerId',
     status: 'status',
+    paymentMode: 'paymentMode',
     orderDate: 'orderDate',
     createdAt: 'createdAt'
   };
@@ -19034,17 +19048,17 @@ export namespace Prisma {
 
   export type VendorWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    name?: string
     AND?: VendorWhereInput | VendorWhereInput[]
     OR?: VendorWhereInput[]
     NOT?: VendorWhereInput | VendorWhereInput[]
-    name?: StringFilter<"Vendor"> | string
     contact?: StringNullableFilter<"Vendor"> | string | null
     email?: StringNullableFilter<"Vendor"> | string | null
     preferredPaymentMode?: StringNullableFilter<"Vendor"> | string | null
     purchaseOrders?: PurchaseOrderListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
     batches?: InventoryBatchListRelationFilter
-  }, "id">
+  }, "id" | "name">
 
   export type VendorOrderByWithAggregationInput = {
     id?: SortOrder
@@ -19353,6 +19367,7 @@ export namespace Prisma {
     id?: StringFilter<"DispatchOrder"> | string
     customerId?: StringFilter<"DispatchOrder"> | string
     status?: StringFilter<"DispatchOrder"> | string
+    paymentMode?: StringNullableFilter<"DispatchOrder"> | string | null
     orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
     items?: DispatchItemListRelationFilter
@@ -19363,6 +19378,7 @@ export namespace Prisma {
     id?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
+    paymentMode?: SortOrderInput | SortOrder
     orderDate?: SortOrder
     createdAt?: SortOrder
     items?: DispatchItemOrderByRelationAggregateInput
@@ -19376,6 +19392,7 @@ export namespace Prisma {
     NOT?: DispatchOrderWhereInput | DispatchOrderWhereInput[]
     customerId?: StringFilter<"DispatchOrder"> | string
     status?: StringFilter<"DispatchOrder"> | string
+    paymentMode?: StringNullableFilter<"DispatchOrder"> | string | null
     orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
     items?: DispatchItemListRelationFilter
@@ -19386,6 +19403,7 @@ export namespace Prisma {
     id?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
+    paymentMode?: SortOrderInput | SortOrder
     orderDate?: SortOrder
     createdAt?: SortOrder
     _count?: DispatchOrderCountOrderByAggregateInput
@@ -19400,6 +19418,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DispatchOrder"> | string
     customerId?: StringWithAggregatesFilter<"DispatchOrder"> | string
     status?: StringWithAggregatesFilter<"DispatchOrder"> | string
+    paymentMode?: StringNullableWithAggregatesFilter<"DispatchOrder"> | string | null
     orderDate?: DateTimeWithAggregatesFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"DispatchOrder"> | Date | string
   }
@@ -20310,6 +20329,7 @@ export namespace Prisma {
   export type DispatchOrderCreateInput = {
     id?: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
     items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
@@ -20320,6 +20340,7 @@ export namespace Prisma {
     id?: string
     customerId: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
     items?: DispatchItemUncheckedCreateNestedManyWithoutDispatchOrderInput
@@ -20328,6 +20349,7 @@ export namespace Prisma {
   export type DispatchOrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
@@ -20338,6 +20360,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: DispatchItemUncheckedUpdateManyWithoutDispatchOrderNestedInput
@@ -20347,6 +20370,7 @@ export namespace Prisma {
     id?: string
     customerId: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
   }
@@ -20354,6 +20378,7 @@ export namespace Prisma {
   export type DispatchOrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20362,6 +20387,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21156,6 +21182,7 @@ export namespace Prisma {
     id?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
+    paymentMode?: SortOrder
     orderDate?: SortOrder
     createdAt?: SortOrder
   }
@@ -21164,6 +21191,7 @@ export namespace Prisma {
     id?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
+    paymentMode?: SortOrder
     orderDate?: SortOrder
     createdAt?: SortOrder
   }
@@ -21172,6 +21200,7 @@ export namespace Prisma {
     id?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
+    paymentMode?: SortOrder
     orderDate?: SortOrder
     createdAt?: SortOrder
   }
@@ -23903,6 +23932,7 @@ export namespace Prisma {
   export type DispatchOrderCreateWithoutCustomerInput = {
     id?: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
     items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
@@ -23911,6 +23941,7 @@ export namespace Prisma {
   export type DispatchOrderUncheckedCreateWithoutCustomerInput = {
     id?: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
     items?: DispatchItemUncheckedCreateNestedManyWithoutDispatchOrderInput
@@ -23985,6 +24016,7 @@ export namespace Prisma {
     id?: StringFilter<"DispatchOrder"> | string
     customerId?: StringFilter<"DispatchOrder"> | string
     status?: StringFilter<"DispatchOrder"> | string
+    paymentMode?: StringNullableFilter<"DispatchOrder"> | string | null
     orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
   }
@@ -24100,6 +24132,7 @@ export namespace Prisma {
   export type DispatchOrderCreateWithoutItemsInput = {
     id?: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
     customer: CustomerCreateNestedOneWithoutDispatchOrdersInput
@@ -24109,6 +24142,7 @@ export namespace Prisma {
     id?: string
     customerId: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
   }
@@ -24167,6 +24201,7 @@ export namespace Prisma {
   export type DispatchOrderUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutDispatchOrdersNestedInput
@@ -24176,6 +24211,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25090,6 +25126,7 @@ export namespace Prisma {
   export type DispatchOrderCreateManyCustomerInput = {
     id?: string
     status?: string
+    paymentMode?: string | null
     orderDate?: Date | string
     createdAt?: Date | string
   }
@@ -25110,6 +25147,7 @@ export namespace Prisma {
   export type DispatchOrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
@@ -25118,6 +25156,7 @@ export namespace Prisma {
   export type DispatchOrderUncheckedUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: DispatchItemUncheckedUpdateManyWithoutDispatchOrderNestedInput
@@ -25126,6 +25165,7 @@ export namespace Prisma {
   export type DispatchOrderUncheckedUpdateManyWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

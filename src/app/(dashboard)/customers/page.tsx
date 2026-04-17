@@ -1,21 +1,21 @@
-import { 
-  Users, 
-  MapPin, 
-  Phone, 
-  Calendar,
-  ChevronRight,
-  MoreVertical,
-} from "lucide-react";
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
+import {
+    Calendar,
+    ChevronRight,
+    MapPin,
+    MoreVertical,
+    Phone,
+    Users,
+} from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-import { CustomerSearch } from "./CustomerSearch";
 import { CustomerModal } from "./CustomerModal";
+import { CustomerSearch } from "./CustomerSearch";
 
 async function getCustomersWithStats(query?: string) {
   const customers = await prisma.customer.findMany({
@@ -62,10 +62,10 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
           <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
              <span>Main</span>
              <span>/</span>
-             <span className="text-primary">Accounts</span>
+             <span className="text-primary">Customers</span>
           </nav>
           <h1 className="text-4xl font-black text-foreground tracking-tight">Customers</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">Strategic account management and interaction tracking.</p>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">View and manage customers</p>
         </div>
         <div className="flex items-center gap-3">
             <CustomerSearch />
@@ -77,15 +77,15 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
         <div className="lg:col-span-1 space-y-6">
           <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
-            Customers Directory
+            Customers
           </h2>
-          <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-2">
+          <div className="space-y-3 max-h-150 overflow-y-auto no-scrollbar pr-2">
             {customers.map(customer => (
               <div key={customer.id} className="p-5 bg-surface-lowest rounded-2xl border border-border-ghost shadow-ambient hover:border-primary/50 transition-all cursor-pointer group">
                 <div className="flex items-start justify-between">
                     <div>
-                        <p className="font-bold text-foreground text-lg truncate max-w-[120px]">{customer.name}</p>
-                        <p className="text-[10px] font-black text-muted-foreground uppercase mt-1 tracking-widest">{customer.contact || "No Contact"}</p>
+                        <p className="font-bold text-foreground text-lg truncate max-w-30">{customer.name}</p>
+                        <p className="text-[10px] font-black text-muted-foreground uppercase mt-1 tracking-widest">{customer.contact || "No Phone"}</p>
                     </div>
                     <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center font-black text-primary group-hover:bg-primary/10 transition-colors border border-border-ghost">
                         {customer.name[0]}
@@ -132,7 +132,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                       <tr key={c.id} className="hover:bg-surface-low/30 transition-colors group cursor-pointer">
                         <td className="px-8 py-6">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20">
+                            <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20">
                                {c.name[0]}
                             </div>
                             <div>
@@ -148,8 +148,8 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                            </div>
                         </td>
                         <td className="px-8 py-6">
-                          <div className="flex items-start gap-2 text-muted-foreground max-w-[200px]">
-                             <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 opacity-60" />
+                          <div className="flex items-start gap-2 text-muted-foreground max-w-50">
+                             <MapPin className="w-4 h-4 mt-0.5 shrink-0 opacity-60" />
                              <span className="text-sm font-medium line-clamp-2">{c.address || "No address provided"}</span>
                           </div>
                         </td>
@@ -189,7 +189,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-8 rounded-[2rem] bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
+              <div className="p-8 rounded-4xl bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
                  <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center transition-transform group-hover:scale-110">
                     <Users className="w-7 h-7" />
                  </div>
@@ -198,7 +198,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">Active Accounts Indexed</p>
                  </div>
               </div>
-              <div className="p-8 rounded-[2rem] bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
+              <div className="p-8 rounded-4xl bg-surface-lowest border border-border-ghost shadow-ambient space-y-5 group hover:border-primary/30 transition-all">
                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition-transform group-hover:scale-110 border border-emerald-100">
                     <Calendar className="w-7 h-7" />
                  </div>
@@ -209,7 +209,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">Accounts with Pulse</p>
                  </div>
               </div>
-              <div className="p-8 rounded-[2rem] bg-orange-50 border border-orange-100 shadow-ambient space-y-5 group hover:scale-[1.02] transition-all">
+              <div className="p-8 rounded-4xl bg-orange-50 border border-orange-100 shadow-ambient space-y-5 group hover:scale-[1.02] transition-all">
                  <div className="w-14 h-14 rounded-2xl bg-orange-600 text-white flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg shadow-orange-200">
                     <Calendar className="w-7 h-7" />
                  </div>

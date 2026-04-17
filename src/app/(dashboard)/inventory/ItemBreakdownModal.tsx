@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { 
-  X, 
-  History, 
-  Truck, 
-  Calendar, 
-  Package,
-  Layers,
-  Loader2,
-  ShieldCheck,
+import {
+    Calendar,
+    History,
+    Layers,
+    Loader2,
+    Package,
+    ShieldCheck,
+    Truck,
+    X,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface BreakdownEntry {
   vendor: string;
@@ -108,9 +108,9 @@ export function ItemBreakdownModal({
             </div>
             <div>
                <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
-                  <span className="text-primary/60">Stock Audit</span>
+                  <span className="text-primary/60">Stock</span>
                   <span className="opacity-30">/</span>
-                  <span>Origin Trail</span>
+                  <span>History</span>
                </nav>
                <h2 className="text-4xl font-black text-foreground tracking-tighter leading-none">{itemName}</h2>
                <div className="flex items-center gap-4 mt-3">
@@ -135,16 +135,16 @@ export function ItemBreakdownModal({
            {loading ? (
              <div className="py-32 flex flex-col items-center justify-center gap-6">
                 <Loader2 className="w-12 h-12 animate-spin text-primary" />
-                <p className="text-lg font-bold text-muted-foreground animate-pulse">Reconstructing procurement ledger...</p>
+                <p className="text-lg font-bold text-muted-foreground animate-pulse">Loading stock details...</p>
              </div>
            ) : breakdown.length > 0 ? (
              <div className="space-y-8">
                 <div className="flex items-center justify-between">
                    <h3 className="text-xl font-black text-foreground flex items-center gap-3">
                       <History className="w-5 h-5 text-primary" />
-                      Current Stock Breakdown
+                      Stock Breakdown
                    </h3>
-                   <span className="text-xs font-bold text-muted-foreground italic">Contribution trail filtered for existing inventory</span>
+                   <span className="text-xs font-bold text-muted-foreground italic">Current stock from all sources</span>
                 </div>
 
                 <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden">

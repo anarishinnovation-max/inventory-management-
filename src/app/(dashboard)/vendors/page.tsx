@@ -1,14 +1,14 @@
-import { 
-  Truck, 
-  TrendingDown, 
-  Clock, 
-  Star,
-  ChevronRight,
-  ShieldCheck,
-  IndianRupee
-} from "lucide-react";
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
+import {
+    ChevronRight,
+    Clock,
+    IndianRupee,
+    ShieldCheck,
+    Star,
+    TrendingDown,
+    Truck
+} from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -70,8 +70,8 @@ export default async function VendorsPage() {
     <div className="space-y-10 pb-10">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="heading-xl">Strategic Sourcing</h1>
-          <p className="text-muted-foreground mt-1 text-lg">Manage vendor relationships and analyze procurement pricing.</p>
+          <h1 className="heading-xl">Vendors & Prices</h1>
+          <p className="text-muted-foreground mt-1 text-lg">Manage vendors and their prices</p>
         </div>
         <VendorModal />
       </header>
@@ -80,7 +80,7 @@ export default async function VendorsPage() {
         <div className="lg:col-span-1 space-y-6">
           <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Truck className="w-5 h-5 text-primary" />
-            Vendor Directory
+            Vendors
           </h2>
           <div className="space-y-3">
             {vendors.map((vendor: any) => (
@@ -95,7 +95,7 @@ export default async function VendorsPage() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                  <span className="text-xs font-bold text-muted-foreground uppercase">{vendor.items.length} Contracts</span>
+                  <span className="text-xs font-bold text-muted-foreground uppercase">{vendor.items.length} Orders</span>
                   <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
               </div>

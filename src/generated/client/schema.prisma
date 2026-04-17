@@ -74,7 +74,7 @@ model Inventory {
 
 model Vendor {
   id                   String                 @id @default(uuid())
-  name                 String
+  name                 String                 @unique
   contact              String?
   email                String?
   preferredPaymentMode String?                @default("Cash")
@@ -138,13 +138,14 @@ model Customer {
 }
 
 model DispatchOrder {
-  id         String         @id @default(uuid())
-  customerId String
-  status     String         @default("pending")
-  orderDate  DateTime       @default(now())
-  createdAt  DateTime       @default(now())
-  items      DispatchItem[]
-  customer   Customer       @relation(fields: [customerId], references: [id])
+  id          String         @id @default(uuid())
+  customerId  String
+  status      String         @default("pending")
+  paymentMode String?        @default("Cash")
+  orderDate   DateTime       @default(now())
+  createdAt   DateTime       @default(now())
+  items       DispatchItem[]
+  customer    Customer       @relation(fields: [customerId], references: [id])
 }
 
 model DispatchItem {

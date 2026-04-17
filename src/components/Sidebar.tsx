@@ -1,21 +1,21 @@
 "use client";
 
+import { clsx, type ClassValue } from "clsx";
+import {
+    BarChart3,
+    ChevronRight,
+    History,
+    LayoutDashboard,
+    LogOut,
+    Package,
+    Settings,
+    ShoppingCart,
+    SquareStack,
+    Truck,
+    Users
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Package, 
-  SquareStack, 
-  ShoppingCart, 
-  Users, 
-  Truck, 
-  History, 
-  BarChart3, 
-  Settings,
-  LogOut,
-  ChevronRight
-} from "lucide-react";
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -25,12 +25,12 @@ function cn(...inputs: ClassValue[]) {
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/" },
   { name: "Inventory", icon: Package, href: "/inventory" },
-  { name: "Rack Management", icon: SquareStack, href: "/racks" },
-  { name: "Purchase Orders", icon: ShoppingCart, href: "/orders/purchase" },
-  { name: "Customer Dispatch", icon: Truck, href: "/orders/dispatch" },
+  { name: "Stock Locations", icon: SquareStack, href: "/racks" },
+  { name: "Orders from Vendors", icon: ShoppingCart, href: "/orders/purchase" },
+  { name: "Orders to Customers", icon: Truck, href: "/orders/dispatch" },
   { name: "Customers", icon: Users, href: "/customers" },
-  { name: "Vendors & Pricing", icon: BarChart3, href: "/vendors" },
-  { name: "Transactions", icon: History, href: "/transactions" },
+  { name: "Vendors & Prices", icon: BarChart3, href: "/vendors" },
+  { name: "History", icon: History, href: "/transactions" },
   { name: "Settings", icon: Settings, href: "/settings" },
 ];
 

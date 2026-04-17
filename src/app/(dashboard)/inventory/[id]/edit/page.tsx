@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
-import { 
-  ArrowLeft, 
-  Package, 
-  QrCode, 
-  Camera, 
-  Settings, 
-  TrendingUp,
-  ShieldCheck,
+import InventoryStockManager from "@/app/(dashboard)/inventory/InventoryStockManager";
+import { clsx, type ClassValue } from "clsx";
+import {
+  AlertCircle,
+  ArrowLeft,
+  Camera,
   Loader2,
-  AlertCircle
+  Package,
+  QrCode,
+  Settings,
+  ShieldCheck,
+  TrendingUp
 } from "lucide-react";
 import Link from "next/link";
-import { clsx, type ClassValue } from "clsx";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import InventoryStockManager from "@/app/(dashboard)/inventory/InventoryStockManager";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -54,7 +54,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         } else {
           setError("Failed to fetch necessary data.");
         }
-      } catch (err) {
+      } catch (_err) {
         setError("An unexpected error occurred while fetching data.");
       } finally {
         setFetching(false);
@@ -91,7 +91,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         router.refresh();
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "Failed to update item");
+        setError(errorData.error || "Could not save changes");
       }
     } catch (err) {
       setError("An unexpected error occurred.");
@@ -135,41 +135,41 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Inventory</span>
           </Link>
-          <h2 className="text-4xl font-black tracking-tight text-foreground">Edit Item: {itemData?.sku}</h2>
-          <p className="text-muted-foreground font-medium">Update SKU specifications and operational parameters.</p>
+          <h2 className="text-4xl font-black tracking-tight text-foreground">Edit Item</h2>
+          <p className="text-muted-foreground font-medium">Update item details</p>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
-            Discard Changes
+            Cancel
           </Link>
-          <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-gradient-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
+          <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {loading ? "Optimizing..." : "Update Specifications"}
+            {loading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>
 
       {error && (
          <div className="p-4 mb-6 rounded-2xl bg-error/10 border border-error/20 text-error font-bold flex items-center gap-3">
-            <ShieldCheck className="w-5 h-5 flex-shrink-0" />
+            <ShieldCheck className="w-5 h-5 shrink-0" />
             {error}
          </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-7 space-y-8">
-          <div className="bg-surface-lowest p-8 rounded-[2rem] shadow-ambient border border-border-ghost space-y-8">
+          <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
             <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                  <Package className="w-5 h-5" />
               </div>
-              Core Details
+              Item Details
             </h3>
             
             <div className="space-y-6">
               <div>
                 <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Item Name</label>
-                <input required name="name" defaultValue={itemData?.name} className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-[15px] font-bold placeholder:text-muted-foreground/50 text-foreground" placeholder="e.g. Industrial Servo Motor XL-500" type="text" />
+                <input required name="name" defaultValue={itemData?.name} className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-[15px] font-bold placeholder:text-muted-foreground/50 text-foreground" placeholder="e.g. Motor, Bolt, Wire" type="text" />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -182,7 +182,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                 </div>
                 
                 <div>
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit of Measure</label>
+                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
                   <select name="unit" defaultValue={itemData?.unit} required className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold appearance-none cursor-pointer text-foreground">
                     <option value="Pieces">Pieces (pcs)</option>
                     <option value="Kilograms">Kilograms (kg)</option>
@@ -214,7 +214,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             </div>
           </div>
 
-          <div className="bg-surface-low/50 p-8 rounded-[2rem] border-2 border-dashed border-border-ghost flex flex-col items-center justify-center min-h-[200px] text-center group cursor-pointer hover:border-primary/50 transition-all hover:bg-primary/5">
+          <div className="bg-surface-low/50 p-8 rounded-4xl border-2 border-dashed border-border-ghost flex flex-col items-center justify-center min-h-50 text-center group cursor-pointer hover:border-primary/50 transition-all hover:bg-primary/5">
             <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors group-hover:scale-110 duration-300 mb-4">
                 <Camera className="w-6 h-6 " />
             </div>
@@ -224,7 +224,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         </div>
 
         <div className="lg:col-span-5 space-y-8">
-          <div className="bg-surface-lowest p-8 rounded-[2rem] shadow-ambient border border-border-ghost space-y-8">
+          <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
             <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
               <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                  <Settings className="w-5 h-5" />
@@ -266,7 +266,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             </div>
           </div>
 
-          <div className="primary-gradient p-8 rounded-[2rem] text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
+          <div className="primary-gradient p-8 rounded-4xl text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
             <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
             <div className="flex items-start justify-between mb-6 relative z-10">
               <TrendingUp className="w-8 h-8 opacity-80" />

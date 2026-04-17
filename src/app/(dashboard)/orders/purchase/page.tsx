@@ -64,42 +64,42 @@ export default async function PurchaseOrdersPage() {
             <span>/</span>
             <span className="text-primary">Purchase Orders</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Inbound Procurement</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">Manage supply pipeline and verify inbound logistics.</p>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Purchase Orders</h1>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">Manage orders from vendors</p>
         </div>
-        <Link href="/orders/purchase/new" className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+        <Link href="/orders/purchase/new" className="flex items-center gap-2 px-6 py-3 bg-linear-to-rrom-primary to-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
           <Plus className="w-5 h-5" />
-          <span>Create Purchase Order</span>
+          <span>New Order</span>
         </Link>
       </header>
 
       {/* KPI Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-orange-500/30 transition-all">
+        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-orange-500/30 transition-all">
            <div className="flex justify-between items-start">
               <div className="p-4 rounded-2xl bg-orange-500/10 text-orange-500 transition-transform group-hover:scale-110">
                  <Clock className="w-6 h-6" />
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-2 py-1 rounded-md bg-orange-50 w-fit">Draft/Pending</p>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-2 py-1 rounded-md bg-orange-50 w-fit">Pending</p>
               <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{pendingCount}</h2>
            </div>
         </div>
         
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-blue-500/30 transition-all">
+        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-blue-500/30 transition-all">
            <div className="flex justify-between items-start">
               <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500 transition-transform group-hover:scale-110">
                  <Truck className="w-6 h-6" />
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-2 py-1 rounded-md bg-blue-50 w-fit">Expected Goods</p>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-2 py-1 rounded-md bg-blue-50 w-fit">On Order</p>
               <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{orderedCount}</h2>
            </div>
         </div>
 
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-emerald-500/30 transition-all">
+        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-emerald-500/30 transition-all">
            <div className="flex justify-between items-start">
               <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500 transition-transform group-hover:scale-110">
                  <CheckCircle2 className="w-6 h-6" />
@@ -204,7 +204,7 @@ export default async function PurchaseOrdersPage() {
                 <tr>
                    <td colSpan={7} className="px-8 py-40 text-center">
                       <div className="flex flex-col items-center gap-6">
-                        <div className="w-20 h-20 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center text-muted-foreground opacity-30">
+                        <div className="w-20 h-20 rounded-4xl bg-surface-low border border-border-ghost flex items-center justify-center text-muted-foreground opacity-30">
                           <Truck className="w-10 h-10" />
                         </div>
                         <div>

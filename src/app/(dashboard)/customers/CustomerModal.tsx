@@ -1,14 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Plus, X, User, Mail, Phone, MapPin } from "lucide-react";
 import { createCustomer } from "@/lib/user-actions";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { Mail, MapPin, Phone, Plus, User, X } from "lucide-react";
+import { useState, useTransition } from "react";
 
 export function CustomerModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,8 +29,9 @@ export function CustomerModal() {
       try {
         await createCustomer(data);
         setIsOpen(false);
-      } catch (err: any) {
-        setError(err.message || "Failed to create customer.");
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : "Could not add customer";
+        setError(errorMessage);
       }
     });
   };
@@ -48,7 +43,7 @@ export function CustomerModal() {
         className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-black text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
       >
         <Plus className="w-4 h-4" />
-        Add Account
+        Add Customer
       </button>
 
       {isOpen && (
@@ -56,8 +51,8 @@ export function CustomerModal() {
           <div className="bg-surface-lowest w-full max-w-lg rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-200">
              <header className="px-10 pt-10 pb-6 flex items-center justify-between">
                 <div>
-                   <h2 className="text-3xl font-black text-foreground tracking-tight">Onboard Entity</h2>
-                   <p className="text-muted-foreground font-medium mt-1">Register a new client or corporate account.</p>
+                   <h2 className="text-3xl font-black text-foreground tracking-tight">Add New Customer</h2>
+                   <p className="text-muted-foreground font-medium mt-1">Add a new customer</p>
                 </div>
                 <button 
                     onClick={() => setIsOpen(false)}
@@ -76,13 +71,13 @@ export function CustomerModal() {
                 
                 <div className="space-y-4">
                     <div className="group">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Account Name</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Customer Name</label>
                         <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input 
                                 name="name"
                                 required
-                                placeholder="e.g. Acme Corp Industries"
+                                placeholder="e.g. John Smith or ABC Company"
                                 className="w-full pl-12 pr-6 py-4 rounded-2xl bg-surface-low border border-transparent focus:border-primary/50 focus:bg-white transition-all outline-none font-bold text-foreground"
                             />
                         </div>
@@ -90,24 +85,24 @@ export function CustomerModal() {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="group">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Email Address</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Email</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                 <input 
                                     name="email"
                                     type="email"
-                                    placeholder="contact@acme.com"
+                                    placeholder="john@company.com"
                                     className="w-full pl-12 pr-6 py-4 rounded-2xl bg-surface-low border border-transparent focus:border-primary/50 focus:bg-white transition-all outline-none font-bold text-foreground text-sm"
                                 />
                             </div>
                         </div>
                         <div className="group">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Direct Contact</label>
+                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Phone Number</label>
                             <div className="relative">
                                 <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                 <input 
                                     name="contact"
-                                    placeholder="+1 234 567 890"
+                                    placeholder="+1-123-456-7890"
                                     className="w-full pl-12 pr-6 py-4 rounded-2xl bg-surface-low border border-transparent focus:border-primary/50 focus:bg-white transition-all outline-none font-bold text-foreground text-sm"
                                 />
                             </div>
@@ -115,13 +110,13 @@ export function CustomerModal() {
                     </div>
 
                     <div className="group">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Physical Address</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Address</label>
                         <div className="relative">
                             <MapPin className="absolute left-4 top-5 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <textarea 
                                 name="address"
                                 rows={3}
-                                placeholder="HQ address or primary warehouse location..."
+                                placeholder="Street address or location"
                                 className="w-full pl-12 pr-6 py-4 rounded-2xl bg-surface-low border border-transparent focus:border-primary/50 focus:bg-white transition-all outline-none font-bold text-foreground text-sm resize-none"
                             />
                         </div>
@@ -134,14 +129,14 @@ export function CustomerModal() {
                         onClick={() => setIsOpen(false)}
                         className="flex-1 py-4 rounded-2xl bg-surface-low text-foreground font-black text-sm hover:bg-surface-ghost transition-all"
                     >
-                        Discard
+                        Cancel
                     </button>
                     <button 
                         disabled={isPending}
                         type="submit"
-                        className="flex-[2] py-4 rounded-2xl bg-primary text-white font-black text-sm shadow-xl shadow-primary/30 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50"
+                        className="flex-2 py-4 rounded-2xl bg-primary text-white font-black text-sm shadow-xl shadow-primary/30 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50"
                     >
-                        {isPending ? "Validating & Saving..." : "Authorize Account Creation"}
+                        {isPending ? "Saving..." : "Save Customer"}
                     </button>
                 </div>
              </form>

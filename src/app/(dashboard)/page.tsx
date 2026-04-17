@@ -154,7 +154,7 @@ export default async function DashboardPage() {
 
       {/* KPI Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-primary/30 transition-all duration-300">
+        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-primary/30 transition-all duration-300">
           <div className="flex justify-between items-start">
             <div className="p-4 bg-primary/10 text-primary rounded-2xl shadow-sm transition-transform group-hover:scale-110">
               <Package className="w-6 h-6" />
@@ -170,7 +170,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-success/30 transition-all duration-300">
+        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-success/30 transition-all duration-300">
           <div className="flex justify-between items-start">
             <div className="p-4 bg-success/10 text-success rounded-2xl shadow-sm transition-transform group-hover:scale-110">
               <IndianRupee className="w-6 h-6" />
@@ -185,7 +185,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-error/30 transition-all duration-300">
+        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-error/30 transition-all duration-300">
           <div className="flex justify-between items-start">
             <div className="p-4 bg-error/10 text-error rounded-2xl shadow-sm transition-transform group-hover:scale-110">
               <AlertTriangle className="w-6 h-6" />
@@ -200,7 +200,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient group hover:border-indigo-500/30 transition-all duration-300">
+        <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost shadow-ambient group hover:border-indigo-500/30 transition-all duration-300">
           <div className="flex justify-between items-start">
             <div className="p-4 bg-indigo-500/10 text-indigo-500 rounded-2xl shadow-sm transition-transform group-hover:scale-110">
               <Truck className="w-6 h-6" />

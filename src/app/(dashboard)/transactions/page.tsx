@@ -1,13 +1,13 @@
-import { 
-  History, 
-  ArrowUpRight, 
-  ArrowDownLeft, 
-  Truck,
-  Users as UsersIcon,
-  MapPin
-} from "lucide-react";
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  History,
+  MapPin,
+  Truck,
+  Users as UsersIcon
+} from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import { ExportButton } from "./ExportButton";
 
@@ -45,29 +45,29 @@ export default async function TransactionsPage() {
           <nav className="flex gap-2 text-xs text-muted-foreground font-bold uppercase tracking-widest mb-3">
             <span>Audit</span>
             <span>/</span>
-            <span className="text-primary">Ledger</span>
+            <span className="text-primary">History</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Unified Audit Registry</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">Immutable real-time ledger of all warehouse operations and stock movements.</p>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Transaction History</h1>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">View all stock movements and updates</p>
         </div>
         <ExportButton data={transactions} />
       </header>
 
       <div className="bg-surface-lowest rounded-[2.5rem] shadow-ambient border border-border-ghost overflow-hidden">
         <div className="px-8 py-5 border-b border-border-ghost bg-surface-low/30 flex items-center justify-between">
-           <h3 className="text-sm font-black text-foreground uppercase tracking-widest">Global Operations Log</h3>
-           <span className="text-[10px] font-black text-muted-foreground bg-white px-3 py-1 rounded-full border border-border-ghost">{transactions.length} Records Verified</span>
+           <h3 className="text-sm font-black text-foreground uppercase tracking-widest">All Transactions</h3>
+           <span className="text-[10px] font-black text-muted-foreground bg-white px-3 py-1 rounded-full border border-border-ghost">{transactions.length} Transactions</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-surface-low/20">
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Operation Type</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Asset Details</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Volume</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Type</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Item</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Quantity</th>
                 <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Location</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Entity / Authority</th>
-                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Timestamp</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">From/To</th>
+                <th className="px-8 py-5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
@@ -146,7 +146,7 @@ export default async function TransactionsPage() {
                 <tr>
                    <td colSpan={6} className="px-8 py-40 text-center">
                       <div className="flex flex-col items-center gap-6 max-w-sm mx-auto">
-                         <div className="w-20 h-20 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center text-muted-foreground opacity-20">
+                         <div className="w-20 h-20 rounded-4xl bg-surface-low border border-border-ghost flex items-center justify-center text-muted-foreground opacity-20">
                             <History className="w-10 h-10" />
                          </div>
                          <div>

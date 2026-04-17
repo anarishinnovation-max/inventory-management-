@@ -1,20 +1,18 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
-import { 
-  ArrowLeft, 
-  Truck, 
-  Package, 
-  CheckCircle2, 
-  Clock, 
-  Loader2,
-  AlertCircle,
-  ShieldCheck,
-  Send
+import { clsx, type ClassValue } from "clsx";
+import {
+    AlertCircle,
+    ArrowLeft,
+    CheckCircle2,
+    Loader2,
+    Package,
+    Send,
+    ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
-import { clsx, type ClassValue } from "clsx";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -166,6 +164,11 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                     <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-2">Recipient Entity</p>
                     <p className="text-lg font-black text-indigo-900">{order.customer.name}</p>
                     <p className="text-xs font-medium text-indigo-700/70 mt-1">{order.customer.email || "Verification Pending"}</p>
+                 </div>
+
+                 <div className="p-6 rounded-2xl bg-blue-50 border border-blue-100">
+                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-2">Mode of Payment</p>
+                    <p className="text-lg font-black text-blue-900">{order.paymentMode || "Cash"}</p>
                  </div>
 
                  {isDispatched ? (

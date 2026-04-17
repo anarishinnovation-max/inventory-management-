@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -21,7 +21,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { customerId, items } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
+    const { customerId, items, paymentMode } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
 
     if (!customerId || !items || !items.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -29,6 +29,7 @@ export async function POST(request: Request) {
 
     const order = await InventoryService.createDispatchOrder({
       customerId,
+      paymentMode: paymentMode || "Cash",
       items: items.map((item: any) => ({
         itemId: item.itemId,
         quantity: parseFloat(item.quantity),

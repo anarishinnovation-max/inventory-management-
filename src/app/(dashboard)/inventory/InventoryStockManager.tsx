@@ -1,23 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { 
-  SquareStack, 
-  MapPin, 
-  Plus, 
-  Save, 
-  Loader2, 
-  Trash2,
-  RefreshCcw,
+import {
+  AlertCircle,
   CheckCircle2,
-  AlertCircle
+  Loader2,
+  MapPin,
+  Plus,
+  RefreshCcw,
+  Save,
+  SquareStack,
+  Trash2
 } from "lucide-react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { useCallback, useEffect, useState } from "react";
 
 interface Stock {
   id: string;
@@ -43,11 +37,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
   const [newRackId, setNewRackId] = useState("");
   const [newQuantity, setNewQuantity] = useState(0);
 
-  useEffect(() => {
-    fetchData();
-  }, [itemId]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [stockRes, rackRes] = await Promise.all([
@@ -61,12 +51,16 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
         setStocks(item.stocks);
         setAllRacks(racks);
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Failed to load stock data");
     } finally {
       setLoading(false);
     }
-  };
+  }, [itemId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleUpdateStock = async (rackId: string, quantity: number, currentStockId?: string) => {
     setUpdatingId(currentStockId || "new");
@@ -81,14 +75,14 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
       });
 
       if (res.ok) {
-        setMessage("Stock updated successfully");
+        setMessage("Stock updated");
         setShowAddForm(false);
         fetchData();
       } else {
         const data = await res.json();
         setError(data.error || "Update failed");
       }
-    } catch (err) {
+    } catch (_err) {
       setError("An unexpected error occurred");
     } finally {
       setUpdatingId(null);
@@ -97,7 +91,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
 
   if (loading) {
     return (
-      <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost flex items-center justify-center gap-3">
+      <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost flex items-center justify-center gap-3">
         <Loader2 className="w-5 h-5 animate-spin text-primary" />
         <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Hydrating Stock Matrix...</span>
       </div>
@@ -105,7 +99,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
   }
 
   return (
-    <div className="bg-surface-lowest p-8 rounded-[2rem] shadow-ambient border border-border-ghost space-y-8">
+    <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
       <div className="flex items-center justify-between border-b border-border-ghost pb-4">
         <h3 className="text-xl font-black flex items-center gap-3 text-foreground">
           <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
@@ -174,7 +168,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                 className="w-full py-3 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
              >
                 {updatingId === "new" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Allocate Location
+                Add Location
              </button>
           </div>
         )}
@@ -190,7 +184,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                    </div>
                    <div>
                       <p className="text-sm font-black text-foreground">Rack {stock.rackNumber}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Primary Warehouse Area</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Stock location</p>
                    </div>
                 </div>
 
@@ -207,7 +201,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                       </div>
                       <button 
                          type="button"
-                         title="Update Stock"
+                         title="Update quantity"
                          disabled={updatingId === stock.id}
                          onClick={() => {
                             const input = document.getElementById(`qty-${stock.id}`) as HTMLInputElement;
@@ -231,12 +225,12 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
             ))}
           </div>
         ) : !showAddForm && (
-          <div className="p-12 border-2 border-dashed border-border-ghost rounded-[2rem] flex flex-col items-center text-center">
+          <div className="p-12 border-2 border-dashed border-border-ghost rounded-4xl flex flex-col items-center text-center">
              <div className="w-16 h-16 rounded-full bg-surface-low flex items-center justify-center text-muted-foreground mb-4">
                 <SquareStack className="w-8 h-8 opacity-20" />
              </div>
-             <p className="font-black text-foreground">No Stock Allocation</p>
-             <p className="text-sm font-medium text-muted-foreground mt-1 max-w-xs">This item has no recorded physical presence in your warehouse zones.</p>
+             <p className="font-black text-foreground">No Stock Locations</p>
+             <p className="text-sm font-medium text-muted-foreground mt-1 max-w-xs">Add this item to a stock location to begin tracking it.</p>
           </div>
         )}
       </div>
