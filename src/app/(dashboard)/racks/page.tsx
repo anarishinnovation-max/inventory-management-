@@ -14,6 +14,7 @@ import {
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import prisma from "@/lib/prisma";
+import AddRackButton from "./AddRackButton";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -66,10 +67,7 @@ export default async function RacksPage() {
           <h2 className="text-4xl font-black text-foreground tracking-tight mb-1">Rack Management</h2>
           <p className="text-muted-foreground text-sm font-medium">Manage and monitor storage locations across your facility.</p>
         </div>
-        <button className="bg-linear-to-r from-primary to-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
-          <Plus className="w-5 h-5" />
-          Add New Rack
-        </button>
+        <AddRackButton />
       </div>
 
       {/* Bento Stats Grid */}

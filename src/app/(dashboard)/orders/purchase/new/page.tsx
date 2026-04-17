@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, 
@@ -30,7 +30,7 @@ interface LineItem {
 
 const PAYMENT_MODE_OPTIONS = ["Cash", "Bank Transfer", "UPI", "Credit"];
 
-export default function NewPurchaseOrderPage() {
+function NewPurchaseOrderForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -357,5 +357,18 @@ export default function NewPurchaseOrderPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function NewPurchaseOrderPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <p className="text-muted-foreground font-bold animate-pulse">Loading procurement engine...</p>
+      </div>
+    }>
+      <NewPurchaseOrderForm />
+    </Suspense>
   );
 }

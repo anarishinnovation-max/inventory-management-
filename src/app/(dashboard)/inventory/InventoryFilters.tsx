@@ -39,7 +39,7 @@ export default function InventoryFilters({
 
   return (
     <>
-      <div className="md:col-span-1 p-5 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex flex-col justify-center space-y-4">
+      <div className="md:col-span-2 p-5 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex flex-col justify-center space-y-4">
         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground font-sans">Filter by Status</label>
         <div className="flex flex-wrap gap-2">
           <button 
@@ -79,10 +79,19 @@ export default function InventoryFilters({
             Out of Stock
           </button>
           <button 
+            onClick={() => setFilter("status", "shortage")}
+            className={cn(
+              "px-4 py-2 rounded-full text-xs font-bold transition-all",
+              currentStatus === 'shortage' ? "bg-error text-white shadow-lg shadow-error/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+            )}
+          >
+            Shortage
+          </button>
+          <button 
             onClick={() => setFilter("status", "ordered")}
             className={cn(
               "px-4 py-2 rounded-full text-xs font-bold transition-all",
-              currentStatus === 'ordered' ? "bg-info text-white shadow-lg shadow-info/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
+              currentStatus === 'ordered' ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" : "bg-surface-low text-muted-foreground hover:bg-surface-high"
             )}
           >
             On Order
@@ -90,7 +99,7 @@ export default function InventoryFilters({
         </div>
       </div>
 
-      <div className="md:col-span-2 p-5 bg-surface-lowest rounded-4xladow-ambient border border-border-ghost flex items-center justify-between">
+      <div className="md:col-span-1 p-5 bg-surface-lowest rounded-4xl shadow-ambient border border-border-ghost flex items-center justify-between">
         <div className="space-y-4 flex-1">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block text-left font-sans">Categories</label>
           <div className="flex gap-4">

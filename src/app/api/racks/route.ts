@@ -36,6 +36,9 @@ export async function POST(request: Request) {
     });
     return NextResponse.json(rack, { status: 201 });
   } catch (error: any) {
+    if (error.code === 'P2002') {
+      return NextResponse.json({ error: "Rack number already exists" }, { status: 409 });
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

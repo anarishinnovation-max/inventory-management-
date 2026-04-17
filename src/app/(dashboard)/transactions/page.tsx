@@ -109,7 +109,7 @@ export default async function TransactionsPage() {
                        <div className="flex items-center gap-2">
                           <MapPin className="w-3.5 h-3.5 text-primary opacity-50" />
                           <span className="text-sm font-bold text-foreground">
-                            {tx.rack.rackName}
+                            {tx.rack.rackNumber}
                           </span>
                        </div>
                     ) : (
@@ -149,10 +149,10 @@ export default async function TransactionsPage() {
                          <div className="w-20 h-20 rounded-4xl bg-surface-low border border-border-ghost flex items-center justify-center text-muted-foreground opacity-20">
                             <History className="w-10 h-10" />
                          </div>
-                         <div>
-                            <p className="text-2xl font-black text-foreground tracking-tight">Registry Empty</p>
-                            <p className="text-[15px] font-medium text-muted-foreground mt-2">Historical operations will be progressively indexed here as they are authenticated.</p>
-                         </div>
+                          <div>
+                             <p className="text-2xl font-black text-foreground tracking-tight">Audit Registry Empty</p>
+                             <p className="text-[15px] font-medium text-muted-foreground mt-2">Transactions are generated during Goods Receipt, Fulfillment, or Manual Adjustments. Complete a workflow to see history.</p>
+                          </div>
                       </div>
                    </td>
                 </tr>

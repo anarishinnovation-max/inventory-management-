@@ -42,6 +42,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json(item, { status: 201 });
   } catch (error: any) {
+    if (error.message.startsWith("SKU_EXISTS:")) {
+      return NextResponse.json({ error: error.message.split(":")[1] + " already exists in the registry." }, { status: 409 });
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

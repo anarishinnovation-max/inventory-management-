@@ -12,6 +12,14 @@ export const InventoryService = {
     minStockLevel?: number;
     isCritical?: boolean;
   }) {
+    // 0. Check SKU uniqueness
+    const existing = await prisma.item.findUnique({
+      where: { sku: data.sku },
+    });
+    if (existing) {
+      throw new Error(`SKU_EXISTS:${data.sku}`);
+    }
+
     return await prisma.$transaction(async (tx) => {
       const item = await (tx as any).item.create({
         data: {
@@ -30,6 +38,17 @@ export const InventoryService = {
           quantityAvailable: 0,
           quantityReserved: 0,
           quantityInTransit: 0,
+        },
+      });
+
+      // 3. Create Audit Log for registry
+      await (tx as any).inventoryTransaction.create({
+        data: {
+          item: { connect: { id: item.id } },
+          type: "INITIAL_REGISTRY",
+          quantity: 0,
+          referenceType: "ITEM_CREATE",
+          referenceId: "System Initialization",
         },
       });
 
@@ -261,6 +280,17 @@ export const InventoryService = {
             }
           });
         }
+
+        // 4. Create Audit Log for Reservation
+        await tx.inventoryTransaction.create({
+          data: {
+            item: { connect: { id: item.itemId } },
+            type: "RESERVE",
+            quantity: item.quantity,
+            referenceType: "DISPATCH",
+            referenceId: order.id,
+          },
+        });
       }
 
       return order;
@@ -464,6 +494,49 @@ export const InventoryService = {
           referenceType: "MANUAL_DISPATCH",
           referenceId: params.remarks || "Manual Dispatch",
         },
+      });
+    });
+  },
+
+  /**
+   * Cancels a dispatch order and releases reserved stock.
+   */
+  async cancelDispatchOrder(orderId: string) {
+    return await prisma.$transaction(async (tx: any) => {
+      const order = await tx.dispatchOrder.findUnique({
+        where: { id: orderId },
+        include: { items: true },
+      });
+
+      if (!order) throw new Error("Order not found");
+      if (order.status === "dispatched") throw new Error("Cannot cancel a dispatched order");
+      if (order.status === "cancelled") return order;
+
+      for (const line of order.items) {
+        // 1. Update Inventory summary
+        await tx.inventory.update({
+          where: { itemId: line.itemId },
+          data: {
+            quantityAvailable: { increment: line.quantity },
+            quantityReserved: { decrement: line.quantity },
+          },
+        });
+
+        // 2. Create Audit Log for Release
+        await tx.inventoryTransaction.create({
+          data: {
+            item: { connect: { id: line.itemId } },
+            type: "RELEASE_RESERVE",
+            quantity: -line.quantity,
+            referenceType: "DISPATCH",
+            referenceId: orderId,
+          },
+        });
+      }
+
+      return await tx.dispatchOrder.update({
+        where: { id: orderId },
+        data: { status: "cancelled" },
       });
     });
   },
