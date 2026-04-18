@@ -51,7 +51,7 @@ export default function Header() {
 
           <button className="p-0.5 border-2 border-transparent hover:border-primary/20 rounded-full transition-all active:scale-95 overflow-hidden" suppressHydrationWarning>
              <div className="w-9 h-9 bg-primary/10 rounded-full flex items-center justify-center text-primary font-black text-xs uppercase">
-                JD
+                ND
              </div>
           </button>
         </div>

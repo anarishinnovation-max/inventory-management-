@@ -42,7 +42,7 @@ async function getVendorsWithPricing() {
       po.items.map((pi: any) => ({
         ...pi,
         price: pi.costPrice, // mapping costPrice to price for legacy UI
-        leadTime: "3-5 Days", // Default
+        leadTime: "3-7 Days", // Balanced Indian logistics
         isPreferred: false
       }))
     )

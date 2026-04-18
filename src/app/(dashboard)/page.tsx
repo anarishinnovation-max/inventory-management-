@@ -184,7 +184,7 @@ export default async function DashboardPage() {
           </div>
           <div className="mt-6">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Value</p>
-            <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">₹{Number(data.kpis.stockValue).toLocaleString()}</h2>
+            <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">₹{Number(data.kpis.stockValue).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
             <p className="text-[10px] text-muted-foreground mt-2 font-medium">Market valuation active</p>
           </div>
         </div>

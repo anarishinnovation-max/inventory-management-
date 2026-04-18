@@ -26,13 +26,14 @@ function formatDateTime(value: string | Date | null | undefined) {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return "Not scheduled";
 
-  return `${parsed.toLocaleDateString(undefined, {
+  return `${parsed.toLocaleDateString('en-IN', {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  })} | ${parsed.toLocaleTimeString([], {
+  })} | ${parsed.toLocaleTimeString('en-IN', {
     hour: "2-digit",
     minute: "2-digit",
+    hour12: true
   })}`;
 }
 

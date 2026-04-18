@@ -202,12 +202,12 @@ export function ItemBreakdownModal({
                                   </span>
                                 </td>
                                 <td className="px-8 py-6 text-right font-black text-foreground tabular-nums text-[14px]">
-                                  {Number(entry.costPerUnit || 0).toLocaleString(undefined, { style: 'currency', currency: 'INR', minimumFractionDigits: 1 })}
+                                  {Number(entry.costPerUnit || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 })}
                                 </td>
                                 <td className="px-8 py-6 text-right">
                                   <div className="flex items-center justify-end gap-2 text-[12px] font-bold text-muted-foreground group-hover:text-foreground transition-colors">
                                     <Calendar className="w-4 h-4 opacity-40" />
-                                    {new Date(entry.purchaseDate).toLocaleDateString(undefined, { month: "short", day: "2-digit", year: "numeric" })}
+                                    {new Date(entry.purchaseDate).toLocaleDateString('en-IN', { month: "short", day: "2-digit", year: "numeric" })}
                                   </div>
                                 </td>
                               </tr>
@@ -253,7 +253,7 @@ export function ItemBreakdownModal({
                           <div key={po.poId} className="px-6 py-5 flex items-center justify-between hover:bg-white transition-colors">
                             <div className="flex flex-col">
                               <span className="font-bold text-foreground text-sm">{po.vendor}</span>
-                              <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60 tracking-widest">ETA: {po.expectedDelivery ? new Date(po.expectedDelivery).toLocaleDateString() : 'TBD'}</span>
+                              <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60 tracking-widest">ETA: {po.expectedDelivery ? new Date(po.expectedDelivery).toLocaleDateString('en-IN') : 'TBD'}</span>
                             </div>
                             <span className="text-sm font-black text-primary">+{po.quantity} Units</span>
                           </div>

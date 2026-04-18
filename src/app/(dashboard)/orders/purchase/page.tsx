@@ -15,7 +15,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 function formatDate(value: string | Date) {
-  return new Date(value).toLocaleDateString(undefined, {
+  return new Date(value).toLocaleDateString('en-IN', {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -23,9 +23,10 @@ function formatDate(value: string | Date) {
 }
 
 function formatTime(value: string | Date) {
-  return new Date(value).toLocaleTimeString([], {
+  return new Date(value).toLocaleTimeString('en-IN', {
     hour: "2-digit",
     minute: "2-digit",
+    hour12: true
   });
 }
 
@@ -170,7 +171,7 @@ export default async function PurchaseOrdersPage() {
                       </div>
                     </td>
                     <td className="px-8 py-5 text-right">
-                      <span className="text-lg font-black text-foreground tracking-tighter">₹{totalValue.toLocaleString()}</span>
+                      <span className="text-lg font-black text-foreground tracking-tighter">₹{totalValue.toLocaleString('en-IN')}</span>
                     </td>
                     <td className="px-8 py-5">
                       <span className={cn(

@@ -21,8 +21,8 @@ export function ExportButton({ data }: ExportButtonProps) {
       tx.quantity,
       tx.rack?.rackName || "In-Transit",
       tx.customer?.name || tx.vendor?.name || "Internal",
-      new Date(tx.createdAt).toLocaleDateString(),
-      new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      new Date(tx.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+      new Date(tx.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
     ]);
 
     const csvContent = [

@@ -337,8 +337,8 @@ function NewPurchaseOrderForm() {
                  <div className="pt-6 border-t border-border-ghost flex justify-between items-baseline">
                     <span className="text-xs font-black text-foreground uppercase tracking-widest">Total Capital</span>
                     <div className="text-right">
-                       <span className="text-3xl font-black text-foreground tracking-tighter">₹{calculateTotal().toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                       <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Excluding VAT/Tax</p>
+                       <span className="text-3xl font-black text-foreground tracking-tighter">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                       <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Excluding GST</p>
                     </div>
                  </div>
               </div>

@@ -135,10 +135,10 @@ export default async function TransactionsPage() {
                   </td>
                   <td className="px-8 py-5 text-right">
                       <p className="text-[11px] font-black text-foreground">
-                        {new Date(tx.createdAt).toLocaleDateString()}
+                        {new Date(tx.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </p>
                       <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
-                        {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(tx.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}
                       </p>
                   </td>
                 </tr>
