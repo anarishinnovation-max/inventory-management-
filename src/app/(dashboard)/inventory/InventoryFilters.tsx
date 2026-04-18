@@ -10,12 +10,12 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export default function InventoryFilters({ 
-  currentStatus, 
+export default function InventoryFilters({
+  currentStatus,
   currentCategory,
   categories = []
-}: { 
-  currentStatus: string; 
+}: {
+  currentStatus: string;
   currentCategory: string;
   categories?: string[];
 }) {
@@ -31,7 +31,7 @@ export default function InventoryFilters({
     } else {
       params.delete(key);
     }
-    
+
     startTransition(() => {
       router.push(`${pathname}?${params.toString()}`);
     });
@@ -41,11 +41,11 @@ export default function InventoryFilters({
     <>
       <div className="md:col-span-2 card-premium flex flex-col justify-center gap-4 border-primary/5">
         <div className="flex items-center justify-between">
-            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Filter by Status</label>
-            {isPending && <span className="text-[10px] font-bold text-primary animate-pulse">Updating...</span>}
+          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Filter by Status</label>
+          {isPending && <span className="text-[10px] font-bold text-primary animate-pulse">Updating...</span>}
         </div>
         <div className="flex flex-wrap gap-2">
-          <button 
+          <button
             onClick={() => setFilter("status", "all")}
             className={cn(
               "badge py-2 px-4 transition-all active:scale-95",
@@ -55,7 +55,7 @@ export default function InventoryFilters({
           >
             <span>All items</span>
           </button>
-          <button 
+          <button
             onClick={() => setFilter("status", "instock")}
             className={cn(
               "badge py-2 px-4 transition-all active:scale-95",
@@ -63,9 +63,9 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>Good</span>
+            <span>In Stock</span>
           </button>
-          <button 
+          <button
             onClick={() => setFilter("status", "low")}
             className={cn(
               "badge py-2 px-4 transition-all active:scale-95",
@@ -73,9 +73,9 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>Running Low</span>
+            <span>Low Stock</span>
           </button>
-          <button 
+          <button
             onClick={() => setFilter("status", "shortage")}
             className={cn(
               "badge py-2 px-4 transition-all active:scale-95",
@@ -83,9 +83,9 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>Very Low</span>
+            <span>Out of Stock</span>
           </button>
-          <button 
+          <button
             onClick={() => setFilter("status", "ordered")}
             className={cn(
               "badge py-2 px-4 transition-all active:scale-95",
@@ -93,7 +93,17 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>Coming Soon</span>
+            <span>Ordered</span>
+          </button>
+          <button
+            onClick={() => setFilter("status", "outofstock")}
+            className={cn(
+              "badge py-2 px-4 transition-all active:scale-95",
+              currentStatus === 'outofstock' ? "bg-error text-white border-error shadow-[0_0_12_oklch(0.55_0.2_25_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
+            )}
+            suppressHydrationWarning
+          >
+            <span>Urgent</span>
           </button>
         </div>
       </div>
@@ -103,27 +113,27 @@ export default function InventoryFilters({
           <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block text-left">Filter by Category</label>
           <div className="flex flex-col gap-3">
             <div className="relative">
-                <select 
-                  value={currentCategory}
-                  onChange={(e) => setFilter("category", e.target.value)}
-                  className={cn(
-                    "w-full bg-surface-low/50 border border-transparent rounded-lg px-3 py-2 text-xs font-bold text-foreground outline-none focus:border-primary/20 appearance-none cursor-pointer group-hover:bg-white transition-all",
-                    isPending && "opacity-50"
-                  )}
-                  suppressHydrationWarning
-                >
-                  <option value="all">All Categories</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-                <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
+              <select
+                value={currentCategory}
+                onChange={(e) => setFilter("category", e.target.value)}
+                className={cn(
+                  "w-full bg-surface-low/50 border border-transparent rounded-lg px-3 py-2 text-xs font-bold text-foreground outline-none focus:border-primary/20 appearance-none cursor-pointer group-hover:bg-white transition-all",
+                  isPending && "opacity-50"
+                )}
+                suppressHydrationWarning
+              >
+                <option value="all">All Categories</option>
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
             </div>
           </div>
         </div>
         <div className="h-10 w-px bg-border-ghost mx-5"></div>
         <div className="p-3 text-primary bg-primary/5 rounded-xl">
-           <Search className={cn("w-4 h-4", isPending && "animate-pulse")} />
+          <Search className={cn("w-4 h-4", isPending && "animate-pulse")} />
         </div>
       </div>
     </>

@@ -130,10 +130,10 @@ export default async function InventoryPage({
     console.error("DEBUG: Inventory fetch error:", e);
     return { items: [], totalItems: 0 };
   });
-  
+
   const allCategories = await prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } });
   const categoryNames = allCategories.map(c => c.name);
-  
+
   return (
     <div className="space-y-8 pb-10">
       {/* Header & Actions */}
@@ -155,12 +155,12 @@ export default async function InventoryPage({
 
       {/* Bento Stats & Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <InventoryFilters 
-          currentStatus={status} 
-          currentCategory={category} 
-          categories={categoryNames} 
+        <InventoryFilters
+          currentStatus={status}
+          currentCategory={category}
+          categories={categoryNames}
         />
-        
+
         <div className="md:col-span-1 card-premium flex items-center gap-5 !p-6">
           <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center text-success transition-transform hover:rotate-12">
             <TrendingUp className="w-6 h-6" />
@@ -192,8 +192,10 @@ export default async function InventoryPage({
               {items.length > 0 ? items.map((item: MappedItem) => {
                 const totalStock = item.totalStock;
                 const incomingQty = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
-                
-                // Reliability logic based on physical on-hand stock
+
+                // Reliability logic based on physical on-hand stock and availability
+                const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
+                const isUrgent = netAvailable < 0;
                 const isShortage = totalStock <= 0;
                 const isOrdered = incomingQty > 0;
                 const isLowStock = !isOrdered && totalStock > 0 && totalStock <= item.minStockLevel;
@@ -215,36 +217,39 @@ export default async function InventoryPage({
                     </td>
                     <td className="px-6 py-5">
                       <span className="badge bg-indigo-50/50 text-indigo-600 border-indigo-100">
-                         {item.category}
+                        {item.category}
                       </span>
                     </td>
                     <td className="px-6 py-5 text-right">
-                       <div className="flex flex-col items-end">
-                         <span className={`text-base font-black tracking-tight ${
-                             isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"
-                         }`}>
-                             {totalStock} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
-                         </span>
-                         {incomingQty > 0 && (
-                            <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
-                               +{incomingQty} Coming Soon
-                            </span>
-                         )}
-                       </div>
+                      <div className="flex flex-col items-end">
+                        <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"
+                          }`}>
+                          {totalStock} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
+                        </span>
+                        {incomingQty > 0 && (
+                          <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
+                            +{incomingQty} Ordered
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-5">
-                       <span className="text-xs font-bold text-muted-foreground bg-surface-low px-2 py-1 rounded-md">
-                          {rackLocations || "N/A"}
-                       </span>
+                      <span className="text-xs font-bold text-muted-foreground bg-surface-low px-2 py-1 rounded-md">
+                        {rackLocations || "N/A"}
+                      </span>
                     </td>
                     <td className="px-6 py-5">
-                       {isShortage ? (
+                      {isUrgent ? (
+                        <span className="badge bg-error text-white border-error shadow-[0_0_12px_oklch(0.55_0.2_25_/_0.2)]">
+                          Urgent
+                        </span>
+                      ) : isShortage ? (
                         <span className="badge bg-error/10 text-error border-error/20 ring-4 ring-error/5">
-                          Running Out
+                          Out of Stock
                         </span>
                       ) : isOrdered ? (
                         <span className="badge bg-primary/5 text-primary border-primary/10">
-                          On the Way
+                          Ordered
                         </span>
                       ) : isLowStock ? (
                         <span className="badge bg-warning/10 text-warning border-warning/20 italic">
@@ -252,36 +257,37 @@ export default async function InventoryPage({
                         </span>
                       ) : (
                         <span className="badge bg-success/10 text-success border-success/20">
-                          Good
+                          In Stock
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-5 text-right">
-                      <InventoryTableActions 
-                        itemId={item.id} 
-                        itemName={item.name} 
+                      <InventoryTableActions
+                        itemId={item.id}
+                        itemName={item.name}
                         totalStock={totalStock}
                         incomingQty={incomingQty}
+                        minStockLevel={item.minStockLevel || 0}
                       />
                     </td>
                   </tr>
                 );
               }) : (
                 <tr>
-                   <td colSpan={7} className="px-8 py-32 text-center text-muted-foreground">
-                     <div className="flex flex-col items-center gap-6">
-                       <div className="p-6 rounded-3xl bg-surface-low border border-border-ghost">
-                         <Package className="w-16 h-16 opacity-20" />
-                       </div>
-                       <div>
-                         <p className="text-2xl font-black text-foreground">No Items Found</p>
-                         <p className="text-[15px] font-medium mt-2 max-w-sm mx-auto">Add your first item here to see it on the list.</p>
-                       </div>
-                       <Link href="/inventory/new" className="px-6 py-3 bg-foreground text-surface-lowest rounded-xl font-bold shadow-ambient hover:scale-[1.02] active:scale-[0.98] transition-transform">
-                         + Add First Item
-                       </Link>
-                     </div>
-                   </td>
+                  <td colSpan={7} className="px-8 py-32 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center gap-6">
+                      <div className="p-6 rounded-3xl bg-surface-low border border-border-ghost">
+                        <Package className="w-16 h-16 opacity-20" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-black text-foreground">No Items Found</p>
+                        <p className="text-[15px] font-medium mt-2 max-w-sm mx-auto">Add your first item here to see it on the list.</p>
+                      </div>
+                      <Link href="/inventory/new" className="px-6 py-3 bg-foreground text-surface-lowest rounded-xl font-bold shadow-ambient hover:scale-[1.02] active:scale-[0.98] transition-transform">
+                        + Add First Item
+                      </Link>
+                    </div>
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -290,10 +296,10 @@ export default async function InventoryPage({
       </div>
 
       {/* Pagination Footer */}
-      <InventoryPagination 
-        totalItems={totalItems} 
-        pageSize={PAGE_SIZE} 
-        currentPage={page} 
+      <InventoryPagination
+        totalItems={totalItems}
+        pageSize={PAGE_SIZE}
+        currentPage={page}
       />
     </div>
   );
