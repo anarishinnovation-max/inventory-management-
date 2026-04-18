@@ -100,11 +100,12 @@ async function getDashboardAnalytics() {
   const replenishItems = await prisma.$queryRaw<any[]>`
     SELECT 
       i.id, i.name, i.sku, i."minStockLevel",
-      inv."quantityAvailable"::int as current_qty
+      inv."quantityAvailable"::int as current_qty,
+      inv."incomingQty"::int as incoming_qty
     FROM "Item" i
     JOIN "Inventory" inv ON i.id = inv."itemId"
-    WHERE inv."quantityAvailable" < i."minStockLevel"
-    ORDER BY inv."quantityAvailable" ASC
+    WHERE (inv."quantityAvailable" + inv."incomingQty") < i."minStockLevel"
+    ORDER BY (inv."quantityAvailable" + inv."incomingQty") ASC
     LIMIT 3
   `;
 
