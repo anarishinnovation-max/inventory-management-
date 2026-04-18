@@ -60,12 +60,12 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-             <span>Main</span>
+             <span>Home</span>
              <span className="opacity-30">/</span>
-             <span className="text-primary">Entity management</span>
+             <span className="text-primary">Buyers</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Active Accounts</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Verified customer registry and transaction indices.</p>
+          <h1 className="heading-xl tracking-tight">Our Buyers</h1>
+          <p className="text-muted-foreground mt-2 font-medium">A list of everyone who buys from us.</p>
         </div>
         <div className="flex items-center gap-3">
             <CustomerSearch />
@@ -77,7 +77,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
         <div className="lg:col-span-1 space-y-4">
           <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
             <Users className="w-3 h-3 text-primary" />
-            Selection
+            Buyers List
           </h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-1">
             {customers.map(customer => (
@@ -99,14 +99,14 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 </div>
               </div>
             ))}
-            {customers.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No matching accounts.</p>}
+            {customers.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No buyers found.</p>}
           </div>
         </div>
 
         <div className="lg:col-span-3 space-y-6">
            <div className="flex items-center justify-between">
              <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-3">
-               Account details
+               Buyer Info
              </h2>
              <div className="flex items-center gap-2">
                 <button className="p-2 rounded-lg hover:bg-surface-low text-muted-foreground transition-all border border-transparent hover:border-border-ghost">
@@ -120,11 +120,11 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 <table className="w-full text-left">
                   <thead>
                     <tr className="table-header">
-                      <th className="table-cell-header">Identified entity</th>
-                      <th className="table-cell-header">Contact</th>
-                      <th className="table-cell-header">Base Location</th>
-                      <th className="table-cell-header">Market Pulse</th>
-                      <th className="table-cell-header">Reliability</th>
+                      <th className="table-cell-header">Buyer</th>
+                      <th className="table-cell-header">Phone/Email</th>
+                      <th className="table-cell-header">Address</th>
+                      <th className="table-cell-header">Last Order</th>
+                      <th className="table-cell-header">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
@@ -147,13 +147,13 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                         <td className="px-8 py-5">
                           <div className="flex items-start gap-2 text-muted-foreground group-hover:text-foreground transition-colors max-w-[200px]">
                              <MapPin className="w-3 h-3 mt-0.5 shrink-0 opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all" />
-                             <span className="text-xs font-medium line-clamp-1">{c.address || "Pending location data"}</span>
+                             <span className="text-xs font-medium line-clamp-1">{c.address || "No address yet"}</span>
                           </div>
                         </td>
                         <td className="px-8 py-5">
                            <div className="flex flex-col">
                               <span className="text-xs font-black text-foreground">{c.lastInteraction ? new Date(c.lastInteraction).toLocaleDateString() : 'Inactive'}</span>
-                              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">Last touchpoint</span>
+                              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">Last visit</span>
                            </div>
                         </td>
                         <td className="px-8 py-5">
@@ -162,7 +162,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                              c.totalTransactions > 10 ? "bg-success/10 text-success" : "bg-primary/10 text-primary"
                           )}>
                              <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                             {c.totalTransactions > 10 ? 'VIP / Growth' : 'Standard'}
+                             {c.totalTransactions > 10 ? 'Big Buyer' : 'Normal'}
                           </span>
                         </td>
                       </tr>
@@ -171,7 +171,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                          <td colSpan={5} className="px-8 py-40 text-center text-muted-foreground font-medium">
                             <div className="flex flex-col items-center gap-4 opacity-30">
                                 <Users className="w-16 h-16" />
-                                <p className="text-2xl font-black text-foreground">No records indexed.</p>
+                                <p className="text-2xl font-black text-foreground">No buyers found.</p>
                             </div>
                          </td>
                       </tr>
@@ -188,7 +188,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                  </div>
                  <div>
                     <p className="text-3xl font-black text-foreground tracking-tighter">{customers.length}</p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total database load</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Buyers</p>
                  </div>
               </div>
               <div className="card-premium flex items-center gap-5 group border-success/5">
@@ -199,7 +199,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                     <p className="text-3xl font-black text-foreground tracking-tighter">
                         {customers.filter(c => c.totalTransactions > 0).length}
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Converted Accounts</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Regular Buyers</p>
                  </div>
               </div>
               <div className="card-premium bg-error/[0.02] border-error/5 flex items-center gap-5 group">
@@ -216,7 +216,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                             return last < thirtyDaysAgo;
                         }).length}
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-error/60 mt-1">At Risk / Dormant</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-error/60 mt-1">Not visited recently</p>
                  </div>
               </div>
            </div>

@@ -37,7 +37,7 @@ function SearchableItemSelect({
   items, 
   value, 
   onChange, 
-  placeholder = "Select Item Registry" 
+  placeholder = "Select Item from List" 
 }: { 
   items: any[], 
   value: string, 
@@ -166,10 +166,10 @@ function NewPurchaseOrderForm() {
             }]);
           }
         } else {
-          setError("Failed to initialize procurement catalogs.");
+          setError("Failed to load item lists.");
         }
       } catch (err) {
-        setError("Network failure while fetching master data.");
+        setError("Network error while getting data.");
       } finally {
         setFetching(false);
       }
@@ -251,7 +251,7 @@ function NewPurchaseOrderForm() {
         router.refresh();
       } else {
         const data = await res.json();
-        setError(data.error || "Procurement execution failed.");
+        setError(data.error || "Buying items failed.");
       }
     } catch (err) {
       setError("Internal server link failure.");
@@ -264,7 +264,7 @@ function NewPurchaseOrderForm() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-bold animate-pulse">Initializing Procurement catalogs...</p>
+        <p className="text-muted-foreground font-bold animate-pulse">Loading items...</p>
       </div>
     );
   }
@@ -276,14 +276,14 @@ function NewPurchaseOrderForm() {
         <div className="space-y-4">
           <Link href="/orders/purchase" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Inbound List</span>
+            <span>Back to Order List</span>
           </Link>
-          <h1 className="text-5xl font-black tracking-tight text-foreground">Initiate Procurement</h1>
-          <p className="text-muted-foreground text-lg font-medium">Configure a new Purchase Order for verified vendors.</p>
+          <h1 className="text-5xl font-black tracking-tight text-foreground">Buy New Items</h1>
+          <p className="text-muted-foreground text-lg font-medium">Set up a new order from suppliers.</p>
         </div>
         <div className="flex items-center gap-4">
            <Link href="/orders/purchase" className="px-6 py-3.5 text-sm font-bold text-muted-foreground hover:bg-surface-low rounded-2xl border border-transparent transition-all">
-             Abort
+             Cancel
            </Link>
            <button 
              onClick={handleSubmit}
@@ -291,7 +291,7 @@ function NewPurchaseOrderForm() {
              className="px-8 py-3.5 text-sm font-black text-white bg-primary rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
            >
              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShoppingCart className="w-4 h-4" />}
-             {loading ? "Transmitting..." : "Execute Purchase Order"}
+             {loading ? "Saving..." : "Confirm Order"}
            </button>
         </div>
       </div>
@@ -312,7 +312,7 @@ function NewPurchaseOrderForm() {
                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                     <Truck className="w-5 h-5" />
                  </div>
-                 Procurement Line Items
+                 Items to Buy
                </h3>
                <button 
                  onClick={addLineItem}
@@ -327,7 +327,7 @@ function NewPurchaseOrderForm() {
               {lineItems.map((item, index) => (
                 <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 bg-surface-low/30 rounded-3xl border border-border-ghost group relative hover:border-primary/20 transition-all">
                   <div className="md:col-span-12 lg:col-span-5 relative">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Specification</label>
+                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Details</label>
                     <SearchableItemSelect 
                       items={items.filter(i => 
                         !lineItems.some((li, liIndex) => liIndex !== index && li.itemId === i.id)
@@ -394,16 +394,16 @@ function NewPurchaseOrderForm() {
         {/* Sidebar: Vendor & Summary */}
         <div className="lg:col-span-4 space-y-8">
            <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
-              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Order Meta</h3>
+              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Order Details</h3>
               
               <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Certified Vendor</label>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Supplier</label>
                  <select 
                    value={selectedVendor}
                    onChange={(e) => setSelectedVendor(e.target.value)}
                    className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
                  >
-                   <option value="">Select Supply Source</option>
+                   <option value="">Select Supplier</option>
                    {vendors.map(v => (
                      <option key={v.id} value={v.id}>{v.name}</option>
                    ))}
@@ -438,15 +438,15 @@ function NewPurchaseOrderForm() {
 
               <div className="pt-6 border-t border-border-ghost space-y-5">
                  <div className="flex justify-between items-center text-sm font-bold text-muted-foreground">
-                    <span>Active Line Items</span>
+                    <span>Items in Order</span>
                     <span className="text-foreground">{lineItems.length}</span>
                  </div>
                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-muted-foreground">Total Logistics Volume</span>
+                    <span className="text-sm font-bold text-muted-foreground">Total Units</span>
                     <span className="text-[15px] font-black text-foreground">{lineItems.reduce((acc, curr) => acc + curr.quantityOrdered, 0)} Units</span>
                  </div>
                  <div className="pt-6 border-t border-border-ghost flex justify-between items-baseline">
-                    <span className="text-xs font-black text-foreground uppercase tracking-widest">Total Capital</span>
+                    <span className="text-xs font-black text-foreground uppercase tracking-widest">Total Cost</span>
                     <div className="text-right">
                        <span className="text-3xl font-black text-foreground tracking-tighter">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                        <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Excluding GST</p>
@@ -459,10 +459,10 @@ function NewPurchaseOrderForm() {
               <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
               <div className="flex items-center gap-3 mb-4 relative z-10">
                  <CheckCircle2 className="w-5 h-5 opacity-80" />
-                 <p className="text-[10px] font-black uppercase tracking-widest">Procurement Quality</p>
+                 <p className="text-[10px] font-black uppercase tracking-widest">Order Quality</p>
               </div>
               <p className="text-sm font-medium leading-relaxed relative z-10">
-                Confirming this order will automatically update <strong>Goods-in-Transit</strong> values and notify the warehouse dock for incoming logistics.
+                Confirming this order will automatically update <strong>Items on the way</strong> values and notify the warehouse dock for incoming items.
               </p>
            </div>
         </div>
@@ -476,7 +476,7 @@ export default function NewPurchaseOrderPage() {
     <Suspense fallback={
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-bold animate-pulse">Loading procurement engine...</p>
+        <p className="text-muted-foreground font-bold animate-pulse">Loading...</p>
       </div>
     }>
       <NewPurchaseOrderForm />

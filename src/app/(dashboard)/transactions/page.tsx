@@ -43,19 +43,19 @@ export default async function TransactionsPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Systems audit</span>
+            <span>Records</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Ledger history</span>
+            <span className="text-primary">Activity Log</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">System Ledger</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Immutable audit trail of all asset movements and state changes.</p>
+          <h1 className="heading-xl tracking-tight">Activity Log</h1>
+          <p className="text-muted-foreground mt-2 font-medium">A list of every time items were moved or changed.</p>
         </div>
         <ExportButton data={transactions} />
       </header>
 
       <div className="card-premium !p-0 overflow-hidden">
         <div className="px-8 py-4 border-b border-border-ghost bg-surface-low/30 flex items-center justify-between">
-           <h3 className="text-[11px] font-black text-foreground uppercase tracking-wider">Transaction sequence</h3>
+           <h3 className="text-[11px] font-black text-foreground uppercase tracking-wider">Recent Activity</h3>
            <div className="badge border-none bg-white shadow-sm text-[9px] px-2.5 h-6">
               {transactions.length} RECORDS
            </div>
@@ -64,12 +64,12 @@ export default async function TransactionsPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="table-header border-y-0">
-                <th className="table-cell-header">Entry Type</th>
-                <th className="table-cell-header">Asset Detail</th>
-                <th className="table-cell-header text-right">Delta</th>
-                <th className="table-cell-header">Node</th>
-                <th className="table-cell-header">Entity focus</th>
-                <th className="table-cell-header text-right">Timestamp</th>
+                <th className="table-cell-header">Action</th>
+                <th className="table-cell-header">Item Name</th>
+                <th className="table-cell-header text-right">Change</th>
+                <th className="table-cell-header">Rack</th>
+                <th className="table-cell-header">Supplier / Buyer</th>
+                <th className="table-cell-header text-right">Date & Time</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
@@ -88,7 +88,7 @@ export default async function TransactionsPage() {
                       )}
                       <div>
                         <p className="font-black text-foreground text-[11px] tracking-tight group-hover:text-primary transition-all">{tx.type}</p>
-                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.1em] mt-0.5">{tx.referenceType || "CORE"}</p>
+                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.1em] mt-0.5">{tx.referenceType || "GENERAL"}</p>
                       </div>
                     </div>
                   </td>
@@ -111,11 +111,11 @@ export default async function TransactionsPage() {
                        <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary transition-all" />
                           <span className="text-[11px] font-bold text-foreground">
-                            NODE-{tx.rack.rackNumber}
+                            RACK-{tx.rack.rackNumber}
                           </span>
                        </div>
                     ) : (
-                       <span className="badge bg-surface-low text-muted-foreground text-[8px] h-5 border-none">TRANSIENT</span>
+                        <span className="badge bg-surface-low text-muted-foreground text-[8px] h-5 border-none">MOVING</span>
                     )}
                   </td>
                   <td className="px-8 py-5">
@@ -130,7 +130,7 @@ export default async function TransactionsPage() {
                         <span className="text-[11px] font-bold text-foreground">{tx.vendor.name}</span>
                       </div>
                     ) : (
-                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-30 italic">Internal Update</span>
+                       <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-30 italic">Stock Change</span>
                     )}
                   </td>
                   <td className="px-8 py-5 text-right">
@@ -150,8 +150,8 @@ export default async function TransactionsPage() {
                             <History className="w-10 h-10" />
                          </div>
                           <div>
-                             <p className="text-2xl font-black text-foreground tracking-tight">Audit Registry Empty</p>
-                             <p className="text-[15px] font-medium text-muted-foreground mt-2">Transactions are generated during Goods Receipt, Fulfillment, or Manual Adjustments. Complete a workflow to see history.</p>
+                             <p className="text-2xl font-black text-foreground tracking-tight">No History Found</p>
+                             <p className="text-[15px] font-medium text-muted-foreground mt-2">Activity shows up here when you buy items, sell items, or change stock.</p>
                           </div>
                       </div>
                    </td>

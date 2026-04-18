@@ -42,16 +42,16 @@ export default async function DispatchPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Fulfillment</span>
+            <span>Selling</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Outbound pipeline</span>
+            <span className="text-primary">Outgoing items</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Customer Orders</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Coordinate fulfillment and shipment dispatch.</p>
+          <h1 className="heading-xl tracking-tight">Selling Orders</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Manage selling and sending items to buyers.</p>
         </div>
         <Link href="/orders/dispatch/new" className="btn-primary shadow-glow">
           <Plus className="w-4 h-4" />
-          <span>Queue Order</span>
+          <span>New Sale</span>
         </Link>
       </header>
 
@@ -65,7 +65,7 @@ export default async function DispatchPage() {
            </div>
            <div className="mt-8">
               <h2 className="text-3xl font-black text-foreground tracking-tighter">{pendingCount}</h2>
-              <p className="text-[9px] font-black text-warning uppercase tracking-widest mt-1">Pending Shipment</p>
+              <p className="text-[9px] font-black text-warning uppercase tracking-widest mt-1">Waiting to Send</p>
            </div>
         </div>
 
@@ -77,7 +77,7 @@ export default async function DispatchPage() {
            </div>
            <div className="mt-8">
               <h2 className="text-3xl font-black text-foreground tracking-tighter">{dispatchedCount}</h2>
-              <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mt-1">Dispatched Finalized</p>
+              <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mt-1">Items Sent</p>
            </div>
         </div>
       </div>
@@ -89,12 +89,12 @@ export default async function DispatchPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="table-header">
-                <th className="table-cell-header">Order Identity</th>
-                <th className="table-cell-header">Receiver Details</th>
-                <th className="table-cell-header">Asset Detail</th>
-                <th className="table-cell-header">Method</th>
+                <th className="table-cell-header">Order ID</th>
+                <th className="table-cell-header">Buyer Details</th>
+                <th className="table-cell-header">Items</th>
+                <th className="table-cell-header">Paid By</th>
                 <th className="table-cell-header">Status</th>
-                <th className="table-cell-header text-right">Ops</th>
+                <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
                   <tbody className="divide-y divide-border-ghost">
@@ -127,7 +127,7 @@ export default async function DispatchPage() {
                            </div>
                         </td>
                         <td className="px-8 py-5">
-                           <span className="text-[10px] font-black text-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost">{order.items.length} units allocated</span>
+                           <span className="text-[10px] font-black text-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost">{order.items.length} units</span>
                         </td>
                         <td className="px-8 py-5">
                            <span className="text-xs font-bold text-muted-foreground">{order.paymentMode || "Cash"}</span>
@@ -142,14 +142,14 @@ export default async function DispatchPage() {
                         </td>
                         <td className="px-8 py-5 text-right">
                            <Link href={`/orders/dispatch/${order.id}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-low text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm border border-transparent hover:border-primary">
-                              Fulfillment
+                              View & Send
                            </Link>
                         </td>
                       </tr>
                     )) : (
                       <tr>
                         <td colSpan={7} className="px-8 py-32 text-center text-muted-foreground font-medium italic">
-                           No outbound orders found in the registry.
+                           No selling orders found.
                         </td>
                       </tr>
                     )}

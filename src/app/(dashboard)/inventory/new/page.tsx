@@ -91,10 +91,10 @@ export default function NewItemPage() {
         <div className="space-y-2">
           <Link href="/inventory" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Inventory</span>
+            <span>Back to Stock</span>
           </Link>
           <h2 className="text-4xl font-black tracking-tight text-foreground">Add New Item</h2>
-          <p className="text-muted-foreground font-medium">Enter item details and stock settings</p>
+          <p className="text-muted-foreground font-medium">Fill in the form to add a new item.</p>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
@@ -102,7 +102,7 @@ export default function NewItemPage() {
           </Link>
           <button type="submit" disabled={loading || fetchingCategories} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            Save Changes
+            Save Item
           </button>
         </div>
       </div>
@@ -125,7 +125,7 @@ export default function NewItemPage() {
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                  <Package className="w-5 h-5" />
               </div>
-              Item Details
+              Item Info
             </h3>
             
             <div className="space-y-6">
@@ -146,9 +146,9 @@ export default function NewItemPage() {
                 <div>
                   <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
                   <select name="unit" required className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold appearance-none cursor-pointer text-foreground">
-                    <option value="Pieces">Pieces (pcs)</option>
-                    <option value="Kilograms">Kilograms (kg)</option>
-                    <option value="Boxes">Boxes (box)</option>
+                    <option value="Pieces">Piece (pcs)</option>
+                    <option value="Kilograms">Kilogram (kg)</option>
+                    <option value="Boxes">Box (box)</option>
                   </select>
                 </div>
               </div>
@@ -200,28 +200,28 @@ export default function NewItemPage() {
               <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                  <Settings className="w-5 h-5" />
               </div>
-              Operational Rules
+              Rules
             </h3>
             
             {/* Stock Parameters */}
             <div className="space-y-8">
               <div>
                 <div className="flex justify-between items-end mb-3">
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest">Minimum Stock Level</label>
-                  <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Alert Threshold</span>
+                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest">Low Stock Warning</label>
+                  <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Warning level</span>
                 </div>
                 <div className="relative">
                   <input required name="minStockLevel" className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right pr-16 text-foreground" type="number" defaultValue="25" min="0" />
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-black text-muted-foreground">PCS</span>
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-3 font-bold">System will trigger &#34;Low Stock" notification when units drop below this level.</p>
+                <p className="text-[10px] text-muted-foreground mt-3 font-bold">We will tell you when items go below this level.</p>
               </div>
 
               {/* Toggle Component */}
               <div className="flex items-center justify-between p-5 bg-surface-low rounded-2xl border border-border-ghost">
                 <div>
-                  <p className="text-[15px] font-black text-foreground">Critical Item</p>
-                  <p className="text-xs font-bold text-muted-foreground mt-0.5">Flag for priority replenishment</p>
+                  <p className="text-[15px] font-black text-foreground">Important Item</p>
+                  <p className="text-xs font-bold text-muted-foreground mt-0.5">Buy this first when low</p>
                 </div>
                 <button 
                   type="button" 
@@ -240,10 +240,10 @@ export default function NewItemPage() {
 
               {/* Location Selector (Visual Only) */}
               <div className="pt-4 border-t border-border-ghost">
-                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4">Default Storage Location</label>
+                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4">Main Spot in Rack</label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <p className="text-[10px] font-bold text-muted-foreground ml-1">Zone / Rack</p>
+                    <p className="text-[10px] font-bold text-muted-foreground ml-1">Area / Rack</p>
                     <select className="w-full px-4 py-3 bg-surface-lowest border border-border-ghost rounded-xl text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-surface-low transition-colors">
                       <option>Rack A-01</option>
                       <option>Rack A-02</option>
@@ -251,11 +251,11 @@ export default function NewItemPage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] font-bold text-muted-foreground ml-1">Bin / Slot</p>
+                    <p className="text-[10px] font-bold text-muted-foreground ml-1">Shelf / Spot</p>
                     <select className="w-full px-4 py-3 bg-surface-lowest border border-border-ghost rounded-xl text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-surface-low transition-colors">
-                      <option>Bin 12</option>
-                      <option>Bin 14</option>
-                      <option>Bin 22</option>
+                      <option>Shelf 12</option>
+                      <option>Shelf 14</option>
+                      <option>Shelf 22</option>
                     </select>
                   </div>
                 </div>
@@ -268,13 +268,13 @@ export default function NewItemPage() {
             <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
             <div className="flex items-start justify-between mb-6 relative z-10">
               <TrendingUp className="w-8 h-8 opacity-80" />
-              <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">Smart Insight</span>
+              <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">Tip</span>
             </div>
             <p className="text-[15px] font-medium leading-relaxed relative z-10">
-               Based on similar items in the system, we recommend a <span className="font-black">Bin size of L3</span> and a <span className="font-black drop-shadow-md">Safety Stock of 40 units</span> to avoid stockouts.
+               Based on similar items, we suggest using <span className="font-black">Shelf spot L3</span> and keeping a <span className="font-black drop-shadow-md">Safe amount of 40 units</span> to not run out.
             </p>
             <button type="button" className="mt-8 text-xs font-black py-3 px-5 bg-white text-primary rounded-xl transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 relative z-10 shadow-lg">
-                Apply Optimizations 
+                Use these settings 
             </button>
           </div>
 
@@ -288,12 +288,12 @@ export default function NewItemPage() {
              <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-[15px] font-black text-foreground">System Validation Active</p>
-            <p className="text-xs font-bold text-muted-foreground mt-0.5">Fill out all required fields to submit. SKUs must be globally unique.</p>
+            <p className="text-[15px] font-black text-foreground">Checking form...</p>
+            <p className="text-xs font-bold text-muted-foreground mt-0.5">Please fill all boxes. SKU must be new.</p>
           </div>
         </div>
         <button type="submit" disabled={loading} className="w-full md:w-auto px-10 py-4 text-[15px] font-black text-white bg-foreground rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2">
-           {loading ? "Validating & Submitting..." : "Submit Item to Registry"}
+           {loading ? "Saving..." : "Add Item"}
         </button>
       </div>
 

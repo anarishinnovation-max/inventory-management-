@@ -31,7 +31,7 @@ export default function InventorySearch({ defaultValue }: { defaultValue: string
           type="text" 
           defaultValue={defaultValue}
           onChange={(e) => handleSearch(e.target.value)}
-          placeholder="Search SKUs, Items, or Racks..." 
+          placeholder="Search items, SKU, or Rack..." 
           className="w-full pl-14 pr-4 py-4 bg-surface-lowest rounded-2xl shadow-ambient border border-border-ghost outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm"
           suppressHydrationWarning
         />

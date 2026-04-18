@@ -71,12 +71,12 @@ export default async function VendorsPage() {
       <header className="flex items-center justify-between">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-             <span>Main</span>
+             <span>Home</span>
              <span className="opacity-30">/</span>
-             <span className="text-primary">Supply Network</span>
+             <span className="text-primary">Suppliers</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Vendors & Prices</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Coordinate procurement contracts and supplier performance.</p>
+          <h1 className="heading-xl tracking-tight">Suppliers & Prices</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Manage your suppliers and how much they charge.</p>
         </div>
         <VendorModal />
       </header>
@@ -85,7 +85,7 @@ export default async function VendorsPage() {
         <div className="lg:col-span-1 space-y-4">
           <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
             <Truck className="w-3 h-3 text-primary" />
-            Selection
+            Our Suppliers
           </h2>
           <div className="space-y-3">
             {vendors.map((vendor: any) => (
@@ -107,14 +107,14 @@ export default async function VendorsPage() {
                 </div>
               </div>
             ))}
-            {vendors.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No matching vendors.</p>}
+            {vendors.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No suppliers found.</p>}
           </div>
         </div>
 
         <div className="lg:col-span-3 space-y-6">
            <div className="flex items-center justify-between">
              <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-3">
-               Pricing index
+               Price List
              </h2>
            </div>
 
@@ -123,11 +123,11 @@ export default async function VendorsPage() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="table-header">
-                      <th className="table-cell-header">Vendor identity</th>
-                      <th className="table-cell-header">Item / SKU code</th>
-                      <th className="table-cell-header text-right">Value scope</th>
-                      <th className="table-cell-header">Logistics flow</th>
-                      <th className="table-cell-header">Contract</th>
+                      <th className="table-cell-header">Supplier</th>
+                      <th className="table-cell-header">Item & SKU</th>
+                      <th className="table-cell-header text-right">Price</th>
+                      <th className="table-cell-header">Time to Send</th>
+                      <th className="table-cell-header">Rating</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
@@ -153,7 +153,7 @@ export default async function VendorsPage() {
                                 <span className="text-[9px] font-black text-muted-foreground opacity-50 uppercase">INR</span>
                                 <span className="text-sm font-black text-foreground tracking-tighter">{Number(entry.price).toLocaleString()}</span>
                              </div>
-                             <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Fixed cost</span>
+                             <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Per piece</span>
                           </div>
                         </td>
                         <td className="px-8 py-5">
@@ -178,7 +178,7 @@ export default async function VendorsPage() {
                     )) : (
                       <tr>
                          <td colSpan={5} className="px-8 py-32 text-center text-muted-foreground font-medium">
-                            No vendor contracts found. Link items to vendors to see price comparisons.
+                            No prices found. Add prices to suppliers to see them here.
                          </td>
                       </tr>
                     )}
@@ -193,8 +193,8 @@ export default async function VendorsPage() {
                      <ShieldCheck className="w-5 h-5" />
                   </div>
                   <div>
-                     <h4 className="text-sm font-black text-foreground uppercase tracking-widest">Optimized Sourcing</h4>
-                     <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">System identifies the lowest variance contracts for maximum margin protection.</p>
+                     <h4 className="text-sm font-black text-foreground uppercase tracking-widest">Best Buying</h4>
+                     <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">We help you find the best prices to save money.</p>
                   </div>
                </div>
                <div className="card-premium flex items-start gap-5 group border-success/5 bg-success/[0.01]">
@@ -202,8 +202,8 @@ export default async function VendorsPage() {
                      <Clock className="w-5 h-5" />
                   </div>
                   <div>
-                     <h4 className="text-sm font-black text-foreground uppercase tracking-widest">Agile Fulfillment</h4>
-                     <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">Lead-time analysis ensures just-in-time inventory cycles for critical asset classes.</p>
+                     <h4 className="text-sm font-black text-foreground uppercase tracking-widest">Fast Sending</h4>
+                     <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">We track how long suppliers take to send items so you don't run out.</p>
                   </div>
                </div>
             </div>

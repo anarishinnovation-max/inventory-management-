@@ -41,7 +41,7 @@ export default function InventoryFilters({
     <>
       <div className="md:col-span-2 card-premium flex flex-col justify-center gap-4 border-primary/5">
         <div className="flex items-center justify-between">
-            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Status filter</label>
+            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Filter by Status</label>
             {isPending && <span className="text-[10px] font-bold text-primary animate-pulse">Updating...</span>}
         </div>
         <div className="flex flex-wrap gap-2">
@@ -53,7 +53,7 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>All records</span>
+            <span>All items</span>
           </button>
           <button 
             onClick={() => setFilter("status", "instock")}
@@ -63,7 +63,7 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>Optimal</span>
+            <span>Good</span>
           </button>
           <button 
             onClick={() => setFilter("status", "low")}
@@ -73,7 +73,7 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>Low stock</span>
+            <span>Running Low</span>
           </button>
           <button 
             onClick={() => setFilter("status", "shortage")}
@@ -83,7 +83,7 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>Shortage</span>
+            <span>Very Low</span>
           </button>
           <button 
             onClick={() => setFilter("status", "ordered")}
@@ -93,14 +93,14 @@ export default function InventoryFilters({
             )}
             suppressHydrationWarning
           >
-            <span>On Order</span>
+            <span>Coming Soon</span>
           </button>
         </div>
       </div>
 
       <div className="md:col-span-1 card-premium flex items-center justify-between !p-6">
         <div className="space-y-4 flex-1">
-          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block text-left">Grouping</label>
+          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block text-left">Filter by Category</label>
           <div className="flex flex-col gap-3">
             <div className="relative">
                 <select 
@@ -112,7 +112,7 @@ export default function InventoryFilters({
                   )}
                   suppressHydrationWarning
                 >
-                  <option value="all">Global categories</option>
+                  <option value="all">All Categories</option>
                   {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}

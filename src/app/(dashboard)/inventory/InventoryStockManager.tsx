@@ -93,7 +93,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
     return (
       <div className="bg-surface-lowest p-8 rounded-4xl border border-border-ghost flex items-center justify-center gap-3">
         <Loader2 className="w-5 h-5 animate-spin text-primary" />
-        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Hydrating Stock Matrix...</span>
+        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Loading...</span>
       </div>
     );
   }
@@ -105,14 +105,14 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
           <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
              <MapPin className="w-5 h-5" />
           </div>
-          Stock Allocation
+          Where Items Are
         </h3>
         <button 
           type="button"
           onClick={() => setShowAddForm(!showAddForm)}
           className="flex items-center gap-2 px-4 py-2 bg-surface-low hover:bg-surface-high rounded-xl text-xs font-black transition-colors border border-border-ghost text-foreground"
         >
-          {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Add Location</>}
+          {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Add New Spot</>}
         </button>
       </div>
 
@@ -151,7 +151,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                    </select>
                 </div>
                 <div className="space-y-1.5">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Initial Quantity</label>
+                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Starting Amount</label>
                    <input 
                       type="number"
                       value={newQuantity}
@@ -168,7 +168,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                 className="w-full py-3 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
              >
                 {updatingId === "new" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Add Location
+                Finish Adding
              </button>
           </div>
         )}
@@ -184,7 +184,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                    </div>
                    <div>
                       <p className="text-sm font-black text-foreground">Rack {stock.rackNumber}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Stock location</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Rack Spot</p>
                    </div>
                 </div>
 
@@ -229,8 +229,8 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
              <div className="w-16 h-16 rounded-full bg-surface-low flex items-center justify-center text-muted-foreground mb-4">
                 <SquareStack className="w-8 h-8 opacity-20" />
              </div>
-             <p className="font-black text-foreground">No Stock Locations</p>
-             <p className="text-sm font-medium text-muted-foreground mt-1 max-w-xs">Add this item to a stock location to begin tracking it.</p>
+             <p className="font-black text-foreground">No Rack spots yet.</p>
+             <p className="text-sm font-medium text-muted-foreground mt-1 max-w-xs">Add this item to a Rack to start tracking.</p>
           </div>
         )}
       </div>

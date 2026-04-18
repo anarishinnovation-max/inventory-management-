@@ -128,23 +128,23 @@ export function ItemBreakdownModal({
             </div>
             <div>
                <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-2">
-                  <span>Inventory HUB</span>
+                  <span>Stock</span>
                   <span className="opacity-30">/</span>
-                  <span className="text-muted-foreground">Detailed Specs</span>
+                  <span className="text-muted-foreground">Item Details</span>
                </nav>
                <h2 className="text-3xl font-black text-foreground tracking-tighter leading-tight mb-3">{itemName}</h2>
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-lg border border-border-ghost shadow-sm">
                     <Package className="w-4 h-4 text-primary" />
-                    <span className="text-[11px] font-black text-foreground">{totalStock} Physical</span>
+                    <span className="text-[11px] font-black text-foreground">{totalStock} Items here</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-lg border border-border-ghost shadow-sm">
                     <Truck className="w-4 h-4 text-indigo-600" />
-                    <span className="text-[11px] font-black text-foreground">{incomingQty} Incoming</span>
+                    <span className="text-[11px] font-black text-foreground">{incomingQty} On the way</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/20 text-primary rounded-lg shadow-sm">
                     <ShieldCheck className="w-4 h-4" />
-                    <span className="text-[11px] font-black uppercase tracking-tighter">Total Visibility: {totalVisibility}</span>
+                    <span className="text-[11px] font-black uppercase tracking-tighter">Total Count: {totalVisibility}</span>
                   </div>
                 </div>
             </div>
@@ -161,7 +161,7 @@ export function ItemBreakdownModal({
            {loading ? (
              <div className="py-32 flex flex-col items-center justify-center gap-6">
                 <Loader2 className="w-12 h-12 animate-spin text-primary" />
-                <p className="text-lg font-black text-muted-foreground animate-pulse">Syncing Specifications...</p>
+                <p className="text-lg font-black text-muted-foreground animate-pulse">Loading Details...</p>
              </div>
            ) : (breakdown.length > 0 || incomingPOs.length > 0 || customerOrders.length > 0) ? (
              <div className="space-y-12">
@@ -170,18 +170,18 @@ export function ItemBreakdownModal({
                     <div className="flex items-center justify-between border-b border-border-ghost pb-4">
                       <div className="flex items-center gap-3">
                         <History className="w-5 h-5 text-primary" />
-                        <h3 className="text-xl font-black text-foreground tracking-tight">Acquisition Timeline</h3>
+                        <h3 className="text-xl font-black text-foreground tracking-tight">Buying History</h3>
                       </div>
-                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest italic opacity-60">FIFO Batching Enabled</span>
+                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest italic opacity-60">Ordered by Date</span>
                     </div>
 
                     <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden">
                       <table className="w-full text-left">
                           <thead>
                             <tr className="bg-surface-low/50 border-b border-border-ghost text-muted-foreground">
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Vendor</th>
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Supplier</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Quantity</th>
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Cost</th>
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Price</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Date</th>
                             </tr>
                           </thead>
@@ -223,7 +223,7 @@ export function ItemBreakdownModal({
                     <section className="space-y-6">
                       <div className="flex items-center gap-3 border-b border-border-ghost pb-4">
                         <Package className="w-5 h-5 text-indigo-600" />
-                        <h3 className="text-lg font-black text-foreground tracking-tight">Active Demand</h3>
+                        <h3 className="text-lg font-black text-foreground tracking-tight">Selling to Buyers</h3>
                       </div>
                       <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden divide-y divide-border-ghost">
                         {customerOrders.map((order) => (
@@ -246,7 +246,7 @@ export function ItemBreakdownModal({
                     <section className="space-y-6">
                       <div className="flex items-center gap-3 border-b border-border-ghost pb-4">
                         <Truck className="w-5 h-5 text-primary" />
-                        <h3 className="text-lg font-black text-foreground tracking-tight">Replenishment Pipelne</h3>
+                        <h3 className="text-lg font-black text-foreground tracking-tight">Coming from Suppliers</h3>
                       </div>
                       <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden divide-y divide-border-ghost">
                         {incomingPOs.map((po) => (
@@ -269,8 +269,8 @@ export function ItemBreakdownModal({
                   <Layers className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-foreground tracking-tight">No Operational Activity</h3>
-                  <p className="text-sm font-bold mt-2 max-w-xs mx-auto">This item currently has no batch history or pending requirements.</p>
+                  <h3 className="text-2xl font-black text-foreground tracking-tight">No Details Yet</h3>
+                  <p className="text-sm font-bold mt-2 max-w-xs mx-auto">No history or upcoming orders for this item.</p>
                 </div>
              </div>
            )}
@@ -279,13 +279,13 @@ export function ItemBreakdownModal({
         <footer className="px-10 py-8 bg-surface-low/30 border-t border-border-ghost shrink-0 flex flex-col sm:flex-row justify-between items-center gap-6">
            <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground italic">
               <ShieldCheck className="w-5 h-5 text-success" />
-              Enterprise Audit Mode Active
+              Activity Log Active
            </div>
            <button 
              onClick={onClose}
              className="w-full sm:w-auto px-10 py-3 bg-foreground text-surface-lowest rounded-xl font-black shadow-xl hover:scale-[1.02] active:scale-95 transition-all text-xs uppercase tracking-[0.2em]"
            >
-              Return to Hub
+              Go Back
            </button>
         </footer>
       </div>

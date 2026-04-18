@@ -139,17 +139,17 @@ export default async function DashboardPage() {
       {/* Executive Header */}
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="heading-xl tracking-tight">Executive Dashboard</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">Real-time oversight of your logistics ecosystem.</p>
+          <h1 className="heading-xl tracking-tight">Summary</h1>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">See what is happening with your stock now.</p>
         </div>
         <div className="flex items-center gap-3">
             <button className="btn-secondary" suppressHydrationWarning>
                 <FileDown className="w-4 h-4 text-primary" />
-                <span>Export Analysis</span>
+                <span>Get Report</span>
             </button>
             <button className="btn-primary shadow-glow" suppressHydrationWarning>
                 <PlusSquare className="w-4 h-4" />
-                <span>Quick Stock Entry</span>
+                <span>Add Stock</span>
             </button>
         </div>
       </header>
@@ -167,7 +167,7 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Total SKUs</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Total Items</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.totalItems}</h2>
             <p className="text-[10px] text-muted-foreground mt-2 font-medium">+3 new this week</p>
           </div>
@@ -183,9 +183,9 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Value</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Stock Value</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">₹{Number(data.kpis.stockValue).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
-            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Market valuation active</p>
+            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Money in stock</p>
           </div>
         </div>
 
@@ -195,13 +195,13 @@ export default async function DashboardPage() {
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div className="badge bg-error/10 text-error border-error/20">
-              Critical
+              Needs Visit
             </div>
           </div>
           <div className="mt-6">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Low Stock</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.lowStockCount}</h2>
-            <p className="text-[10px] text-error/60 mt-2 font-bold tracking-tight">Requires Attention</p>
+            <p className="text-[10px] text-error/60 mt-2 font-bold tracking-tight">Need to buy more</p>
           </div>
         </div>
 
@@ -212,9 +212,9 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Active Vendors</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Suppliers</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.vendorsCount}</h2>
-            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Across 4 regions</p>
+            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Across all areas</p>
           </div>
         </div>
       </div>
@@ -225,15 +225,15 @@ export default async function DashboardPage() {
         <div className="lg:col-span-2 card-premium !p-8">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h3 className="text-xl font-black text-foreground">Stock Flow Dynamics</h3>
-              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Movement trends for last 10 sessions</p>
+              <h3 className="text-xl font-black text-foreground">Items Moving In and Out</h3>
+              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Movement in the last 10 days</p>
             </div>
             <div className="flex gap-4">
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-primary">
-                <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_oklch(0.55_0.18_250)]"></span> Inbound
+                <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_oklch(0.55_0.18_250)]"></span> Incoming
               </div>
               <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-indigo-300">
-                <span className="w-2 h-2 rounded-full bg-indigo-300 shadow-[0_0_8px_oklch(0.6_0.1_250)]"></span> Outbound
+                <span className="w-2 h-2 rounded-full bg-indigo-300 shadow-[0_0_8px_oklch(0.6_0.1_250)]"></span> Outgoing
               </div>
             </div>
           </div>
@@ -258,9 +258,9 @@ export default async function DashboardPage() {
                      </div>
                  );
              }) : (
-                 <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-medium italic text-xs">
-                     Insufficient data to render flow dynamics.
-                 </div>
+              <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-medium italic text-xs">
+                  Not enough data to show movement.
+              </div>
              )}
           </div>
           <div className="flex justify-between mt-4 text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] px-2">
@@ -274,7 +274,7 @@ export default async function DashboardPage() {
             <div className="p-2 bg-error/10 rounded-lg">
                 <BellRing className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-black uppercase tracking-tight">Priority Replenish</h3>
+            <h3 className="text-lg font-black uppercase tracking-tight">Need to Buy Soon</h3>
           </div>
           <div className="space-y-3 flex-1">
             {data.replenish.length > 0 ? data.replenish.map((item, idx) => (
@@ -291,12 +291,12 @@ export default async function DashboardPage() {
             )) : (
                 <div className="flex flex-col items-center justify-center h-48 text-muted-foreground font-medium text-center">
                     <Activity className="w-8 h-8 opacity-10 mb-2" />
-                    <p className="text-[10px] uppercase font-black tracking-widest">Levels Optimal</p>
+                    <p className="text-[10px] uppercase font-black tracking-widest">Stock is Good</p>
                 </div>
             )}
           </div>
           <Link href="/orders/purchase/new" className="block w-full">
-            <button className="w-full mt-8 py-3.5 bg-error text-white rounded-xl text-[11px] font-black shadow-lg shadow-error/10 hover:opacity-90 transition-all active:scale-95 uppercase tracking-widest">Refill Stock</button>
+            <button className="w-full mt-8 py-3.5 bg-error text-white rounded-xl text-[11px] font-black shadow-lg shadow-error/10 hover:opacity-90 transition-all active:scale-95 uppercase tracking-widest">Buy More</button>
           </Link>
         </div>
       </div>
@@ -310,18 +310,18 @@ export default async function DashboardPage() {
                 <div className="p-2 bg-primary/10 rounded-lg">
                     <History className="w-4 h-4 text-primary" />
                 </div>
-                <h3 className="text-lg font-black text-foreground">Audit Log</h3>
+                <h3 className="text-lg font-black text-foreground">Activity Log</h3>
             </div>
-            <button className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity" suppressHydrationWarning>View Full Trail</button>
+            <button className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity" suppressHydrationWarning>View Full List</button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-surface-low/10">
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Operation</th>
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Asset Detail</th>
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Delta</th>
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest text-right">Verification</th>
+                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Action</th>
+                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Item Info</th>
+                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Change</th>
+                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest text-right">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-ghost">
@@ -346,7 +346,7 @@ export default async function DashboardPage() {
                         <span className="text-sm font-black text-foreground">{tx.type.includes('IN') || tx.type === 'PURCHASE' ? '+' : '-'}{tx.quantity}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <span className="text-[9px] font-black text-success px-2 py-0.5 rounded-md border border-success/20 bg-success/5">VERIFIED</span>
+                      <span className="text-[9px] font-black text-success px-2 py-0.5 rounded-md border border-success/20 bg-success/5">DONE</span>
                     </td>
                   </tr>
                 ))}
@@ -361,7 +361,7 @@ export default async function DashboardPage() {
             <div className="p-2 bg-warning/10 rounded-lg">
                 <Zap className="w-4 h-4 text-warning" />
             </div>
-            <h3 className="text-lg font-black text-foreground">Market velocity</h3>
+            <h3 className="text-lg font-black text-foreground">Popular Items</h3>
           </div>
           <div className="space-y-6 flex-1">
             {data.velocity.length > 0 ? data.velocity.map((item, idx) => {
@@ -372,7 +372,7 @@ export default async function DashboardPage() {
                         <div className="flex justify-between items-end mb-2">
                             <div>
                                 <p className="text-xs font-bold text-foreground">{item.name}</p>
-                                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Active Demand</p>
+                                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Selling Fast</p>
                             </div>
                             <span className="text-xs font-black text-primary">{item.units}U</span>
                         </div>
@@ -395,11 +395,11 @@ export default async function DashboardPage() {
                     <TrendingUp className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                   <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Smart Predictor</p>
+                   <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Tips</p>
                    <p className="text-[11px] font-bold text-muted-foreground mt-1.5 leading-relaxed">
-                       Current velocity suggests <span className="text-foreground">Critical Shortage</span> of top 2 items within 4 days.
+                       You might run out of these <span className="text-foreground">very soon</span> (top 2 items).
                    </p>
-                   <button className="text-[10px] font-black text-primary uppercase tracking-widest mt-3 flex items-center gap-1 hover:gap-2 transition-all" suppressHydrationWarning>Autoload PO <ChevronRight className="w-3 h-3" /></button>
+                   <button className="text-[10px] font-black text-primary uppercase tracking-widest mt-3 flex items-center gap-1 hover:gap-2 transition-all" suppressHydrationWarning>Re-order <ChevronRight className="w-3 h-3" /></button>
                 </div>
              </div>
           </div>

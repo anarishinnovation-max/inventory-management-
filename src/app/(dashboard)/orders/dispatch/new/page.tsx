@@ -65,8 +65,8 @@ function ShortagePopup({
                <AlertCircle className="w-8 h-8" />
             </div>
             <div>
-               <h2 className="text-3xl font-black text-foreground tracking-tighter leading-none">Stock Shortage Detected</h2>
-               <p className="text-muted-foreground font-bold mt-2 uppercase text-[10px] tracking-widest">Action Required for Fulfillment</p>
+               <h2 className="text-3xl font-black text-foreground tracking-tighter leading-none">Items Running Low</h2>
+               <p className="text-muted-foreground font-bold mt-2 uppercase text-[10px] tracking-widest">Need more items to finish this.</p>
             </div>
           </div>
 
@@ -84,7 +84,7 @@ function ShortagePopup({
                 <span className="text-foreground">{info.incoming} Units</span>
              </div>
              <div className="pt-4 border-t border-border-ghost flex justify-between items-center">
-                <span className="text-xs font-black uppercase tracking-widest text-error">Shortage Amount</span>
+                <span className="text-xs font-black uppercase tracking-widest text-error">Amount Missing</span>
                 <span className="text-2xl font-black text-error">{shortageAmount} Units</span>
              </div>
           </div>
@@ -95,27 +95,27 @@ function ShortagePopup({
                className="w-full py-4 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
              >
                <Package className="w-4 h-4" />
-               Create Purchase Order Now
+               Buy Items Now
              </button>
              <div className="grid grid-cols-2 gap-3">
                <button 
                  onClick={() => onAction("LATER")}
                  className="py-4 bg-surface-low text-foreground border border-border-ghost rounded-2xl font-black text-xs hover:bg-surface-lowest transition-all"
                >
-                 Create Later
+                 Do Later
                </button>
                <button 
                  onClick={() => onAction("ANYWAY")}
                  className="py-4 bg-surface-low text-foreground border border-border-ghost rounded-2xl font-black text-xs hover:bg-surface-lowest transition-all"
                >
-                 Continue Anyway
+                 Finish Anyway
                </button>
              </div>
           </div>
         </div>
         <footer className="px-10 py-6 bg-surface-low border-t border-border-ghost flex justify-center">
            <button onClick={onClose} className="text-xs font-black text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest">
-             Cancel Order Operation
+             Cancel Order
            </button>
         </footer>
       </div>
@@ -171,7 +171,7 @@ export default function NewDispatchOrderPage() {
           });
           setInventoryMap(map);
         } else {
-          setError("Failed to initialize order catalogs.");
+          setError("Failed to load labels.");
         }
       } catch (err) {
         setError("Network failure while fetching master data.");
@@ -356,7 +356,7 @@ export default function NewDispatchOrderPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-bold animate-pulse">Initializing Fulfillment catalogs...</p>
+        <p className="text-muted-foreground font-bold animate-pulse">Loading items...</p>
       </div>
     );
   }
@@ -375,14 +375,14 @@ export default function NewDispatchOrderPage() {
         <div className="space-y-4">
           <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Dispatch List</span>
+            <span>Back to Sales List</span>
           </Link>
-          <h1 className="text-5xl font-black tracking-tight text-foreground">Initiate Fulfillment</h1>
-          <p className="text-muted-foreground text-lg font-medium">Configure a new Dispatch Order for a registered customer.</p>
+          <h1 className="text-5xl font-black tracking-tight text-foreground">Sell & Send Items</h1>
+          <p className="text-muted-foreground text-lg font-medium">Set up a new order for a buyer.</p>
         </div>
         <div className="flex items-center gap-4">
            <Link href="/orders/dispatch" className="px-6 py-3.5 text-sm font-bold text-muted-foreground hover:bg-surface-low rounded-2xl border border-transparent transition-all">
-             Abort
+             Cancel
            </Link>
            <button 
              onClick={handleSubmit}
@@ -390,7 +390,7 @@ export default function NewDispatchOrderPage() {
              className="px-8 py-3.5 text-sm font-black text-white bg-foreground rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
            >
              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-             {loading ? "Processing..." : "Create Dispatch Order"}
+             {loading ? "Saving..." : "Confirm Sale"}
            </button>
         </div>
       </div>
@@ -411,7 +411,7 @@ export default function NewDispatchOrderPage() {
                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                     <Package className="w-5 h-5" />
                  </div>
-                 Dispatch Line Items
+                 Items to Sell
                </h3>
                <button 
                  onClick={addLineItem}
@@ -428,9 +428,9 @@ export default function NewDispatchOrderPage() {
                 const isExceeding = item.itemId && item.quantity > available;
                 
                 return (
-                  <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 bg-surface-low/30 rounded-3xl border border-border-ghost group relative hover:border-primary/20 transition-all">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end" key={index}>
                     <div className="md:col-span-5 relative" data-item-search>
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Specification</label>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Details</label>
                       <div className="relative">
                         <div className="absolute left-4 top-3.5 text-muted-foreground pointer-events-none">
                           <Search className="w-4 h-4" />
@@ -535,16 +535,16 @@ export default function NewDispatchOrderPage() {
         {/* Sidebar: Customer & Summary */}
         <div className="lg:col-span-4 space-y-8">
            <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
-              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Dispatch Meta</h3>
+              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Sale Details</h3>
               
               <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Recipient Customer</label>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Buyer Name</label>
                  <select 
                    value={selectedCustomer}
                    onChange={(e) => setSelectedCustomer(e.target.value)}
                    className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
                  >
-                   <option value="">Select Recipient</option>
+                   <option value="">Select Buyer</option>
                    {customers.map(c => (
                      <option key={c.id} value={c.id}>{c.name}</option>
                    ))}
@@ -552,7 +552,7 @@ export default function NewDispatchOrderPage() {
               </div>
 
               <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Mode of Payment</label>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">How they paid</label>
                  <select 
                    value={paymentMode}
                    onChange={(e) => setPaymentMode(e.target.value)}
@@ -580,15 +580,15 @@ export default function NewDispatchOrderPage() {
 
               <div className="pt-6 border-t border-border-ghost space-y-5">
                  <div className="flex justify-between items-center text-sm font-bold text-muted-foreground">
-                    <span>Active Line Items</span>
+                    <span>Items in Order</span>
                     <span className="text-foreground">{lineItems.length}</span>
                  </div>
                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-muted-foreground">Total Logistics Volume</span>
+                    <span className="text-sm font-bold text-muted-foreground">Total Units</span>
                     <span className="text-[15px] font-black text-foreground">{lineItems.reduce((acc, curr) => acc + curr.quantity, 0)} Units</span>
                  </div>
                  <div className="pt-6 border-t border-border-ghost flex justify-between items-baseline">
-                    <span className="text-xs font-black text-foreground uppercase tracking-widest">Total Billable</span>
+                    <span className="text-xs font-black text-foreground uppercase tracking-widest">Total Bill</span>
                     <div className="text-right">
                        <span className="text-3xl font-black text-foreground tracking-tighter">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                        <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Excluding GST</p>
@@ -601,10 +601,10 @@ export default function NewDispatchOrderPage() {
               <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
               <div className="flex items-center gap-3 mb-4 relative z-10">
                  <CheckCircle2 className="w-5 h-5 opacity-80" />
-                 <p className="text-[10px] font-black uppercase tracking-widest">Fulfillment Flow</p>
+                 <p className="text-[10px] font-black uppercase tracking-widest">Selling Flow</p>
               </div>
               <p className="text-sm font-medium leading-relaxed relative z-10">
-                Confirming this order will pre-reserve stock in the warehouse. Final deduction happens on physical dispatch confirmation.
+                Confirming this order will set aside items. We remove items from stock only after you confirm they are sent.
               </p>
            </div>
         </div>

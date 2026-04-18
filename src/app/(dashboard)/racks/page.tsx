@@ -60,12 +60,12 @@ export default async function RacksPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Main</span>
+            <span>Home</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Warehouse Control</span>
+            <span className="text-primary">Stock Room</span>
           </nav>
-          <h2 className="heading-xl tracking-tight">Rack Topography</h2>
-          <p className="text-muted-foreground mt-2 font-medium">Coordinate storage layout and spatial optimization.</p>
+          <h2 className="heading-xl tracking-tight">Rack List</h2>
+          <p className="text-muted-foreground mt-2 font-medium">See where all your items are stored.</p>
         </div>
         <div className="flex gap-3">
             <button className="btn-secondary">
@@ -80,7 +80,7 @@ export default async function RacksPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card-premium group">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Volumetric Fill</span>
+            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">How Full</span>
             <TrendingUp className="w-3 h-3 text-success" />
           </div>
           <div className="flex items-baseline gap-2">
@@ -94,30 +94,30 @@ export default async function RacksPage() {
         
         <div className="card-premium group">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Provisioned Slots</span>
+            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Total Racks</span>
           </div>
           <span className="text-3xl font-black tracking-tighter text-foreground">{racks.length}</span>
-          <p className="text-[10px] text-muted-foreground mt-4 font-bold uppercase tracking-widest">Active nodes in Zone A</p>
+          <p className="text-[10px] text-muted-foreground mt-4 font-bold uppercase tracking-widest">Racks in use</p>
         </div>
         
         <div className="card-premium group border-warning/5 bg-warning/[0.01]">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Cold Spots</span>
+            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Empty Spots</span>
             <div className="w-2 h-2 rounded-full bg-warning animate-pulse"></div>
           </div>
           <span className="text-3xl font-black tracking-tighter text-foreground">12</span>
-          <p className="text-[10px] text-warning/70 mt-4 font-bold uppercase tracking-widest leading-none">Unallocated storage</p>
+          <p className="text-[10px] text-warning/70 mt-4 font-bold uppercase tracking-widest leading-none">Space available for use.</p>
         </div>
         
         <div className="card-premium group border-primary/10 bg-primary/[0.02]">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-primary">Efficiency Index</span>
+            <span className="text-[10px] uppercase font-black tracking-widest text-primary">Storage Rating</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-3xl font-black tracking-tighter text-primary">A++</span>
-            <div className="badge bg-primary text-white text-[9px] border-none shadow-glow py-0 px-2 h-5">LEAN</div>
+            <div className="badge bg-primary text-white text-[9px] border-none shadow-glow py-0 px-2 h-5">GOOD</div>
           </div>
-          <p className="text-[10px] text-primary/60 mt-4 font-bold uppercase tracking-widest leading-none">Optimal Pathing enabled</p>
+          <p className="text-[10px] text-primary/60 mt-4 font-bold uppercase tracking-widest leading-none">Everything in the right place.</p>
         </div>
       </div>
 
@@ -125,10 +125,10 @@ export default async function RacksPage() {
       <div className="card-premium !p-0 overflow-hidden">
         <div className="px-8 py-4 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
           <div className="flex items-center gap-4">
-            <span className="text-[13px] font-black text-foreground uppercase tracking-wider">Spatial Inventory</span>
+            <span className="text-[13px] font-black text-foreground uppercase tracking-wider">Rack Items</span>
             <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-border-ghost text-[9px] font-black text-muted-foreground uppercase tracking-widest shadow-sm hover:border-primary/20 transition-all cursor-pointer">
                 <Filter className="w-3 h-3 text-primary" />
-                Refine View
+                Filter
             </div>
           </div>
           <div className="flex gap-1">
@@ -141,10 +141,10 @@ export default async function RacksPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="table-header">
-                <th className="table-cell-header">Location ID</th>
-                <th className="table-cell-header">Zone Assignment</th>
-                <th className="table-cell-header">Allocated Assets</th>
-                <th className="table-cell-header text-right">Fill Factor</th>
+                <th className="table-cell-header">Rack Number</th>
+                <th className="table-cell-header">Area</th>
+                <th className="table-cell-header">Items in Rack</th>
+                <th className="table-cell-header text-right">How Full</th>
                 <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
@@ -163,7 +163,7 @@ export default async function RacksPage() {
                         </div>
                         <div>
                           <p className="text-sm font-black text-foreground group-hover:text-primary transition-all">Rack {row.rackNumber}</p>
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Primary Storage</p>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Main Spot</p>
                         </div>
                       </div>
                     </td>
@@ -202,7 +202,7 @@ export default async function RacksPage() {
         </div>
         
         <div className="px-8 py-5 bg-surface-low/30 border-t border-border-ghost flex items-center justify-between">
-          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Showing {racks.length} Rack Locations</span>
+          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Showing {racks.length} Racks</span>
           <div className="flex gap-1.5">
             <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-surface-low text-muted-foreground hover:bg-surface-high transition-colors" disabled>
                <ChevronLeft className="w-4 h-4" />

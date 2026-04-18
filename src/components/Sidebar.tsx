@@ -36,31 +36,31 @@ interface MenuSection {
 
 const menuSections: MenuSection[] = [
   {
-    title: "Operations",
+    title: "Main",
     items: [
-      { name: "Dashboard", icon: LayoutDashboard, href: "/" },
-      { name: "Inventory", icon: Package, href: "/inventory", badge: "Live" },
-      { name: "Stock Locations", icon: SquareStack, href: "/racks" },
+      { name: "Home", icon: LayoutDashboard, href: "/" },
+      { name: "Stock", icon: Package, href: "/inventory", badge: "Live" },
+      { name: "Rack List", icon: SquareStack, href: "/racks" },
     ]
   },
   {
     title: "Orders",
     items: [
-      { name: "Purchases (PO)", icon: ShoppingCart, href: "/orders/purchase" },
-      { name: "Sales Orders", icon: Truck, href: "/orders/dispatch" },
+      { name: "Buy Items", icon: ShoppingCart, href: "/orders/purchase" },
+      { name: "Sell Items", icon: Truck, href: "/orders/dispatch" },
     ]
   },
   {
-    title: "Masters",
+    title: "People",
     items: [
-      { name: "Customers", icon: Users, href: "/customers" },
-      { name: "Vendors & Prices", icon: BarChart3, href: "/vendors" },
+      { name: "Buyers", icon: Users, href: "/customers" },
+      { name: "Suppliers", icon: BarChart3, href: "/vendors" },
     ]
   },
   {
-    title: "System",
+    title: "More",
     items: [
-      { name: "History", icon: History, href: "/transactions" },
+      { name: "Activity Log", icon: History, href: "/transactions" },
       { name: "Settings", icon: Settings, href: "/settings" },
     ]
   }

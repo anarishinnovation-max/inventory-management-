@@ -61,16 +61,16 @@ export default async function PurchaseOrdersPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Procurement</span>
+            <span>Buying</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Supply Chain Flow</span>
+            <span className="text-primary">Item Movement</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Purchase Orders</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Coordinate inbound asset flow from verified suppliers.</p>
+          <h1 className="heading-xl tracking-tight">Buying Orders</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Manage items coming in from suppliers.</p>
         </div>
         <Link href="/orders/purchase/new" className="btn-primary shadow-glow">
           <Plus className="w-4 h-4" />
-          <span>Onboard PO</span>
+          <span>New Order</span>
         </Link>
       </header>
 
@@ -83,7 +83,7 @@ export default async function PurchaseOrdersPage() {
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[9px] font-black text-warning uppercase tracking-widest">Active Drafts</p>
+              <p className="text-[9px] font-black text-warning uppercase tracking-widest">Waiting</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingCount}</h2>
            </div>
         </div>
@@ -95,7 +95,7 @@ export default async function PurchaseOrdersPage() {
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[9px] font-black text-primary uppercase tracking-widest">In Transit</p>
+              <p className="text-[9px] font-black text-primary uppercase tracking-widest">On the Way</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{orderedCount}</h2>
            </div>
         </div>
@@ -107,7 +107,7 @@ export default async function PurchaseOrdersPage() {
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[9px] font-black text-success uppercase tracking-widest">Verified Inbound</p>
+              <p className="text-[9px] font-black text-success uppercase tracking-widest">Items Received</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{receivedCount}</h2>
            </div>
         </div>
@@ -119,12 +119,12 @@ export default async function PurchaseOrdersPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="table-header">
-                <th className="table-cell-header">PO Identity</th>
-                <th className="table-cell-header">Logistics flow</th>
-                <th className="table-cell-header text-right">Financial Exposure</th>
-                <th className="table-cell-header">Pipeline Status</th>
-                <th className="table-cell-header">Timestamp</th>
-                <th className="table-cell-header text-right">Ops</th>
+                <th className="table-cell-header">Order ID</th>
+                <th className="table-cell-header">Items</th>
+                <th className="table-cell-header text-right">Total Cost</th>
+                <th className="table-cell-header">Status</th>
+                <th className="table-cell-header">Date & Time</th>
+                <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
@@ -195,7 +195,7 @@ export default async function PurchaseOrdersPage() {
                     <td className="px-8 py-5 text-right">
                       <Link href={`/orders/purchase/${po.id}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-low text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm border border-transparent hover:border-primary">
                         <Eye className="w-3 h-3" />
-                        Audit
+                        View Details
                       </Link>
                     </td>
                   </tr>
@@ -208,11 +208,11 @@ export default async function PurchaseOrdersPage() {
                           <Truck className="w-10 h-10" />
                         </div>
                         <div>
-                          <p className="text-2xl font-black text-foreground tracking-tight">No Active Procurement Records</p>
-                          <p className="text-[15px] font-medium text-muted-foreground mt-2 max-w-sm mx-auto">Purchase orders will be indexed here as they are generated for verification.</p>
+                          <p className="text-2xl font-black text-foreground tracking-tight">No Orders Found</p>
+                          <p className="text-[15px] font-medium text-muted-foreground mt-2 max-w-sm mx-auto">Your orders will show up here after you create them.</p>
                         </div>
                         <Link href="/orders/purchase/new" className="px-8 py-3.5 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
-                          Initialize First PO
+                          Create First Order
                         </Link>
                       </div>
                    </td>

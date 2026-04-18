@@ -140,16 +140,16 @@ export default async function InventoryPage({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Main</span>
+            <span>Home</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Inventory</span>
+            <span className="text-primary">Stock</span>
           </nav>
-          <h2 className="heading-xl">Inventory Hub</h2>
-          <p className="text-muted-foreground mt-2 font-medium">Global stock visibility and SKU management.</p>
+          <h2 className="heading-xl">Stock List</h2>
+          <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
         <Link href="/inventory/new" className="btn-primary shadow-glow">
           <PlusCircle className="w-4 h-4" />
-          <span>Onboard SKU</span>
+          <span>Add New Item</span>
         </Link>
       </div>
 
@@ -167,7 +167,7 @@ export default async function InventoryPage({
           </div>
           <div>
             <p className="text-2xl font-black text-foreground tracking-tight">{items.length}</p>
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Found Records</p>
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Items Found</p>
           </div>
         </div>
       </div>
@@ -180,12 +180,12 @@ export default async function InventoryPage({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="table-header">
-                <th className="table-cell-header">Identified SKU</th>
+                <th className="table-cell-header">Item Name & SKU</th>
                 <th className="table-cell-header">Category</th>
-                <th className="table-cell-header text-right">Stock Level</th>
-                <th className="table-cell-header">Location</th>
-                <th className="table-cell-header">Reliability</th>
-                <th className="table-cell-header text-right">Ops</th>
+                <th className="table-cell-header text-right">Amount</th>
+                <th className="table-cell-header">Where it is</th>
+                <th className="table-cell-header">Status</th>
+                <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
@@ -227,7 +227,7 @@ export default async function InventoryPage({
                          </span>
                          {incomingQty > 0 && (
                             <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
-                               +{incomingQty} On Order
+                               +{incomingQty} Coming Soon
                             </span>
                          )}
                        </div>
@@ -238,21 +238,21 @@ export default async function InventoryPage({
                        </span>
                     </td>
                     <td className="px-6 py-5">
-                      {isShortage ? (
+                       {isShortage ? (
                         <span className="badge bg-error/10 text-error border-error/20 ring-4 ring-error/5">
-                          Shortage
+                          Running Out
                         </span>
                       ) : isOrdered ? (
                         <span className="badge bg-primary/5 text-primary border-primary/10">
-                          Incoming
+                          On the Way
                         </span>
                       ) : isLowStock ? (
                         <span className="badge bg-warning/10 text-warning border-warning/20 italic">
-                          Low Level
+                          Low Stock
                         </span>
                       ) : (
                         <span className="badge bg-success/10 text-success border-success/20">
-                          Optimal
+                          Good
                         </span>
                       )}
                     </td>
@@ -274,11 +274,11 @@ export default async function InventoryPage({
                          <Package className="w-16 h-16 opacity-20" />
                        </div>
                        <div>
-                         <p className="text-2xl font-black text-foreground">No Inventory Items Found</p>
-                         <p className="text-[15px] font-medium mt-2 max-w-sm mx-auto">Start by adding your first SKU to tracking to visualize it here.</p>
+                         <p className="text-2xl font-black text-foreground">No Items Found</p>
+                         <p className="text-[15px] font-medium mt-2 max-w-sm mx-auto">Add your first item here to see it on the list.</p>
                        </div>
                        <Link href="/inventory/new" className="px-6 py-3 bg-foreground text-surface-lowest rounded-xl font-bold shadow-ambient hover:scale-[1.02] active:scale-[0.98] transition-transform">
-                         + Create First SKU
+                         + Add First Item
                        </Link>
                      </div>
                    </td>
