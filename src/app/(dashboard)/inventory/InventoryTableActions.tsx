@@ -50,7 +50,7 @@ export default function InventoryTableActions({
   };
 
   return (
-    <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+    <div className="flex justify-end gap-1">
       <Link 
         href={`/orders/purchase/new?itemId=${itemId}&quantity=${neededAmount}`}
         className="p-2 hover:bg-white rounded-xl text-success transition-all border border-transparent hover:border-border-ghost shadow-sm hover:shadow-md"
@@ -80,14 +80,14 @@ export default function InventoryTableActions({
       >
         <Edit className="w-4 h-4" />
       </Link>
-      <button
+      {/* <button
         onClick={handleDelete}
         disabled={isDeleting}
         className="p-2 hover:bg-error/10 rounded-xl text-error transition-colors disabled:opacity-50"
         suppressHydrationWarning
       >
         {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-      </button>
+      </button> */}
     </div>
   );
 }

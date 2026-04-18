@@ -189,7 +189,7 @@ export default async function RacksPage() {
                       </div>
                     </td>
                     <td className="px-8 py-5 text-right">
-                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex justify-end gap-2">
                          <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><Edit className="w-4 h-4" /></button>
                          <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><MoreVertical className="w-4 h-4" /></button>
                       </div>
