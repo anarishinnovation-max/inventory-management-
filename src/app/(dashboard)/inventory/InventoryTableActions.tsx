@@ -1,10 +1,11 @@
 "use client";
 
-import { Edit, Eye, Loader2, ShoppingCart, Trash2 } from "lucide-react";
+import { Edit, Eye, Flame, Loader2, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ItemBreakdownModal } from "./ItemBreakdownModal";
+import { ScrapModal } from "./ScrapModal";
 
 export default function InventoryTableActions({
   itemId,
@@ -22,6 +23,7 @@ export default function InventoryTableActions({
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [showScrap, setShowScrap] = useState(false);
 
   const neededAmount = Math.max(1, minStockLevel - totalStock);
 
@@ -74,12 +76,27 @@ export default function InventoryTableActions({
         totalStock={totalStock}
         incomingQty={incomingQty}
       />
+      <ScrapModal
+        isOpen={showScrap}
+        onClose={() => setShowScrap(false)}
+        itemId={itemId}
+        itemName={itemName}
+        totalStock={totalStock}
+      />
       <Link
         href={`/inventory/${itemId}/edit`}
         className="p-2 hover:bg-surface-low rounded-xl text-muted-foreground transition-colors"
+        title="Edit Item"
       >
         <Edit className="w-4 h-4" />
       </Link>
+      <button
+        onClick={() => setShowScrap(true)}
+        className="p-2 hover:bg-error/10 rounded-xl text-error transition-all border border-transparent hover:border-error/20"
+        title="Scrap Inventory"
+      >
+        <Flame className="w-4 h-4" />
+      </button>
       {/* <button
         onClick={handleDelete}
         disabled={isDeleting}

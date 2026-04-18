@@ -13,10 +13,21 @@ model User {
   password         String
   name             String
   role             String                 @default("employee")
+  roleId           String?                @map("role_id")
+  roleObj          Role?                  @relation(fields: [roleId], references: [id])
   emailAlerts      Boolean                @default(true)
   twoFactorEnabled Boolean                @default(false)
   createdAt        DateTime               @default(now())
   transactions     InventoryTransaction[]
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  permissions Json?    @default("[]")
+  users       User[]
+  createdAt   DateTime @default(now())
 }
 
 model Category {

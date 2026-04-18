@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SS Cuttings | Enterprise Inventory Management",
-  description: "Precision inventory management for the modern built environment.",
+  title: "SS Cutting Tools | Enterprise Inventory Management",
+  description: "Precision inventory management for SS Cutting Tools.",
 };
 
 export default function RootLayout({

@@ -13,6 +13,7 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.findUnique({
       where: { username },
+      include: { roleObj: true }
     });
 
     if (!user) {
@@ -25,9 +26,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    await login(user.id, user.username, user.role);
-
-    return NextResponse.json({ success: true, user: { id: user.id, username: user.username, role: user.role } });
+    await login(user.id, user.username, user.role, user.roleId || undefined);
+  
+    return NextResponse.json({ 
+      success: true, 
+      user: { 
+        id: user.id, 
+        username: user.username, 
+        role: user.role,
+        roleId: user.roleId,
+        roleName: user.roleObj?.name || user.role
+      } 
+    });
   } catch (error: any) {
     console.error("Login error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

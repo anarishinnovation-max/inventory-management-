@@ -4,15 +4,35 @@ import bcrypt from "bcryptjs";
 async function main() {
   const hashedPassword = await bcrypt.hash("admin123", 10);
 
-  // Create Owner User
+  // 1. Create Default Roles
+  const roles = [
+    { name: "owner", description: "Full system access" },
+    { name: "admin", description: "Management and reporting access" },
+    { name: "employee", description: "Standard inventory operations" },
+  ];
+
+  const roleMap: Record<string, any> = {};
+  for (const r of roles) {
+    const role = await prisma.role.upsert({
+      where: { name: r.name },
+      update: { description: r.description },
+      create: { name: r.name, description: r.description },
+    });
+    roleMap[r.name] = role;
+  }
+
+  // 2. Create Owner User
   const owner = await prisma.user.upsert({
     where: { username: "admin" },
-    update: {},
+    update: {
+       roleId: roleMap["owner"].id
+    },
     create: {
       username: "admin",
       password: hashedPassword,
       name: "System Admin",
       role: "owner",
+      roleId: roleMap["owner"].id,
     },
   });
 

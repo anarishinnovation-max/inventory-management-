@@ -82,7 +82,7 @@ export default function Sidebar() {
         </div>
         {!collapsed && (
           <div className="flex flex-col">
-            <span className="font-black text-lg tracking-tighter text-foreground leading-none">SS Cuttings</span>
+            <span className="font-black text-lg tracking-tighter text-foreground leading-none">SS Cutting Tools</span>
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mt-1">Enterprise</span>
           </div>
         )}
