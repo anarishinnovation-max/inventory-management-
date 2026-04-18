@@ -11,7 +11,10 @@ import {
   IndianRupee,
   Loader2,
   AlertCircle,
-  CheckCircle2
+  CheckCircle2,
+  Search,
+  ChevronDown,
+  Check
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -29,6 +32,96 @@ interface LineItem {
 }
 
 const PAYMENT_MODE_OPTIONS = ["Cash", "Bank Transfer", "UPI", "Credit"];
+
+function SearchableItemSelect({ 
+  items, 
+  value, 
+  onChange, 
+  placeholder = "Select Item Registry" 
+}: { 
+  items: any[], 
+  value: string, 
+  onChange: (val: string) => void,
+  placeholder?: string
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const dropdownRef = useState<HTMLDivElement | null>(null)[0];
+
+  const selectedItem = items.find(i => i.id === value);
+  const filteredItems = items.filter(i => 
+    i.name.toLowerCase().includes(search.toLowerCase()) || 
+    i.sku.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="relative">
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer flex items-center justify-between"
+      >
+        <span className={cn(!selectedItem && "text-muted-foreground")}>
+          {selectedItem ? `${selectedItem.sku} - ${selectedItem.name}` : placeholder}
+        </span>
+        <ChevronDown className={cn("w-4 h-4 transition-transform", isOpen && "rotate-180")} />
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-2 bg-surface-lowest border border-border-ghost rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="p-3 border-b border-border-ghost bg-surface-low/30">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input 
+                type="text"
+                autoFocus
+                placeholder="Search SKU or Name..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-surface-lowest border border-border-ghost rounded-lg pl-9 pr-4 py-2 text-sm font-bold focus:ring-2 focus:ring-primary outline-none"
+              />
+            </div>
+          </div>
+          <div className="max-h-60 overflow-y-auto p-2">
+            {filteredItems.length > 0 ? (
+              filteredItems.map(item => (
+                <div 
+                  key={item.id}
+                  onClick={() => {
+                    onChange(item.id);
+                    setIsOpen(false);
+                    setSearch("");
+                  }}
+                  className={cn(
+                    "flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-colors",
+                    item.id === value ? "bg-primary text-white" : "hover:bg-surface-low text-foreground"
+                  )}
+                >
+                  <div className="flex flex-col">
+                    <span className="text-xs font-black">{item.sku}</span>
+                    <span className="text-[11px] opacity-80">{item.name}</span>
+                  </div>
+                  {item.id === value && <Check className="w-4 h-4" />}
+                </div>
+              ))
+            ) : (
+              <div className="p-4 text-center text-xs font-bold text-muted-foreground">
+                No items found
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
 
 function NewPurchaseOrderForm() {
   const router = useRouter();
@@ -233,18 +326,36 @@ function NewPurchaseOrderForm() {
             <div className="space-y-6">
               {lineItems.map((item, index) => (
                 <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 bg-surface-low/30 rounded-3xl border border-border-ghost group relative hover:border-primary/20 transition-all">
-                  <div className="md:col-span-5">
+                  <div className="md:col-span-12 lg:col-span-5 relative">
                     <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Specification</label>
-                    <select 
+                    <SearchableItemSelect 
+                      items={items.filter(i => 
+                        !lineItems.some((li, liIndex) => liIndex !== index && li.itemId === i.id)
+                      )}
                       value={item.itemId}
-                      onChange={(e) => updateLineItem(index, "itemId", e.target.value)}
-                      className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer"
-                    >
-                      <option value="">Select Item Registry</option>
-                      {items.map(i => (
-                        <option key={i.id} value={i.id}>{i.sku} - {i.name}</option>
-                      ))}
-                    </select>
+                      onChange={(val) => updateLineItem(index, "itemId", val)}
+                    />
+                    
+                    {item.itemId && (() => {
+                      const selectedItem = items.find(i => i.id === item.itemId);
+                      const stock = selectedItem?.inventory?.quantityAvailable || 0;
+                      const isLow = stock < (selectedItem?.minStockLevel || 0);
+                      
+                      return (
+                        <div className={cn(
+                          "mt-2 flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[10px] font-black uppercase tracking-wider animate-in fade-in slide-in-from-top-1",
+                          isLow 
+                            ? "bg-error/5 border-error/20 text-error" 
+                            : "bg-success/5 border-success/20 text-success"
+                        )}>
+                          <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", isLow ? "bg-error" : "bg-success")} />
+                          <span>
+                            {isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} Units Available
+                          </span>
+                          <span className="opacity-40 ml-auto">Min Rqd: {selectedItem?.minStockLevel || 0}</span>
+                        </div>
+                      );
+                    })()}
                   </div>
                   <div className="md:col-span-3">
                     <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Quantity</label>
