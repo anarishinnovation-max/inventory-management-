@@ -223,6 +223,7 @@ exports.Prisma.DispatchOrderScalarFieldEnum = {
   customerId: 'customerId',
   status: 'status',
   paymentMode: 'paymentMode',
+  expectedDelivery: 'expectedDelivery',
   orderDate: 'orderDate',
   createdAt: 'createdAt'
 };
