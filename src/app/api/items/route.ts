@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
@@ -7,7 +9,16 @@ export async function GET() {
     const items = await (prisma as any).item.findMany({
       include: {
         category: true,
-        inventory: true,
+        inventory: {
+          include: {
+            batches: {
+              include: {
+                vendor: true
+              },
+              orderBy: { purchaseDate: 'desc' }
+            }
+          }
+        },
         stocks: {
           include: {
             rack: true

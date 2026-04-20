@@ -1,4 +1,6 @@
 import prisma from "./prisma";
+import { getTenantId } from "./tenant";
+import { Prisma } from "../generated/client";
 
 export const InventoryService = {
   /**
@@ -12,17 +14,21 @@ export const InventoryService = {
     minStockLevel?: number;
     isCritical?: boolean;
   }) {
-    // 0. Check SKU uniqueness
-    const existing = await prisma.item.findUnique({
-      where: { sku: data.sku },
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
+
+    // 0. Check SKU uniqueness within the tenant
+    const existing = await (prisma as any).item.findFirst({
+      where: { sku: data.sku, tenantId },
     });
     if (existing) {
       throw new Error(`SKU_EXISTS:${data.sku}`);
     }
 
-    return await prisma.$transaction(async (tx) => {
-      const item = await (tx as any).item.create({
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const item = await tx.item.create({
         data: {
+          tenantId,
           name: data.name,
           sku: data.sku,
           unit: data.unit,
@@ -32,8 +38,9 @@ export const InventoryService = {
         },
       });
 
-      await (tx as any).inventory.create({
+      await tx.inventory.create({
         data: {
+          tenantId,
           item: { connect: { id: item.id } },
           quantityAvailable: 0,
           quantityReserved: 0,
@@ -41,9 +48,9 @@ export const InventoryService = {
         },
       });
 
-      // 3. Create Audit Log for registry
-      await (tx as any).inventoryTransaction.create({
+      await tx.inventoryTransaction.create({
         data: {
+          tenantId,
           item: { connect: { id: item.id } },
           type: "INITIAL_REGISTRY",
           quantity: 0,
@@ -58,12 +65,14 @@ export const InventoryService = {
 
   /**
    * Receives items from a Purchase Order.
-   * Updates quantities received, adds inventory transactions, and updates the cached snapshot.
    */
   async receiveGoods(poId: string, itemQuantities: { itemId: string; receivedQty: number }[], userId?: string) {
-    return await prisma.$transaction(async (tx: any) => {
-      const po = await tx.purchaseOrder.findUnique({
-        where: { id: poId },
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
+
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const po = await tx.purchaseOrder.findFirst({
+        where: { id: poId, tenantId },
         include: { items: true },
       });
 
@@ -75,17 +84,18 @@ export const InventoryService = {
 
         // 1. Update PO Item received quantity
         await tx.pOLineItem.update({
-          where: { id: poItem.id },
+          where: { id: poItem.id, tenantId },
           data: {
             quantityReceived: { increment: update.receivedQty },
           },
         });
 
         // 2. Create Inventory Transaction (PURCHASE)
-        const userExists = userId ? await tx.user.findUnique({ where: { id: userId } }) : null;
+        const userExists = userId ? await tx.user.findFirst({ where: { id: userId, tenantId } }) : null;
 
         await tx.inventoryTransaction.create({
           data: {
+            tenantId,
             item: { connect: { id: update.itemId } },
             vendor: { connect: { id: po.vendorId } },
             user: userExists ? { connect: { id: userId } } : undefined,
@@ -97,46 +107,38 @@ export const InventoryService = {
         });
 
         // 3. Update Cached Inventory summary
-        // Increase available, decrease in-transit without going below 0
-        const currentInv = await tx.inventory.findUnique({
-          where: { itemId: update.itemId },
+        const currentInv = await tx.inventory.findFirst({
+          where: { itemId: update.itemId, tenantId },
         });
 
         if (currentInv) {
           await tx.inventory.update({
-            where: { itemId: update.itemId },
+            where: { id: currentInv.id, tenantId },
             data: {
               quantityAvailable: { increment: update.receivedQty },
               incomingQty: { decrement: Math.min(currentInv.incomingQty || 0, update.receivedQty) },
               quantityInTransit: { decrement: Math.min(currentInv.quantityInTransit || 0, update.receivedQty) },
             },
           });
-        } else {
-          await tx.inventory.create({
-            data: {
-              itemId: update.itemId,
-              quantityAvailable: update.receivedQty,
-              incomingQty: 0,
-              quantityInTransit: 0,
-              quantityReserved: 0,
-            },
-          });
         }
 
-        // 3b. Update Stock table (per-rack) — inventory page reads from here
-        const defaultRack = await tx.rack.findFirst({ orderBy: { rackNumber: "asc" } });
+        // 3b. Update Stock table (per-rack)
+        const defaultRack = await tx.rack.findFirst({
+          where: { tenantId },
+          orderBy: { rackNumber: "asc" }
+        });
         if (defaultRack) {
           const existingStock = await tx.stock.findFirst({
-            where: { itemId: update.itemId, rackId: defaultRack.id },
+            where: { itemId: update.itemId, rackId: defaultRack.id, tenantId },
           });
           if (existingStock) {
             await tx.stock.update({
-              where: { id: existingStock.id },
+              where: { id: existingStock.id, tenantId },
               data: { quantity: { increment: update.receivedQty } },
             });
           } else {
             await tx.stock.create({
-              data: { itemId: update.itemId, rackId: defaultRack.id, quantity: update.receivedQty },
+              data: { tenantId, itemId: update.itemId, rackId: defaultRack.id, quantity: update.receivedQty },
             });
           }
         }
@@ -144,24 +146,22 @@ export const InventoryService = {
 
       // 4. Update overall PO Status
       const finalItems = await tx.pOLineItem.findMany({
-        where: { purchaseOrderId: poId }
+        where: { purchaseOrderId: poId, tenantId }
       });
 
-      const allReceived = finalItems.every((i: { quantityReceived: number; quantityOrdered: number; }) => i.quantityReceived >= i.quantityOrdered);
-      const someReceived = finalItems.some((i: { quantityReceived: number; }) => i.quantityReceived > 0);
-      
+      const allReceived = finalItems.every((i: any) => i.quantityReceived >= i.quantityOrdered);
+      const someReceived = finalItems.some((i: any) => i.quantityReceived > 0);
       const newStatus = allReceived ? "DELIVERED" : (someReceived ? "PARTIAL" : "ORDERED");
 
       await tx.purchaseOrder.update({
-        where: { id: poId },
+        where: { id: poId, tenantId },
         data: { status: newStatus }
       });
 
-      // When an order is fully delivered, create batch rows once (idempotent on retries).
-      // Inventory quantities are already updated above during receipt operations.
+      // Handle Batching
       if (allReceived && String(po.status || "").toUpperCase() !== "DELIVERED") {
         const inventories = await tx.inventory.findMany({
-          where: { itemId: { in: finalItems.map((entry: any) => entry.itemId) } },
+          where: { itemId: { in: finalItems.map((entry: any) => entry.itemId) }, tenantId },
           select: { id: true, itemId: true },
         });
         const inventoryIdByItemId = new Map<string, string>(
@@ -174,6 +174,7 @@ export const InventoryService = {
             if (!inventoryId) return null;
 
             return {
+              tenantId,
               inventoryId,
               vendorId: po.vendorId,
               quantity: line.quantityReceived,
@@ -186,26 +187,15 @@ export const InventoryService = {
           .filter(Boolean);
 
         if (batchRows.length > 0) {
-          try {
-            await tx.inventoryBatch.createMany({
-              data: batchRows,
-              skipDuplicates: true,
-            });
-          } catch (error: unknown) {
-            const code = (error as { code?: string } | null)?.code;
-            // Common prod footgun: code updated but DB not migrated yet.
-            if (code === "P2021") {
-              throw new Error(
-                "Inventory batch tracking is not migrated in the database yet. Run `npx prisma migrate dev` (or `npx prisma migrate deploy`) and then `npx prisma generate`."
-              );
+            // Using createMany or individual creates to avoid type issues with tx
+            for (const row of batchRows) {
+               if (row) await tx.inventoryBatch.create({ data: row });
             }
-            throw error;
-          }
         }
       }
 
-      return await tx.purchaseOrder.findUnique({
-        where: { id: poId },
+      return await tx.purchaseOrder.findFirst({
+        where: { id: poId, tenantId },
         include: { items: { include: { item: true } } },
       });
     });
@@ -213,35 +203,25 @@ export const InventoryService = {
 
   /**
    * Creates a new Dispatch Order.
-   * Note: In this project, stock is NOT reserved ahead of time.
    */
   async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date }) {
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
+
     const status = data.status || "pending";
-    const isShortageAllowed = status === "Backordered" || status === "Pending Procurement";
 
-    return await prisma.$transaction(async (tx: any) => {
-      // 1. Validation & Availability Check
-      if (!isShortageAllowed) {
-        for (const item of data.items) {
-          const inv = await tx.inventory.findUnique({
-            where: { itemId: item.itemId },
-          });
-
-          if (!inv || inv.quantityAvailable < item.quantity) {
-            throw new Error(`Insufficient available stock for item ID: ${item.itemId}. Requested: ${item.quantity}, Available: ${inv?.quantityAvailable || 0}`);
-          }
-        }
-      }
-
-      // 2. Create Order
+    return await (prisma as any).$transaction(async (tx: any) => {
+      // Create Order
       const order = await tx.dispatchOrder.create({
         data: {
+          tenantId,
           customerId: data.customerId,
           status: status,
           paymentMode: data.paymentMode || "Cash",
           expectedDelivery: data.expectedDelivery ? new Date(data.expectedDelivery) : null,
           items: {
             create: data.items.map((item: any) => ({
+              tenantId,
               itemId: item.itemId,
               quantity: item.quantity,
               sellingPrice: item.sellingPrice,
@@ -249,20 +229,20 @@ export const InventoryService = {
           },
         },
       });
-
-      // Stock is not reserved during the pending phase as per project requirements.
       return order;
     });
   },
 
   /**
    * Dispatches a sales order.
-   * Creates sale transactions, decrements reserved inventory, and specific rack stock.
    */
   async dispatchGoods(dispatchId: string) {
-    return await prisma.$transaction(async (tx: any) => {
-      const order = await tx.dispatchOrder.findUnique({
-        where: { id: dispatchId },
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
+
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const order = await tx.dispatchOrder.findFirst({
+        where: { id: dispatchId, tenantId },
         include: { items: true },
       });
 
@@ -270,37 +250,37 @@ export const InventoryService = {
       if (order.status === "dispatched") throw new Error("Order already dispatched");
 
       for (const line of order.items) {
-        // 1. Update Inventory summary (Decrement Available directly upon physical dispatch)
+        // 1. Update Inventory summary
         await tx.inventory.update({
-          where: { itemId: line.itemId },
+          where: { itemId: line.itemId, tenantId },
           data: {
             quantityAvailable: { decrement: line.quantity },
           },
         });
 
-        // 2. Deduct from Racks (Greedy Approach)
+        // 2. Deduct from Racks
         let remainingToDeduct = line.quantity;
         const availableStocks = await tx.stock.findMany({
-          where: { itemId: line.itemId, quantity: { gt: 0 } },
+          where: { itemId: line.itemId, quantity: { gt: 0 }, tenantId },
           orderBy: { quantity: "desc" },
         });
 
         let usedRackId = null;
         for (const stock of availableStocks) {
           if (remainingToDeduct <= 0) break;
-
           const deduction = Math.min(stock.quantity, remainingToDeduct);
           await tx.stock.update({
-            where: { id: stock.id },
+            where: { id: stock.id, tenantId },
             data: { quantity: { decrement: deduction } },
           });
           remainingToDeduct -= deduction;
           usedRackId = stock.rackId;
         }
 
-        // 3. Create Inventory Transaction (SALE)
+        // 3. Create Inventory Transaction
         await tx.inventoryTransaction.create({
           data: {
+            tenantId,
             item: { connect: { id: line.itemId } },
             customer: order.customerId ? { connect: { id: order.customerId } } : undefined,
             type: "SALE",
@@ -312,12 +292,10 @@ export const InventoryService = {
         });
       }
 
-      const updatedOrder = await tx.dispatchOrder.update({
-        where: { id: dispatchId },
+      return await tx.dispatchOrder.update({
+        where: { id: dispatchId, tenantId },
         data: { status: "dispatched" },
       });
-
-      return updatedOrder;
     });
   },
 
@@ -325,10 +303,13 @@ export const InventoryService = {
    * Records scrapped inventory.
    */
   async scrapInventory(itemId: string, qty: number, reason?: string) {
-    return await prisma.$transaction(async (tx) => {
-      // 1. Create Transaction (SCRAP)
-      await (tx as any).inventoryTransaction.create({
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
+    return await (prisma as any).$transaction(async (tx: any) => {
+      await tx.inventoryTransaction.create({
         data: {
+          tenantId,
           item: { connect: { id: itemId } },
           type: "SCRAP",
           quantity: -qty,
@@ -337,9 +318,8 @@ export const InventoryService = {
         },
       });
 
-      // 2. Update Cached Inventory
-      return await (tx as any).inventory.update({
-        where: { itemId },
+      return await tx.inventory.update({
+        where: { itemId, tenantId },
         data: {
           quantityAvailable: { decrement: qty },
         },
@@ -348,52 +328,54 @@ export const InventoryService = {
   },
 
   /**
-   * Updates stock in a specific rack and synchronizes the global inventory summary.
+   * Updates stock in a specific rack.
    */
   async updateStock(itemId: string, rackId: string, quantity: number, userId: string, remarks?: string) {
-    return await prisma.$transaction(async (tx) => {
-      // 1. Get current stock for this rack
-      const currentStock = await (tx as any).stock.findFirst({
-        where: { itemId, rackId },
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const currentStock = await tx.stock.findFirst({
+        where: { itemId, rackId, tenantId },
       });
 
       const oldQuantity = currentStock?.quantity || 0;
       const adjustmentQty = quantity - oldQuantity;
 
-      // 2. Upsert Stock record
       if (currentStock) {
-        await (tx as any).stock.update({
-          where: { id: currentStock.id },
+        await tx.stock.update({
+          where: { id: currentStock.id, tenantId },
           data: { quantity, updatedAt: new Date() },
         });
       } else {
-        await (tx as any).stock.create({
-          data: { itemId, rackId, quantity },
+        await tx.stock.create({
+          data: { tenantId, itemId, rackId, quantity },
         });
       }
 
-      // 3. Update Global Inventory Summary
-      await (tx as any).inventory.upsert({
-        where: { itemId },
-        create: {
-          item: { connect: { id: itemId } },
-          quantityAvailable: quantity, // If it didn't exist, we assume this is the first entry
-          quantityInTransit: 0,
-          quantityReserved: 0,
-        },
-        update: {
-          quantityAvailable: { increment: adjustmentQty },
-        },
-      });
+      const existingInv = await tx.inventory.findFirst({ where: { itemId, tenantId } });
+      if (existingInv) {
+        await tx.inventory.update({
+            where: { id: existingInv.id, tenantId },
+            data: { quantityAvailable: { increment: adjustmentQty } }
+        });
+      } else {
+        await tx.inventory.create({
+            data: {
+                tenantId,
+                item: { connect: { id: itemId } },
+                quantityAvailable: quantity,
+                quantityInTransit: 0,
+                quantityReserved: 0,
+            }
+        });
+      }
 
-      // 4. Create Audit Transaction
-      const userExists = userId ? await (tx as any).user.findUnique({ where: { id: userId } }) : null;
-
-      await (tx as any).inventoryTransaction.create({
+      await tx.inventoryTransaction.create({
         data: {
+          tenantId,
           item: { connect: { id: itemId } },
           rack: { connect: { id: rackId } },
-          user: userExists ? { connect: { id: userId } } : undefined,
           type: adjustmentQty >= 0 ? "ADJUSTMENT_IN" : "ADJUSTMENT_OUT",
           quantity: Math.abs(adjustmentQty),
           referenceType: "MANUAL",
@@ -416,37 +398,33 @@ export const InventoryService = {
     customerId?: string;
     remarks?: string;
   }) {
-    return await prisma.$transaction(async (tx) => {
-      // 1. Validate Stock
-      const stock = await (tx as any).stock.findFirst({
-        where: { itemId: params.itemId, rackId: params.rackId },
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
+
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const stock = await tx.stock.findFirst({
+        where: { itemId: params.itemId, rackId: params.rackId, tenantId },
       });
 
       if (!stock || stock.quantity < params.quantity) {
         throw new Error("Insufficient stock in the specified rack location.");
       }
 
-      // 2. Update Stock
-      await (tx as any).stock.update({
-        where: { id: stock.id },
+      await tx.stock.update({
+        where: { id: stock.id, tenantId },
         data: { quantity: { decrement: params.quantity } },
       });
 
-      // 3. Update Global Inventory
-      await (tx as any).inventory.update({
-        where: { itemId: params.itemId },
+      await tx.inventory.update({
+        where: { itemId: params.itemId, tenantId },
         data: { quantityAvailable: { decrement: params.quantity } },
       });
 
-      // 4. Create Audit Transaction
-      const userExists = params.userId ? await tx.user.findUnique({ where: { id: params.userId } }) : null;
-
-      return await (tx as any).inventoryTransaction.create({
+      return await tx.inventoryTransaction.create({
         data: {
+          tenantId,
           item: { connect: { id: params.itemId } },
           rack: { connect: { id: params.rackId } },
-          user: userExists ? { connect: { id: params.userId } } : undefined,
-          customer: params.customerId ? { connect: { id: params.customerId } } : undefined,
           type: "OUTWARD",
           quantity: -params.quantity,
           referenceType: "MANUAL_DISPATCH",
@@ -460,21 +438,12 @@ export const InventoryService = {
    * Cancels a dispatch order and releases reserved stock.
    */
   async cancelDispatchOrder(orderId: string) {
-    return await prisma.$transaction(async (tx: any) => {
-      const order = await tx.dispatchOrder.findUnique({
-        where: { id: orderId },
-        include: { items: true },
-      });
+    const tenantId = await getTenantId();
+    if (!tenantId) throw new Error("Unauthorized");
 
-      if (!order) throw new Error("Order not found");
-      if (order.status === "dispatched") throw new Error("Cannot cancel a dispatched order");
-      if (order.status === "cancelled") return order;
-
-      // No stock was held/reserved, so no release is needed.
-      return await tx.dispatchOrder.update({
-        where: { id: orderId },
-        data: { status: "cancelled" },
-      });
+    return await (prisma as any).dispatchOrder.update({
+      where: { id: orderId, tenantId },
+      data: { status: "cancelled" },
     });
   },
 };

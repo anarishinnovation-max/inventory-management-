@@ -1,18 +1,30 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { login } from "@/lib/auth";
+import { getTenantId } from "@/lib/tenant";
 
 export async function POST(request: Request) {
   try {
+    const tenantId = await getTenantId();
+    if (!tenantId) {
+      return NextResponse.json({ error: "Tenant not found or invalid subdomain" }, { status: 400 });
+    }
+
     const { username, password } = await request.json();
 
     if (!username || !password) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { username },
+    // Explicitly filter by tenantId during login
+    const user = await (prisma as any).user.findFirst({
+      where: {
+        username,
+        tenantId
+      },
       include: { roleObj: true }
     });
 
@@ -26,17 +38,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    // Proceed with login
     await login(user.id, user.username, user.role, user.roleId || undefined);
-  
-    return NextResponse.json({ 
-      success: true, 
-      user: { 
-        id: user.id, 
-        username: user.username, 
+
+    return NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        username: user.username,
         role: user.role,
         roleId: user.roleId,
         roleName: user.roleObj?.name || user.role
-      } 
+      }
     });
   } catch (error: any) {
     console.error("Login error:", error);

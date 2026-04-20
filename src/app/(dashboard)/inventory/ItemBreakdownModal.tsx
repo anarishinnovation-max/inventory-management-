@@ -179,7 +179,7 @@ export function ItemBreakdownModal({
                       <table className="w-full text-left">
                           <thead>
                             <tr className="bg-surface-low/50 border-b border-border-ghost text-muted-foreground">
-                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Supplier</th>
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Vendor</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Quantity</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Price</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Date</th>
@@ -223,7 +223,7 @@ export function ItemBreakdownModal({
                     <section className="space-y-6">
                       <div className="flex items-center gap-3 border-b border-border-ghost pb-4">
                         <Package className="w-5 h-5 text-indigo-600" />
-                        <h3 className="text-lg font-black text-foreground tracking-tight">Selling to Buyers</h3>
+                        <h3 className="text-lg font-black text-foreground tracking-tight">Selling to Customers</h3>
                       </div>
                       <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden divide-y divide-border-ghost">
                         {customerOrders.map((order) => (
@@ -246,7 +246,7 @@ export function ItemBreakdownModal({
                     <section className="space-y-6">
                       <div className="flex items-center gap-3 border-b border-border-ghost pb-4">
                         <Truck className="w-5 h-5 text-primary" />
-                        <h3 className="text-lg font-black text-foreground tracking-tight">Coming from Suppliers</h3>
+                        <h3 className="text-lg font-black text-foreground tracking-tight">Coming from Vendors</h3>
                       </div>
                       <div className="bg-surface-low/30 rounded-3xl border border-border-ghost overflow-hidden divide-y divide-border-ghost">
                         {incomingPOs.map((po) => (

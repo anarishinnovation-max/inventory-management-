@@ -14,12 +14,18 @@ import {
   CheckCircle2,
   Search,
   ChevronDown,
-  Check
+  Check,
+  Eye,
+  Building2,
+  CreditCard,
+  Calendar,
+  Layers
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { StockBreakdownPopup } from "./StockBreakdownPopup";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -139,6 +145,7 @@ function NewPurchaseOrderForm() {
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantityOrdered: 1, costPrice: 0 }
   ]);
+  const [breakdownData, setBreakdownData] = useState<{ name: string; total: number; batches: any[] } | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -279,7 +286,7 @@ function NewPurchaseOrderForm() {
             <span>Back to Order List</span>
           </Link>
           <h1 className="text-5xl font-black tracking-tight text-foreground">Buy New Items</h1>
-          <p className="text-muted-foreground text-lg font-medium">Set up a new order from suppliers.</p>
+          <p className="text-muted-foreground text-lg font-medium">Set up a new order from vendors.</p>
         </div>
         <div className="flex items-center gap-4">
            <Link href="/orders/purchase" className="px-6 py-3.5 text-sm font-bold text-muted-foreground hover:bg-surface-low rounded-2xl border border-transparent transition-all">
@@ -349,9 +356,26 @@ function NewPurchaseOrderForm() {
                             : "bg-success/5 border-success/20 text-success"
                         )}>
                           <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", isLow ? "bg-error" : "bg-success")} />
-                          <span>
-                            {isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} Units Available
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span>
+                              {isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} Units Available
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setBreakdownData({
+                                  name: selectedItem.name,
+                                  total: stock,
+                                  batches: selectedItem.inventory?.batches || []
+                                });
+                              }}
+                              className="p-1 hover:bg-black/5 rounded-md transition-colors"
+                              title="View breakdown"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                           <span className="opacity-40 ml-auto">Min Rqd: {selectedItem?.minStockLevel || 0}</span>
                         </div>
                       );
@@ -364,7 +388,8 @@ function NewPurchaseOrderForm() {
                       min="1"
                       value={item.quantityOrdered}
                       onChange={(e) => updateLineItem(index, "quantityOrdered", e.target.value)}
-                      className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
+                      className="input-field font-mono font-bold text-sm"
+                      placeholder="0"
                     />
                   </div>
                   <div className="md:col-span-3">
@@ -374,7 +399,8 @@ function NewPurchaseOrderForm() {
                       min="0"
                       value={item.costPrice}
                       onChange={(e) => updateLineItem(index, "costPrice", e.target.value)}
-                      className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
+                      className="input-field font-mono font-bold text-sm"
+                      placeholder="0.00"
                     />
                   </div>
                   <div className="md:col-span-1 flex items-end justify-center pb-1">
@@ -392,51 +418,74 @@ function NewPurchaseOrderForm() {
         </div>
 
         {/* Sidebar: Vendor & Summary */}
+        {/* Sidebar: Vendor & Summary */}
         <div className="lg:col-span-4 space-y-8">
-           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
-              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Order Details</h3>
+           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-10">
+              <div className="flex items-center gap-4 border-b border-border-ghost pb-6">
+                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <Layers className="w-6 h-6" />
+                 </div>
+                 <h3 className="text-2xl font-black text-foreground tracking-tight">Order Details</h3>
+              </div>
               
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Supplier</label>
-                 <select 
-                   value={selectedVendor}
-                   onChange={(e) => setSelectedVendor(e.target.value)}
-                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
-                 >
-                   <option value="">Select Supplier</option>
-                   {vendors.map(v => (
-                     <option key={v.id} value={v.id}>{v.name}</option>
-                   ))}
-                 </select>
+              <div className="space-y-6">
+                <div className="group">
+                   <div className="flex items-center gap-2 mb-3">
+                      <Building2 className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                      <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Vendor Source</label>
+                   </div>
+                   <div className="relative">
+                     <select 
+                       value={selectedVendor}
+                       onChange={(e) => setSelectedVendor(e.target.value)}
+                       className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none transition-all hover:bg-surface-lowest hover:border-primary/20"
+                     >
+                       <option value="">Select Vendor</option>
+                       {vendors.map(v => (
+                         <option key={v.id} value={v.id}>{v.name}</option>
+                       ))}
+                     </select>
+                     <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                   </div>
+                </div>
+
+                <div className="group">
+                   <div className="flex items-center gap-2 mb-3">
+                      <CreditCard className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                      <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Payment Method</label>
+                   </div>
+                   <div className="relative">
+                     <select 
+                       value={paymentMode}
+                       onChange={(e) => setPaymentMode(e.target.value)}
+                       className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none transition-all hover:bg-surface-lowest hover:border-primary/20"
+                     >
+                       {PAYMENT_MODE_OPTIONS.map((mode) => (
+                         <option key={mode} value={mode}>{mode}</option>
+                       ))}
+                       {!PAYMENT_MODE_OPTIONS.includes(paymentMode) && (
+                         <option value={paymentMode}>{paymentMode}</option>
+                       )}
+                     </select>
+                     <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                   </div>
+                </div>
+
+                <div className="group">
+                   <div className="flex items-center gap-2 mb-3">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                      <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Expected Delivery</label>
+                   </div>
+                   <input
+                     type="datetime-local"
+                     value={expectedDelivery}
+                     onChange={(e) => setExpectedDelivery(e.target.value)}
+                     className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none transition-all hover:bg-surface-lowest hover:border-primary/20"
+                   />
+                </div>
               </div>
 
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Payment Mode</label>
-                 <select 
-                   value={paymentMode}
-                   onChange={(e) => setPaymentMode(e.target.value)}
-                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
-                 >
-                   {PAYMENT_MODE_OPTIONS.map((mode) => (
-                     <option key={mode} value={mode}>{mode}</option>
-                   ))}
-                   {!PAYMENT_MODE_OPTIONS.includes(paymentMode) && (
-                     <option value={paymentMode}>{paymentMode}</option>
-                   )}
-                 </select>
-              </div>
-
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Expected Delivery (Date & Time)</label>
-                 <input
-                   type="datetime-local"
-                   value={expectedDelivery}
-                   onChange={(e) => setExpectedDelivery(e.target.value)}
-                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none"
-                 />
-              </div>
-
-              <div className="pt-6 border-t border-border-ghost space-y-5">
+              <div className="pt-8 border-t border-border-ghost space-y-5">
                  <div className="flex justify-between items-center text-sm font-bold text-muted-foreground">
                     <span>Items in Order</span>
                     <span className="text-foreground">{lineItems.length}</span>
@@ -445,11 +494,13 @@ function NewPurchaseOrderForm() {
                     <span className="text-sm font-bold text-muted-foreground">Total Units</span>
                     <span className="text-[15px] font-black text-foreground">{lineItems.reduce((acc, curr) => acc + curr.quantityOrdered, 0)} Units</span>
                  </div>
-                 <div className="pt-6 border-t border-border-ghost flex justify-between items-baseline">
-                    <span className="text-xs font-black text-foreground uppercase tracking-widest">Total Cost</span>
-                    <div className="text-right">
-                       <span className="text-3xl font-black text-foreground tracking-tighter">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                       <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Excluding GST</p>
+                 <div className="pt-8 border-t border-border-ghost">
+                    <div className="flex justify-between items-baseline mb-4">
+                       <span className="text-xs font-black text-foreground uppercase tracking-[0.2em]">Payable Amount</span>
+                       <div className="text-right">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-1">Total Cost (Excl. GST)</span>
+                          <span className="text-4xl font-black text-foreground tracking-tighter">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                       </div>
                     </div>
                  </div>
               </div>
@@ -467,6 +518,14 @@ function NewPurchaseOrderForm() {
            </div>
         </div>
       </div>
+
+      <StockBreakdownPopup 
+        isOpen={!!breakdownData}
+        onClose={() => setBreakdownData(null)}
+        itemName={breakdownData?.name || ""}
+        totalStock={breakdownData?.total || 0}
+        batches={breakdownData?.batches || []}
+      />
     </div>
   );
 }

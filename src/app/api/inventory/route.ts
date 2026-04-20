@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
@@ -30,17 +32,17 @@ export async function GET() {
       const incomingQty = Number(inv.incomingQty || 0);
       const reservedQty = Number(inv.quantityReserved || 0);
       const minStockLevel = Number(inv.item?.minStockLevel || 0);
-      const status = computeInventoryStatus({ 
-        totalQty, 
-        incomingQty, 
-        reservedQty, 
-        minStockLevel 
+      const status = computeInventoryStatus({
+        totalQty,
+        incomingQty,
+        reservedQty,
+        minStockLevel
       });
-      return { 
-        ...inv, 
-        totalQty, 
-        incomingQty, 
-        reservedQty, 
+      return {
+        ...inv,
+        totalQty,
+        incomingQty,
+        reservedQty,
         status,
         netAvailable: (totalQty + incomingQty) - reservedQty
       };

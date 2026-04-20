@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import {
@@ -73,10 +75,10 @@ export default async function VendorsPage() {
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
              <span>Home</span>
              <span className="opacity-30">/</span>
-             <span className="text-primary">Suppliers</span>
+             <span className="text-primary">Vendors</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Suppliers & Prices</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Manage your suppliers and how much they charge.</p>
+          <h1 className="heading-xl tracking-tight">Vendors & Prices</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Manage your vendors and how much they charge.</p>
         </div>
         <VendorModal />
       </header>
@@ -85,7 +87,7 @@ export default async function VendorsPage() {
         <div className="lg:col-span-1 space-y-4">
           <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
             <Truck className="w-3 h-3 text-primary" />
-            Our Suppliers
+            Our Vendors
           </h2>
           <div className="space-y-3">
             {vendors.map((vendor: any) => (
@@ -107,7 +109,7 @@ export default async function VendorsPage() {
                 </div>
               </div>
             ))}
-            {vendors.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No suppliers found.</p>}
+            {vendors.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No vendors found.</p>}
           </div>
         </div>
 
@@ -123,7 +125,7 @@ export default async function VendorsPage() {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="table-header">
-                      <th className="table-cell-header">Supplier</th>
+                      <th className="table-cell-header">Vendor</th>
                       <th className="table-cell-header">Item & SKU</th>
                       <th className="table-cell-header text-right">Price</th>
                       <th className="table-cell-header">Time to Send</th>
@@ -178,7 +180,7 @@ export default async function VendorsPage() {
                     )) : (
                       <tr>
                          <td colSpan={5} className="px-8 py-32 text-center text-muted-foreground font-medium">
-                            No prices found. Add prices to suppliers to see them here.
+                            No prices found. Add prices to vendors to see them here.
                          </td>
                       </tr>
                     )}
@@ -203,7 +205,7 @@ export default async function VendorsPage() {
                   </div>
                   <div>
                      <h4 className="text-sm font-black text-foreground uppercase tracking-widest">Fast Sending</h4>
-                     <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">We track how long suppliers take to send items so you don't run out.</p>
+                     <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">We track how long vendors take to send items so you don't run out.</p>
                   </div>
                </div>
             </div>

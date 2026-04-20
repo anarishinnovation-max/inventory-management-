@@ -378,7 +378,7 @@ export default function NewDispatchOrderPage() {
             <span>Back to Sales List</span>
           </Link>
           <h1 className="text-5xl font-black tracking-tight text-foreground">Sell & Send Items</h1>
-          <p className="text-muted-foreground text-lg font-medium">Set up a new order for a buyer.</p>
+          <p className="text-muted-foreground text-lg font-medium">Set up a new order for a customer.</p>
         </div>
         <div className="flex items-center gap-4">
            <Link href="/orders/dispatch" className="px-6 py-3.5 text-sm font-bold text-muted-foreground hover:bg-surface-low rounded-2xl border border-transparent transition-all">
@@ -538,13 +538,13 @@ export default function NewDispatchOrderPage() {
               <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Sale Details</h3>
               
               <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Buyer Name</label>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Customer Name</label>
                  <select 
                    value={selectedCustomer}
                    onChange={(e) => setSelectedCustomer(e.target.value)}
                    className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
                  >
-                   <option value="">Select Buyer</option>
+                   <option value="">Select Customer</option>
                    {customers.map(c => (
                      <option key={c.id} value={c.id}>{c.name}</option>
                    ))}

@@ -3,6 +3,7 @@
 import prisma from "./prisma";
 import { revalidatePath } from "next/cache";
 import { getSession } from "./auth";
+import { getTenantId } from "./tenant";
 
 export async function updateUserSettings(data: { emailAlerts?: boolean, twoFactorEnabled?: boolean }) {
   const session = await getSession();
@@ -10,7 +11,8 @@ export async function updateUserSettings(data: { emailAlerts?: boolean, twoFacto
     throw new Error("Unauthorized");
   }
 
-  await prisma.user.update({
+  // Automated extension will handle filters, but we handle the type here
+  await (prisma as any).user.update({
     where: { id: session.id },
     data: data,
   });
@@ -19,13 +21,14 @@ export async function updateUserSettings(data: { emailAlerts?: boolean, twoFacto
 }
 
 export async function createCustomer(data: { name: string, contact?: string, email?: string, address?: string }) {
-  const session = await getSession();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+  const tenantId = await getTenantId();
+  if (!tenantId) throw new Error("Tenant context missing");
 
-  const customer = await prisma.customer.create({
-    data: data
+  const customer = await (prisma as any).customer.create({
+    data: {
+      ...data,
+      tenantId,
+    }
   });
 
   revalidatePath("/customers");
@@ -33,13 +36,14 @@ export async function createCustomer(data: { name: string, contact?: string, ema
 }
 
 export async function createVendor(data: { name: string, contact?: string, email?: string, preferredPaymentMode?: string }) {
-  const session = await getSession();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+  const tenantId = await getTenantId();
+  if (!tenantId) throw new Error("Tenant context missing");
 
-  const vendor = await prisma.vendor.create({
-    data: data
+  const vendor = await (prisma as any).vendor.create({
+    data: {
+      ...data,
+      tenantId,
+    }
   });
 
   revalidatePath("/vendors");

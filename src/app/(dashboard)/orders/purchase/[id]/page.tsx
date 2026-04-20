@@ -232,7 +232,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
               
               <div className="space-y-6">
                  <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
-                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Supplier Summary</p>
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Vendor Summary</p>
                     <p className="text-lg font-black text-foreground">{order.vendor.name}</p>
                     <p className="text-xs font-medium text-muted-foreground mt-1">Ready for inbound verification.</p>
                  </div>

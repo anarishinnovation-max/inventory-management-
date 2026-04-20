@@ -61,16 +61,16 @@ export default async function PurchaseOrdersPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Buying</span>
+            <span>Purchase Bills</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Item Movement</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Buying Orders</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Manage items coming in from suppliers.</p>
+          <h1 className="heading-xl tracking-tight">Purchase Bills</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Manage items coming in from vendors.</p>
         </div>
         <Link href="/orders/purchase/new" className="btn-primary shadow-glow">
           <Plus className="w-4 h-4" />
-          <span>New Order</span>
+          <span>New Purchase Order</span>
         </Link>
       </header>
 

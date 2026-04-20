@@ -1,6 +1,8 @@
-import { InventoryService } from "@/lib/inventory-service";
-import prisma from "@/lib/prisma";
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { InventoryService } from "@/lib/inventory-service";
 
 export async function GET() {
   try {

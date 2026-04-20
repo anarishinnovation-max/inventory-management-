@@ -229,7 +229,7 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Suppliers</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Vendors</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.vendorsCount}</h2>
             <p className="text-[10px] text-muted-foreground mt-2 font-medium">Across all areas</p>
           </div>

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import {
@@ -68,7 +70,7 @@ export default async function TransactionsPage() {
                 <th className="table-cell-header">Item Name</th>
                 <th className="table-cell-header text-right">Change</th>
                 <th className="table-cell-header">Rack</th>
-                <th className="table-cell-header">Supplier / Buyer</th>
+                <th className="table-cell-header">Vendor / Customer</th>
                 <th className="table-cell-header text-right">Date & Time</th>
               </tr>
             </thead>

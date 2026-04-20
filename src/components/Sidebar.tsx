@@ -46,15 +46,15 @@ const menuSections: MenuSection[] = [
   {
     title: "Orders",
     items: [
-      { name: "Buy Items", icon: ShoppingCart, href: "/orders/purchase" },
-      { name: "Sell Items", icon: Truck, href: "/orders/dispatch" },
+      { name: "Purchase Bills", icon: ShoppingCart, href: "/orders/purchase" },
+      { name: "Sell Bills", icon: Truck, href: "/orders/dispatch" },
     ]
   },
   {
     title: "People",
     items: [
-      { name: "Buyers", icon: Users, href: "/customers" },
-      { name: "Suppliers", icon: BarChart3, href: "/vendors" },
+      { name: "Customers", icon: Users, href: "/customers" },
+      { name: "Vendors", icon: BarChart3, href: "/vendors" },
     ]
   },
   {

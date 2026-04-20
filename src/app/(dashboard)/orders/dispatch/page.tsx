@@ -46,12 +46,12 @@ export default async function DispatchPage() {
             <span className="opacity-30">/</span>
             <span className="text-primary">Outgoing items</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Selling Orders</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Manage selling and sending items to buyers.</p>
+          <h1 className="heading-xl tracking-tight">Selling Bills</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Manage selling and sending items to customers.</p>
         </div>
         <Link href="/orders/dispatch/new" className="btn-primary shadow-glow">
           <Plus className="w-4 h-4" />
-          <span>New Sale</span>
+          <span>New Sale Order</span>
         </Link>
       </header>
 
@@ -90,7 +90,7 @@ export default async function DispatchPage() {
             <thead>
               <tr className="table-header">
                 <th className="table-cell-header">Order ID</th>
-                <th className="table-cell-header">Buyer Details</th>
+                <th className="table-cell-header">Customer Details</th>
                 <th className="table-cell-header">Items</th>
                 <th className="table-cell-header">Paid By</th>
                 <th className="table-cell-header">Status</th>

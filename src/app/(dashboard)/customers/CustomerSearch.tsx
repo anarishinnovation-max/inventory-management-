@@ -11,6 +11,9 @@ export function CustomerSearch() {
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
 
   useEffect(() => {
+    const currentQ = searchParams.get("q") || "";
+    if (searchTerm === currentQ) return;
+
     const delayDebounceFn = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
       if (searchTerm) {
@@ -22,7 +25,7 @@ export function CustomerSearch() {
       startTransition(() => {
         router.replace(`?${params.toString()}`);
       });
-    }, 300);
+    }, 400);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm, router, searchParams]);

@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { getTenantId } from "@/lib/tenant";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const tenantId = await getTenantId();
+    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
 
-    const item = await prisma.item.findUnique({
-      where: { id },
+    const item = await (prisma as any).item.findFirst({
+      where: { id, tenantId },
       include: {
         category: true,
         inventory: true,
@@ -31,7 +30,6 @@ export async function GET(
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    // Transform for UI consistency if needed
     const transformedItem = {
         ...item,
         stocks: (item as any).stocks.map((s: any) => ({
@@ -45,10 +43,7 @@ export async function GET(
     return NextResponse.json(transformedItem);
   } catch (error: any) {
     console.error("Item fetch error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
   }
 }
 
@@ -57,35 +52,31 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const tenantId = await getTenantId();
+    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
     const body = await request.json();
     const { name, sku, categoryId, unit, minStockLevel, isCritical } = body;
 
-    // Check if item exists
-    const existingItem = await prisma.item.findUnique({ where: { id } });
+    const existingItem = await (prisma as any).item.findFirst({ where: { id, tenantId } });
     if (!existingItem) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    // Check for SKU uniqueness
     if (sku && sku !== existingItem.sku) {
-        const skuCheck = await prisma.item.findUnique({ where: { sku } });
+        const skuCheck = await (prisma as any).item.findFirst({ where: { sku, tenantId } });
         if (skuCheck) {
             return NextResponse.json({ error: "SKU already exists" }, { status: 400 });
         }
     }
 
-    const updatedItem = await prisma.item.update({
-      where: { id },
+    const updatedItem = await (prisma as any).item.update({
+      where: { id, tenantId },
       data: {
         name: name !== undefined ? name : undefined,
         sku: sku !== undefined ? sku : undefined,
-        category: categoryId !== undefined ? { connect: { id: categoryId } } : undefined,
+        categoryId: categoryId !== undefined ? categoryId : undefined,
         unit: unit !== undefined ? unit : undefined,
         minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
         isCritical: isCritical !== undefined ? !!isCritical : undefined,
@@ -95,10 +86,7 @@ export async function PUT(
     return NextResponse.json(updatedItem);
   } catch (error: any) {
     console.error("Item update error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
   }
 }
 
@@ -107,37 +95,31 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const tenantId = await getTenantId();
+    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
 
-    // Check for associated stock records
-    const stockCount = await prisma.stock.count({
-      where: { itemId: id, quantity: { gt: 0 } },
+    const stockCount = await (prisma as any).stock.count({
+      where: { itemId: id, quantity: { gt: 0 }, tenantId },
     });
 
     if (stockCount > 0) {
       return NextResponse.json({ 
-        error: "Cannot delete item with existing stock records. Please clear stock first." 
+        error: "Cannot delete item with existing stock records." 
       }, { status: 400 });
     }
 
-    await prisma.$transaction([
-        prisma.inventory.deleteMany({ where: { itemId: id } }),
-        prisma.stock.deleteMany({ where: { itemId: id } }),
-        prisma.inventoryTransaction.deleteMany({ where: { itemId: id } }),
-        prisma.item.delete({ where: { id } })
+    await (prisma as any).$transaction([
+        (prisma as any).inventory.deleteMany({ where: { itemId: id, tenantId } }),
+        (prisma as any).stock.deleteMany({ where: { itemId: id, tenantId } }),
+        (prisma as any).inventoryTransaction.deleteMany({ where: { itemId: id, tenantId } }),
+        (prisma as any).item.delete({ where: { id, tenantId } })
     ]);
 
     return NextResponse.json({ message: "Item deleted successfully" });
   } catch (error: any) {
     console.error("Item delete error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
   }
 }

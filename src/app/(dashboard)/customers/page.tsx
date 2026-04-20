@@ -62,9 +62,9 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
              <span>Home</span>
              <span className="opacity-30">/</span>
-             <span className="text-primary">Buyers</span>
+             <span className="text-primary">Customers</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Our Buyers</h1>
+          <h1 className="heading-xl tracking-tight">Our Customers</h1>
           <p className="text-muted-foreground mt-2 font-medium">A list of everyone who buys from us.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -77,7 +77,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
         <div className="lg:col-span-1 space-y-4">
           <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
             <Users className="w-3 h-3 text-primary" />
-            Buyers List
+            Customers List
           </h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-1">
             {customers.map(customer => (
@@ -99,14 +99,14 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 </div>
               </div>
             ))}
-            {customers.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No buyers found.</p>}
+            {customers.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No customers found.</p>}
           </div>
         </div>
 
         <div className="lg:col-span-3 space-y-6">
            <div className="flex items-center justify-between">
              <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-3">
-               Buyer Info
+               Customer Info
              </h2>
              <div className="flex items-center gap-2">
                 <button className="p-2 rounded-lg hover:bg-surface-low text-muted-foreground transition-all border border-transparent hover:border-border-ghost">
@@ -120,7 +120,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 <table className="w-full text-left">
                   <thead>
                     <tr className="table-header">
-                      <th className="table-cell-header">Buyer</th>
+                      <th className="table-cell-header">Customer</th>
                       <th className="table-cell-header">Phone/Email</th>
                       <th className="table-cell-header">Address</th>
                       <th className="table-cell-header">Last Order</th>
@@ -162,7 +162,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                              c.totalTransactions > 10 ? "bg-success/10 text-success" : "bg-primary/10 text-primary"
                           )}>
                              <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                             {c.totalTransactions > 10 ? 'Big Buyer' : 'Normal'}
+                             {c.totalTransactions > 10 ? 'VIP Customer' : 'Regular'}
                           </span>
                         </td>
                       </tr>
@@ -171,7 +171,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                          <td colSpan={5} className="px-8 py-40 text-center text-muted-foreground font-medium">
                             <div className="flex flex-col items-center gap-4 opacity-30">
                                 <Users className="w-16 h-16" />
-                                <p className="text-2xl font-black text-foreground">No buyers found.</p>
+                                <p className="text-2xl font-black text-foreground">No customers found.</p>
                             </div>
                          </td>
                       </tr>
@@ -188,7 +188,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                  </div>
                  <div>
                     <p className="text-3xl font-black text-foreground tracking-tighter">{customers.length}</p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Buyers</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Customers</p>
                  </div>
               </div>
               <div className="card-premium flex items-center gap-5 group border-success/5">
@@ -199,7 +199,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                     <p className="text-3xl font-black text-foreground tracking-tighter">
                         {customers.filter(c => c.totalTransactions > 0).length}
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Regular Buyers</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Active Customers</p>
                  </div>
               </div>
               <div className="card-premium bg-error/[0.02] border-error/5 flex items-center gap-5 group">
