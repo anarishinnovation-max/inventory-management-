@@ -2,6 +2,7 @@ import InventoryFilters from "@/app/(dashboard)/inventory/InventoryFilters";
 import InventoryPagination from "@/app/(dashboard)/inventory/InventoryPagination";
 import InventorySearch from "@/app/(dashboard)/inventory/InventorySearch";
 import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableActions";
+import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
 import { ImageIcon, Package, PlusCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
@@ -67,7 +68,17 @@ async function getInventory(q?: string, status?: string, category?: string, page
   });
 
   // Map and calculate stock levels
-  let mappedItems = allItems.map((item) => ({
+  let mappedItems = allItems.map((item: Prisma.ItemGetPayload<{
+    include: {
+      category: true;
+      inventory: true;
+      stocks: {
+        include: {
+          rack: true;
+        };
+      };
+    };
+  }>) => ({
     id: item.id,
     name: item.name,
     sku: item.sku,
@@ -93,7 +104,7 @@ async function getInventory(q?: string, status?: string, category?: string, page
 
   // Apply Status Filtering in memory for 100% accuracy against minStockLevel
   if (status && status !== 'all') {
-    mappedItems = mappedItems.filter((item) => {
+    mappedItems = mappedItems.filter((item: MappedItem) => {
       const total = item.totalStock;
       const incoming = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
       const reserved = item.quantityReserved;
@@ -132,7 +143,7 @@ export default async function InventoryPage({
   });
 
   const allCategories = await prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } });
-  const categoryNames = allCategories.map(c => c.name);
+  const categoryNames = allCategories.map((c: { name: string }) => c.name);
 
   return (
     <div className="space-y-8 pb-10">

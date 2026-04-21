@@ -1,21 +1,22 @@
+import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import {
-  Activity,
-  AlertTriangle,
-  ArrowDownLeft,
-  ArrowUpRight,
-  BellRing,
-  ChevronRight,
-  FileDown,
-  History,
-  IndianRupee,
-  Package,
-  PlusSquare,
-  TrendingUp,
-  Truck,
-  Zap,
-  ShoppingCart
+    Activity,
+    AlertTriangle,
+    ArrowDownLeft,
+    ArrowUpRight,
+    BellRing,
+    ChevronRight,
+    FileDown,
+    History,
+    IndianRupee,
+    Package,
+    PlusSquare,
+    ShoppingCart,
+    TrendingUp,
+    Truck,
+    Zap
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
@@ -118,7 +119,11 @@ async function getDashboardAnalytics() {
       vendorsCount: vendorsCount,
     },
     flow: flowResult.reverse(),
-    recentActivity: recentActivity.map(tx => ({
+    recentActivity: recentActivity.map((tx: Prisma.InventoryTransactionGetPayload<{
+      include: {
+        item: true;
+      };
+    }>) => ({
       id: tx.id,
       type: tx.type,
       quantity: Math.abs(tx.quantity),
@@ -256,7 +261,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="h-48 flex items-end gap-2.5 px-2 relative border-b border-border-ghost pb-1">
-            {data.flow.length > 0 ? data.flow.map((day, idx) => {
+            {data.flow.length > 0 ? data.flow.map((day: { inbound: number; outbound: number; day: Date }, idx: number) => {
               const maxVal = Math.max(...data.flow.map((d: any) => Math.max(d.inbound, d.outbound))) || 1;
               const inHeight = (day.inbound / maxVal) * 100;
               const outHeight = (day.outbound / maxVal) * 100;
@@ -281,7 +286,7 @@ export default async function DashboardPage() {
             )}
           </div>
           <div className="flex justify-between mt-4 text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] px-2">
-            {data.flow.map((d, i) => <span key={i} className="flex-1 text-center">{new Date(d.day).toLocaleDateString([], { day: '2-digit', month: 'short' })}</span>)}
+            {data.flow.map((d: { inbound: number; outbound: number; day: Date }, i: number) => <span key={i} className="flex-1 text-center">{new Date(d.day).toLocaleDateString([], { day: '2-digit', month: 'short' })}</span>)}
           </div>
         </div>
 
@@ -294,7 +299,7 @@ export default async function DashboardPage() {
             <h3 className="text-lg font-black uppercase tracking-tight">Need to Buy Soon</h3>
           </div>
           <div className="space-y-3 flex-1">
-            {data.replenish.length > 0 ? data.replenish.map((item, idx) => (
+            {data.replenish.length > 0 ? data.replenish.map((item: { id: string; name: string; sku: string; minStockLevel: number; current_qty: number; incoming_qty: number }, idx: number) => (
               <div key={idx} className="bg-white p-4 rounded-xl border border-error/5 flex items-center justify-between group hover:border-error/20 transition-all shadow-sm">
                 <div className="flex items-center gap-4">
                     <div 
@@ -358,7 +363,7 @@ export default async function DashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-ghost">
-                {data.recentActivity.map((tx) => (
+                {data.recentActivity.map((tx: any) => (
                   <tr key={tx.id} className="hover:bg-surface-low/40 transition-colors cursor-pointer group">
                     <td className="px-6 py-4">
                       <div className={cn(
@@ -397,7 +402,7 @@ export default async function DashboardPage() {
             <h3 className="text-lg font-black text-foreground">Popular Items</h3>
           </div>
           <div className="space-y-6 flex-1">
-            {data.velocity.length > 0 ? data.velocity.map((item, idx) => {
+            {data.velocity.length > 0 ? data.velocity.map((item: any, idx: number) => {
               const maxUnits = data.velocity[0]?.units || 1;
               const progress = (item.units / maxUnits) * 100;
               return (

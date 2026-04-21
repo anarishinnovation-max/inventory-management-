@@ -1,14 +1,15 @@
-import { 
-  Plus, 
-  Clock, 
-  CheckCircle2, 
-  Truck,
-  Eye
-} from "lucide-react";
+import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import {
+  CheckCircle2,
+  Clock,
+  Eye,
+  Plus,
+  Truck
+} from "lucide-react";
 import Link from "next/link";
+import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,9 +53,36 @@ export default async function PurchaseOrdersPage() {
   const pos = await getPurchaseOrders().catch(() => []);
 
   // Calculate stats
-  const pendingCount = pos.filter(o => o.status.toUpperCase() === "PENDING").length;
-  const orderedCount = pos.filter(o => o.status.toUpperCase() === "ORDERED").length;
-  const receivedCount = pos.filter(o => ["RECEIVED", "DELIVERED"].includes(o.status.toUpperCase())).length;
+  const pendingCount = pos.filter((o: Prisma.PurchaseOrderGetPayload<{
+    include: {
+      vendor: true;
+      items: {
+        include: {
+          item: true;
+        };
+      };
+    };
+  }>) => o.status.toUpperCase() === "PENDING").length;
+  const orderedCount = pos.filter((o: Prisma.PurchaseOrderGetPayload<{
+    include: {
+      vendor: true;
+      items: {
+        include: {
+          item: true;
+        };
+      };
+    };
+  }>) => o.status.toUpperCase() === "ORDERED").length;
+  const receivedCount = pos.filter((o: Prisma.PurchaseOrderGetPayload<{
+    include: {
+      vendor: true;
+      items: {
+        include: {
+          item: true;
+        };
+      };
+    };
+  }>) => ["RECEIVED", "DELIVERED"].includes(o.status.toUpperCase())).length;
 
   return (
     <div className="space-y-10 pb-10">

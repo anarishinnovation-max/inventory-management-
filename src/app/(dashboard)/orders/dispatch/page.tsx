@@ -1,9 +1,10 @@
+import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
 import { clsx, type ClassValue } from "clsx";
 import {
-  CheckCircle2,
-  Clock,
-  Plus
+    CheckCircle2,
+    Clock,
+    Plus
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
@@ -34,8 +35,26 @@ export default async function DispatchPage() {
   const orders = await getDispatchOrders().catch(() => []);
 
   // Calculate stats
-  const pendingCount = orders.filter(o => o.status === "pending").length;
-  const dispatchedCount = orders.filter(o => o.status === "dispatched").length;
+  const pendingCount = orders.filter((o: Prisma.DispatchOrderGetPayload<{
+    include: {
+      customer: true;
+      items: {
+        include: {
+          item: true;
+        };
+      };
+    };
+  }>) => o.status === "pending").length;
+  const dispatchedCount = orders.filter((o: Prisma.DispatchOrderGetPayload<{
+    include: {
+      customer: true;
+      items: {
+        include: {
+          item: true;
+        };
+      };
+    };
+  }>) => o.status === "dispatched").length;
 
   return (
     <div className="space-y-10 pb-10">

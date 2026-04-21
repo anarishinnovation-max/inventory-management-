@@ -38,7 +38,7 @@ async function getCustomersWithStats(query?: string) {
     }
   });
 
-  return customers.map(c => ({
+  return customers.map((c: any) => ({
     id: c.id,
     name: c.name,
     contact: c.contact,
@@ -80,7 +80,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
             Customers List
           </h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-1">
-            {customers.map(customer => (
+            {customers.map((customer: any) => (
               <div key={customer.id} className="p-4 card-premium group hover:border-primary/30 transition-all cursor-pointer bg-white/50">
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -128,7 +128,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
-                    {customers.length > 0 ? customers.map((c) => (
+                    {customers.length > 0 ? customers.map((c: any) => (
                       <tr key={c.id} className="hover:bg-surface-low/30 transition-all group cursor-pointer border-b border-border-ghost last:border-0">
                         <td className="px-8 py-5">
                           <div className="flex items-center gap-4">
@@ -197,7 +197,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                  </div>
                  <div>
                     <p className="text-3xl font-black text-foreground tracking-tighter">
-                        {customers.filter(c => c.totalTransactions > 0).length}
+                        {customers.filter((c: any) => c.totalTransactions > 0).length}
                     </p>
                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Active Customers</p>
                  </div>
@@ -208,7 +208,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                  </div>
                  <div>
                     <p className="text-3xl font-black text-error tracking-tighter">
-                        {customers.filter(c => {
+                        {customers.filter((c: any) => {
                             const last = c.lastInteraction ? new Date(c.lastInteraction) : null;
                             if (!last) return false;
                             const thirtyDaysAgo = new Date();

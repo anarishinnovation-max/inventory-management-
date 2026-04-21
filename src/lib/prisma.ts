@@ -1,26 +1,29 @@
 import { PrismaClient } from "../generated/client";
+import { getTenantId } from "./tenant";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const prismaClientSingleton = () => {
   const connectionString = process.env.DATABASE_URL;
   
+  // Use the native driver adapter as required by Prisma 7 for this environment
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);
   
-  const baseClient = new PrismaClient({
+  return new PrismaClient({
     adapter,
     log: ["error"],
-  });
-
-  const extendedClient = baseClient.$extends({
+  }).$extends({
     query: {
       $allModels: {
         async $allOperations({ model, operation, args, query }) {
+          // Skip tenant check for Tenant model itself
           if (model === "Tenant") {
             return query(args);
           }
 
+          // We only automate isolation for READ operations to keep TypeScript happy.
+          // CREATE, UPDATE, DELETE are handled explicitly in the service layer 
           const readOperations = [
             "findMany", 
             "findFirst", 
@@ -32,8 +35,6 @@ const prismaClientSingleton = () => {
           ];
           
           if (readOperations.includes(operation)) {
-            // Lazy import to break circular dependency with tenant.ts
-            const { getTenantId } = await import("./tenant");
             const tenantId = await getTenantId();
             if (tenantId) {
               (args as any).where = {
@@ -48,26 +49,16 @@ const prismaClientSingleton = () => {
       },
     },
   });
-
-  return { extendedClient, baseClient };
 };
 
-const clients = globalThis as unknown as {
-  prisma: any;
-  basePrisma: any;
+type PrismaClientExtended = ReturnType<typeof prismaClientSingleton>;
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClientExtended | undefined;
 };
 
-if (!clients.prisma) {
-  const { extendedClient, baseClient } = prismaClientSingleton();
-  clients.prisma = extendedClient;
-  clients.basePrisma = baseClient;
-}
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
-export const basePrisma = clients.basePrisma;
-const prisma = clients.prisma;
 export default prisma;
 
-if (process.env.NODE_ENV !== "production") {
-  (globalThis as any).prisma = clients.prisma;
-  (globalThis as any).basePrisma = clients.basePrisma;
-}
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
