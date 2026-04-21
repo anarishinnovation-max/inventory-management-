@@ -1,7 +1,7 @@
 import { decrypt } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const url = request.nextUrl;
   const host = request.headers.get("host") || "";
   

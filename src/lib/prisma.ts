@@ -3,17 +3,22 @@ import { getTenantId } from "./tenant";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-const prismaClientSingleton = () => {
-  const connectionString = process.env.DATABASE_URL;
-  
-  // Use the native driver adapter as required by Prisma 7 for this environment
-  const pool = new Pool({ connectionString });
-  const adapter = new PrismaPg(pool);
-  
-  return new PrismaClient({
-    adapter,
-    log: ["error"],
-  }).$extends({
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
+const globalForPrisma = globalThis as unknown as {
+  basePrisma: PrismaClient | undefined;
+};
+
+export const basePrisma = globalForPrisma.basePrisma ?? new PrismaClient({
+  adapter,
+  log: ["error"],
+});
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.basePrisma = basePrisma;
+
+const prisma = basePrisma.$extends({
     query: {
       $allModels: {
         async $allOperations({ model, operation, args, query }) {
@@ -48,17 +53,6 @@ const prismaClientSingleton = () => {
         },
       },
     },
-  });
-};
-
-type PrismaClientExtended = ReturnType<typeof prismaClientSingleton>;
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientExtended | undefined;
-};
-
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+});
 
 export default prisma;
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

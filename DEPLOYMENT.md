@@ -1,41 +1,37 @@
 # SS Cuttings: Production Deployment Guide
 
-This guide provides step-by-step instructions to host the **SS Cuttings** system on a professional cloud stack (Vercel + Managed PostgreSQL).
+This guide details the deployment flow for the SS Cuttings multi-tenant architecture.
 
-## Phase 1: Database Setup (Supabase or Neon)
-We recommend a managed database to ensure **24/7 availability** and **automatic backups**.
+## Architecture Overview
+- **Hosting**: Vercel (Next.js 16).
+- **Database**: PostgreSQL (Supabase, Neon, or RDS).
+- **Interception**: `proxy.ts` handles tenant routing based on subdomains.
 
-1.  **Create a Database**: Sign up for [Supabase](https://supabase.com) or [Neon](https://neon.tech).
-2.  **Get Connection String**: Copy your URI (e.g., `postgresql://user:pass@endpoint:5432/db`).
-3.  **Prepare for SSL**: Ensure your connection string includes `?sslmode=require` if required by the provider.
+## Deployment Workflow
 
-## Phase 2: Application Hosting (Vercel)
-Vercel is the recommended host for Next.js applications.
+### 1. Database Configuration
+Ensure your PostgreSQL instance is ready and accessible.
+- **SSL**: Most providers require `?sslmode=require` in the connection string.
 
-1.  **Connect Repository**: Push your code to GitHub/GitLab and connect it to Vercel.
-2.  **Configure Environment Variables**:
-    In the Vercel Dashboard, go to **Settings > Environment Variables** and add:
-    - `DATABASE_URL`: Your production connection string.
-    - `JWT_SECRET`: A long, random string (e.g., `openssl rand -base64 32`).
-3.  **Deploy**: Vercel will automatically build and deploy your app.
+### 2. Vercel Setup
+1. **Environment Variables**:
+   Add the following in Vercel Settings:
+   - `DATABASE_URL`: Production connection string.
+   - `JWT_SECRET`: Random 32+ character string.
+2. **Wildcard Domains**:
+   To support subdomains (e.g., `client1.yourdomain.com`), configure a **Wildcard Domain** in Vercel.
 
-## Phase 3: Database Migration
-Once the environment variables are set, you need to apply the schema to your production database.
+### 3. Automated Deployment
+This project uses a custom build command in `package.json`:
+`prisma generate && prisma migrate deploy && next build`
 
-1.  **Run Migration**: Locally, run the following command pointing to your production DB:
-    ```bash
-    npm run db:migrate:prod
-    ```
-    *This command uses `prisma migrate deploy`, which is safe for production.*
+**What happens during deployment:**
+- **Code Build**: Next.js compiles the app using Turbopack.
+- **Database Migration**: `prisma migrate deploy` automatically applies any new tables or schema changes to your production database without data loss.
+- **Prisma Client**: The client is generated specifically for the environment.
 
-## Operations & Reliability
-- **Backups**: If using Supabase/Neon, daily backups are automatic. You can find them in the "Backups" tab of their dashboards.
-- **Monitoring**: Use the **Vercel Analytics** tab to monitor performance as your item count grows into the thousands.
-- **Uptime**: Vercel provides a 99.9% uptime guarantee for Pro accounts.
+## Scaling
+The multi-tenant architecture is designed to scale horizontally. As you add more tenants, you only need to ensure your PostgreSQL pool size is scaled accordingly.
 
-***
-
-### Preparation Checklist (Already Completed)
-- [x] **Performance**: Added `@index` to high-traffic database columns.
-- [x] **Security**: Configured `X-Frame-Options` and `X-Content-Type` headers in `next.config.ts`.
-- [x] **Automation**: Added `postinstall` scripts to `package.json` for automatic Prisma generation.
+---
+*Generated for SS Cuttings Deployment - 2026*

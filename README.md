@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SS Cuttings Inventory Management System (IMS)
 
-## Getting Started
+A high-performance, multi-tenant inventory management system designed for scale.
 
-First, run the development server:
+## 🚀 Key Capabilities
 
+- **Intelligent Analytics**: Real-time tracking of stock velocity, movement trends, and warehouse utilization.
+- **Multi-Tenant Foundation**: Built-in support for tenant isolation via subdomains and automated filtering.
+- **Operational Efficiency**: Streamlined purchase order workflows and critical stock replenishment alerts.
+- **Robust Tech Stack**: Built with Next.js 16 (Turbopack), Prisma 7, and PostgreSQL.
+
+## 🛠️ Development
+
+### Setup
+1. Clone the repository.
+2. Install dependencies: `npm install`.
+3. Set up your `.env` (refer to `.env.example`).
+4. Generate Prisma Client: `npm run postinstall`.
+
+### Running Locally
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project is optimized for **Vercel**. Pushing to the `main` branch triggers an automated build and deployment process, including:
+- Prisma client generation.
+- Automated database migrations via `prisma migrate deploy`.
+- Production-grade optimization via Turbopack.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+Internal use only for SS Cuttings.
