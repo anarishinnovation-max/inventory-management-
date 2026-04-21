@@ -1,5 +1,5 @@
 import { cookies, headers } from "next/headers";
-import prisma from "./prisma";
+import { basePrisma as prisma } from "./prisma";
 
 export async function getTenantId(): Promise<string | null> {
   const h = await headers();
