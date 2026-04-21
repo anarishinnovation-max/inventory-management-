@@ -27,25 +27,35 @@ export default function NewItemPage() {
   const [error, setError] = useState("");
 
   const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
+  const [racks, setRacks] = useState<{id: string, rackNumber: string}[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [isCritical, setIsCritical] = useState(false);
 
   useEffect(() => {
-    async function loadCategories() {
+    async function loadInitialData() {
       try {
-        const res = await fetch("/api/categories");
-        if (res.ok) {
-          const data = await res.json();
-          setCategories(data);
-          if (data.length > 0) setSelectedCategoryId(data[0].id);
+        const [catRes, rackRes] = await Promise.all([
+          fetch("/api/categories"),
+          fetch("/api/racks")
+        ]);
+
+        if (catRes.ok) {
+          const catData = await catRes.json();
+          setCategories(catData);
+          if (catData.length > 0) setSelectedCategoryId(catData[0].id);
+        }
+
+        if (rackRes.ok) {
+          const rackData = await rackRes.json();
+          setRacks(rackData);
         }
       } catch (err) {
-        console.error("Failed to load categories", err);
+        console.error("Failed to load form data", err);
       } finally {
         setFetchingCategories(false);
       }
     }
-    loadCategories();
+    loadInitialData();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -241,23 +251,15 @@ export default function NewItemPage() {
               {/* Location Selector (Visual Only) */}
               <div className="pt-4 border-t border-border-ghost">
                 <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4">Main Spot in Rack</label>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-bold text-muted-foreground ml-1">Area / Rack</p>
-                    <select className="w-full px-4 py-3 bg-surface-lowest border border-border-ghost rounded-xl text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-surface-low transition-colors">
-                      <option>Rack A-01</option>
-                      <option>Rack A-02</option>
-                      <option>Rack B-01</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-bold text-muted-foreground ml-1">Shelf / Spot</p>
-                    <select className="w-full px-4 py-3 bg-surface-lowest border border-border-ghost rounded-xl text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-surface-low transition-colors">
-                      <option>Shelf 12</option>
-                      <option>Shelf 14</option>
-                      <option>Shelf 22</option>
-                    </select>
-                  </div>
+                <div className="space-y-2">
+                  <p className="text-[10px] font-bold text-muted-foreground ml-1">Area / Rack</p>
+                  <select className="w-full px-4 py-3 bg-surface-lowest border border-border-ghost rounded-xl text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-surface-low transition-colors">
+                    {racks.length > 0 ? racks.map(rack => (
+                      <option key={rack.id} value={rack.id}>Rack {rack.rackNumber}</option>
+                    )) : (
+                      <option disabled>No Racks Found</option>
+                    )}
+                  </select>
                 </div>
               </div>
             </div>
@@ -271,7 +273,7 @@ export default function NewItemPage() {
               <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">Tip</span>
             </div>
             <p className="text-[15px] font-medium leading-relaxed relative z-10">
-               Based on similar items, we suggest using <span className="font-black">Shelf spot L3</span> and keeping a <span className="font-black drop-shadow-md">Safe amount of 40 units</span> to not run out.
+               Based on similar items, we suggest using <span className="font-black">Rack A-01</span> and keeping a <span className="font-black drop-shadow-md">Safe amount of 40 units</span> to not run out.
             </p>
             <button type="button" className="mt-8 text-xs font-black py-3 px-5 bg-white text-primary rounded-xl transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 relative z-10 shadow-lg">
                 Use these settings 
