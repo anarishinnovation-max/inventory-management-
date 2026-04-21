@@ -2,11 +2,9 @@ export const dynamic = 'force-dynamic';
 
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getTenantId } from "@/lib/tenant";
 
 export async function GET() {
   try {
-    // Note: Automated extension will handle tenant filtering for READ
     const orders = await prisma.purchaseOrder.findMany({
       include: {
         vendor: true,
@@ -25,9 +23,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const tenantId = await getTenantId();
-    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     const body = (await request.json()) as {
       vendorId?: string;
       items?: Array<{ itemId: string; quantityOrdered: number | string; costPrice: number | string }>;
@@ -43,14 +38,12 @@ export async function POST(request: Request) {
     const order = await (prisma as any).$transaction(async (tx: any) => {
       const po = await tx.purchaseOrder.create({
         data: {
-          tenantId,
           vendorId,
           paymentMode: paymentMode || "Cash",
           expectedDelivery: expectedDelivery ? new Date(expectedDelivery) : null,
           status: "ORDERED",
           items: {
             create: items.map((item) => ({
-              tenantId,
               itemId: item.itemId,
               quantityOrdered: Number(item.quantityOrdered),
               costPrice: Number(item.costPrice),
@@ -61,14 +54,13 @@ export async function POST(request: Request) {
 
       for (const item of items) {
         const qty = Number(item.quantityOrdered);
-        // Using findFirst instead of findUnique to avoid compound unique filter issues in TypeScript
         const existingInv = await tx.inventory.findFirst({
-          where: { itemId: item.itemId, tenantId }
+          where: { itemId: item.itemId }
         });
 
         if (existingInv) {
           await tx.inventory.update({
-            where: { id: existingInv.id, tenantId },
+            where: { id: existingInv.id },
             data: {
               incomingQty: { increment: qty },
               quantityInTransit: { increment: qty },
@@ -77,7 +69,6 @@ export async function POST(request: Request) {
         } else {
           await tx.inventory.create({
             data: {
-              tenantId,
               item: { connect: { id: item.itemId } },
               quantityAvailable: 0,
               incomingQty: qty,

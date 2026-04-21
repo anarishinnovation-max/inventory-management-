@@ -1,5 +1,4 @@
 import prisma from "./prisma";
-import { getTenantId } from "./tenant";
 import { Prisma } from "../generated/client";
 
 export const InventoryService = {
@@ -14,12 +13,9 @@ export const InventoryService = {
     minStockLevel?: number;
     isCritical?: boolean;
   }) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
-
-    // 0. Check SKU uniqueness within the tenant
+    // 0. Check SKU uniqueness
     const existing = await (prisma as any).item.findFirst({
-      where: { sku: data.sku, tenantId },
+      where: { sku: data.sku },
     });
     if (existing) {
       throw new Error(`SKU_EXISTS:${data.sku}`);
@@ -28,7 +24,6 @@ export const InventoryService = {
     return await (prisma as any).$transaction(async (tx: any) => {
       const item = await tx.item.create({
         data: {
-          tenantId,
           name: data.name,
           sku: data.sku,
           unit: data.unit,
@@ -40,7 +35,6 @@ export const InventoryService = {
 
       await tx.inventory.create({
         data: {
-          tenantId,
           item: { connect: { id: item.id } },
           quantityAvailable: 0,
           quantityReserved: 0,
@@ -50,7 +44,6 @@ export const InventoryService = {
 
       await tx.inventoryTransaction.create({
         data: {
-          tenantId,
           item: { connect: { id: item.id } },
           type: "INITIAL_REGISTRY",
           quantity: 0,
@@ -67,12 +60,9 @@ export const InventoryService = {
    * Receives items from a Purchase Order.
    */
   async receiveGoods(poId: string, itemQuantities: { itemId: string; receivedQty: number }[], userId?: string) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
-
     return await (prisma as any).$transaction(async (tx: any) => {
       const po = await tx.purchaseOrder.findFirst({
-        where: { id: poId, tenantId },
+        where: { id: poId },
         include: { items: true },
       });
 
@@ -84,18 +74,17 @@ export const InventoryService = {
 
         // 1. Update PO Item received quantity
         await tx.pOLineItem.update({
-          where: { id: poItem.id, tenantId },
+          where: { id: poItem.id },
           data: {
             quantityReceived: { increment: update.receivedQty },
           },
         });
 
         // 2. Create Inventory Transaction (PURCHASE)
-        const userExists = userId ? await tx.user.findFirst({ where: { id: userId, tenantId } }) : null;
+        const userExists = userId ? await tx.user.findFirst({ where: { id: userId } }) : null;
 
         await tx.inventoryTransaction.create({
           data: {
-            tenantId,
             item: { connect: { id: update.itemId } },
             vendor: { connect: { id: po.vendorId } },
             user: userExists ? { connect: { id: userId } } : undefined,
@@ -108,12 +97,12 @@ export const InventoryService = {
 
         // 3. Update Cached Inventory summary
         const currentInv = await tx.inventory.findFirst({
-          where: { itemId: update.itemId, tenantId },
+          where: { itemId: update.itemId },
         });
 
         if (currentInv) {
           await tx.inventory.update({
-            where: { id: currentInv.id, tenantId },
+            where: { id: currentInv.id },
             data: {
               quantityAvailable: { increment: update.receivedQty },
               incomingQty: { decrement: Math.min(currentInv.incomingQty || 0, update.receivedQty) },
@@ -124,21 +113,20 @@ export const InventoryService = {
 
         // 3b. Update Stock table (per-rack)
         const defaultRack = await tx.rack.findFirst({
-          where: { tenantId },
           orderBy: { rackNumber: "asc" }
         });
         if (defaultRack) {
           const existingStock = await tx.stock.findFirst({
-            where: { itemId: update.itemId, rackId: defaultRack.id, tenantId },
+            where: { itemId: update.itemId, rackId: defaultRack.id },
           });
           if (existingStock) {
             await tx.stock.update({
-              where: { id: existingStock.id, tenantId },
+              where: { id: existingStock.id },
               data: { quantity: { increment: update.receivedQty } },
             });
           } else {
             await tx.stock.create({
-              data: { tenantId, itemId: update.itemId, rackId: defaultRack.id, quantity: update.receivedQty },
+              data: { itemId: update.itemId, rackId: defaultRack.id, quantity: update.receivedQty },
             });
           }
         }
@@ -146,7 +134,7 @@ export const InventoryService = {
 
       // 4. Update overall PO Status
       const finalItems = await tx.pOLineItem.findMany({
-        where: { purchaseOrderId: poId, tenantId }
+        where: { purchaseOrderId: poId }
       });
 
       const allReceived = finalItems.every((i: any) => i.quantityReceived >= i.quantityOrdered);
@@ -154,14 +142,14 @@ export const InventoryService = {
       const newStatus = allReceived ? "DELIVERED" : (someReceived ? "PARTIAL" : "ORDERED");
 
       await tx.purchaseOrder.update({
-        where: { id: poId, tenantId },
+        where: { id: poId },
         data: { status: newStatus }
       });
 
       // Handle Batching
       if (allReceived && String(po.status || "").toUpperCase() !== "DELIVERED") {
         const inventories = await tx.inventory.findMany({
-          where: { itemId: { in: finalItems.map((entry: any) => entry.itemId) }, tenantId },
+          where: { itemId: { in: finalItems.map((entry: any) => entry.itemId) } },
           select: { id: true, itemId: true },
         });
         const inventoryIdByItemId = new Map<string, string>(
@@ -174,7 +162,6 @@ export const InventoryService = {
             if (!inventoryId) return null;
 
             return {
-              tenantId,
               inventoryId,
               vendorId: po.vendorId,
               quantity: line.quantityReceived,
@@ -187,7 +174,6 @@ export const InventoryService = {
           .filter(Boolean);
 
         if (batchRows.length > 0) {
-            // Using createMany or individual creates to avoid type issues with tx
             for (const row of batchRows) {
                if (row) await tx.inventoryBatch.create({ data: row });
             }
@@ -195,7 +181,7 @@ export const InventoryService = {
       }
 
       return await tx.purchaseOrder.findFirst({
-        where: { id: poId, tenantId },
+        where: { id: poId },
         include: { items: { include: { item: true } } },
       });
     });
@@ -205,23 +191,18 @@ export const InventoryService = {
    * Creates a new Dispatch Order.
    */
   async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date }) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
-
     const status = data.status || "pending";
 
     return await (prisma as any).$transaction(async (tx: any) => {
       // Create Order
       const order = await tx.dispatchOrder.create({
         data: {
-          tenantId,
           customerId: data.customerId,
           status: status,
           paymentMode: data.paymentMode || "Cash",
           expectedDelivery: data.expectedDelivery ? new Date(data.expectedDelivery) : null,
           items: {
             create: data.items.map((item: any) => ({
-              tenantId,
               itemId: item.itemId,
               quantity: item.quantity,
               sellingPrice: item.sellingPrice,
@@ -237,12 +218,9 @@ export const InventoryService = {
    * Dispatches a sales order.
    */
   async dispatchGoods(dispatchId: string) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized: Tenant context missing");
-
     return await (prisma as any).$transaction(async (tx: any) => {
       const order = await tx.dispatchOrder.findFirst({
-        where: { id: dispatchId, tenantId },
+        where: { id: dispatchId },
         include: { items: true },
       });
 
@@ -252,7 +230,7 @@ export const InventoryService = {
       for (const line of order.items) {
         // 1. Update Inventory summary
         await tx.inventory.update({
-          where: { itemId: line.itemId, tenantId },
+          where: { itemId: line.itemId },
           data: {
             quantityAvailable: { decrement: line.quantity },
           },
@@ -261,7 +239,7 @@ export const InventoryService = {
         // 2. Deduct from Racks
         let remainingToDeduct = line.quantity;
         const availableStocks = await tx.stock.findMany({
-          where: { itemId: line.itemId, quantity: { gt: 0 }, tenantId },
+          where: { itemId: line.itemId, quantity: { gt: 0 } },
           orderBy: { quantity: "desc" },
         });
 
@@ -270,7 +248,7 @@ export const InventoryService = {
           if (remainingToDeduct <= 0) break;
           const deduction = Math.min(stock.quantity, remainingToDeduct);
           await tx.stock.update({
-            where: { id: stock.id, tenantId },
+            where: { id: stock.id },
             data: { quantity: { decrement: deduction } },
           });
           remainingToDeduct -= deduction;
@@ -280,7 +258,6 @@ export const InventoryService = {
         // 3. Create Inventory Transaction
         await tx.inventoryTransaction.create({
           data: {
-            tenantId,
             item: { connect: { id: line.itemId } },
             customer: order.customerId ? { connect: { id: order.customerId } } : undefined,
             type: "SALE",
@@ -293,7 +270,7 @@ export const InventoryService = {
       }
 
       return await tx.dispatchOrder.update({
-        where: { id: dispatchId, tenantId },
+        where: { id: dispatchId },
         data: { status: "dispatched" },
       });
     });
@@ -303,13 +280,9 @@ export const InventoryService = {
    * Records scrapped inventory.
    */
   async scrapInventory(itemId: string, qty: number, reason?: string) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized");
-
     return await (prisma as any).$transaction(async (tx: any) => {
       await tx.inventoryTransaction.create({
         data: {
-          tenantId,
           item: { connect: { id: itemId } },
           type: "SCRAP",
           quantity: -qty,
@@ -319,7 +292,7 @@ export const InventoryService = {
       });
 
       return await tx.inventory.update({
-        where: { itemId, tenantId },
+        where: { itemId },
         data: {
           quantityAvailable: { decrement: qty },
         },
@@ -331,12 +304,9 @@ export const InventoryService = {
    * Updates stock in a specific rack.
    */
   async updateStock(itemId: string, rackId: string, quantity: number, userId: string, remarks?: string) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized");
-
     return await (prisma as any).$transaction(async (tx: any) => {
       const currentStock = await tx.stock.findFirst({
-        where: { itemId, rackId, tenantId },
+        where: { itemId, rackId },
       });
 
       const oldQuantity = currentStock?.quantity || 0;
@@ -344,25 +314,24 @@ export const InventoryService = {
 
       if (currentStock) {
         await tx.stock.update({
-          where: { id: currentStock.id, tenantId },
+          where: { id: currentStock.id },
           data: { quantity, updatedAt: new Date() },
         });
       } else {
         await tx.stock.create({
-          data: { tenantId, itemId, rackId, quantity },
+          data: { itemId, rackId, quantity },
         });
       }
 
-      const existingInv = await tx.inventory.findFirst({ where: { itemId, tenantId } });
+      const existingInv = await tx.inventory.findFirst({ where: { itemId } });
       if (existingInv) {
         await tx.inventory.update({
-            where: { id: existingInv.id, tenantId },
+            where: { id: existingInv.id },
             data: { quantityAvailable: { increment: adjustmentQty } }
         });
       } else {
         await tx.inventory.create({
             data: {
-                tenantId,
                 item: { connect: { id: itemId } },
                 quantityAvailable: quantity,
                 quantityInTransit: 0,
@@ -373,7 +342,6 @@ export const InventoryService = {
 
       await tx.inventoryTransaction.create({
         data: {
-          tenantId,
           item: { connect: { id: itemId } },
           rack: { connect: { id: rackId } },
           type: adjustmentQty >= 0 ? "ADJUSTMENT_IN" : "ADJUSTMENT_OUT",
@@ -398,12 +366,9 @@ export const InventoryService = {
     customerId?: string;
     remarks?: string;
   }) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized");
-
     return await (prisma as any).$transaction(async (tx: any) => {
       const stock = await tx.stock.findFirst({
-        where: { itemId: params.itemId, rackId: params.rackId, tenantId },
+        where: { itemId: params.itemId, rackId: params.rackId },
       });
 
       if (!stock || stock.quantity < params.quantity) {
@@ -411,18 +376,17 @@ export const InventoryService = {
       }
 
       await tx.stock.update({
-        where: { id: stock.id, tenantId },
+        where: { id: stock.id },
         data: { quantity: { decrement: params.quantity } },
       });
 
       await tx.inventory.update({
-        where: { itemId: params.itemId, tenantId },
+        where: { itemId: params.itemId },
         data: { quantityAvailable: { decrement: params.quantity } },
       });
 
       return await tx.inventoryTransaction.create({
         data: {
-          tenantId,
           item: { connect: { id: params.itemId } },
           rack: { connect: { id: params.rackId } },
           type: "OUTWARD",
@@ -438,11 +402,8 @@ export const InventoryService = {
    * Cancels a dispatch order and releases reserved stock.
    */
   async cancelDispatchOrder(orderId: string) {
-    const tenantId = await getTenantId();
-    if (!tenantId) throw new Error("Unauthorized");
-
     return await (prisma as any).dispatchOrder.update({
-      where: { id: orderId, tenantId },
+      where: { id: orderId },
       data: { status: "cancelled" },
     });
   },

@@ -17,13 +17,8 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    // Note: If this data object doesn't have tenantId, the extension might fail or work depending on how it's handled.
-    // For now, ensuring we keep the logic as close to original but formatted.
     const vendor = await prisma.vendor.create({ 
-      data: {
-        ...data,
-        // tenantId is usually passed from the UI or resolved in user-actions.ts
-      } 
+      data: data
     });
     return NextResponse.json(vendor, { status: 201 });
   } catch (error: any) {

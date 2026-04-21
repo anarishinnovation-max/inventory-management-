@@ -7,35 +7,9 @@ datasource db {
   provider = "postgresql"
 }
 
-model Tenant {
-  id        String   @id @default(uuid())
-  name      String
-  subdomain String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  users                 User[]
-  roles                 Role[]
-  categories            Category[]
-  items                 Item[]
-  racks                 Rack[]
-  stocks                Stock[]
-  inventories           Inventory[]
-  vendors               Vendor[]
-  purchaseOrders        PurchaseOrder[]
-  inventoryBatches      InventoryBatch[]
-  poLineItems           POLineItem[]
-  customers             Customer[]
-  dispatchOrders        DispatchOrder[]
-  dispatchItems         DispatchItem[]
-  inventoryTransactions InventoryTransaction[]
-}
-
 model User {
   id               String                 @id @default(uuid())
-  tenantId         String                 @map("tenant_id")
-  username         String
+  username         String                 @unique
   password         String
   name             String
   role             String                 @default("employee")
@@ -45,39 +19,27 @@ model User {
   twoFactorEnabled Boolean                @default(false)
   createdAt        DateTime               @default(now())
   transactions     InventoryTransaction[]
-  tenant           Tenant                 @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, username])
 }
 
 model Role {
   id          String   @id @default(uuid())
-  tenantId    String   @map("tenant_id")
-  name        String
+  name        String   @unique
   description String?
   permissions Json?    @default("[]")
   users       User[]
   createdAt   DateTime @default(now())
-  tenant      Tenant   @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, name])
 }
 
 model Category {
-  id       String @id @default(uuid())
-  tenantId String @map("tenant_id")
-  name     String
-  items    Item[]
-  tenant   Tenant @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, name])
+  id    String @id @default(uuid())
+  name  String @unique
+  items Item[]
 }
 
 model Item {
   id            String                 @id @default(uuid())
-  tenantId      String                 @map("tenant_id")
   name          String
-  sku           String
+  sku           String                 @unique
   categoryId    String
   unit          String
   createdAt     DateTime               @default(now())
@@ -89,42 +51,31 @@ model Item {
   category      Category               @relation(fields: [categoryId], references: [id])
   poItems       POLineItem[]
   stocks        Stock[]
-  tenant        Tenant                 @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, sku])
 }
 
 model Rack {
   id           String                 @id @default(uuid())
-  tenantId     String                 @map("tenant_id")
-  rackNumber   String
+  rackNumber   String                 @unique
   zone         String?
   stocks       Stock[]
   transactions InventoryTransaction[]
-  tenant       Tenant                 @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, rackNumber])
 }
 
 model Stock {
   id        String   @id @default(uuid())
-  tenantId  String   @map("tenant_id")
   itemId    String
   rackId    String
   quantity  Float    @default(0)
   updatedAt DateTime @updatedAt
   item      Item     @relation(fields: [itemId], references: [id])
   rack      Rack     @relation(fields: [rackId], references: [id])
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
 
   @@index([itemId])
   @@index([rackId])
-  @@index([tenantId])
 }
 
 model Inventory {
   id                String           @id @default(uuid())
-  tenantId          String           @map("tenant_id")
   itemId            String           @unique
   quantityAvailable Float            @default(0)
   incomingQty       Float            @default(0)
@@ -133,29 +84,21 @@ model Inventory {
   updatedAt         DateTime         @updatedAt
   item              Item             @relation(fields: [itemId], references: [id])
   batches           InventoryBatch[]
-  tenant            Tenant           @relation(fields: [tenantId], references: [id])
-
-  @@index([tenantId])
 }
 
 model Vendor {
   id                   String                 @id @default(uuid())
-  tenantId             String                 @map("tenant_id")
-  name                 String
+  name                 String                 @unique
   contact              String?
   email                String?
   preferredPaymentMode String?                @default("Cash")
   purchaseOrders       PurchaseOrder[]
   transactions         InventoryTransaction[]
   batches              InventoryBatch[]
-  tenant               Tenant                 @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, name])
 }
 
 model PurchaseOrder {
   id               String           @id @default(uuid())
-  tenantId         String           @map("tenant_id")
   vendorId         String
   status           String           @default("DRAFT")
   paymentMode      String?          @default("Cash")
@@ -165,16 +108,13 @@ model PurchaseOrder {
   vendor           Vendor           @relation(fields: [vendorId], references: [id])
   items            POLineItem[]
   batches          InventoryBatch[]
-  tenant           Tenant           @relation(fields: [tenantId], references: [id])
 
   @@index([status])
   @@index([vendorId])
-  @@index([tenantId])
 }
 
 model InventoryBatch {
-  id              String   @id @default(uuid())
-  tenantId        String   @map("tenant_id")
+  id              String         @id @default(uuid())
   inventoryId     String
   vendorId        String
   quantity        Float
@@ -182,22 +122,18 @@ model InventoryBatch {
   costPerUnit     Float
   purchaseDate    DateTime
   purchaseOrderId String?
-  createdAt       DateTime @default(now())
-
-  inventory     Inventory      @relation(fields: [inventoryId], references: [id])
-  vendor        Vendor         @relation(fields: [vendorId], references: [id])
-  purchaseOrder PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
-  tenant        Tenant         @relation(fields: [tenantId], references: [id])
+  createdAt       DateTime       @default(now())
+  inventory       Inventory      @relation(fields: [inventoryId], references: [id])
+  vendor          Vendor         @relation(fields: [vendorId], references: [id])
+  purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
 
   @@unique([purchaseOrderId, inventoryId])
   @@index([inventoryId, purchaseDate])
   @@index([vendorId])
-  @@index([tenantId])
 }
 
 model POLineItem {
   id               String        @id @default(uuid())
-  tenantId         String        @map("tenant_id")
   purchaseOrderId  String
   itemId           String
   quantityOrdered  Float
@@ -205,28 +141,20 @@ model POLineItem {
   costPrice        Float
   item             Item          @relation(fields: [itemId], references: [id])
   purchaseOrder    PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
-  tenant           Tenant        @relation(fields: [tenantId], references: [id])
-
-  @@index([tenantId])
 }
 
 model Customer {
   id             String                 @id @default(uuid())
-  tenantId       String                 @map("tenant_id")
-  name           String
+  name           String                 @unique
   email          String?
   contact        String?
   address        String?
   dispatchOrders DispatchOrder[]
   transactions   InventoryTransaction[]
-  tenant         Tenant                 @relation(fields: [tenantId], references: [id])
-
-  @@index([tenantId])
 }
 
 model DispatchOrder {
   id               String         @id @default(uuid())
-  tenantId         String         @map("tenant_id")
   customerId       String
   status           String         @default("pending")
   paymentMode      String?        @default("Cash")
@@ -235,30 +163,23 @@ model DispatchOrder {
   createdAt        DateTime       @default(now())
   items            DispatchItem[]
   customer         Customer       @relation(fields: [customerId], references: [id])
-  tenant           Tenant         @relation(fields: [tenantId], references: [id])
 
   @@index([status])
   @@index([customerId])
-  @@index([tenantId])
 }
 
 model DispatchItem {
   id              String        @id @default(uuid())
-  tenantId        String        @map("tenant_id")
   dispatchOrderId String
   itemId          String
   quantity        Float
   sellingPrice    Float
   dispatchOrder   DispatchOrder @relation(fields: [dispatchOrderId], references: [id])
   item            Item          @relation(fields: [itemId], references: [id])
-  tenant          Tenant        @relation(fields: [tenantId], references: [id])
-
-  @@index([tenantId])
 }
 
 model InventoryTransaction {
   id            String    @id @default(uuid())
-  tenantId      String    @map("tenant_id")
   itemId        String
   rackId        String?
   userId        String?
@@ -274,10 +195,8 @@ model InventoryTransaction {
   customer      Customer? @relation(fields: [customerId], references: [id])
   vendor        Vendor?   @relation(fields: [vendorId], references: [id])
   user          User?     @relation(fields: [userId], references: [id])
-  tenant        Tenant    @relation(fields: [tenantId], references: [id])
 
   @@index([itemId])
   @@index([type])
   @@index([createdAt])
-  @@index([tenantId])
 }

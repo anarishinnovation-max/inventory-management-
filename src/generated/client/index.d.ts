@@ -14,11 +14,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
- * Model Tenant
- * 
- */
-export type Tenant = $Result.DefaultSelection<Prisma.$TenantPayload>
-/**
  * Model User
  * 
  */
@@ -103,8 +98,8 @@ export type InventoryTransaction = $Result.DefaultSelection<Prisma.$InventoryTra
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Tenants
- * const tenants = await prisma.tenant.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  *
  *
@@ -126,8 +121,8 @@ export class PrismaClient<
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Tenants
-   * const tenants = await prisma.tenant.findMany()
+   * // Fetch zero or more Users
+   * const users = await prisma.user.findMany()
    * ```
    *
    *
@@ -216,16 +211,6 @@ export class PrismaClient<
   }>>
 
       /**
-   * `prisma.tenant`: Exposes CRUD operations for the **Tenant** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Tenants
-    * const tenants = await prisma.tenant.findMany()
-    * ```
-    */
-  get tenant(): Prisma.TenantDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -808,7 +793,6 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Tenant: 'Tenant',
     User: 'User',
     Role: 'Role',
     Category: 'Category',
@@ -839,84 +823,10 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "user" | "role" | "category" | "item" | "rack" | "stock" | "inventory" | "vendor" | "purchaseOrder" | "inventoryBatch" | "pOLineItem" | "customer" | "dispatchOrder" | "dispatchItem" | "inventoryTransaction"
+      modelProps: "user" | "role" | "category" | "item" | "rack" | "stock" | "inventory" | "vendor" | "purchaseOrder" | "inventoryBatch" | "pOLineItem" | "customer" | "dispatchOrder" | "dispatchItem" | "inventoryTransaction"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
-      Tenant: {
-        payload: Prisma.$TenantPayload<ExtArgs>
-        fields: Prisma.TenantFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.TenantFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.TenantFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>
-          }
-          findFirst: {
-            args: Prisma.TenantFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.TenantFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>
-          }
-          findMany: {
-            args: Prisma.TenantFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>[]
-          }
-          create: {
-            args: Prisma.TenantCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>
-          }
-          createMany: {
-            args: Prisma.TenantCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.TenantCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>[]
-          }
-          delete: {
-            args: Prisma.TenantDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>
-          }
-          update: {
-            args: Prisma.TenantUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>
-          }
-          deleteMany: {
-            args: Prisma.TenantDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.TenantUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.TenantUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>[]
-          }
-          upsert: {
-            args: Prisma.TenantUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TenantPayload>
-          }
-          aggregate: {
-            args: Prisma.TenantAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateTenant>
-          }
-          groupBy: {
-            args: Prisma.TenantGroupByArgs<ExtArgs>
-            result: $Utils.Optional<TenantGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.TenantCountArgs<ExtArgs>
-            result: $Utils.Optional<TenantCountAggregateOutputType> | number
-          }
-        }
-      }
       User: {
         payload: Prisma.$UserPayload<ExtArgs>
         fields: Prisma.UserFieldRefs
@@ -2135,7 +2045,6 @@ export namespace Prisma {
     comments?: runtime.SqlCommenterPlugin[]
   }
   export type GlobalOmitConfig = {
-    tenant?: TenantOmit
     user?: UserOmit
     role?: RoleOmit
     category?: CategoryOmit
@@ -2224,163 +2133,6 @@ export namespace Prisma {
   /**
    * Count Types
    */
-
-
-  /**
-   * Count Type TenantCountOutputType
-   */
-
-  export type TenantCountOutputType = {
-    users: number
-    roles: number
-    categories: number
-    items: number
-    racks: number
-    stocks: number
-    inventories: number
-    vendors: number
-    purchaseOrders: number
-    inventoryBatches: number
-    poLineItems: number
-    customers: number
-    dispatchOrders: number
-    dispatchItems: number
-    inventoryTransactions: number
-  }
-
-  export type TenantCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | TenantCountOutputTypeCountUsersArgs
-    roles?: boolean | TenantCountOutputTypeCountRolesArgs
-    categories?: boolean | TenantCountOutputTypeCountCategoriesArgs
-    items?: boolean | TenantCountOutputTypeCountItemsArgs
-    racks?: boolean | TenantCountOutputTypeCountRacksArgs
-    stocks?: boolean | TenantCountOutputTypeCountStocksArgs
-    inventories?: boolean | TenantCountOutputTypeCountInventoriesArgs
-    vendors?: boolean | TenantCountOutputTypeCountVendorsArgs
-    purchaseOrders?: boolean | TenantCountOutputTypeCountPurchaseOrdersArgs
-    inventoryBatches?: boolean | TenantCountOutputTypeCountInventoryBatchesArgs
-    poLineItems?: boolean | TenantCountOutputTypeCountPoLineItemsArgs
-    customers?: boolean | TenantCountOutputTypeCountCustomersArgs
-    dispatchOrders?: boolean | TenantCountOutputTypeCountDispatchOrdersArgs
-    dispatchItems?: boolean | TenantCountOutputTypeCountDispatchItemsArgs
-    inventoryTransactions?: boolean | TenantCountOutputTypeCountInventoryTransactionsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TenantCountOutputType
-     */
-    select?: TenantCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RoleWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CategoryWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ItemWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountRacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RackWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountStocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: StockWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountInventoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InventoryWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountVendorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VendorWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountPurchaseOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PurchaseOrderWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountInventoryBatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InventoryBatchWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountPoLineItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: POLineItemWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountCustomersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CustomerWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountDispatchOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DispatchOrderWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountDispatchItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DispatchItemWhereInput
-  }
-
-  /**
-   * TenantCountOutputType without action
-   */
-  export type TenantCountOutputTypeCountInventoryTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InventoryTransactionWhereInput
-  }
 
 
   /**
@@ -2770,1486 +2522,6 @@ export namespace Prisma {
    */
 
   /**
-   * Model Tenant
-   */
-
-  export type AggregateTenant = {
-    _count: TenantCountAggregateOutputType | null
-    _min: TenantMinAggregateOutputType | null
-    _max: TenantMaxAggregateOutputType | null
-  }
-
-  export type TenantMinAggregateOutputType = {
-    id: string | null
-    name: string | null
-    subdomain: string | null
-    isActive: boolean | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type TenantMaxAggregateOutputType = {
-    id: string | null
-    name: string | null
-    subdomain: string | null
-    isActive: boolean | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type TenantCountAggregateOutputType = {
-    id: number
-    name: number
-    subdomain: number
-    isActive: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type TenantMinAggregateInputType = {
-    id?: true
-    name?: true
-    subdomain?: true
-    isActive?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type TenantMaxAggregateInputType = {
-    id?: true
-    name?: true
-    subdomain?: true
-    isActive?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type TenantCountAggregateInputType = {
-    id?: true
-    name?: true
-    subdomain?: true
-    isActive?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type TenantAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Tenant to aggregate.
-     */
-    where?: TenantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Tenants to fetch.
-     */
-    orderBy?: TenantOrderByWithRelationInput | TenantOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: TenantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Tenants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Tenants.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Tenants
-    **/
-    _count?: true | TenantCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: TenantMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: TenantMaxAggregateInputType
-  }
-
-  export type GetTenantAggregateType<T extends TenantAggregateArgs> = {
-        [P in keyof T & keyof AggregateTenant]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateTenant[P]>
-      : GetScalarType<T[P], AggregateTenant[P]>
-  }
-
-
-
-
-  export type TenantGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TenantWhereInput
-    orderBy?: TenantOrderByWithAggregationInput | TenantOrderByWithAggregationInput[]
-    by: TenantScalarFieldEnum[] | TenantScalarFieldEnum
-    having?: TenantScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: TenantCountAggregateInputType | true
-    _min?: TenantMinAggregateInputType
-    _max?: TenantMaxAggregateInputType
-  }
-
-  export type TenantGroupByOutputType = {
-    id: string
-    name: string
-    subdomain: string
-    isActive: boolean
-    createdAt: Date
-    updatedAt: Date
-    _count: TenantCountAggregateOutputType | null
-    _min: TenantMinAggregateOutputType | null
-    _max: TenantMaxAggregateOutputType | null
-  }
-
-  type GetTenantGroupByPayload<T extends TenantGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<TenantGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof TenantGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], TenantGroupByOutputType[P]>
-            : GetScalarType<T[P], TenantGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type TenantSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    subdomain?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    users?: boolean | Tenant$usersArgs<ExtArgs>
-    roles?: boolean | Tenant$rolesArgs<ExtArgs>
-    categories?: boolean | Tenant$categoriesArgs<ExtArgs>
-    items?: boolean | Tenant$itemsArgs<ExtArgs>
-    racks?: boolean | Tenant$racksArgs<ExtArgs>
-    stocks?: boolean | Tenant$stocksArgs<ExtArgs>
-    inventories?: boolean | Tenant$inventoriesArgs<ExtArgs>
-    vendors?: boolean | Tenant$vendorsArgs<ExtArgs>
-    purchaseOrders?: boolean | Tenant$purchaseOrdersArgs<ExtArgs>
-    inventoryBatches?: boolean | Tenant$inventoryBatchesArgs<ExtArgs>
-    poLineItems?: boolean | Tenant$poLineItemsArgs<ExtArgs>
-    customers?: boolean | Tenant$customersArgs<ExtArgs>
-    dispatchOrders?: boolean | Tenant$dispatchOrdersArgs<ExtArgs>
-    dispatchItems?: boolean | Tenant$dispatchItemsArgs<ExtArgs>
-    inventoryTransactions?: boolean | Tenant$inventoryTransactionsArgs<ExtArgs>
-    _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["tenant"]>
-
-  export type TenantSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    subdomain?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["tenant"]>
-
-  export type TenantSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    subdomain?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["tenant"]>
-
-  export type TenantSelectScalar = {
-    id?: boolean
-    name?: boolean
-    subdomain?: boolean
-    isActive?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "subdomain" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
-  export type TenantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | Tenant$usersArgs<ExtArgs>
-    roles?: boolean | Tenant$rolesArgs<ExtArgs>
-    categories?: boolean | Tenant$categoriesArgs<ExtArgs>
-    items?: boolean | Tenant$itemsArgs<ExtArgs>
-    racks?: boolean | Tenant$racksArgs<ExtArgs>
-    stocks?: boolean | Tenant$stocksArgs<ExtArgs>
-    inventories?: boolean | Tenant$inventoriesArgs<ExtArgs>
-    vendors?: boolean | Tenant$vendorsArgs<ExtArgs>
-    purchaseOrders?: boolean | Tenant$purchaseOrdersArgs<ExtArgs>
-    inventoryBatches?: boolean | Tenant$inventoryBatchesArgs<ExtArgs>
-    poLineItems?: boolean | Tenant$poLineItemsArgs<ExtArgs>
-    customers?: boolean | Tenant$customersArgs<ExtArgs>
-    dispatchOrders?: boolean | Tenant$dispatchOrdersArgs<ExtArgs>
-    dispatchItems?: boolean | Tenant$dispatchItemsArgs<ExtArgs>
-    inventoryTransactions?: boolean | Tenant$inventoryTransactionsArgs<ExtArgs>
-    _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type TenantIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type TenantIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $TenantPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Tenant"
-    objects: {
-      users: Prisma.$UserPayload<ExtArgs>[]
-      roles: Prisma.$RolePayload<ExtArgs>[]
-      categories: Prisma.$CategoryPayload<ExtArgs>[]
-      items: Prisma.$ItemPayload<ExtArgs>[]
-      racks: Prisma.$RackPayload<ExtArgs>[]
-      stocks: Prisma.$StockPayload<ExtArgs>[]
-      inventories: Prisma.$InventoryPayload<ExtArgs>[]
-      vendors: Prisma.$VendorPayload<ExtArgs>[]
-      purchaseOrders: Prisma.$PurchaseOrderPayload<ExtArgs>[]
-      inventoryBatches: Prisma.$InventoryBatchPayload<ExtArgs>[]
-      poLineItems: Prisma.$POLineItemPayload<ExtArgs>[]
-      customers: Prisma.$CustomerPayload<ExtArgs>[]
-      dispatchOrders: Prisma.$DispatchOrderPayload<ExtArgs>[]
-      dispatchItems: Prisma.$DispatchItemPayload<ExtArgs>[]
-      inventoryTransactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      subdomain: string
-      isActive: boolean
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["tenant"]>
-    composites: {}
-  }
-
-  type TenantGetPayload<S extends boolean | null | undefined | TenantDefaultArgs> = $Result.GetResult<Prisma.$TenantPayload, S>
-
-  type TenantCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<TenantFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: TenantCountAggregateInputType | true
-    }
-
-  export interface TenantDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Tenant'], meta: { name: 'Tenant' } }
-    /**
-     * Find zero or one Tenant that matches the filter.
-     * @param {TenantFindUniqueArgs} args - Arguments to find a Tenant
-     * @example
-     * // Get one Tenant
-     * const tenant = await prisma.tenant.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends TenantFindUniqueArgs>(args: SelectSubset<T, TenantFindUniqueArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Tenant that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {TenantFindUniqueOrThrowArgs} args - Arguments to find a Tenant
-     * @example
-     * // Get one Tenant
-     * const tenant = await prisma.tenant.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends TenantFindUniqueOrThrowArgs>(args: SelectSubset<T, TenantFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Tenant that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TenantFindFirstArgs} args - Arguments to find a Tenant
-     * @example
-     * // Get one Tenant
-     * const tenant = await prisma.tenant.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends TenantFindFirstArgs>(args?: SelectSubset<T, TenantFindFirstArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Tenant that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TenantFindFirstOrThrowArgs} args - Arguments to find a Tenant
-     * @example
-     * // Get one Tenant
-     * const tenant = await prisma.tenant.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends TenantFindFirstOrThrowArgs>(args?: SelectSubset<T, TenantFindFirstOrThrowArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Tenants that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TenantFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Tenants
-     * const tenants = await prisma.tenant.findMany()
-     * 
-     * // Get first 10 Tenants
-     * const tenants = await prisma.tenant.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const tenantWithIdOnly = await prisma.tenant.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends TenantFindManyArgs>(args?: SelectSubset<T, TenantFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Tenant.
-     * @param {TenantCreateArgs} args - Arguments to create a Tenant.
-     * @example
-     * // Create one Tenant
-     * const Tenant = await prisma.tenant.create({
-     *   data: {
-     *     // ... data to create a Tenant
-     *   }
-     * })
-     * 
-     */
-    create<T extends TenantCreateArgs>(args: SelectSubset<T, TenantCreateArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Tenants.
-     * @param {TenantCreateManyArgs} args - Arguments to create many Tenants.
-     * @example
-     * // Create many Tenants
-     * const tenant = await prisma.tenant.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends TenantCreateManyArgs>(args?: SelectSubset<T, TenantCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Tenants and returns the data saved in the database.
-     * @param {TenantCreateManyAndReturnArgs} args - Arguments to create many Tenants.
-     * @example
-     * // Create many Tenants
-     * const tenant = await prisma.tenant.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Tenants and only return the `id`
-     * const tenantWithIdOnly = await prisma.tenant.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends TenantCreateManyAndReturnArgs>(args?: SelectSubset<T, TenantCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Tenant.
-     * @param {TenantDeleteArgs} args - Arguments to delete one Tenant.
-     * @example
-     * // Delete one Tenant
-     * const Tenant = await prisma.tenant.delete({
-     *   where: {
-     *     // ... filter to delete one Tenant
-     *   }
-     * })
-     * 
-     */
-    delete<T extends TenantDeleteArgs>(args: SelectSubset<T, TenantDeleteArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Tenant.
-     * @param {TenantUpdateArgs} args - Arguments to update one Tenant.
-     * @example
-     * // Update one Tenant
-     * const tenant = await prisma.tenant.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends TenantUpdateArgs>(args: SelectSubset<T, TenantUpdateArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Tenants.
-     * @param {TenantDeleteManyArgs} args - Arguments to filter Tenants to delete.
-     * @example
-     * // Delete a few Tenants
-     * const { count } = await prisma.tenant.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends TenantDeleteManyArgs>(args?: SelectSubset<T, TenantDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Tenants.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TenantUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Tenants
-     * const tenant = await prisma.tenant.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends TenantUpdateManyArgs>(args: SelectSubset<T, TenantUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Tenants and returns the data updated in the database.
-     * @param {TenantUpdateManyAndReturnArgs} args - Arguments to update many Tenants.
-     * @example
-     * // Update many Tenants
-     * const tenant = await prisma.tenant.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Tenants and only return the `id`
-     * const tenantWithIdOnly = await prisma.tenant.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends TenantUpdateManyAndReturnArgs>(args: SelectSubset<T, TenantUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Tenant.
-     * @param {TenantUpsertArgs} args - Arguments to update or create a Tenant.
-     * @example
-     * // Update or create a Tenant
-     * const tenant = await prisma.tenant.upsert({
-     *   create: {
-     *     // ... data to create a Tenant
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Tenant we want to update
-     *   }
-     * })
-     */
-    upsert<T extends TenantUpsertArgs>(args: SelectSubset<T, TenantUpsertArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Tenants.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TenantCountArgs} args - Arguments to filter Tenants to count.
-     * @example
-     * // Count the number of Tenants
-     * const count = await prisma.tenant.count({
-     *   where: {
-     *     // ... the filter for the Tenants we want to count
-     *   }
-     * })
-    **/
-    count<T extends TenantCountArgs>(
-      args?: Subset<T, TenantCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], TenantCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Tenant.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TenantAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends TenantAggregateArgs>(args: Subset<T, TenantAggregateArgs>): Prisma.PrismaPromise<GetTenantAggregateType<T>>
-
-    /**
-     * Group by Tenant.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TenantGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends TenantGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: TenantGroupByArgs['orderBy'] }
-        : { orderBy?: TenantGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, TenantGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTenantGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Tenant model
-   */
-  readonly fields: TenantFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Tenant.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__TenantClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    users<T extends Tenant$usersArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    roles<T extends Tenant$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    categories<T extends Tenant$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    items<T extends Tenant$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    racks<T extends Tenant$racksArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$racksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    stocks<T extends Tenant$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    inventories<T extends Tenant$inventoriesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$inventoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    vendors<T extends Tenant$vendorsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$vendorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    purchaseOrders<T extends Tenant$purchaseOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$purchaseOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    inventoryBatches<T extends Tenant$inventoryBatchesArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$inventoryBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    poLineItems<T extends Tenant$poLineItemsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$poLineItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$POLineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    customers<T extends Tenant$customersArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    dispatchOrders<T extends Tenant$dispatchOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$dispatchOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    dispatchItems<T extends Tenant$dispatchItemsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$dispatchItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    inventoryTransactions<T extends Tenant$inventoryTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$inventoryTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Tenant model
-   */
-  interface TenantFieldRefs {
-    readonly id: FieldRef<"Tenant", 'String'>
-    readonly name: FieldRef<"Tenant", 'String'>
-    readonly subdomain: FieldRef<"Tenant", 'String'>
-    readonly isActive: FieldRef<"Tenant", 'Boolean'>
-    readonly createdAt: FieldRef<"Tenant", 'DateTime'>
-    readonly updatedAt: FieldRef<"Tenant", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Tenant findUnique
-   */
-  export type TenantFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * Filter, which Tenant to fetch.
-     */
-    where: TenantWhereUniqueInput
-  }
-
-  /**
-   * Tenant findUniqueOrThrow
-   */
-  export type TenantFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * Filter, which Tenant to fetch.
-     */
-    where: TenantWhereUniqueInput
-  }
-
-  /**
-   * Tenant findFirst
-   */
-  export type TenantFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * Filter, which Tenant to fetch.
-     */
-    where?: TenantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Tenants to fetch.
-     */
-    orderBy?: TenantOrderByWithRelationInput | TenantOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Tenants.
-     */
-    cursor?: TenantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Tenants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Tenants.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Tenants.
-     */
-    distinct?: TenantScalarFieldEnum | TenantScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant findFirstOrThrow
-   */
-  export type TenantFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * Filter, which Tenant to fetch.
-     */
-    where?: TenantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Tenants to fetch.
-     */
-    orderBy?: TenantOrderByWithRelationInput | TenantOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Tenants.
-     */
-    cursor?: TenantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Tenants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Tenants.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Tenants.
-     */
-    distinct?: TenantScalarFieldEnum | TenantScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant findMany
-   */
-  export type TenantFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * Filter, which Tenants to fetch.
-     */
-    where?: TenantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Tenants to fetch.
-     */
-    orderBy?: TenantOrderByWithRelationInput | TenantOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Tenants.
-     */
-    cursor?: TenantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Tenants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Tenants.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Tenants.
-     */
-    distinct?: TenantScalarFieldEnum | TenantScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant create
-   */
-  export type TenantCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Tenant.
-     */
-    data: XOR<TenantCreateInput, TenantUncheckedCreateInput>
-  }
-
-  /**
-   * Tenant createMany
-   */
-  export type TenantCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Tenants.
-     */
-    data: TenantCreateManyInput | TenantCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Tenant createManyAndReturn
-   */
-  export type TenantCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * The data used to create many Tenants.
-     */
-    data: TenantCreateManyInput | TenantCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Tenant update
-   */
-  export type TenantUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Tenant.
-     */
-    data: XOR<TenantUpdateInput, TenantUncheckedUpdateInput>
-    /**
-     * Choose, which Tenant to update.
-     */
-    where: TenantWhereUniqueInput
-  }
-
-  /**
-   * Tenant updateMany
-   */
-  export type TenantUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Tenants.
-     */
-    data: XOR<TenantUpdateManyMutationInput, TenantUncheckedUpdateManyInput>
-    /**
-     * Filter which Tenants to update
-     */
-    where?: TenantWhereInput
-    /**
-     * Limit how many Tenants to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Tenant updateManyAndReturn
-   */
-  export type TenantUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * The data used to update Tenants.
-     */
-    data: XOR<TenantUpdateManyMutationInput, TenantUncheckedUpdateManyInput>
-    /**
-     * Filter which Tenants to update
-     */
-    where?: TenantWhereInput
-    /**
-     * Limit how many Tenants to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Tenant upsert
-   */
-  export type TenantUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Tenant to update in case it exists.
-     */
-    where: TenantWhereUniqueInput
-    /**
-     * In case the Tenant found by the `where` argument doesn't exist, create a new Tenant with this data.
-     */
-    create: XOR<TenantCreateInput, TenantUncheckedCreateInput>
-    /**
-     * In case the Tenant was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<TenantUpdateInput, TenantUncheckedUpdateInput>
-  }
-
-  /**
-   * Tenant delete
-   */
-  export type TenantDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-    /**
-     * Filter which Tenant to delete.
-     */
-    where: TenantWhereUniqueInput
-  }
-
-  /**
-   * Tenant deleteMany
-   */
-  export type TenantDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Tenants to delete
-     */
-    where?: TenantWhereInput
-    /**
-     * Limit how many Tenants to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Tenant.users
-   */
-  export type Tenant$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    cursor?: UserWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.roles
-   */
-  export type Tenant$rolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Role
-     */
-    select?: RoleSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Role
-     */
-    omit?: RoleOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoleInclude<ExtArgs> | null
-    where?: RoleWhereInput
-    orderBy?: RoleOrderByWithRelationInput | RoleOrderByWithRelationInput[]
-    cursor?: RoleWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.categories
-   */
-  export type Tenant$categoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Category
-     */
-    select?: CategorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Category
-     */
-    omit?: CategoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoryInclude<ExtArgs> | null
-    where?: CategoryWhereInput
-    orderBy?: CategoryOrderByWithRelationInput | CategoryOrderByWithRelationInput[]
-    cursor?: CategoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CategoryScalarFieldEnum | CategoryScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.items
-   */
-  export type Tenant$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Item
-     */
-    select?: ItemSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Item
-     */
-    omit?: ItemOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ItemInclude<ExtArgs> | null
-    where?: ItemWhereInput
-    orderBy?: ItemOrderByWithRelationInput | ItemOrderByWithRelationInput[]
-    cursor?: ItemWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ItemScalarFieldEnum | ItemScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.racks
-   */
-  export type Tenant$racksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rack
-     */
-    select?: RackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rack
-     */
-    omit?: RackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RackInclude<ExtArgs> | null
-    where?: RackWhereInput
-    orderBy?: RackOrderByWithRelationInput | RackOrderByWithRelationInput[]
-    cursor?: RackWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RackScalarFieldEnum | RackScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.stocks
-   */
-  export type Tenant$stocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Stock
-     */
-    select?: StockSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Stock
-     */
-    omit?: StockOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StockInclude<ExtArgs> | null
-    where?: StockWhereInput
-    orderBy?: StockOrderByWithRelationInput | StockOrderByWithRelationInput[]
-    cursor?: StockWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: StockScalarFieldEnum | StockScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.inventories
-   */
-  export type Tenant$inventoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inventory
-     */
-    select?: InventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Inventory
-     */
-    omit?: InventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InventoryInclude<ExtArgs> | null
-    where?: InventoryWhereInput
-    orderBy?: InventoryOrderByWithRelationInput | InventoryOrderByWithRelationInput[]
-    cursor?: InventoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InventoryScalarFieldEnum | InventoryScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.vendors
-   */
-  export type Tenant$vendorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Vendor
-     */
-    select?: VendorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Vendor
-     */
-    omit?: VendorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VendorInclude<ExtArgs> | null
-    where?: VendorWhereInput
-    orderBy?: VendorOrderByWithRelationInput | VendorOrderByWithRelationInput[]
-    cursor?: VendorWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: VendorScalarFieldEnum | VendorScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.purchaseOrders
-   */
-  export type Tenant$purchaseOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseOrder
-     */
-    select?: PurchaseOrderSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseOrder
-     */
-    omit?: PurchaseOrderOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseOrderInclude<ExtArgs> | null
-    where?: PurchaseOrderWhereInput
-    orderBy?: PurchaseOrderOrderByWithRelationInput | PurchaseOrderOrderByWithRelationInput[]
-    cursor?: PurchaseOrderWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PurchaseOrderScalarFieldEnum | PurchaseOrderScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.inventoryBatches
-   */
-  export type Tenant$inventoryBatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InventoryBatch
-     */
-    select?: InventoryBatchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InventoryBatch
-     */
-    omit?: InventoryBatchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InventoryBatchInclude<ExtArgs> | null
-    where?: InventoryBatchWhereInput
-    orderBy?: InventoryBatchOrderByWithRelationInput | InventoryBatchOrderByWithRelationInput[]
-    cursor?: InventoryBatchWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InventoryBatchScalarFieldEnum | InventoryBatchScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.poLineItems
-   */
-  export type Tenant$poLineItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the POLineItem
-     */
-    select?: POLineItemSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the POLineItem
-     */
-    omit?: POLineItemOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: POLineItemInclude<ExtArgs> | null
-    where?: POLineItemWhereInput
-    orderBy?: POLineItemOrderByWithRelationInput | POLineItemOrderByWithRelationInput[]
-    cursor?: POLineItemWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: POLineItemScalarFieldEnum | POLineItemScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.customers
-   */
-  export type Tenant$customersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customer
-     */
-    select?: CustomerSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customer
-     */
-    omit?: CustomerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomerInclude<ExtArgs> | null
-    where?: CustomerWhereInput
-    orderBy?: CustomerOrderByWithRelationInput | CustomerOrderByWithRelationInput[]
-    cursor?: CustomerWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CustomerScalarFieldEnum | CustomerScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.dispatchOrders
-   */
-  export type Tenant$dispatchOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DispatchOrder
-     */
-    select?: DispatchOrderSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DispatchOrder
-     */
-    omit?: DispatchOrderOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DispatchOrderInclude<ExtArgs> | null
-    where?: DispatchOrderWhereInput
-    orderBy?: DispatchOrderOrderByWithRelationInput | DispatchOrderOrderByWithRelationInput[]
-    cursor?: DispatchOrderWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DispatchOrderScalarFieldEnum | DispatchOrderScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.dispatchItems
-   */
-  export type Tenant$dispatchItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DispatchItem
-     */
-    select?: DispatchItemSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DispatchItem
-     */
-    omit?: DispatchItemOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DispatchItemInclude<ExtArgs> | null
-    where?: DispatchItemWhereInput
-    orderBy?: DispatchItemOrderByWithRelationInput | DispatchItemOrderByWithRelationInput[]
-    cursor?: DispatchItemWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DispatchItemScalarFieldEnum | DispatchItemScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant.inventoryTransactions
-   */
-  export type Tenant$inventoryTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InventoryTransaction
-     */
-    select?: InventoryTransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InventoryTransaction
-     */
-    omit?: InventoryTransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InventoryTransactionInclude<ExtArgs> | null
-    where?: InventoryTransactionWhereInput
-    orderBy?: InventoryTransactionOrderByWithRelationInput | InventoryTransactionOrderByWithRelationInput[]
-    cursor?: InventoryTransactionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InventoryTransactionScalarFieldEnum | InventoryTransactionScalarFieldEnum[]
-  }
-
-  /**
-   * Tenant without action
-   */
-  export type TenantDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Tenant
-     */
-    select?: TenantSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Tenant
-     */
-    omit?: TenantOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TenantInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model User
    */
 
@@ -4261,7 +2533,6 @@ export namespace Prisma {
 
   export type UserMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     username: string | null
     password: string | null
     name: string | null
@@ -4274,7 +2545,6 @@ export namespace Prisma {
 
   export type UserMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     username: string | null
     password: string | null
     name: string | null
@@ -4287,7 +2557,6 @@ export namespace Prisma {
 
   export type UserCountAggregateOutputType = {
     id: number
-    tenantId: number
     username: number
     password: number
     name: number
@@ -4302,7 +2571,6 @@ export namespace Prisma {
 
   export type UserMinAggregateInputType = {
     id?: true
-    tenantId?: true
     username?: true
     password?: true
     name?: true
@@ -4315,7 +2583,6 @@ export namespace Prisma {
 
   export type UserMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     username?: true
     password?: true
     name?: true
@@ -4328,7 +2595,6 @@ export namespace Prisma {
 
   export type UserCountAggregateInputType = {
     id?: true
-    tenantId?: true
     username?: true
     password?: true
     name?: true
@@ -4414,7 +2680,6 @@ export namespace Prisma {
 
   export type UserGroupByOutputType = {
     id: string
-    tenantId: string
     username: string
     password: string
     name: string
@@ -4444,7 +2709,6 @@ export namespace Prisma {
 
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     username?: boolean
     password?: boolean
     name?: boolean
@@ -4455,13 +2719,11 @@ export namespace Prisma {
     createdAt?: boolean
     roleObj?: boolean | User$roleObjArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     username?: boolean
     password?: boolean
     name?: boolean
@@ -4471,12 +2733,10 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: boolean
     roleObj?: boolean | User$roleObjArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     username?: boolean
     password?: boolean
     name?: boolean
@@ -4486,12 +2746,10 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: boolean
     roleObj?: boolean | User$roleObjArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     username?: boolean
     password?: boolean
     name?: boolean
@@ -4502,20 +2760,17 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "username" | "password" | "name" | "role" | "roleId" | "emailAlerts" | "twoFactorEnabled" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "name" | "role" | "roleId" | "emailAlerts" | "twoFactorEnabled" | "createdAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roleObj?: boolean | User$roleObjArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roleObj?: boolean | User$roleObjArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roleObj?: boolean | User$roleObjArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4523,11 +2778,9 @@ export namespace Prisma {
     objects: {
       roleObj: Prisma.$RolePayload<ExtArgs> | null
       transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       username: string
       password: string
       name: string
@@ -4932,7 +3185,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     roleObj<T extends User$roleObjArgs<ExtArgs> = {}>(args?: Subset<T, User$roleObjArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4963,7 +3215,6 @@ export namespace Prisma {
    */
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'String'>
-    readonly tenantId: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
@@ -5446,7 +3697,6 @@ export namespace Prisma {
 
   export type RoleMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     description: string | null
     createdAt: Date | null
@@ -5454,7 +3704,6 @@ export namespace Prisma {
 
   export type RoleMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     description: string | null
     createdAt: Date | null
@@ -5462,7 +3711,6 @@ export namespace Prisma {
 
   export type RoleCountAggregateOutputType = {
     id: number
-    tenantId: number
     name: number
     description: number
     permissions: number
@@ -5473,7 +3721,6 @@ export namespace Prisma {
 
   export type RoleMinAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     description?: true
     createdAt?: true
@@ -5481,7 +3728,6 @@ export namespace Prisma {
 
   export type RoleMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     description?: true
     createdAt?: true
@@ -5489,7 +3735,6 @@ export namespace Prisma {
 
   export type RoleCountAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     description?: true
     permissions?: true
@@ -5571,7 +3816,6 @@ export namespace Prisma {
 
   export type RoleGroupByOutputType = {
     id: string
-    tenantId: string
     name: string
     description: string | null
     permissions: JsonValue | null
@@ -5597,67 +3841,53 @@ export namespace Prisma {
 
   export type RoleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     description?: boolean
     permissions?: boolean
     createdAt?: boolean
     users?: boolean | Role$usersArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
   export type RoleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     description?: boolean
     permissions?: boolean
     createdAt?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
   export type RoleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     description?: boolean
     permissions?: boolean
     createdAt?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
   export type RoleSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     description?: boolean
     permissions?: boolean
     createdAt?: boolean
   }
 
-  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "description" | "permissions" | "createdAt", ExtArgs["result"]["role"]>
+  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "permissions" | "createdAt", ExtArgs["result"]["role"]>
   export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Role$usersArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type RoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
-  export type RoleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
+  export type RoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type RoleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $RolePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Role"
     objects: {
       users: Prisma.$UserPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       name: string
       description: string | null
       permissions: Prisma.JsonValue | null
@@ -6057,7 +4287,6 @@ export namespace Prisma {
   export interface Prisma__RoleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     users<T extends Role$usersArgs<ExtArgs> = {}>(args?: Subset<T, Role$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6088,7 +4317,6 @@ export namespace Prisma {
    */
   interface RoleFieldRefs {
     readonly id: FieldRef<"Role", 'String'>
-    readonly tenantId: FieldRef<"Role", 'String'>
     readonly name: FieldRef<"Role", 'String'>
     readonly description: FieldRef<"Role", 'String'>
     readonly permissions: FieldRef<"Role", 'Json'>
@@ -6347,10 +4575,6 @@ export namespace Prisma {
      */
     data: RoleCreateManyInput | RoleCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoleIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6421,10 +4645,6 @@ export namespace Prisma {
      * Limit how many Roles to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoleIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6548,19 +4768,16 @@ export namespace Prisma {
 
   export type CategoryMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
   }
 
   export type CategoryMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
   }
 
   export type CategoryCountAggregateOutputType = {
     id: number
-    tenantId: number
     name: number
     _all: number
   }
@@ -6568,19 +4785,16 @@ export namespace Prisma {
 
   export type CategoryMinAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
   }
 
   export type CategoryMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
   }
 
   export type CategoryCountAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     _all?: true
   }
@@ -6659,7 +4873,6 @@ export namespace Prisma {
 
   export type CategoryGroupByOutputType = {
     id: string
-    tenantId: string
     name: string
     _count: CategoryCountAggregateOutputType | null
     _min: CategoryMinAggregateOutputType | null
@@ -6682,55 +4895,41 @@ export namespace Prisma {
 
   export type CategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     items?: boolean | Category$itemsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["category"]>
 
   export type CategorySelectScalar = {
     id?: boolean
-    tenantId?: boolean
     name?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | Category$itemsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | CategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type CategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
-  export type CategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
+  export type CategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $CategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Category"
     objects: {
       items: Prisma.$ItemPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       name: string
     }, ExtArgs["result"]["category"]>
     composites: {}
@@ -7127,7 +5326,6 @@ export namespace Prisma {
   export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     items<T extends Category$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Category$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7158,7 +5356,6 @@ export namespace Prisma {
    */
   interface CategoryFieldRefs {
     readonly id: FieldRef<"Category", 'String'>
-    readonly tenantId: FieldRef<"Category", 'String'>
     readonly name: FieldRef<"Category", 'String'>
   }
     
@@ -7414,10 +5611,6 @@ export namespace Prisma {
      */
     data: CategoryCreateManyInput | CategoryCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoryIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -7488,10 +5681,6 @@ export namespace Prisma {
      * Limit how many Categories to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoryIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -7625,7 +5814,6 @@ export namespace Prisma {
 
   export type ItemMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     sku: string | null
     categoryId: string | null
@@ -7637,7 +5825,6 @@ export namespace Prisma {
 
   export type ItemMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     sku: string | null
     categoryId: string | null
@@ -7649,7 +5836,6 @@ export namespace Prisma {
 
   export type ItemCountAggregateOutputType = {
     id: number
-    tenantId: number
     name: number
     sku: number
     categoryId: number
@@ -7671,7 +5857,6 @@ export namespace Prisma {
 
   export type ItemMinAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     sku?: true
     categoryId?: true
@@ -7683,7 +5868,6 @@ export namespace Prisma {
 
   export type ItemMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     sku?: true
     categoryId?: true
@@ -7695,7 +5879,6 @@ export namespace Prisma {
 
   export type ItemCountAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     sku?: true
     categoryId?: true
@@ -7794,7 +5977,6 @@ export namespace Prisma {
 
   export type ItemGroupByOutputType = {
     id: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -7825,7 +6007,6 @@ export namespace Prisma {
 
   export type ItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     sku?: boolean
     categoryId?: boolean
@@ -7839,13 +6020,11 @@ export namespace Prisma {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     poItems?: boolean | Item$poItemsArgs<ExtArgs>
     stocks?: boolean | Item$stocksArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | ItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["item"]>
 
   export type ItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     sku?: boolean
     categoryId?: boolean
@@ -7854,12 +6033,10 @@ export namespace Prisma {
     isCritical?: boolean
     minStockLevel?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["item"]>
 
   export type ItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     sku?: boolean
     categoryId?: boolean
@@ -7868,12 +6045,10 @@ export namespace Prisma {
     isCritical?: boolean
     minStockLevel?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["item"]>
 
   export type ItemSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     sku?: boolean
     categoryId?: boolean
@@ -7883,7 +6058,7 @@ export namespace Prisma {
     minStockLevel?: boolean
   }
 
-  export type ItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "sku" | "categoryId" | "unit" | "createdAt" | "isCritical" | "minStockLevel", ExtArgs["result"]["item"]>
+  export type ItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "sku" | "categoryId" | "unit" | "createdAt" | "isCritical" | "minStockLevel", ExtArgs["result"]["item"]>
   export type ItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dispatchItems?: boolean | Item$dispatchItemsArgs<ExtArgs>
     inventory?: boolean | Item$inventoryArgs<ExtArgs>
@@ -7891,16 +6066,13 @@ export namespace Prisma {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     poItems?: boolean | Item$poItemsArgs<ExtArgs>
     stocks?: boolean | Item$stocksArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | ItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type ItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $ItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7912,11 +6084,9 @@ export namespace Prisma {
       category: Prisma.$CategoryPayload<ExtArgs>
       poItems: Prisma.$POLineItemPayload<ExtArgs>[]
       stocks: Prisma.$StockPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       name: string
       sku: string
       categoryId: string
@@ -8324,7 +6494,6 @@ export namespace Prisma {
     category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     poItems<T extends Item$poItemsArgs<ExtArgs> = {}>(args?: Subset<T, Item$poItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$POLineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stocks<T extends Item$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Item$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8355,7 +6524,6 @@ export namespace Prisma {
    */
   interface ItemFieldRefs {
     readonly id: FieldRef<"Item", 'String'>
-    readonly tenantId: FieldRef<"Item", 'String'>
     readonly name: FieldRef<"Item", 'String'>
     readonly sku: FieldRef<"Item", 'String'>
     readonly categoryId: FieldRef<"Item", 'String'>
@@ -8909,21 +7077,18 @@ export namespace Prisma {
 
   export type RackMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     rackNumber: string | null
     zone: string | null
   }
 
   export type RackMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     rackNumber: string | null
     zone: string | null
   }
 
   export type RackCountAggregateOutputType = {
     id: number
-    tenantId: number
     rackNumber: number
     zone: number
     _all: number
@@ -8932,21 +7097,18 @@ export namespace Prisma {
 
   export type RackMinAggregateInputType = {
     id?: true
-    tenantId?: true
     rackNumber?: true
     zone?: true
   }
 
   export type RackMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     rackNumber?: true
     zone?: true
   }
 
   export type RackCountAggregateInputType = {
     id?: true
-    tenantId?: true
     rackNumber?: true
     zone?: true
     _all?: true
@@ -9026,7 +7188,6 @@ export namespace Prisma {
 
   export type RackGroupByOutputType = {
     id: string
-    tenantId: string
     rackNumber: string
     zone: string | null
     _count: RackCountAggregateOutputType | null
@@ -9050,62 +7211,48 @@ export namespace Prisma {
 
   export type RackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     rackNumber?: boolean
     zone?: boolean
     stocks?: boolean | Rack$stocksArgs<ExtArgs>
     transactions?: boolean | Rack$transactionsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | RackCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["rack"]>
 
   export type RackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     rackNumber?: boolean
     zone?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["rack"]>
 
   export type RackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     rackNumber?: boolean
     zone?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["rack"]>
 
   export type RackSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     rackNumber?: boolean
     zone?: boolean
   }
 
-  export type RackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "rackNumber" | "zone", ExtArgs["result"]["rack"]>
+  export type RackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rackNumber" | "zone", ExtArgs["result"]["rack"]>
   export type RackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stocks?: boolean | Rack$stocksArgs<ExtArgs>
     transactions?: boolean | Rack$transactionsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | RackCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type RackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
-  export type RackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
+  export type RackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type RackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $RackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Rack"
     objects: {
       stocks: Prisma.$StockPayload<ExtArgs>[]
       transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       rackNumber: string
       zone: string | null
     }, ExtArgs["result"]["rack"]>
@@ -9504,7 +7651,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     stocks<T extends Rack$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Rack$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends Rack$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Rack$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9535,7 +7681,6 @@ export namespace Prisma {
    */
   interface RackFieldRefs {
     readonly id: FieldRef<"Rack", 'String'>
-    readonly tenantId: FieldRef<"Rack", 'String'>
     readonly rackNumber: FieldRef<"Rack", 'String'>
     readonly zone: FieldRef<"Rack", 'String'>
   }
@@ -9792,10 +7937,6 @@ export namespace Prisma {
      */
     data: RackCreateManyInput | RackCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RackIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9866,10 +8007,6 @@ export namespace Prisma {
      * Limit how many Racks to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RackIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -10027,7 +8164,6 @@ export namespace Prisma {
 
   export type StockMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     itemId: string | null
     rackId: string | null
     quantity: number | null
@@ -10036,7 +8172,6 @@ export namespace Prisma {
 
   export type StockMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     itemId: string | null
     rackId: string | null
     quantity: number | null
@@ -10045,7 +8180,6 @@ export namespace Prisma {
 
   export type StockCountAggregateOutputType = {
     id: number
-    tenantId: number
     itemId: number
     rackId: number
     quantity: number
@@ -10064,7 +8198,6 @@ export namespace Prisma {
 
   export type StockMinAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     rackId?: true
     quantity?: true
@@ -10073,7 +8206,6 @@ export namespace Prisma {
 
   export type StockMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     rackId?: true
     quantity?: true
@@ -10082,7 +8214,6 @@ export namespace Prisma {
 
   export type StockCountAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     rackId?: true
     quantity?: true
@@ -10178,7 +8309,6 @@ export namespace Prisma {
 
   export type StockGroupByOutputType = {
     id: string
-    tenantId: string
     itemId: string
     rackId: string
     quantity: number
@@ -10206,64 +8336,54 @@ export namespace Prisma {
 
   export type StockSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     quantity?: boolean
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stock"]>
 
   export type StockSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     quantity?: boolean
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stock"]>
 
   export type StockSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     quantity?: boolean
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stock"]>
 
   export type StockSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     quantity?: boolean
     updatedAt?: boolean
   }
 
-  export type StockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "itemId" | "rackId" | "quantity" | "updatedAt", ExtArgs["result"]["stock"]>
+  export type StockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "rackId" | "quantity" | "updatedAt", ExtArgs["result"]["stock"]>
   export type StockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type StockIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type StockIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $StockPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10271,11 +8391,9 @@ export namespace Prisma {
     objects: {
       item: Prisma.$ItemPayload<ExtArgs>
       rack: Prisma.$RackPayload<ExtArgs>
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       itemId: string
       rackId: string
       quantity: number
@@ -10676,7 +8794,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     item<T extends ItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemDefaultArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     rack<T extends RackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RackDefaultArgs<ExtArgs>>): Prisma__RackClient<$Result.GetResult<Prisma.$RackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10707,7 +8824,6 @@ export namespace Prisma {
    */
   interface StockFieldRefs {
     readonly id: FieldRef<"Stock", 'String'>
-    readonly tenantId: FieldRef<"Stock", 'String'>
     readonly itemId: FieldRef<"Stock", 'String'>
     readonly rackId: FieldRef<"Stock", 'String'>
     readonly quantity: FieldRef<"Stock", 'Float'>
@@ -11159,7 +9275,6 @@ export namespace Prisma {
 
   export type InventoryMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     itemId: string | null
     quantityAvailable: number | null
     incomingQty: number | null
@@ -11170,7 +9285,6 @@ export namespace Prisma {
 
   export type InventoryMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     itemId: string | null
     quantityAvailable: number | null
     incomingQty: number | null
@@ -11181,7 +9295,6 @@ export namespace Prisma {
 
   export type InventoryCountAggregateOutputType = {
     id: number
-    tenantId: number
     itemId: number
     quantityAvailable: number
     incomingQty: number
@@ -11208,7 +9321,6 @@ export namespace Prisma {
 
   export type InventoryMinAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     quantityAvailable?: true
     incomingQty?: true
@@ -11219,7 +9331,6 @@ export namespace Prisma {
 
   export type InventoryMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     quantityAvailable?: true
     incomingQty?: true
@@ -11230,7 +9341,6 @@ export namespace Prisma {
 
   export type InventoryCountAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     quantityAvailable?: true
     incomingQty?: true
@@ -11328,7 +9438,6 @@ export namespace Prisma {
 
   export type InventoryGroupByOutputType = {
     id: string
-    tenantId: string
     itemId: string
     quantityAvailable: number
     incomingQty: number
@@ -11358,7 +9467,6 @@ export namespace Prisma {
 
   export type InventorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     quantityAvailable?: boolean
     incomingQty?: boolean
@@ -11367,13 +9475,11 @@ export namespace Prisma {
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
     batches?: boolean | Inventory$batchesArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | InventoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     quantityAvailable?: boolean
     incomingQty?: boolean
@@ -11381,12 +9487,10 @@ export namespace Prisma {
     quantityInTransit?: boolean
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     quantityAvailable?: boolean
     incomingQty?: boolean
@@ -11394,12 +9498,10 @@ export namespace Prisma {
     quantityInTransit?: boolean
     updatedAt?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectScalar = {
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     quantityAvailable?: boolean
     incomingQty?: boolean
@@ -11408,20 +9510,17 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "itemId" | "quantityAvailable" | "incomingQty" | "quantityReserved" | "quantityInTransit" | "updatedAt", ExtArgs["result"]["inventory"]>
+  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantityAvailable" | "incomingQty" | "quantityReserved" | "quantityInTransit" | "updatedAt", ExtArgs["result"]["inventory"]>
   export type InventoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     batches?: boolean | Inventory$batchesArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | InventoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InventoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type InventoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $InventoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11429,11 +9528,9 @@ export namespace Prisma {
     objects: {
       item: Prisma.$ItemPayload<ExtArgs>
       batches: Prisma.$InventoryBatchPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       itemId: string
       quantityAvailable: number
       incomingQty: number
@@ -11836,7 +9933,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     item<T extends ItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemDefaultArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     batches<T extends Inventory$batchesArgs<ExtArgs> = {}>(args?: Subset<T, Inventory$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11867,7 +9963,6 @@ export namespace Prisma {
    */
   interface InventoryFieldRefs {
     readonly id: FieldRef<"Inventory", 'String'>
-    readonly tenantId: FieldRef<"Inventory", 'String'>
     readonly itemId: FieldRef<"Inventory", 'String'>
     readonly quantityAvailable: FieldRef<"Inventory", 'Float'>
     readonly incomingQty: FieldRef<"Inventory", 'Float'>
@@ -12329,7 +10424,6 @@ export namespace Prisma {
 
   export type VendorMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     contact: string | null
     email: string | null
@@ -12338,7 +10432,6 @@ export namespace Prisma {
 
   export type VendorMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     contact: string | null
     email: string | null
@@ -12347,7 +10440,6 @@ export namespace Prisma {
 
   export type VendorCountAggregateOutputType = {
     id: number
-    tenantId: number
     name: number
     contact: number
     email: number
@@ -12358,7 +10450,6 @@ export namespace Prisma {
 
   export type VendorMinAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     contact?: true
     email?: true
@@ -12367,7 +10458,6 @@ export namespace Prisma {
 
   export type VendorMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     contact?: true
     email?: true
@@ -12376,7 +10466,6 @@ export namespace Prisma {
 
   export type VendorCountAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     contact?: true
     email?: true
@@ -12458,7 +10547,6 @@ export namespace Prisma {
 
   export type VendorGroupByOutputType = {
     id: string
-    tenantId: string
     name: string
     contact: string | null
     email: string | null
@@ -12484,7 +10572,6 @@ export namespace Prisma {
 
   export type VendorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     contact?: boolean
     email?: boolean
@@ -12492,53 +10579,42 @@ export namespace Prisma {
     purchaseOrders?: boolean | Vendor$purchaseOrdersArgs<ExtArgs>
     transactions?: boolean | Vendor$transactionsArgs<ExtArgs>
     batches?: boolean | Vendor$batchesArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | VendorCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vendor"]>
 
   export type VendorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     contact?: boolean
     email?: boolean
     preferredPaymentMode?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vendor"]>
 
   export type VendorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     contact?: boolean
     email?: boolean
     preferredPaymentMode?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["vendor"]>
 
   export type VendorSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     contact?: boolean
     email?: boolean
     preferredPaymentMode?: boolean
   }
 
-  export type VendorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "contact" | "email" | "preferredPaymentMode", ExtArgs["result"]["vendor"]>
+  export type VendorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "contact" | "email" | "preferredPaymentMode", ExtArgs["result"]["vendor"]>
   export type VendorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchaseOrders?: boolean | Vendor$purchaseOrdersArgs<ExtArgs>
     transactions?: boolean | Vendor$transactionsArgs<ExtArgs>
     batches?: boolean | Vendor$batchesArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | VendorCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type VendorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
-  export type VendorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
+  export type VendorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type VendorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $VendorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Vendor"
@@ -12546,11 +10622,9 @@ export namespace Prisma {
       purchaseOrders: Prisma.$PurchaseOrderPayload<ExtArgs>[]
       transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
       batches: Prisma.$InventoryBatchPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       name: string
       contact: string | null
       email: string | null
@@ -12952,7 +11026,6 @@ export namespace Prisma {
     purchaseOrders<T extends Vendor$purchaseOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Vendor$purchaseOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends Vendor$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Vendor$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     batches<T extends Vendor$batchesArgs<ExtArgs> = {}>(args?: Subset<T, Vendor$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12983,7 +11056,6 @@ export namespace Prisma {
    */
   interface VendorFieldRefs {
     readonly id: FieldRef<"Vendor", 'String'>
-    readonly tenantId: FieldRef<"Vendor", 'String'>
     readonly name: FieldRef<"Vendor", 'String'>
     readonly contact: FieldRef<"Vendor", 'String'>
     readonly email: FieldRef<"Vendor", 'String'>
@@ -13242,10 +11314,6 @@ export namespace Prisma {
      */
     data: VendorCreateManyInput | VendorCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VendorIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13316,10 +11384,6 @@ export namespace Prisma {
      * Limit how many Vendors to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VendorIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -13491,7 +11555,6 @@ export namespace Prisma {
 
   export type PurchaseOrderMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     vendorId: string | null
     status: string | null
     paymentMode: string | null
@@ -13502,7 +11565,6 @@ export namespace Prisma {
 
   export type PurchaseOrderMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     vendorId: string | null
     status: string | null
     paymentMode: string | null
@@ -13513,7 +11575,6 @@ export namespace Prisma {
 
   export type PurchaseOrderCountAggregateOutputType = {
     id: number
-    tenantId: number
     vendorId: number
     status: number
     paymentMode: number
@@ -13526,7 +11587,6 @@ export namespace Prisma {
 
   export type PurchaseOrderMinAggregateInputType = {
     id?: true
-    tenantId?: true
     vendorId?: true
     status?: true
     paymentMode?: true
@@ -13537,7 +11597,6 @@ export namespace Prisma {
 
   export type PurchaseOrderMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     vendorId?: true
     status?: true
     paymentMode?: true
@@ -13548,7 +11607,6 @@ export namespace Prisma {
 
   export type PurchaseOrderCountAggregateInputType = {
     id?: true
-    tenantId?: true
     vendorId?: true
     status?: true
     paymentMode?: true
@@ -13632,7 +11690,6 @@ export namespace Prisma {
 
   export type PurchaseOrderGroupByOutputType = {
     id: string
-    tenantId: string
     vendorId: string
     status: string
     paymentMode: string | null
@@ -13660,7 +11717,6 @@ export namespace Prisma {
 
   export type PurchaseOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     vendorId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -13670,13 +11726,11 @@ export namespace Prisma {
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     items?: boolean | PurchaseOrder$itemsArgs<ExtArgs>
     batches?: boolean | PurchaseOrder$batchesArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | PurchaseOrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchaseOrder"]>
 
   export type PurchaseOrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     vendorId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -13684,12 +11738,10 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchaseOrder"]>
 
   export type PurchaseOrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     vendorId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -13697,12 +11749,10 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchaseOrder"]>
 
   export type PurchaseOrderSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     vendorId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -13711,21 +11761,18 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type PurchaseOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "vendorId" | "status" | "paymentMode" | "expectedDelivery" | "orderDate" | "createdAt", ExtArgs["result"]["purchaseOrder"]>
+  export type PurchaseOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "vendorId" | "status" | "paymentMode" | "expectedDelivery" | "orderDate" | "createdAt", ExtArgs["result"]["purchaseOrder"]>
   export type PurchaseOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     items?: boolean | PurchaseOrder$itemsArgs<ExtArgs>
     batches?: boolean | PurchaseOrder$batchesArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | PurchaseOrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PurchaseOrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type PurchaseOrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $PurchaseOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13734,11 +11781,9 @@ export namespace Prisma {
       vendor: Prisma.$VendorPayload<ExtArgs>
       items: Prisma.$POLineItemPayload<ExtArgs>[]
       batches: Prisma.$InventoryBatchPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       vendorId: string
       status: string
       paymentMode: string | null
@@ -14142,7 +12187,6 @@ export namespace Prisma {
     vendor<T extends VendorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VendorDefaultArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     items<T extends PurchaseOrder$itemsArgs<ExtArgs> = {}>(args?: Subset<T, PurchaseOrder$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$POLineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     batches<T extends PurchaseOrder$batchesArgs<ExtArgs> = {}>(args?: Subset<T, PurchaseOrder$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14173,7 +12217,6 @@ export namespace Prisma {
    */
   interface PurchaseOrderFieldRefs {
     readonly id: FieldRef<"PurchaseOrder", 'String'>
-    readonly tenantId: FieldRef<"PurchaseOrder", 'String'>
     readonly vendorId: FieldRef<"PurchaseOrder", 'String'>
     readonly status: FieldRef<"PurchaseOrder", 'String'>
     readonly paymentMode: FieldRef<"PurchaseOrder", 'String'>
@@ -14673,7 +12716,6 @@ export namespace Prisma {
 
   export type InventoryBatchMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     inventoryId: string | null
     vendorId: string | null
     quantity: number | null
@@ -14686,7 +12728,6 @@ export namespace Prisma {
 
   export type InventoryBatchMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     inventoryId: string | null
     vendorId: string | null
     quantity: number | null
@@ -14699,7 +12740,6 @@ export namespace Prisma {
 
   export type InventoryBatchCountAggregateOutputType = {
     id: number
-    tenantId: number
     inventoryId: number
     vendorId: number
     quantity: number
@@ -14726,7 +12766,6 @@ export namespace Prisma {
 
   export type InventoryBatchMinAggregateInputType = {
     id?: true
-    tenantId?: true
     inventoryId?: true
     vendorId?: true
     quantity?: true
@@ -14739,7 +12778,6 @@ export namespace Prisma {
 
   export type InventoryBatchMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     inventoryId?: true
     vendorId?: true
     quantity?: true
@@ -14752,7 +12790,6 @@ export namespace Prisma {
 
   export type InventoryBatchCountAggregateInputType = {
     id?: true
-    tenantId?: true
     inventoryId?: true
     vendorId?: true
     quantity?: true
@@ -14852,7 +12889,6 @@ export namespace Prisma {
 
   export type InventoryBatchGroupByOutputType = {
     id: string
-    tenantId: string
     inventoryId: string
     vendorId: string
     quantity: number
@@ -14884,7 +12920,6 @@ export namespace Prisma {
 
   export type InventoryBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     inventoryId?: boolean
     vendorId?: boolean
     quantity?: boolean
@@ -14896,12 +12931,10 @@ export namespace Prisma {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryBatch"]>
 
   export type InventoryBatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     inventoryId?: boolean
     vendorId?: boolean
     quantity?: boolean
@@ -14913,12 +12946,10 @@ export namespace Prisma {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryBatch"]>
 
   export type InventoryBatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     inventoryId?: boolean
     vendorId?: boolean
     quantity?: boolean
@@ -14930,12 +12961,10 @@ export namespace Prisma {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryBatch"]>
 
   export type InventoryBatchSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     inventoryId?: boolean
     vendorId?: boolean
     quantity?: boolean
@@ -14946,24 +12975,21 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type InventoryBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "inventoryId" | "vendorId" | "quantity" | "remainingQty" | "costPerUnit" | "purchaseDate" | "purchaseOrderId" | "createdAt", ExtArgs["result"]["inventoryBatch"]>
+  export type InventoryBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "inventoryId" | "vendorId" | "quantity" | "remainingQty" | "costPerUnit" | "purchaseDate" | "purchaseOrderId" | "createdAt", ExtArgs["result"]["inventoryBatch"]>
   export type InventoryBatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type InventoryBatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type InventoryBatchIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     vendor?: boolean | VendorDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $InventoryBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14972,11 +12998,9 @@ export namespace Prisma {
       inventory: Prisma.$InventoryPayload<ExtArgs>
       vendor: Prisma.$VendorPayload<ExtArgs>
       purchaseOrder: Prisma.$PurchaseOrderPayload<ExtArgs> | null
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       inventoryId: string
       vendorId: string
       quantity: number
@@ -15382,7 +13406,6 @@ export namespace Prisma {
     inventory<T extends InventoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryDefaultArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     vendor<T extends VendorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VendorDefaultArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     purchaseOrder<T extends InventoryBatch$purchaseOrderArgs<ExtArgs> = {}>(args?: Subset<T, InventoryBatch$purchaseOrderArgs<ExtArgs>>): Prisma__PurchaseOrderClient<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15413,7 +13436,6 @@ export namespace Prisma {
    */
   interface InventoryBatchFieldRefs {
     readonly id: FieldRef<"InventoryBatch", 'String'>
-    readonly tenantId: FieldRef<"InventoryBatch", 'String'>
     readonly inventoryId: FieldRef<"InventoryBatch", 'String'>
     readonly vendorId: FieldRef<"InventoryBatch", 'String'>
     readonly quantity: FieldRef<"InventoryBatch", 'Float'>
@@ -15886,7 +13908,6 @@ export namespace Prisma {
 
   export type POLineItemMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     purchaseOrderId: string | null
     itemId: string | null
     quantityOrdered: number | null
@@ -15896,7 +13917,6 @@ export namespace Prisma {
 
   export type POLineItemMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     purchaseOrderId: string | null
     itemId: string | null
     quantityOrdered: number | null
@@ -15906,7 +13926,6 @@ export namespace Prisma {
 
   export type POLineItemCountAggregateOutputType = {
     id: number
-    tenantId: number
     purchaseOrderId: number
     itemId: number
     quantityOrdered: number
@@ -15930,7 +13949,6 @@ export namespace Prisma {
 
   export type POLineItemMinAggregateInputType = {
     id?: true
-    tenantId?: true
     purchaseOrderId?: true
     itemId?: true
     quantityOrdered?: true
@@ -15940,7 +13958,6 @@ export namespace Prisma {
 
   export type POLineItemMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     purchaseOrderId?: true
     itemId?: true
     quantityOrdered?: true
@@ -15950,7 +13967,6 @@ export namespace Prisma {
 
   export type POLineItemCountAggregateInputType = {
     id?: true
-    tenantId?: true
     purchaseOrderId?: true
     itemId?: true
     quantityOrdered?: true
@@ -16047,7 +14063,6 @@ export namespace Prisma {
 
   export type POLineItemGroupByOutputType = {
     id: string
-    tenantId: string
     purchaseOrderId: string
     itemId: string
     quantityOrdered: number
@@ -16076,7 +14091,6 @@ export namespace Prisma {
 
   export type POLineItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     purchaseOrderId?: boolean
     itemId?: boolean
     quantityOrdered?: boolean
@@ -16084,12 +14098,10 @@ export namespace Prisma {
     costPrice?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | PurchaseOrderDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pOLineItem"]>
 
   export type POLineItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     purchaseOrderId?: boolean
     itemId?: boolean
     quantityOrdered?: boolean
@@ -16097,12 +14109,10 @@ export namespace Prisma {
     costPrice?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | PurchaseOrderDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pOLineItem"]>
 
   export type POLineItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     purchaseOrderId?: boolean
     itemId?: boolean
     quantityOrdered?: boolean
@@ -16110,12 +14120,10 @@ export namespace Prisma {
     costPrice?: boolean
     item?: boolean | ItemDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | PurchaseOrderDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pOLineItem"]>
 
   export type POLineItemSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     purchaseOrderId?: boolean
     itemId?: boolean
     quantityOrdered?: boolean
@@ -16123,21 +14131,18 @@ export namespace Prisma {
     costPrice?: boolean
   }
 
-  export type POLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "purchaseOrderId" | "itemId" | "quantityOrdered" | "quantityReceived" | "costPrice", ExtArgs["result"]["pOLineItem"]>
+  export type POLineItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "purchaseOrderId" | "itemId" | "quantityOrdered" | "quantityReceived" | "costPrice", ExtArgs["result"]["pOLineItem"]>
   export type POLineItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | PurchaseOrderDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type POLineItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | PurchaseOrderDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type POLineItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | PurchaseOrderDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $POLineItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16145,11 +14150,9 @@ export namespace Prisma {
     objects: {
       item: Prisma.$ItemPayload<ExtArgs>
       purchaseOrder: Prisma.$PurchaseOrderPayload<ExtArgs>
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       purchaseOrderId: string
       itemId: string
       quantityOrdered: number
@@ -16551,7 +14554,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     item<T extends ItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemDefaultArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     purchaseOrder<T extends PurchaseOrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PurchaseOrderDefaultArgs<ExtArgs>>): Prisma__PurchaseOrderClient<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16582,7 +14584,6 @@ export namespace Prisma {
    */
   interface POLineItemFieldRefs {
     readonly id: FieldRef<"POLineItem", 'String'>
-    readonly tenantId: FieldRef<"POLineItem", 'String'>
     readonly purchaseOrderId: FieldRef<"POLineItem", 'String'>
     readonly itemId: FieldRef<"POLineItem", 'String'>
     readonly quantityOrdered: FieldRef<"POLineItem", 'Float'>
@@ -17019,7 +15020,6 @@ export namespace Prisma {
 
   export type CustomerMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     email: string | null
     contact: string | null
@@ -17028,7 +15028,6 @@ export namespace Prisma {
 
   export type CustomerMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     name: string | null
     email: string | null
     contact: string | null
@@ -17037,7 +15036,6 @@ export namespace Prisma {
 
   export type CustomerCountAggregateOutputType = {
     id: number
-    tenantId: number
     name: number
     email: number
     contact: number
@@ -17048,7 +15046,6 @@ export namespace Prisma {
 
   export type CustomerMinAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     email?: true
     contact?: true
@@ -17057,7 +15054,6 @@ export namespace Prisma {
 
   export type CustomerMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     email?: true
     contact?: true
@@ -17066,7 +15062,6 @@ export namespace Prisma {
 
   export type CustomerCountAggregateInputType = {
     id?: true
-    tenantId?: true
     name?: true
     email?: true
     contact?: true
@@ -17148,7 +15143,6 @@ export namespace Prisma {
 
   export type CustomerGroupByOutputType = {
     id: string
-    tenantId: string
     name: string
     email: string | null
     contact: string | null
@@ -17174,70 +15168,56 @@ export namespace Prisma {
 
   export type CustomerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     email?: boolean
     contact?: boolean
     address?: boolean
     dispatchOrders?: boolean | Customer$dispatchOrdersArgs<ExtArgs>
     transactions?: boolean | Customer$transactionsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     email?: boolean
     contact?: boolean
     address?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     email?: boolean
     contact?: boolean
     address?: boolean
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     name?: boolean
     email?: boolean
     contact?: boolean
     address?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "email" | "contact" | "address", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "contact" | "address", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dispatchOrders?: boolean | Customer$dispatchOrdersArgs<ExtArgs>
     transactions?: boolean | Customer$transactionsArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
-  export type CustomerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
-  }
+  export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CustomerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $CustomerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Customer"
     objects: {
       dispatchOrders: Prisma.$DispatchOrderPayload<ExtArgs>[]
       transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       name: string
       email: string | null
       contact: string | null
@@ -17638,7 +15618,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     dispatchOrders<T extends Customer$dispatchOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$dispatchOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends Customer$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17669,7 +15648,6 @@ export namespace Prisma {
    */
   interface CustomerFieldRefs {
     readonly id: FieldRef<"Customer", 'String'>
-    readonly tenantId: FieldRef<"Customer", 'String'>
     readonly name: FieldRef<"Customer", 'String'>
     readonly email: FieldRef<"Customer", 'String'>
     readonly contact: FieldRef<"Customer", 'String'>
@@ -17928,10 +15906,6 @@ export namespace Prisma {
      */
     data: CustomerCreateManyInput | CustomerCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomerIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -18002,10 +15976,6 @@ export namespace Prisma {
      * Limit how many Customers to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomerIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -18153,7 +16123,6 @@ export namespace Prisma {
 
   export type DispatchOrderMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     customerId: string | null
     status: string | null
     paymentMode: string | null
@@ -18164,7 +16133,6 @@ export namespace Prisma {
 
   export type DispatchOrderMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     customerId: string | null
     status: string | null
     paymentMode: string | null
@@ -18175,7 +16143,6 @@ export namespace Prisma {
 
   export type DispatchOrderCountAggregateOutputType = {
     id: number
-    tenantId: number
     customerId: number
     status: number
     paymentMode: number
@@ -18188,7 +16155,6 @@ export namespace Prisma {
 
   export type DispatchOrderMinAggregateInputType = {
     id?: true
-    tenantId?: true
     customerId?: true
     status?: true
     paymentMode?: true
@@ -18199,7 +16165,6 @@ export namespace Prisma {
 
   export type DispatchOrderMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     customerId?: true
     status?: true
     paymentMode?: true
@@ -18210,7 +16175,6 @@ export namespace Prisma {
 
   export type DispatchOrderCountAggregateInputType = {
     id?: true
-    tenantId?: true
     customerId?: true
     status?: true
     paymentMode?: true
@@ -18294,7 +16258,6 @@ export namespace Prisma {
 
   export type DispatchOrderGroupByOutputType = {
     id: string
-    tenantId: string
     customerId: string
     status: string
     paymentMode: string | null
@@ -18322,7 +16285,6 @@ export namespace Prisma {
 
   export type DispatchOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     customerId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -18331,13 +16293,11 @@ export namespace Prisma {
     createdAt?: boolean
     items?: boolean | DispatchOrder$itemsArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | DispatchOrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchOrder"]>
 
   export type DispatchOrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     customerId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -18345,12 +16305,10 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchOrder"]>
 
   export type DispatchOrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     customerId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -18358,12 +16316,10 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchOrder"]>
 
   export type DispatchOrderSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     customerId?: boolean
     status?: boolean
     paymentMode?: boolean
@@ -18372,20 +16328,17 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type DispatchOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "customerId" | "status" | "paymentMode" | "expectedDelivery" | "orderDate" | "createdAt", ExtArgs["result"]["dispatchOrder"]>
+  export type DispatchOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "status" | "paymentMode" | "expectedDelivery" | "orderDate" | "createdAt", ExtArgs["result"]["dispatchOrder"]>
   export type DispatchOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | DispatchOrder$itemsArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
     _count?: boolean | DispatchOrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DispatchOrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type DispatchOrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $DispatchOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18393,11 +16346,9 @@ export namespace Prisma {
     objects: {
       items: Prisma.$DispatchItemPayload<ExtArgs>[]
       customer: Prisma.$CustomerPayload<ExtArgs>
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       customerId: string
       status: string
       paymentMode: string | null
@@ -18800,7 +16751,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     items<T extends DispatchOrder$itemsArgs<ExtArgs> = {}>(args?: Subset<T, DispatchOrder$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18831,7 +16781,6 @@ export namespace Prisma {
    */
   interface DispatchOrderFieldRefs {
     readonly id: FieldRef<"DispatchOrder", 'String'>
-    readonly tenantId: FieldRef<"DispatchOrder", 'String'>
     readonly customerId: FieldRef<"DispatchOrder", 'String'>
     readonly status: FieldRef<"DispatchOrder", 'String'>
     readonly paymentMode: FieldRef<"DispatchOrder", 'String'>
@@ -19305,7 +17254,6 @@ export namespace Prisma {
 
   export type DispatchItemMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     dispatchOrderId: string | null
     itemId: string | null
     quantity: number | null
@@ -19314,7 +17262,6 @@ export namespace Prisma {
 
   export type DispatchItemMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     dispatchOrderId: string | null
     itemId: string | null
     quantity: number | null
@@ -19323,7 +17270,6 @@ export namespace Prisma {
 
   export type DispatchItemCountAggregateOutputType = {
     id: number
-    tenantId: number
     dispatchOrderId: number
     itemId: number
     quantity: number
@@ -19344,7 +17290,6 @@ export namespace Prisma {
 
   export type DispatchItemMinAggregateInputType = {
     id?: true
-    tenantId?: true
     dispatchOrderId?: true
     itemId?: true
     quantity?: true
@@ -19353,7 +17298,6 @@ export namespace Prisma {
 
   export type DispatchItemMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     dispatchOrderId?: true
     itemId?: true
     quantity?: true
@@ -19362,7 +17306,6 @@ export namespace Prisma {
 
   export type DispatchItemCountAggregateInputType = {
     id?: true
-    tenantId?: true
     dispatchOrderId?: true
     itemId?: true
     quantity?: true
@@ -19458,7 +17401,6 @@ export namespace Prisma {
 
   export type DispatchItemGroupByOutputType = {
     id: string
-    tenantId: string
     dispatchOrderId: string
     itemId: string
     quantity: number
@@ -19486,64 +17428,54 @@ export namespace Prisma {
 
   export type DispatchItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     dispatchOrderId?: boolean
     itemId?: boolean
     quantity?: boolean
     sellingPrice?: boolean
     dispatchOrder?: boolean | DispatchOrderDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchItem"]>
 
   export type DispatchItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     dispatchOrderId?: boolean
     itemId?: boolean
     quantity?: boolean
     sellingPrice?: boolean
     dispatchOrder?: boolean | DispatchOrderDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchItem"]>
 
   export type DispatchItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     dispatchOrderId?: boolean
     itemId?: boolean
     quantity?: boolean
     sellingPrice?: boolean
     dispatchOrder?: boolean | DispatchOrderDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchItem"]>
 
   export type DispatchItemSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     dispatchOrderId?: boolean
     itemId?: boolean
     quantity?: boolean
     sellingPrice?: boolean
   }
 
-  export type DispatchItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "dispatchOrderId" | "itemId" | "quantity" | "sellingPrice", ExtArgs["result"]["dispatchItem"]>
+  export type DispatchItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dispatchOrderId" | "itemId" | "quantity" | "sellingPrice", ExtArgs["result"]["dispatchItem"]>
   export type DispatchItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dispatchOrder?: boolean | DispatchOrderDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type DispatchItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dispatchOrder?: boolean | DispatchOrderDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type DispatchItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dispatchOrder?: boolean | DispatchOrderDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $DispatchItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19551,11 +17483,9 @@ export namespace Prisma {
     objects: {
       dispatchOrder: Prisma.$DispatchOrderPayload<ExtArgs>
       item: Prisma.$ItemPayload<ExtArgs>
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       dispatchOrderId: string
       itemId: string
       quantity: number
@@ -19956,7 +17886,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     dispatchOrder<T extends DispatchOrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DispatchOrderDefaultArgs<ExtArgs>>): Prisma__DispatchOrderClient<$Result.GetResult<Prisma.$DispatchOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     item<T extends ItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemDefaultArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19987,7 +17916,6 @@ export namespace Prisma {
    */
   interface DispatchItemFieldRefs {
     readonly id: FieldRef<"DispatchItem", 'String'>
-    readonly tenantId: FieldRef<"DispatchItem", 'String'>
     readonly dispatchOrderId: FieldRef<"DispatchItem", 'String'>
     readonly itemId: FieldRef<"DispatchItem", 'String'>
     readonly quantity: FieldRef<"DispatchItem", 'Float'>
@@ -20433,7 +18361,6 @@ export namespace Prisma {
 
   export type InventoryTransactionMinAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     itemId: string | null
     rackId: string | null
     userId: string | null
@@ -20448,7 +18375,6 @@ export namespace Prisma {
 
   export type InventoryTransactionMaxAggregateOutputType = {
     id: string | null
-    tenantId: string | null
     itemId: string | null
     rackId: string | null
     userId: string | null
@@ -20463,7 +18389,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCountAggregateOutputType = {
     id: number
-    tenantId: number
     itemId: number
     rackId: number
     userId: number
@@ -20488,7 +18413,6 @@ export namespace Prisma {
 
   export type InventoryTransactionMinAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     rackId?: true
     userId?: true
@@ -20503,7 +18427,6 @@ export namespace Prisma {
 
   export type InventoryTransactionMaxAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     rackId?: true
     userId?: true
@@ -20518,7 +18441,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCountAggregateInputType = {
     id?: true
-    tenantId?: true
     itemId?: true
     rackId?: true
     userId?: true
@@ -20620,7 +18542,6 @@ export namespace Prisma {
 
   export type InventoryTransactionGroupByOutputType = {
     id: string
-    tenantId: string
     itemId: string
     rackId: string | null
     userId: string | null
@@ -20654,7 +18575,6 @@ export namespace Prisma {
 
   export type InventoryTransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     userId?: boolean
@@ -20670,12 +18590,10 @@ export namespace Prisma {
     customer?: boolean | InventoryTransaction$customerArgs<ExtArgs>
     vendor?: boolean | InventoryTransaction$vendorArgs<ExtArgs>
     user?: boolean | InventoryTransaction$userArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryTransaction"]>
 
   export type InventoryTransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     userId?: boolean
@@ -20691,12 +18609,10 @@ export namespace Prisma {
     customer?: boolean | InventoryTransaction$customerArgs<ExtArgs>
     vendor?: boolean | InventoryTransaction$vendorArgs<ExtArgs>
     user?: boolean | InventoryTransaction$userArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryTransaction"]>
 
   export type InventoryTransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     userId?: boolean
@@ -20712,12 +18628,10 @@ export namespace Prisma {
     customer?: boolean | InventoryTransaction$customerArgs<ExtArgs>
     vendor?: boolean | InventoryTransaction$vendorArgs<ExtArgs>
     user?: boolean | InventoryTransaction$userArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryTransaction"]>
 
   export type InventoryTransactionSelectScalar = {
     id?: boolean
-    tenantId?: boolean
     itemId?: boolean
     rackId?: boolean
     userId?: boolean
@@ -20730,14 +18644,13 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type InventoryTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "itemId" | "rackId" | "userId" | "customerId" | "vendorId" | "type" | "quantity" | "referenceType" | "referenceId" | "createdAt", ExtArgs["result"]["inventoryTransaction"]>
+  export type InventoryTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "rackId" | "userId" | "customerId" | "vendorId" | "type" | "quantity" | "referenceType" | "referenceId" | "createdAt", ExtArgs["result"]["inventoryTransaction"]>
   export type InventoryTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | InventoryTransaction$rackArgs<ExtArgs>
     customer?: boolean | InventoryTransaction$customerArgs<ExtArgs>
     vendor?: boolean | InventoryTransaction$vendorArgs<ExtArgs>
     user?: boolean | InventoryTransaction$userArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type InventoryTransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
@@ -20745,7 +18658,6 @@ export namespace Prisma {
     customer?: boolean | InventoryTransaction$customerArgs<ExtArgs>
     vendor?: boolean | InventoryTransaction$vendorArgs<ExtArgs>
     user?: boolean | InventoryTransaction$userArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
   export type InventoryTransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | ItemDefaultArgs<ExtArgs>
@@ -20753,7 +18665,6 @@ export namespace Prisma {
     customer?: boolean | InventoryTransaction$customerArgs<ExtArgs>
     vendor?: boolean | InventoryTransaction$vendorArgs<ExtArgs>
     user?: boolean | InventoryTransaction$userArgs<ExtArgs>
-    tenant?: boolean | TenantDefaultArgs<ExtArgs>
   }
 
   export type $InventoryTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20764,11 +18675,9 @@ export namespace Prisma {
       customer: Prisma.$CustomerPayload<ExtArgs> | null
       vendor: Prisma.$VendorPayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs> | null
-      tenant: Prisma.$TenantPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      tenantId: string
       itemId: string
       rackId: string | null
       userId: string | null
@@ -21178,7 +19087,6 @@ export namespace Prisma {
     customer<T extends InventoryTransaction$customerArgs<ExtArgs> = {}>(args?: Subset<T, InventoryTransaction$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     vendor<T extends InventoryTransaction$vendorArgs<ExtArgs> = {}>(args?: Subset<T, InventoryTransaction$vendorArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user<T extends InventoryTransaction$userArgs<ExtArgs> = {}>(args?: Subset<T, InventoryTransaction$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -21209,7 +19117,6 @@ export namespace Prisma {
    */
   interface InventoryTransactionFieldRefs {
     readonly id: FieldRef<"InventoryTransaction", 'String'>
-    readonly tenantId: FieldRef<"InventoryTransaction", 'String'>
     readonly itemId: FieldRef<"InventoryTransaction", 'String'>
     readonly rackId: FieldRef<"InventoryTransaction", 'String'>
     readonly userId: FieldRef<"InventoryTransaction", 'String'>
@@ -21729,21 +19636,8 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const TenantScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    subdomain: 'subdomain',
-    isActive: 'isActive',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type TenantScalarFieldEnum = (typeof TenantScalarFieldEnum)[keyof typeof TenantScalarFieldEnum]
-
-
   export const UserScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     username: 'username',
     password: 'password',
     name: 'name',
@@ -21759,7 +19653,6 @@ export namespace Prisma {
 
   export const RoleScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     name: 'name',
     description: 'description',
     permissions: 'permissions',
@@ -21771,7 +19664,6 @@ export namespace Prisma {
 
   export const CategoryScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     name: 'name'
   };
 
@@ -21780,7 +19672,6 @@ export namespace Prisma {
 
   export const ItemScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     name: 'name',
     sku: 'sku',
     categoryId: 'categoryId',
@@ -21795,7 +19686,6 @@ export namespace Prisma {
 
   export const RackScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     rackNumber: 'rackNumber',
     zone: 'zone'
   };
@@ -21805,7 +19695,6 @@ export namespace Prisma {
 
   export const StockScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     itemId: 'itemId',
     rackId: 'rackId',
     quantity: 'quantity',
@@ -21817,7 +19706,6 @@ export namespace Prisma {
 
   export const InventoryScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     itemId: 'itemId',
     quantityAvailable: 'quantityAvailable',
     incomingQty: 'incomingQty',
@@ -21831,7 +19719,6 @@ export namespace Prisma {
 
   export const VendorScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     name: 'name',
     contact: 'contact',
     email: 'email',
@@ -21843,7 +19730,6 @@ export namespace Prisma {
 
   export const PurchaseOrderScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     vendorId: 'vendorId',
     status: 'status',
     paymentMode: 'paymentMode',
@@ -21857,7 +19743,6 @@ export namespace Prisma {
 
   export const InventoryBatchScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     inventoryId: 'inventoryId',
     vendorId: 'vendorId',
     quantity: 'quantity',
@@ -21873,7 +19758,6 @@ export namespace Prisma {
 
   export const POLineItemScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     purchaseOrderId: 'purchaseOrderId',
     itemId: 'itemId',
     quantityOrdered: 'quantityOrdered',
@@ -21886,7 +19770,6 @@ export namespace Prisma {
 
   export const CustomerScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     name: 'name',
     email: 'email',
     contact: 'contact',
@@ -21898,7 +19781,6 @@ export namespace Prisma {
 
   export const DispatchOrderScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     customerId: 'customerId',
     status: 'status',
     paymentMode: 'paymentMode',
@@ -21912,7 +19794,6 @@ export namespace Prisma {
 
   export const DispatchItemScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     dispatchOrderId: 'dispatchOrderId',
     itemId: 'itemId',
     quantity: 'quantity',
@@ -21924,7 +19805,6 @@ export namespace Prisma {
 
   export const InventoryTransactionScalarFieldEnum: {
     id: 'id',
-    tenantId: 'tenantId',
     itemId: 'itemId',
     rackId: 'rackId',
     userId: 'userId',
@@ -22066,114 +19946,11 @@ export namespace Prisma {
    */
 
 
-  export type TenantWhereInput = {
-    AND?: TenantWhereInput | TenantWhereInput[]
-    OR?: TenantWhereInput[]
-    NOT?: TenantWhereInput | TenantWhereInput[]
-    id?: StringFilter<"Tenant"> | string
-    name?: StringFilter<"Tenant"> | string
-    subdomain?: StringFilter<"Tenant"> | string
-    isActive?: BoolFilter<"Tenant"> | boolean
-    createdAt?: DateTimeFilter<"Tenant"> | Date | string
-    updatedAt?: DateTimeFilter<"Tenant"> | Date | string
-    users?: UserListRelationFilter
-    roles?: RoleListRelationFilter
-    categories?: CategoryListRelationFilter
-    items?: ItemListRelationFilter
-    racks?: RackListRelationFilter
-    stocks?: StockListRelationFilter
-    inventories?: InventoryListRelationFilter
-    vendors?: VendorListRelationFilter
-    purchaseOrders?: PurchaseOrderListRelationFilter
-    inventoryBatches?: InventoryBatchListRelationFilter
-    poLineItems?: POLineItemListRelationFilter
-    customers?: CustomerListRelationFilter
-    dispatchOrders?: DispatchOrderListRelationFilter
-    dispatchItems?: DispatchItemListRelationFilter
-    inventoryTransactions?: InventoryTransactionListRelationFilter
-  }
-
-  export type TenantOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    subdomain?: SortOrder
-    isActive?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    users?: UserOrderByRelationAggregateInput
-    roles?: RoleOrderByRelationAggregateInput
-    categories?: CategoryOrderByRelationAggregateInput
-    items?: ItemOrderByRelationAggregateInput
-    racks?: RackOrderByRelationAggregateInput
-    stocks?: StockOrderByRelationAggregateInput
-    inventories?: InventoryOrderByRelationAggregateInput
-    vendors?: VendorOrderByRelationAggregateInput
-    purchaseOrders?: PurchaseOrderOrderByRelationAggregateInput
-    inventoryBatches?: InventoryBatchOrderByRelationAggregateInput
-    poLineItems?: POLineItemOrderByRelationAggregateInput
-    customers?: CustomerOrderByRelationAggregateInput
-    dispatchOrders?: DispatchOrderOrderByRelationAggregateInput
-    dispatchItems?: DispatchItemOrderByRelationAggregateInput
-    inventoryTransactions?: InventoryTransactionOrderByRelationAggregateInput
-  }
-
-  export type TenantWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    subdomain?: string
-    AND?: TenantWhereInput | TenantWhereInput[]
-    OR?: TenantWhereInput[]
-    NOT?: TenantWhereInput | TenantWhereInput[]
-    name?: StringFilter<"Tenant"> | string
-    isActive?: BoolFilter<"Tenant"> | boolean
-    createdAt?: DateTimeFilter<"Tenant"> | Date | string
-    updatedAt?: DateTimeFilter<"Tenant"> | Date | string
-    users?: UserListRelationFilter
-    roles?: RoleListRelationFilter
-    categories?: CategoryListRelationFilter
-    items?: ItemListRelationFilter
-    racks?: RackListRelationFilter
-    stocks?: StockListRelationFilter
-    inventories?: InventoryListRelationFilter
-    vendors?: VendorListRelationFilter
-    purchaseOrders?: PurchaseOrderListRelationFilter
-    inventoryBatches?: InventoryBatchListRelationFilter
-    poLineItems?: POLineItemListRelationFilter
-    customers?: CustomerListRelationFilter
-    dispatchOrders?: DispatchOrderListRelationFilter
-    dispatchItems?: DispatchItemListRelationFilter
-    inventoryTransactions?: InventoryTransactionListRelationFilter
-  }, "id" | "subdomain">
-
-  export type TenantOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    subdomain?: SortOrder
-    isActive?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: TenantCountOrderByAggregateInput
-    _max?: TenantMaxOrderByAggregateInput
-    _min?: TenantMinOrderByAggregateInput
-  }
-
-  export type TenantScalarWhereWithAggregatesInput = {
-    AND?: TenantScalarWhereWithAggregatesInput | TenantScalarWhereWithAggregatesInput[]
-    OR?: TenantScalarWhereWithAggregatesInput[]
-    NOT?: TenantScalarWhereWithAggregatesInput | TenantScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Tenant"> | string
-    name?: StringWithAggregatesFilter<"Tenant"> | string
-    subdomain?: StringWithAggregatesFilter<"Tenant"> | string
-    isActive?: BoolWithAggregatesFilter<"Tenant"> | boolean
-    createdAt?: DateTimeWithAggregatesFilter<"Tenant"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Tenant"> | Date | string
-  }
-
   export type UserWhereInput = {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
-    tenantId?: StringFilter<"User"> | string
     username?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
@@ -22184,12 +19961,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     roleObj?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
     transactions?: InventoryTransactionListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     username?: SortOrder
     password?: SortOrder
     name?: SortOrder
@@ -22200,17 +19975,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     roleObj?: RoleOrderByWithRelationInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    tenantId_username?: UserTenantIdUsernameCompoundUniqueInput
+    username?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    tenantId?: StringFilter<"User"> | string
-    username?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
@@ -22220,12 +19992,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     roleObj?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
     transactions?: InventoryTransactionListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "tenantId_username">
+  }, "id" | "username">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     username?: SortOrder
     password?: SortOrder
     name?: SortOrder
@@ -22244,7 +20014,6 @@ export namespace Prisma {
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
-    tenantId?: StringWithAggregatesFilter<"User"> | string
     username?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     name?: StringWithAggregatesFilter<"User"> | string
@@ -22260,44 +20029,36 @@ export namespace Prisma {
     OR?: RoleWhereInput[]
     NOT?: RoleWhereInput | RoleWhereInput[]
     id?: StringFilter<"Role"> | string
-    tenantId?: StringFilter<"Role"> | string
     name?: StringFilter<"Role"> | string
     description?: StringNullableFilter<"Role"> | string | null
     permissions?: JsonNullableFilter<"Role">
     createdAt?: DateTimeFilter<"Role"> | Date | string
     users?: UserListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type RoleOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     permissions?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type RoleWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    tenantId_name?: RoleTenantIdNameCompoundUniqueInput
+    name?: string
     AND?: RoleWhereInput | RoleWhereInput[]
     OR?: RoleWhereInput[]
     NOT?: RoleWhereInput | RoleWhereInput[]
-    tenantId?: StringFilter<"Role"> | string
-    name?: StringFilter<"Role"> | string
     description?: StringNullableFilter<"Role"> | string | null
     permissions?: JsonNullableFilter<"Role">
     createdAt?: DateTimeFilter<"Role"> | Date | string
     users?: UserListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "tenantId_name">
+  }, "id" | "name">
 
   export type RoleOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     permissions?: SortOrderInput | SortOrder
@@ -22312,7 +20073,6 @@ export namespace Prisma {
     OR?: RoleScalarWhereWithAggregatesInput[]
     NOT?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Role"> | string
-    tenantId?: StringWithAggregatesFilter<"Role"> | string
     name?: StringWithAggregatesFilter<"Role"> | string
     description?: StringNullableWithAggregatesFilter<"Role"> | string | null
     permissions?: JsonNullableWithAggregatesFilter<"Role">
@@ -22324,35 +20084,27 @@ export namespace Prisma {
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     id?: StringFilter<"Category"> | string
-    tenantId?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
     items?: ItemListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type CategoryOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     items?: ItemOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type CategoryWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    tenantId_name?: CategoryTenantIdNameCompoundUniqueInput
+    name?: string
     AND?: CategoryWhereInput | CategoryWhereInput[]
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
-    tenantId?: StringFilter<"Category"> | string
-    name?: StringFilter<"Category"> | string
     items?: ItemListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "tenantId_name">
+  }, "id" | "name">
 
   export type CategoryOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     _count?: CategoryCountOrderByAggregateInput
     _max?: CategoryMaxOrderByAggregateInput
@@ -22364,7 +20116,6 @@ export namespace Prisma {
     OR?: CategoryScalarWhereWithAggregatesInput[]
     NOT?: CategoryScalarWhereWithAggregatesInput | CategoryScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Category"> | string
-    tenantId?: StringWithAggregatesFilter<"Category"> | string
     name?: StringWithAggregatesFilter<"Category"> | string
   }
 
@@ -22373,7 +20124,6 @@ export namespace Prisma {
     OR?: ItemWhereInput[]
     NOT?: ItemWhereInput | ItemWhereInput[]
     id?: StringFilter<"Item"> | string
-    tenantId?: StringFilter<"Item"> | string
     name?: StringFilter<"Item"> | string
     sku?: StringFilter<"Item"> | string
     categoryId?: StringFilter<"Item"> | string
@@ -22387,12 +20137,10 @@ export namespace Prisma {
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     poItems?: POLineItemListRelationFilter
     stocks?: StockListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type ItemOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     sku?: SortOrder
     categoryId?: SortOrder
@@ -22406,18 +20154,15 @@ export namespace Prisma {
     category?: CategoryOrderByWithRelationInput
     poItems?: POLineItemOrderByRelationAggregateInput
     stocks?: StockOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type ItemWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    tenantId_sku?: ItemTenantIdSkuCompoundUniqueInput
+    sku?: string
     AND?: ItemWhereInput | ItemWhereInput[]
     OR?: ItemWhereInput[]
     NOT?: ItemWhereInput | ItemWhereInput[]
-    tenantId?: StringFilter<"Item"> | string
     name?: StringFilter<"Item"> | string
-    sku?: StringFilter<"Item"> | string
     categoryId?: StringFilter<"Item"> | string
     unit?: StringFilter<"Item"> | string
     createdAt?: DateTimeFilter<"Item"> | Date | string
@@ -22429,12 +20174,10 @@ export namespace Prisma {
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     poItems?: POLineItemListRelationFilter
     stocks?: StockListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "tenantId_sku">
+  }, "id" | "sku">
 
   export type ItemOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     sku?: SortOrder
     categoryId?: SortOrder
@@ -22454,7 +20197,6 @@ export namespace Prisma {
     OR?: ItemScalarWhereWithAggregatesInput[]
     NOT?: ItemScalarWhereWithAggregatesInput | ItemScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Item"> | string
-    tenantId?: StringWithAggregatesFilter<"Item"> | string
     name?: StringWithAggregatesFilter<"Item"> | string
     sku?: StringWithAggregatesFilter<"Item"> | string
     categoryId?: StringWithAggregatesFilter<"Item"> | string
@@ -22469,41 +20211,33 @@ export namespace Prisma {
     OR?: RackWhereInput[]
     NOT?: RackWhereInput | RackWhereInput[]
     id?: StringFilter<"Rack"> | string
-    tenantId?: StringFilter<"Rack"> | string
     rackNumber?: StringFilter<"Rack"> | string
     zone?: StringNullableFilter<"Rack"> | string | null
     stocks?: StockListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type RackOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     rackNumber?: SortOrder
     zone?: SortOrderInput | SortOrder
     stocks?: StockOrderByRelationAggregateInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type RackWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    tenantId_rackNumber?: RackTenantIdRackNumberCompoundUniqueInput
+    rackNumber?: string
     AND?: RackWhereInput | RackWhereInput[]
     OR?: RackWhereInput[]
     NOT?: RackWhereInput | RackWhereInput[]
-    tenantId?: StringFilter<"Rack"> | string
-    rackNumber?: StringFilter<"Rack"> | string
     zone?: StringNullableFilter<"Rack"> | string | null
     stocks?: StockListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "tenantId_rackNumber">
+  }, "id" | "rackNumber">
 
   export type RackOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     rackNumber?: SortOrder
     zone?: SortOrderInput | SortOrder
     _count?: RackCountOrderByAggregateInput
@@ -22516,7 +20250,6 @@ export namespace Prisma {
     OR?: RackScalarWhereWithAggregatesInput[]
     NOT?: RackScalarWhereWithAggregatesInput | RackScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Rack"> | string
-    tenantId?: StringWithAggregatesFilter<"Rack"> | string
     rackNumber?: StringWithAggregatesFilter<"Rack"> | string
     zone?: StringNullableWithAggregatesFilter<"Rack"> | string | null
   }
@@ -22526,26 +20259,22 @@ export namespace Prisma {
     OR?: StockWhereInput[]
     NOT?: StockWhereInput | StockWhereInput[]
     id?: StringFilter<"Stock"> | string
-    tenantId?: StringFilter<"Stock"> | string
     itemId?: StringFilter<"Stock"> | string
     rackId?: StringFilter<"Stock"> | string
     quantity?: FloatFilter<"Stock"> | number
     updatedAt?: DateTimeFilter<"Stock"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     rack?: XOR<RackScalarRelationFilter, RackWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type StockOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     quantity?: SortOrder
     updatedAt?: SortOrder
     item?: ItemOrderByWithRelationInput
     rack?: RackOrderByWithRelationInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type StockWhereUniqueInput = Prisma.AtLeast<{
@@ -22553,19 +20282,16 @@ export namespace Prisma {
     AND?: StockWhereInput | StockWhereInput[]
     OR?: StockWhereInput[]
     NOT?: StockWhereInput | StockWhereInput[]
-    tenantId?: StringFilter<"Stock"> | string
     itemId?: StringFilter<"Stock"> | string
     rackId?: StringFilter<"Stock"> | string
     quantity?: FloatFilter<"Stock"> | number
     updatedAt?: DateTimeFilter<"Stock"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     rack?: XOR<RackScalarRelationFilter, RackWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id">
 
   export type StockOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     quantity?: SortOrder
@@ -22582,7 +20308,6 @@ export namespace Prisma {
     OR?: StockScalarWhereWithAggregatesInput[]
     NOT?: StockScalarWhereWithAggregatesInput | StockScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Stock"> | string
-    tenantId?: StringWithAggregatesFilter<"Stock"> | string
     itemId?: StringWithAggregatesFilter<"Stock"> | string
     rackId?: StringWithAggregatesFilter<"Stock"> | string
     quantity?: FloatWithAggregatesFilter<"Stock"> | number
@@ -22594,7 +20319,6 @@ export namespace Prisma {
     OR?: InventoryWhereInput[]
     NOT?: InventoryWhereInput | InventoryWhereInput[]
     id?: StringFilter<"Inventory"> | string
-    tenantId?: StringFilter<"Inventory"> | string
     itemId?: StringFilter<"Inventory"> | string
     quantityAvailable?: FloatFilter<"Inventory"> | number
     incomingQty?: FloatFilter<"Inventory"> | number
@@ -22603,12 +20327,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     batches?: InventoryBatchListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type InventoryOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     quantityAvailable?: SortOrder
     incomingQty?: SortOrder
@@ -22617,7 +20339,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     item?: ItemOrderByWithRelationInput
     batches?: InventoryBatchOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type InventoryWhereUniqueInput = Prisma.AtLeast<{
@@ -22626,7 +20347,6 @@ export namespace Prisma {
     AND?: InventoryWhereInput | InventoryWhereInput[]
     OR?: InventoryWhereInput[]
     NOT?: InventoryWhereInput | InventoryWhereInput[]
-    tenantId?: StringFilter<"Inventory"> | string
     quantityAvailable?: FloatFilter<"Inventory"> | number
     incomingQty?: FloatFilter<"Inventory"> | number
     quantityReserved?: FloatFilter<"Inventory"> | number
@@ -22634,12 +20354,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     batches?: InventoryBatchListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id" | "itemId">
 
   export type InventoryOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     quantityAvailable?: SortOrder
     incomingQty?: SortOrder
@@ -22658,7 +20376,6 @@ export namespace Prisma {
     OR?: InventoryScalarWhereWithAggregatesInput[]
     NOT?: InventoryScalarWhereWithAggregatesInput | InventoryScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Inventory"> | string
-    tenantId?: StringWithAggregatesFilter<"Inventory"> | string
     itemId?: StringWithAggregatesFilter<"Inventory"> | string
     quantityAvailable?: FloatWithAggregatesFilter<"Inventory"> | number
     incomingQty?: FloatWithAggregatesFilter<"Inventory"> | number
@@ -22672,7 +20389,6 @@ export namespace Prisma {
     OR?: VendorWhereInput[]
     NOT?: VendorWhereInput | VendorWhereInput[]
     id?: StringFilter<"Vendor"> | string
-    tenantId?: StringFilter<"Vendor"> | string
     name?: StringFilter<"Vendor"> | string
     contact?: StringNullableFilter<"Vendor"> | string | null
     email?: StringNullableFilter<"Vendor"> | string | null
@@ -22680,12 +20396,10 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
     batches?: InventoryBatchListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type VendorOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     contact?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -22693,29 +20407,24 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderOrderByRelationAggregateInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
     batches?: InventoryBatchOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type VendorWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    tenantId_name?: VendorTenantIdNameCompoundUniqueInput
+    name?: string
     AND?: VendorWhereInput | VendorWhereInput[]
     OR?: VendorWhereInput[]
     NOT?: VendorWhereInput | VendorWhereInput[]
-    tenantId?: StringFilter<"Vendor"> | string
-    name?: StringFilter<"Vendor"> | string
     contact?: StringNullableFilter<"Vendor"> | string | null
     email?: StringNullableFilter<"Vendor"> | string | null
     preferredPaymentMode?: StringNullableFilter<"Vendor"> | string | null
     purchaseOrders?: PurchaseOrderListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
     batches?: InventoryBatchListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id" | "tenantId_name">
+  }, "id" | "name">
 
   export type VendorOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     contact?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -22730,7 +20439,6 @@ export namespace Prisma {
     OR?: VendorScalarWhereWithAggregatesInput[]
     NOT?: VendorScalarWhereWithAggregatesInput | VendorScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Vendor"> | string
-    tenantId?: StringWithAggregatesFilter<"Vendor"> | string
     name?: StringWithAggregatesFilter<"Vendor"> | string
     contact?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
     email?: StringNullableWithAggregatesFilter<"Vendor"> | string | null
@@ -22742,7 +20450,6 @@ export namespace Prisma {
     OR?: PurchaseOrderWhereInput[]
     NOT?: PurchaseOrderWhereInput | PurchaseOrderWhereInput[]
     id?: StringFilter<"PurchaseOrder"> | string
-    tenantId?: StringFilter<"PurchaseOrder"> | string
     vendorId?: StringFilter<"PurchaseOrder"> | string
     status?: StringFilter<"PurchaseOrder"> | string
     paymentMode?: StringNullableFilter<"PurchaseOrder"> | string | null
@@ -22752,12 +20459,10 @@ export namespace Prisma {
     vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     items?: POLineItemListRelationFilter
     batches?: InventoryBatchListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type PurchaseOrderOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     vendorId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrderInput | SortOrder
@@ -22767,7 +20472,6 @@ export namespace Prisma {
     vendor?: VendorOrderByWithRelationInput
     items?: POLineItemOrderByRelationAggregateInput
     batches?: InventoryBatchOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type PurchaseOrderWhereUniqueInput = Prisma.AtLeast<{
@@ -22775,7 +20479,6 @@ export namespace Prisma {
     AND?: PurchaseOrderWhereInput | PurchaseOrderWhereInput[]
     OR?: PurchaseOrderWhereInput[]
     NOT?: PurchaseOrderWhereInput | PurchaseOrderWhereInput[]
-    tenantId?: StringFilter<"PurchaseOrder"> | string
     vendorId?: StringFilter<"PurchaseOrder"> | string
     status?: StringFilter<"PurchaseOrder"> | string
     paymentMode?: StringNullableFilter<"PurchaseOrder"> | string | null
@@ -22785,12 +20488,10 @@ export namespace Prisma {
     vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     items?: POLineItemListRelationFilter
     batches?: InventoryBatchListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id">
 
   export type PurchaseOrderOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     vendorId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrderInput | SortOrder
@@ -22807,7 +20508,6 @@ export namespace Prisma {
     OR?: PurchaseOrderScalarWhereWithAggregatesInput[]
     NOT?: PurchaseOrderScalarWhereWithAggregatesInput | PurchaseOrderScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"PurchaseOrder"> | string
-    tenantId?: StringWithAggregatesFilter<"PurchaseOrder"> | string
     vendorId?: StringWithAggregatesFilter<"PurchaseOrder"> | string
     status?: StringWithAggregatesFilter<"PurchaseOrder"> | string
     paymentMode?: StringNullableWithAggregatesFilter<"PurchaseOrder"> | string | null
@@ -22821,7 +20521,6 @@ export namespace Prisma {
     OR?: InventoryBatchWhereInput[]
     NOT?: InventoryBatchWhereInput | InventoryBatchWhereInput[]
     id?: StringFilter<"InventoryBatch"> | string
-    tenantId?: StringFilter<"InventoryBatch"> | string
     inventoryId?: StringFilter<"InventoryBatch"> | string
     vendorId?: StringFilter<"InventoryBatch"> | string
     quantity?: FloatFilter<"InventoryBatch"> | number
@@ -22833,12 +20532,10 @@ export namespace Prisma {
     inventory?: XOR<InventoryScalarRelationFilter, InventoryWhereInput>
     vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     purchaseOrder?: XOR<PurchaseOrderNullableScalarRelationFilter, PurchaseOrderWhereInput> | null
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type InventoryBatchOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     inventoryId?: SortOrder
     vendorId?: SortOrder
     quantity?: SortOrder
@@ -22850,7 +20547,6 @@ export namespace Prisma {
     inventory?: InventoryOrderByWithRelationInput
     vendor?: VendorOrderByWithRelationInput
     purchaseOrder?: PurchaseOrderOrderByWithRelationInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type InventoryBatchWhereUniqueInput = Prisma.AtLeast<{
@@ -22859,7 +20555,6 @@ export namespace Prisma {
     AND?: InventoryBatchWhereInput | InventoryBatchWhereInput[]
     OR?: InventoryBatchWhereInput[]
     NOT?: InventoryBatchWhereInput | InventoryBatchWhereInput[]
-    tenantId?: StringFilter<"InventoryBatch"> | string
     inventoryId?: StringFilter<"InventoryBatch"> | string
     vendorId?: StringFilter<"InventoryBatch"> | string
     quantity?: FloatFilter<"InventoryBatch"> | number
@@ -22871,12 +20566,10 @@ export namespace Prisma {
     inventory?: XOR<InventoryScalarRelationFilter, InventoryWhereInput>
     vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     purchaseOrder?: XOR<PurchaseOrderNullableScalarRelationFilter, PurchaseOrderWhereInput> | null
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id" | "purchaseOrderId_inventoryId">
 
   export type InventoryBatchOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     inventoryId?: SortOrder
     vendorId?: SortOrder
     quantity?: SortOrder
@@ -22897,7 +20590,6 @@ export namespace Prisma {
     OR?: InventoryBatchScalarWhereWithAggregatesInput[]
     NOT?: InventoryBatchScalarWhereWithAggregatesInput | InventoryBatchScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"InventoryBatch"> | string
-    tenantId?: StringWithAggregatesFilter<"InventoryBatch"> | string
     inventoryId?: StringWithAggregatesFilter<"InventoryBatch"> | string
     vendorId?: StringWithAggregatesFilter<"InventoryBatch"> | string
     quantity?: FloatWithAggregatesFilter<"InventoryBatch"> | number
@@ -22913,7 +20605,6 @@ export namespace Prisma {
     OR?: POLineItemWhereInput[]
     NOT?: POLineItemWhereInput | POLineItemWhereInput[]
     id?: StringFilter<"POLineItem"> | string
-    tenantId?: StringFilter<"POLineItem"> | string
     purchaseOrderId?: StringFilter<"POLineItem"> | string
     itemId?: StringFilter<"POLineItem"> | string
     quantityOrdered?: FloatFilter<"POLineItem"> | number
@@ -22921,12 +20612,10 @@ export namespace Prisma {
     costPrice?: FloatFilter<"POLineItem"> | number
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     purchaseOrder?: XOR<PurchaseOrderScalarRelationFilter, PurchaseOrderWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type POLineItemOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     purchaseOrderId?: SortOrder
     itemId?: SortOrder
     quantityOrdered?: SortOrder
@@ -22934,7 +20623,6 @@ export namespace Prisma {
     costPrice?: SortOrder
     item?: ItemOrderByWithRelationInput
     purchaseOrder?: PurchaseOrderOrderByWithRelationInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type POLineItemWhereUniqueInput = Prisma.AtLeast<{
@@ -22942,7 +20630,6 @@ export namespace Prisma {
     AND?: POLineItemWhereInput | POLineItemWhereInput[]
     OR?: POLineItemWhereInput[]
     NOT?: POLineItemWhereInput | POLineItemWhereInput[]
-    tenantId?: StringFilter<"POLineItem"> | string
     purchaseOrderId?: StringFilter<"POLineItem"> | string
     itemId?: StringFilter<"POLineItem"> | string
     quantityOrdered?: FloatFilter<"POLineItem"> | number
@@ -22950,12 +20637,10 @@ export namespace Prisma {
     costPrice?: FloatFilter<"POLineItem"> | number
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     purchaseOrder?: XOR<PurchaseOrderScalarRelationFilter, PurchaseOrderWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id">
 
   export type POLineItemOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     purchaseOrderId?: SortOrder
     itemId?: SortOrder
     quantityOrdered?: SortOrder
@@ -22973,7 +20658,6 @@ export namespace Prisma {
     OR?: POLineItemScalarWhereWithAggregatesInput[]
     NOT?: POLineItemScalarWhereWithAggregatesInput | POLineItemScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"POLineItem"> | string
-    tenantId?: StringWithAggregatesFilter<"POLineItem"> | string
     purchaseOrderId?: StringWithAggregatesFilter<"POLineItem"> | string
     itemId?: StringWithAggregatesFilter<"POLineItem"> | string
     quantityOrdered?: FloatWithAggregatesFilter<"POLineItem"> | number
@@ -22986,46 +20670,39 @@ export namespace Prisma {
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     id?: StringFilter<"Customer"> | string
-    tenantId?: StringFilter<"Customer"> | string
     name?: StringFilter<"Customer"> | string
     email?: StringNullableFilter<"Customer"> | string | null
     contact?: StringNullableFilter<"Customer"> | string | null
     address?: StringNullableFilter<"Customer"> | string | null
     dispatchOrders?: DispatchOrderListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type CustomerOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     email?: SortOrderInput | SortOrder
     contact?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     dispatchOrders?: DispatchOrderOrderByRelationAggregateInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    name?: string
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
-    tenantId?: StringFilter<"Customer"> | string
-    name?: StringFilter<"Customer"> | string
     email?: StringNullableFilter<"Customer"> | string | null
     contact?: StringNullableFilter<"Customer"> | string | null
     address?: StringNullableFilter<"Customer"> | string | null
     dispatchOrders?: DispatchOrderListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-  }, "id">
+  }, "id" | "name">
 
   export type CustomerOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     email?: SortOrderInput | SortOrder
     contact?: SortOrderInput | SortOrder
@@ -23040,7 +20717,6 @@ export namespace Prisma {
     OR?: CustomerScalarWhereWithAggregatesInput[]
     NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Customer"> | string
-    tenantId?: StringWithAggregatesFilter<"Customer"> | string
     name?: StringWithAggregatesFilter<"Customer"> | string
     email?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     contact?: StringNullableWithAggregatesFilter<"Customer"> | string | null
@@ -23052,7 +20728,6 @@ export namespace Prisma {
     OR?: DispatchOrderWhereInput[]
     NOT?: DispatchOrderWhereInput | DispatchOrderWhereInput[]
     id?: StringFilter<"DispatchOrder"> | string
-    tenantId?: StringFilter<"DispatchOrder"> | string
     customerId?: StringFilter<"DispatchOrder"> | string
     status?: StringFilter<"DispatchOrder"> | string
     paymentMode?: StringNullableFilter<"DispatchOrder"> | string | null
@@ -23061,12 +20736,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
     items?: DispatchItemListRelationFilter
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type DispatchOrderOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrderInput | SortOrder
@@ -23075,7 +20748,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     items?: DispatchItemOrderByRelationAggregateInput
     customer?: CustomerOrderByWithRelationInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type DispatchOrderWhereUniqueInput = Prisma.AtLeast<{
@@ -23083,7 +20755,6 @@ export namespace Prisma {
     AND?: DispatchOrderWhereInput | DispatchOrderWhereInput[]
     OR?: DispatchOrderWhereInput[]
     NOT?: DispatchOrderWhereInput | DispatchOrderWhereInput[]
-    tenantId?: StringFilter<"DispatchOrder"> | string
     customerId?: StringFilter<"DispatchOrder"> | string
     status?: StringFilter<"DispatchOrder"> | string
     paymentMode?: StringNullableFilter<"DispatchOrder"> | string | null
@@ -23092,12 +20763,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
     items?: DispatchItemListRelationFilter
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id">
 
   export type DispatchOrderOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrderInput | SortOrder
@@ -23114,7 +20783,6 @@ export namespace Prisma {
     OR?: DispatchOrderScalarWhereWithAggregatesInput[]
     NOT?: DispatchOrderScalarWhereWithAggregatesInput | DispatchOrderScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DispatchOrder"> | string
-    tenantId?: StringWithAggregatesFilter<"DispatchOrder"> | string
     customerId?: StringWithAggregatesFilter<"DispatchOrder"> | string
     status?: StringWithAggregatesFilter<"DispatchOrder"> | string
     paymentMode?: StringNullableWithAggregatesFilter<"DispatchOrder"> | string | null
@@ -23128,26 +20796,22 @@ export namespace Prisma {
     OR?: DispatchItemWhereInput[]
     NOT?: DispatchItemWhereInput | DispatchItemWhereInput[]
     id?: StringFilter<"DispatchItem"> | string
-    tenantId?: StringFilter<"DispatchItem"> | string
     dispatchOrderId?: StringFilter<"DispatchItem"> | string
     itemId?: StringFilter<"DispatchItem"> | string
     quantity?: FloatFilter<"DispatchItem"> | number
     sellingPrice?: FloatFilter<"DispatchItem"> | number
     dispatchOrder?: XOR<DispatchOrderScalarRelationFilter, DispatchOrderWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type DispatchItemOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     dispatchOrderId?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
     sellingPrice?: SortOrder
     dispatchOrder?: DispatchOrderOrderByWithRelationInput
     item?: ItemOrderByWithRelationInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type DispatchItemWhereUniqueInput = Prisma.AtLeast<{
@@ -23155,19 +20819,16 @@ export namespace Prisma {
     AND?: DispatchItemWhereInput | DispatchItemWhereInput[]
     OR?: DispatchItemWhereInput[]
     NOT?: DispatchItemWhereInput | DispatchItemWhereInput[]
-    tenantId?: StringFilter<"DispatchItem"> | string
     dispatchOrderId?: StringFilter<"DispatchItem"> | string
     itemId?: StringFilter<"DispatchItem"> | string
     quantity?: FloatFilter<"DispatchItem"> | number
     sellingPrice?: FloatFilter<"DispatchItem"> | number
     dispatchOrder?: XOR<DispatchOrderScalarRelationFilter, DispatchOrderWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id">
 
   export type DispatchItemOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     dispatchOrderId?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
@@ -23184,7 +20845,6 @@ export namespace Prisma {
     OR?: DispatchItemScalarWhereWithAggregatesInput[]
     NOT?: DispatchItemScalarWhereWithAggregatesInput | DispatchItemScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DispatchItem"> | string
-    tenantId?: StringWithAggregatesFilter<"DispatchItem"> | string
     dispatchOrderId?: StringWithAggregatesFilter<"DispatchItem"> | string
     itemId?: StringWithAggregatesFilter<"DispatchItem"> | string
     quantity?: FloatWithAggregatesFilter<"DispatchItem"> | number
@@ -23196,7 +20856,6 @@ export namespace Prisma {
     OR?: InventoryTransactionWhereInput[]
     NOT?: InventoryTransactionWhereInput | InventoryTransactionWhereInput[]
     id?: StringFilter<"InventoryTransaction"> | string
-    tenantId?: StringFilter<"InventoryTransaction"> | string
     itemId?: StringFilter<"InventoryTransaction"> | string
     rackId?: StringNullableFilter<"InventoryTransaction"> | string | null
     userId?: StringNullableFilter<"InventoryTransaction"> | string | null
@@ -23212,12 +20871,10 @@ export namespace Prisma {
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     vendor?: XOR<VendorNullableScalarRelationFilter, VendorWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }
 
   export type InventoryTransactionOrderByWithRelationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
@@ -23233,7 +20890,6 @@ export namespace Prisma {
     customer?: CustomerOrderByWithRelationInput
     vendor?: VendorOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
-    tenant?: TenantOrderByWithRelationInput
   }
 
   export type InventoryTransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -23241,7 +20897,6 @@ export namespace Prisma {
     AND?: InventoryTransactionWhereInput | InventoryTransactionWhereInput[]
     OR?: InventoryTransactionWhereInput[]
     NOT?: InventoryTransactionWhereInput | InventoryTransactionWhereInput[]
-    tenantId?: StringFilter<"InventoryTransaction"> | string
     itemId?: StringFilter<"InventoryTransaction"> | string
     rackId?: StringNullableFilter<"InventoryTransaction"> | string | null
     userId?: StringNullableFilter<"InventoryTransaction"> | string | null
@@ -23257,12 +20912,10 @@ export namespace Prisma {
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     vendor?: XOR<VendorNullableScalarRelationFilter, VendorWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
   }, "id">
 
   export type InventoryTransactionOrderByWithAggregationInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
@@ -23285,7 +20938,6 @@ export namespace Prisma {
     OR?: InventoryTransactionScalarWhereWithAggregatesInput[]
     NOT?: InventoryTransactionScalarWhereWithAggregatesInput | InventoryTransactionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"InventoryTransaction"> | string
-    tenantId?: StringWithAggregatesFilter<"InventoryTransaction"> | string
     itemId?: StringWithAggregatesFilter<"InventoryTransaction"> | string
     rackId?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
     userId?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
@@ -23296,129 +20948,6 @@ export namespace Prisma {
     referenceType?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
     referenceId?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"InventoryTransaction"> | Date | string
-  }
-
-  export type TenantCreateInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantCreateManyInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type TenantUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TenantUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateInput = {
@@ -23432,12 +20961,10 @@ export namespace Prisma {
     createdAt?: Date | string
     roleObj?: RoleCreateNestedOneWithoutUsersInput
     transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
-    tenant: TenantCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: string
-    tenantId: string
     username: string
     password: string
     name: string
@@ -23460,12 +20987,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roleObj?: RoleUpdateOneWithoutUsersNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -23479,7 +21004,6 @@ export namespace Prisma {
 
   export type UserCreateManyInput = {
     id?: string
-    tenantId: string
     username: string
     password: string
     name: string
@@ -23503,7 +21027,6 @@ export namespace Prisma {
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -23521,12 +21044,10 @@ export namespace Prisma {
     permissions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     users?: UserCreateNestedManyWithoutRoleObjInput
-    tenant: TenantCreateNestedOneWithoutRolesInput
   }
 
   export type RoleUncheckedCreateInput = {
     id?: string
-    tenantId: string
     name: string
     description?: string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
@@ -23541,12 +21062,10 @@ export namespace Prisma {
     permissions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutRoleObjNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutRolesNestedInput
   }
 
   export type RoleUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
@@ -23556,7 +21075,6 @@ export namespace Prisma {
 
   export type RoleCreateManyInput = {
     id?: string
-    tenantId: string
     name: string
     description?: string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
@@ -23573,7 +21091,6 @@ export namespace Prisma {
 
   export type RoleUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
@@ -23584,12 +21101,10 @@ export namespace Prisma {
     id?: string
     name: string
     items?: ItemCreateNestedManyWithoutCategoryInput
-    tenant: TenantCreateNestedOneWithoutCategoriesInput
   }
 
   export type CategoryUncheckedCreateInput = {
     id?: string
-    tenantId: string
     name: string
     items?: ItemUncheckedCreateNestedManyWithoutCategoryInput
   }
@@ -23598,19 +21113,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     items?: ItemUpdateManyWithoutCategoryNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutCategoriesNestedInput
   }
 
   export type CategoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     items?: ItemUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
   export type CategoryCreateManyInput = {
     id?: string
-    tenantId: string
     name: string
   }
 
@@ -23621,7 +21133,6 @@ export namespace Prisma {
 
   export type CategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
   }
 
@@ -23639,12 +21150,10 @@ export namespace Prisma {
     category: CategoryCreateNestedOneWithoutItemsInput
     poItems?: POLineItemCreateNestedManyWithoutItemInput
     stocks?: StockCreateNestedManyWithoutItemInput
-    tenant: TenantCreateNestedOneWithoutItemsInput
   }
 
   export type ItemUncheckedCreateInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -23673,12 +21182,10 @@ export namespace Prisma {
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
     poItems?: POLineItemUpdateManyWithoutItemNestedInput
     stocks?: StockUpdateManyWithoutItemNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -23695,7 +21202,6 @@ export namespace Prisma {
 
   export type ItemCreateManyInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -23717,7 +21223,6 @@ export namespace Prisma {
 
   export type ItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -23733,12 +21238,10 @@ export namespace Prisma {
     zone?: string | null
     stocks?: StockCreateNestedManyWithoutRackInput
     transactions?: InventoryTransactionCreateNestedManyWithoutRackInput
-    tenant: TenantCreateNestedOneWithoutRacksInput
   }
 
   export type RackUncheckedCreateInput = {
     id?: string
-    tenantId: string
     rackNumber: string
     zone?: string | null
     stocks?: StockUncheckedCreateNestedManyWithoutRackInput
@@ -23751,12 +21254,10 @@ export namespace Prisma {
     zone?: NullableStringFieldUpdateOperationsInput | string | null
     stocks?: StockUpdateManyWithoutRackNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutRackNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutRacksNestedInput
   }
 
   export type RackUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackNumber?: StringFieldUpdateOperationsInput | string
     zone?: NullableStringFieldUpdateOperationsInput | string | null
     stocks?: StockUncheckedUpdateManyWithoutRackNestedInput
@@ -23765,7 +21266,6 @@ export namespace Prisma {
 
   export type RackCreateManyInput = {
     id?: string
-    tenantId: string
     rackNumber: string
     zone?: string | null
   }
@@ -23778,7 +21278,6 @@ export namespace Prisma {
 
   export type RackUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackNumber?: StringFieldUpdateOperationsInput | string
     zone?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -23789,12 +21288,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutStocksInput
     rack: RackCreateNestedOneWithoutStocksInput
-    tenant: TenantCreateNestedOneWithoutStocksInput
   }
 
   export type StockUncheckedCreateInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId: string
     quantity?: number
@@ -23807,12 +21304,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutStocksNestedInput
     rack?: RackUpdateOneRequiredWithoutStocksNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutStocksNestedInput
   }
 
   export type StockUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -23821,7 +21316,6 @@ export namespace Prisma {
 
   export type StockCreateManyInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId: string
     quantity?: number
@@ -23836,7 +21330,6 @@ export namespace Prisma {
 
   export type StockUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -23852,12 +21345,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutInventoryInput
     batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
-    tenant: TenantCreateNestedOneWithoutInventoriesInput
   }
 
   export type InventoryUncheckedCreateInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantityAvailable?: number
     incomingQty?: number
@@ -23876,12 +21367,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
     batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoriesNestedInput
   }
 
   export type InventoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantityAvailable?: FloatFieldUpdateOperationsInput | number
     incomingQty?: FloatFieldUpdateOperationsInput | number
@@ -23893,7 +21382,6 @@ export namespace Prisma {
 
   export type InventoryCreateManyInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantityAvailable?: number
     incomingQty?: number
@@ -23913,7 +21401,6 @@ export namespace Prisma {
 
   export type InventoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantityAvailable?: FloatFieldUpdateOperationsInput | number
     incomingQty?: FloatFieldUpdateOperationsInput | number
@@ -23931,12 +21418,10 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutVendorInput
     transactions?: InventoryTransactionCreateNestedManyWithoutVendorInput
     batches?: InventoryBatchCreateNestedManyWithoutVendorInput
-    tenant: TenantCreateNestedOneWithoutVendorsInput
   }
 
   export type VendorUncheckedCreateInput = {
     id?: string
-    tenantId: string
     name: string
     contact?: string | null
     email?: string | null
@@ -23955,12 +21440,10 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUpdateManyWithoutVendorNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutVendorNestedInput
     batches?: InventoryBatchUpdateManyWithoutVendorNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutVendorsNestedInput
   }
 
   export type VendorUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23972,7 +21455,6 @@ export namespace Prisma {
 
   export type VendorCreateManyInput = {
     id?: string
-    tenantId: string
     name: string
     contact?: string | null
     email?: string | null
@@ -23989,7 +21471,6 @@ export namespace Prisma {
 
   export type VendorUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24006,12 +21487,10 @@ export namespace Prisma {
     vendor: VendorCreateNestedOneWithoutPurchaseOrdersInput
     items?: POLineItemCreateNestedManyWithoutPurchaseOrderInput
     batches?: InventoryBatchCreateNestedManyWithoutPurchaseOrderInput
-    tenant: TenantCreateNestedOneWithoutPurchaseOrdersInput
   }
 
   export type PurchaseOrderUncheckedCreateInput = {
     id?: string
-    tenantId: string
     vendorId: string
     status?: string
     paymentMode?: string | null
@@ -24032,12 +21511,10 @@ export namespace Prisma {
     vendor?: VendorUpdateOneRequiredWithoutPurchaseOrdersNestedInput
     items?: POLineItemUpdateManyWithoutPurchaseOrderNestedInput
     batches?: InventoryBatchUpdateManyWithoutPurchaseOrderNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
   }
 
   export type PurchaseOrderUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24050,7 +21527,6 @@ export namespace Prisma {
 
   export type PurchaseOrderCreateManyInput = {
     id?: string
-    tenantId: string
     vendorId: string
     status?: string
     paymentMode?: string | null
@@ -24070,7 +21546,6 @@ export namespace Prisma {
 
   export type PurchaseOrderUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24089,12 +21564,10 @@ export namespace Prisma {
     inventory: InventoryCreateNestedOneWithoutBatchesInput
     vendor: VendorCreateNestedOneWithoutBatchesInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
-    tenant: TenantCreateNestedOneWithoutInventoryBatchesInput
   }
 
   export type InventoryBatchUncheckedCreateInput = {
     id?: string
-    tenantId: string
     inventoryId: string
     vendorId: string
     quantity: number
@@ -24115,12 +21588,10 @@ export namespace Prisma {
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
     vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryBatchesNestedInput
   }
 
   export type InventoryBatchUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -24133,7 +21604,6 @@ export namespace Prisma {
 
   export type InventoryBatchCreateManyInput = {
     id?: string
-    tenantId: string
     inventoryId: string
     vendorId: string
     quantity: number
@@ -24155,7 +21625,6 @@ export namespace Prisma {
 
   export type InventoryBatchUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -24173,12 +21642,10 @@ export namespace Prisma {
     costPrice: number
     item: ItemCreateNestedOneWithoutPoItemsInput
     purchaseOrder: PurchaseOrderCreateNestedOneWithoutItemsInput
-    tenant: TenantCreateNestedOneWithoutPoLineItemsInput
   }
 
   export type POLineItemUncheckedCreateInput = {
     id?: string
-    tenantId: string
     purchaseOrderId: string
     itemId: string
     quantityOrdered: number
@@ -24193,12 +21660,10 @@ export namespace Prisma {
     costPrice?: FloatFieldUpdateOperationsInput | number
     item?: ItemUpdateOneRequiredWithoutPoItemsNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneRequiredWithoutItemsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutPoLineItemsNestedInput
   }
 
   export type POLineItemUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantityOrdered?: FloatFieldUpdateOperationsInput | number
@@ -24208,7 +21673,6 @@ export namespace Prisma {
 
   export type POLineItemCreateManyInput = {
     id?: string
-    tenantId: string
     purchaseOrderId: string
     itemId: string
     quantityOrdered: number
@@ -24225,7 +21689,6 @@ export namespace Prisma {
 
   export type POLineItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantityOrdered?: FloatFieldUpdateOperationsInput | number
@@ -24241,12 +21704,10 @@ export namespace Prisma {
     address?: string | null
     dispatchOrders?: DispatchOrderCreateNestedManyWithoutCustomerInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCustomerInput
-    tenant: TenantCreateNestedOneWithoutCustomersInput
   }
 
   export type CustomerUncheckedCreateInput = {
     id?: string
-    tenantId: string
     name: string
     email?: string | null
     contact?: string | null
@@ -24263,12 +21724,10 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchOrders?: DispatchOrderUpdateManyWithoutCustomerNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCustomerNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutCustomersNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24279,7 +21738,6 @@ export namespace Prisma {
 
   export type CustomerCreateManyInput = {
     id?: string
-    tenantId: string
     name: string
     email?: string | null
     contact?: string | null
@@ -24296,7 +21754,6 @@ export namespace Prisma {
 
   export type CustomerUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24312,12 +21769,10 @@ export namespace Prisma {
     createdAt?: Date | string
     items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
     customer: CustomerCreateNestedOneWithoutDispatchOrdersInput
-    tenant: TenantCreateNestedOneWithoutDispatchOrdersInput
   }
 
   export type DispatchOrderUncheckedCreateInput = {
     id?: string
-    tenantId: string
     customerId: string
     status?: string
     paymentMode?: string | null
@@ -24336,12 +21791,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
     customer?: CustomerUpdateOneRequiredWithoutDispatchOrdersNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutDispatchOrdersNestedInput
   }
 
   export type DispatchOrderUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24353,7 +21806,6 @@ export namespace Prisma {
 
   export type DispatchOrderCreateManyInput = {
     id?: string
-    tenantId: string
     customerId: string
     status?: string
     paymentMode?: string | null
@@ -24373,7 +21825,6 @@ export namespace Prisma {
 
   export type DispatchOrderUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24388,12 +21839,10 @@ export namespace Prisma {
     sellingPrice: number
     dispatchOrder: DispatchOrderCreateNestedOneWithoutItemsInput
     item: ItemCreateNestedOneWithoutDispatchItemsInput
-    tenant: TenantCreateNestedOneWithoutDispatchItemsInput
   }
 
   export type DispatchItemUncheckedCreateInput = {
     id?: string
-    tenantId: string
     dispatchOrderId: string
     itemId: string
     quantity: number
@@ -24406,12 +21855,10 @@ export namespace Prisma {
     sellingPrice?: FloatFieldUpdateOperationsInput | number
     dispatchOrder?: DispatchOrderUpdateOneRequiredWithoutItemsNestedInput
     item?: ItemUpdateOneRequiredWithoutDispatchItemsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutDispatchItemsNestedInput
   }
 
   export type DispatchItemUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -24420,7 +21867,6 @@ export namespace Prisma {
 
   export type DispatchItemCreateManyInput = {
     id?: string
-    tenantId: string
     dispatchOrderId: string
     itemId: string
     quantity: number
@@ -24435,7 +21881,6 @@ export namespace Prisma {
 
   export type DispatchItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -24454,12 +21899,10 @@ export namespace Prisma {
     customer?: CustomerCreateNestedOneWithoutTransactionsInput
     vendor?: VendorCreateNestedOneWithoutTransactionsInput
     user?: UserCreateNestedOneWithoutTransactionsInput
-    tenant: TenantCreateNestedOneWithoutInventoryTransactionsInput
   }
 
   export type InventoryTransactionUncheckedCreateInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     userId?: string | null
@@ -24484,12 +21927,10 @@ export namespace Prisma {
     customer?: CustomerUpdateOneWithoutTransactionsNestedInput
     vendor?: VendorUpdateOneWithoutTransactionsNestedInput
     user?: UserUpdateOneWithoutTransactionsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryTransactionsNestedInput
   }
 
   export type InventoryTransactionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24504,7 +21945,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCreateManyInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     userId?: string | null
@@ -24528,7 +21968,6 @@ export namespace Prisma {
 
   export type InventoryTransactionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24556,6 +21995,21 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -24572,88 +22026,9 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type UserListRelationFilter = {
-    every?: UserWhereInput
-    some?: UserWhereInput
-    none?: UserWhereInput
-  }
-
-  export type RoleListRelationFilter = {
-    every?: RoleWhereInput
-    some?: RoleWhereInput
-    none?: RoleWhereInput
-  }
-
-  export type CategoryListRelationFilter = {
-    every?: CategoryWhereInput
-    some?: CategoryWhereInput
-    none?: CategoryWhereInput
-  }
-
-  export type ItemListRelationFilter = {
-    every?: ItemWhereInput
-    some?: ItemWhereInput
-    none?: ItemWhereInput
-  }
-
-  export type RackListRelationFilter = {
-    every?: RackWhereInput
-    some?: RackWhereInput
-    none?: RackWhereInput
-  }
-
-  export type StockListRelationFilter = {
-    every?: StockWhereInput
-    some?: StockWhereInput
-    none?: StockWhereInput
-  }
-
-  export type InventoryListRelationFilter = {
-    every?: InventoryWhereInput
-    some?: InventoryWhereInput
-    none?: InventoryWhereInput
-  }
-
-  export type VendorListRelationFilter = {
-    every?: VendorWhereInput
-    some?: VendorWhereInput
-    none?: VendorWhereInput
-  }
-
-  export type PurchaseOrderListRelationFilter = {
-    every?: PurchaseOrderWhereInput
-    some?: PurchaseOrderWhereInput
-    none?: PurchaseOrderWhereInput
-  }
-
-  export type InventoryBatchListRelationFilter = {
-    every?: InventoryBatchWhereInput
-    some?: InventoryBatchWhereInput
-    none?: InventoryBatchWhereInput
-  }
-
-  export type POLineItemListRelationFilter = {
-    every?: POLineItemWhereInput
-    some?: POLineItemWhereInput
-    none?: POLineItemWhereInput
-  }
-
-  export type CustomerListRelationFilter = {
-    every?: CustomerWhereInput
-    some?: CustomerWhereInput
-    none?: CustomerWhereInput
-  }
-
-  export type DispatchOrderListRelationFilter = {
-    every?: DispatchOrderWhereInput
-    some?: DispatchOrderWhereInput
-    none?: DispatchOrderWhereInput
-  }
-
-  export type DispatchItemListRelationFilter = {
-    every?: DispatchItemWhereInput
-    some?: DispatchItemWhereInput
-    none?: DispatchItemWhereInput
+  export type RoleNullableScalarRelationFilter = {
+    is?: RoleWhereInput | null
+    isNot?: RoleWhereInput | null
   }
 
   export type InventoryTransactionListRelationFilter = {
@@ -24662,91 +22037,49 @@ export namespace Prisma {
     none?: InventoryTransactionWhereInput
   }
 
-  export type UserOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type RoleOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type CategoryOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ItemOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type RackOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type StockOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InventoryOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type VendorOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PurchaseOrderOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InventoryBatchOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type POLineItemOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type CustomerOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type DispatchOrderOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type DispatchItemOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type InventoryTransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type TenantCountOrderByAggregateInput = {
+  export type UserCountOrderByAggregateInput = {
     id?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
     name?: SortOrder
-    subdomain?: SortOrder
-    isActive?: SortOrder
+    role?: SortOrder
+    roleId?: SortOrder
+    emailAlerts?: SortOrder
+    twoFactorEnabled?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type TenantMaxOrderByAggregateInput = {
+  export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
     name?: SortOrder
-    subdomain?: SortOrder
-    isActive?: SortOrder
+    role?: SortOrder
+    roleId?: SortOrder
+    emailAlerts?: SortOrder
+    twoFactorEnabled?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type TenantMinOrderByAggregateInput = {
+  export type UserMinOrderByAggregateInput = {
     id?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
     name?: SortOrder
-    subdomain?: SortOrder
-    isActive?: SortOrder
+    role?: SortOrder
+    roleId?: SortOrder
+    emailAlerts?: SortOrder
+    twoFactorEnabled?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -24765,6 +22098,24 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -24787,98 +22138,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type RoleNullableScalarRelationFilter = {
-    is?: RoleWhereInput | null
-    isNot?: RoleWhereInput | null
-  }
-
-  export type TenantScalarRelationFilter = {
-    is?: TenantWhereInput
-    isNot?: TenantWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
-  }
-
-  export type UserTenantIdUsernameCompoundUniqueInput = {
-    tenantId: string
-    username: string
-  }
-
-  export type UserCountOrderByAggregateInput = {
-    id?: SortOrder
-    tenantId?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    name?: SortOrder
-    role?: SortOrder
-    roleId?: SortOrder
-    emailAlerts?: SortOrder
-    twoFactorEnabled?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type UserMaxOrderByAggregateInput = {
-    id?: SortOrder
-    tenantId?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    name?: SortOrder
-    role?: SortOrder
-    roleId?: SortOrder
-    emailAlerts?: SortOrder
-    twoFactorEnabled?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type UserMinOrderByAggregateInput = {
-    id?: SortOrder
-    tenantId?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    name?: SortOrder
-    role?: SortOrder
-    roleId?: SortOrder
-    emailAlerts?: SortOrder
-    twoFactorEnabled?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -24904,14 +22163,18 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type RoleTenantIdNameCompoundUniqueInput = {
-    tenantId: string
-    name: string
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type RoleCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     description?: SortOrder
     permissions?: SortOrder
@@ -24920,7 +22183,6 @@ export namespace Prisma {
 
   export type RoleMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
@@ -24928,7 +22190,6 @@ export namespace Prisma {
 
   export type RoleMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
@@ -24960,26 +22221,28 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
-  export type CategoryTenantIdNameCompoundUniqueInput = {
-    tenantId: string
-    name: string
+  export type ItemListRelationFilter = {
+    every?: ItemWhereInput
+    some?: ItemWhereInput
+    none?: ItemWhereInput
+  }
+
+  export type ItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type CategoryCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
   }
 
   export type CategoryMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
   }
 
   export type CategoryMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
   }
 
@@ -24994,6 +22257,12 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type DispatchItemListRelationFilter = {
+    every?: DispatchItemWhereInput
+    some?: DispatchItemWhereInput
+    none?: DispatchItemWhereInput
+  }
+
   export type InventoryNullableScalarRelationFilter = {
     is?: InventoryWhereInput | null
     isNot?: InventoryWhereInput | null
@@ -25004,14 +22273,32 @@ export namespace Prisma {
     isNot?: CategoryWhereInput
   }
 
-  export type ItemTenantIdSkuCompoundUniqueInput = {
-    tenantId: string
-    sku: string
+  export type POLineItemListRelationFilter = {
+    every?: POLineItemWhereInput
+    some?: POLineItemWhereInput
+    none?: POLineItemWhereInput
+  }
+
+  export type StockListRelationFilter = {
+    every?: StockWhereInput
+    some?: StockWhereInput
+    none?: StockWhereInput
+  }
+
+  export type DispatchItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type POLineItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StockOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ItemCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     sku?: SortOrder
     categoryId?: SortOrder
@@ -25027,7 +22314,6 @@ export namespace Prisma {
 
   export type ItemMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     sku?: SortOrder
     categoryId?: SortOrder
@@ -25039,7 +22325,6 @@ export namespace Prisma {
 
   export type ItemMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     sku?: SortOrder
     categoryId?: SortOrder
@@ -25069,28 +22354,20 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type RackTenantIdRackNumberCompoundUniqueInput = {
-    tenantId: string
-    rackNumber: string
-  }
-
   export type RackCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     rackNumber?: SortOrder
     zone?: SortOrder
   }
 
   export type RackMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     rackNumber?: SortOrder
     zone?: SortOrder
   }
 
   export type RackMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     rackNumber?: SortOrder
     zone?: SortOrder
   }
@@ -25107,7 +22384,6 @@ export namespace Prisma {
 
   export type StockCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     quantity?: SortOrder
@@ -25120,7 +22396,6 @@ export namespace Prisma {
 
   export type StockMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     quantity?: SortOrder
@@ -25129,7 +22404,6 @@ export namespace Prisma {
 
   export type StockMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     quantity?: SortOrder
@@ -25140,9 +22414,18 @@ export namespace Prisma {
     quantity?: SortOrder
   }
 
+  export type InventoryBatchListRelationFilter = {
+    every?: InventoryBatchWhereInput
+    some?: InventoryBatchWhereInput
+    none?: InventoryBatchWhereInput
+  }
+
+  export type InventoryBatchOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type InventoryCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     quantityAvailable?: SortOrder
     incomingQty?: SortOrder
@@ -25160,7 +22443,6 @@ export namespace Prisma {
 
   export type InventoryMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     quantityAvailable?: SortOrder
     incomingQty?: SortOrder
@@ -25171,7 +22453,6 @@ export namespace Prisma {
 
   export type InventoryMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     quantityAvailable?: SortOrder
     incomingQty?: SortOrder
@@ -25187,14 +22468,18 @@ export namespace Prisma {
     quantityInTransit?: SortOrder
   }
 
-  export type VendorTenantIdNameCompoundUniqueInput = {
-    tenantId: string
-    name: string
+  export type PurchaseOrderListRelationFilter = {
+    every?: PurchaseOrderWhereInput
+    some?: PurchaseOrderWhereInput
+    none?: PurchaseOrderWhereInput
+  }
+
+  export type PurchaseOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type VendorCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     contact?: SortOrder
     email?: SortOrder
@@ -25203,7 +22488,6 @@ export namespace Prisma {
 
   export type VendorMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     contact?: SortOrder
     email?: SortOrder
@@ -25212,7 +22496,6 @@ export namespace Prisma {
 
   export type VendorMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     contact?: SortOrder
     email?: SortOrder
@@ -25237,7 +22520,6 @@ export namespace Prisma {
 
   export type PurchaseOrderCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     vendorId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrder
@@ -25248,7 +22530,6 @@ export namespace Prisma {
 
   export type PurchaseOrderMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     vendorId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrder
@@ -25259,7 +22540,6 @@ export namespace Prisma {
 
   export type PurchaseOrderMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     vendorId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrder
@@ -25299,7 +22579,6 @@ export namespace Prisma {
 
   export type InventoryBatchCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     inventoryId?: SortOrder
     vendorId?: SortOrder
     quantity?: SortOrder
@@ -25318,7 +22597,6 @@ export namespace Prisma {
 
   export type InventoryBatchMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     inventoryId?: SortOrder
     vendorId?: SortOrder
     quantity?: SortOrder
@@ -25331,7 +22609,6 @@ export namespace Prisma {
 
   export type InventoryBatchMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     inventoryId?: SortOrder
     vendorId?: SortOrder
     quantity?: SortOrder
@@ -25355,7 +22632,6 @@ export namespace Prisma {
 
   export type POLineItemCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     purchaseOrderId?: SortOrder
     itemId?: SortOrder
     quantityOrdered?: SortOrder
@@ -25371,7 +22647,6 @@ export namespace Prisma {
 
   export type POLineItemMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     purchaseOrderId?: SortOrder
     itemId?: SortOrder
     quantityOrdered?: SortOrder
@@ -25381,7 +22656,6 @@ export namespace Prisma {
 
   export type POLineItemMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     purchaseOrderId?: SortOrder
     itemId?: SortOrder
     quantityOrdered?: SortOrder
@@ -25395,9 +22669,18 @@ export namespace Prisma {
     costPrice?: SortOrder
   }
 
+  export type DispatchOrderListRelationFilter = {
+    every?: DispatchOrderWhereInput
+    some?: DispatchOrderWhereInput
+    none?: DispatchOrderWhereInput
+  }
+
+  export type DispatchOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CustomerCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     email?: SortOrder
     contact?: SortOrder
@@ -25406,7 +22689,6 @@ export namespace Prisma {
 
   export type CustomerMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     email?: SortOrder
     contact?: SortOrder
@@ -25415,7 +22697,6 @@ export namespace Prisma {
 
   export type CustomerMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     name?: SortOrder
     email?: SortOrder
     contact?: SortOrder
@@ -25429,7 +22710,6 @@ export namespace Prisma {
 
   export type DispatchOrderCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrder
@@ -25440,7 +22720,6 @@ export namespace Prisma {
 
   export type DispatchOrderMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrder
@@ -25451,7 +22730,6 @@ export namespace Prisma {
 
   export type DispatchOrderMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     customerId?: SortOrder
     status?: SortOrder
     paymentMode?: SortOrder
@@ -25467,7 +22745,6 @@ export namespace Prisma {
 
   export type DispatchItemCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     dispatchOrderId?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
@@ -25481,7 +22758,6 @@ export namespace Prisma {
 
   export type DispatchItemMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     dispatchOrderId?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
@@ -25490,7 +22766,6 @@ export namespace Prisma {
 
   export type DispatchItemMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     dispatchOrderId?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
@@ -25524,7 +22799,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCountOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     userId?: SortOrder
@@ -25543,7 +22817,6 @@ export namespace Prisma {
 
   export type InventoryTransactionMaxOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     userId?: SortOrder
@@ -25558,7 +22831,6 @@ export namespace Prisma {
 
   export type InventoryTransactionMinOrderByAggregateInput = {
     id?: SortOrder
-    tenantId?: SortOrder
     itemId?: SortOrder
     rackId?: SortOrder
     userId?: SortOrder
@@ -25575,648 +22847,6 @@ export namespace Prisma {
     quantity?: SortOrder
   }
 
-  export type UserCreateNestedManyWithoutTenantInput = {
-    create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
-    createMany?: UserCreateManyTenantInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
-  export type RoleCreateNestedManyWithoutTenantInput = {
-    create?: XOR<RoleCreateWithoutTenantInput, RoleUncheckedCreateWithoutTenantInput> | RoleCreateWithoutTenantInput[] | RoleUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RoleCreateOrConnectWithoutTenantInput | RoleCreateOrConnectWithoutTenantInput[]
-    createMany?: RoleCreateManyTenantInputEnvelope
-    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-  }
-
-  export type CategoryCreateNestedManyWithoutTenantInput = {
-    create?: XOR<CategoryCreateWithoutTenantInput, CategoryUncheckedCreateWithoutTenantInput> | CategoryCreateWithoutTenantInput[] | CategoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CategoryCreateOrConnectWithoutTenantInput | CategoryCreateOrConnectWithoutTenantInput[]
-    createMany?: CategoryCreateManyTenantInputEnvelope
-    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-  }
-
-  export type ItemCreateNestedManyWithoutTenantInput = {
-    create?: XOR<ItemCreateWithoutTenantInput, ItemUncheckedCreateWithoutTenantInput> | ItemCreateWithoutTenantInput[] | ItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: ItemCreateOrConnectWithoutTenantInput | ItemCreateOrConnectWithoutTenantInput[]
-    createMany?: ItemCreateManyTenantInputEnvelope
-    connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-  }
-
-  export type RackCreateNestedManyWithoutTenantInput = {
-    create?: XOR<RackCreateWithoutTenantInput, RackUncheckedCreateWithoutTenantInput> | RackCreateWithoutTenantInput[] | RackUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RackCreateOrConnectWithoutTenantInput | RackCreateOrConnectWithoutTenantInput[]
-    createMany?: RackCreateManyTenantInputEnvelope
-    connect?: RackWhereUniqueInput | RackWhereUniqueInput[]
-  }
-
-  export type StockCreateNestedManyWithoutTenantInput = {
-    create?: XOR<StockCreateWithoutTenantInput, StockUncheckedCreateWithoutTenantInput> | StockCreateWithoutTenantInput[] | StockUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutTenantInput | StockCreateOrConnectWithoutTenantInput[]
-    createMany?: StockCreateManyTenantInputEnvelope
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-  }
-
-  export type InventoryCreateNestedManyWithoutTenantInput = {
-    create?: XOR<InventoryCreateWithoutTenantInput, InventoryUncheckedCreateWithoutTenantInput> | InventoryCreateWithoutTenantInput[] | InventoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutTenantInput | InventoryCreateOrConnectWithoutTenantInput[]
-    createMany?: InventoryCreateManyTenantInputEnvelope
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-  }
-
-  export type VendorCreateNestedManyWithoutTenantInput = {
-    create?: XOR<VendorCreateWithoutTenantInput, VendorUncheckedCreateWithoutTenantInput> | VendorCreateWithoutTenantInput[] | VendorUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: VendorCreateOrConnectWithoutTenantInput | VendorCreateOrConnectWithoutTenantInput[]
-    createMany?: VendorCreateManyTenantInputEnvelope
-    connect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-  }
-
-  export type PurchaseOrderCreateNestedManyWithoutTenantInput = {
-    create?: XOR<PurchaseOrderCreateWithoutTenantInput, PurchaseOrderUncheckedCreateWithoutTenantInput> | PurchaseOrderCreateWithoutTenantInput[] | PurchaseOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: PurchaseOrderCreateOrConnectWithoutTenantInput | PurchaseOrderCreateOrConnectWithoutTenantInput[]
-    createMany?: PurchaseOrderCreateManyTenantInputEnvelope
-    connect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-  }
-
-  export type InventoryBatchCreateNestedManyWithoutTenantInput = {
-    create?: XOR<InventoryBatchCreateWithoutTenantInput, InventoryBatchUncheckedCreateWithoutTenantInput> | InventoryBatchCreateWithoutTenantInput[] | InventoryBatchUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryBatchCreateOrConnectWithoutTenantInput | InventoryBatchCreateOrConnectWithoutTenantInput[]
-    createMany?: InventoryBatchCreateManyTenantInputEnvelope
-    connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-  }
-
-  export type POLineItemCreateNestedManyWithoutTenantInput = {
-    create?: XOR<POLineItemCreateWithoutTenantInput, POLineItemUncheckedCreateWithoutTenantInput> | POLineItemCreateWithoutTenantInput[] | POLineItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: POLineItemCreateOrConnectWithoutTenantInput | POLineItemCreateOrConnectWithoutTenantInput[]
-    createMany?: POLineItemCreateManyTenantInputEnvelope
-    connect?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-  }
-
-  export type CustomerCreateNestedManyWithoutTenantInput = {
-    create?: XOR<CustomerCreateWithoutTenantInput, CustomerUncheckedCreateWithoutTenantInput> | CustomerCreateWithoutTenantInput[] | CustomerUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CustomerCreateOrConnectWithoutTenantInput | CustomerCreateOrConnectWithoutTenantInput[]
-    createMany?: CustomerCreateManyTenantInputEnvelope
-    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-  }
-
-  export type DispatchOrderCreateNestedManyWithoutTenantInput = {
-    create?: XOR<DispatchOrderCreateWithoutTenantInput, DispatchOrderUncheckedCreateWithoutTenantInput> | DispatchOrderCreateWithoutTenantInput[] | DispatchOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchOrderCreateOrConnectWithoutTenantInput | DispatchOrderCreateOrConnectWithoutTenantInput[]
-    createMany?: DispatchOrderCreateManyTenantInputEnvelope
-    connect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-  }
-
-  export type DispatchItemCreateNestedManyWithoutTenantInput = {
-    create?: XOR<DispatchItemCreateWithoutTenantInput, DispatchItemUncheckedCreateWithoutTenantInput> | DispatchItemCreateWithoutTenantInput[] | DispatchItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchItemCreateOrConnectWithoutTenantInput | DispatchItemCreateOrConnectWithoutTenantInput[]
-    createMany?: DispatchItemCreateManyTenantInputEnvelope
-    connect?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-  }
-
-  export type InventoryTransactionCreateNestedManyWithoutTenantInput = {
-    create?: XOR<InventoryTransactionCreateWithoutTenantInput, InventoryTransactionUncheckedCreateWithoutTenantInput> | InventoryTransactionCreateWithoutTenantInput[] | InventoryTransactionUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutTenantInput | InventoryTransactionCreateOrConnectWithoutTenantInput[]
-    createMany?: InventoryTransactionCreateManyTenantInputEnvelope
-    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-  }
-
-  export type UserUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
-    createMany?: UserCreateManyTenantInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
-  export type RoleUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<RoleCreateWithoutTenantInput, RoleUncheckedCreateWithoutTenantInput> | RoleCreateWithoutTenantInput[] | RoleUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RoleCreateOrConnectWithoutTenantInput | RoleCreateOrConnectWithoutTenantInput[]
-    createMany?: RoleCreateManyTenantInputEnvelope
-    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-  }
-
-  export type CategoryUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<CategoryCreateWithoutTenantInput, CategoryUncheckedCreateWithoutTenantInput> | CategoryCreateWithoutTenantInput[] | CategoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CategoryCreateOrConnectWithoutTenantInput | CategoryCreateOrConnectWithoutTenantInput[]
-    createMany?: CategoryCreateManyTenantInputEnvelope
-    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-  }
-
-  export type ItemUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<ItemCreateWithoutTenantInput, ItemUncheckedCreateWithoutTenantInput> | ItemCreateWithoutTenantInput[] | ItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: ItemCreateOrConnectWithoutTenantInput | ItemCreateOrConnectWithoutTenantInput[]
-    createMany?: ItemCreateManyTenantInputEnvelope
-    connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-  }
-
-  export type RackUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<RackCreateWithoutTenantInput, RackUncheckedCreateWithoutTenantInput> | RackCreateWithoutTenantInput[] | RackUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RackCreateOrConnectWithoutTenantInput | RackCreateOrConnectWithoutTenantInput[]
-    createMany?: RackCreateManyTenantInputEnvelope
-    connect?: RackWhereUniqueInput | RackWhereUniqueInput[]
-  }
-
-  export type StockUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<StockCreateWithoutTenantInput, StockUncheckedCreateWithoutTenantInput> | StockCreateWithoutTenantInput[] | StockUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutTenantInput | StockCreateOrConnectWithoutTenantInput[]
-    createMany?: StockCreateManyTenantInputEnvelope
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-  }
-
-  export type InventoryUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<InventoryCreateWithoutTenantInput, InventoryUncheckedCreateWithoutTenantInput> | InventoryCreateWithoutTenantInput[] | InventoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutTenantInput | InventoryCreateOrConnectWithoutTenantInput[]
-    createMany?: InventoryCreateManyTenantInputEnvelope
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-  }
-
-  export type VendorUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<VendorCreateWithoutTenantInput, VendorUncheckedCreateWithoutTenantInput> | VendorCreateWithoutTenantInput[] | VendorUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: VendorCreateOrConnectWithoutTenantInput | VendorCreateOrConnectWithoutTenantInput[]
-    createMany?: VendorCreateManyTenantInputEnvelope
-    connect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-  }
-
-  export type PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<PurchaseOrderCreateWithoutTenantInput, PurchaseOrderUncheckedCreateWithoutTenantInput> | PurchaseOrderCreateWithoutTenantInput[] | PurchaseOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: PurchaseOrderCreateOrConnectWithoutTenantInput | PurchaseOrderCreateOrConnectWithoutTenantInput[]
-    createMany?: PurchaseOrderCreateManyTenantInputEnvelope
-    connect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-  }
-
-  export type InventoryBatchUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<InventoryBatchCreateWithoutTenantInput, InventoryBatchUncheckedCreateWithoutTenantInput> | InventoryBatchCreateWithoutTenantInput[] | InventoryBatchUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryBatchCreateOrConnectWithoutTenantInput | InventoryBatchCreateOrConnectWithoutTenantInput[]
-    createMany?: InventoryBatchCreateManyTenantInputEnvelope
-    connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-  }
-
-  export type POLineItemUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<POLineItemCreateWithoutTenantInput, POLineItemUncheckedCreateWithoutTenantInput> | POLineItemCreateWithoutTenantInput[] | POLineItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: POLineItemCreateOrConnectWithoutTenantInput | POLineItemCreateOrConnectWithoutTenantInput[]
-    createMany?: POLineItemCreateManyTenantInputEnvelope
-    connect?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-  }
-
-  export type CustomerUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<CustomerCreateWithoutTenantInput, CustomerUncheckedCreateWithoutTenantInput> | CustomerCreateWithoutTenantInput[] | CustomerUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CustomerCreateOrConnectWithoutTenantInput | CustomerCreateOrConnectWithoutTenantInput[]
-    createMany?: CustomerCreateManyTenantInputEnvelope
-    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-  }
-
-  export type DispatchOrderUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<DispatchOrderCreateWithoutTenantInput, DispatchOrderUncheckedCreateWithoutTenantInput> | DispatchOrderCreateWithoutTenantInput[] | DispatchOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchOrderCreateOrConnectWithoutTenantInput | DispatchOrderCreateOrConnectWithoutTenantInput[]
-    createMany?: DispatchOrderCreateManyTenantInputEnvelope
-    connect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-  }
-
-  export type DispatchItemUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<DispatchItemCreateWithoutTenantInput, DispatchItemUncheckedCreateWithoutTenantInput> | DispatchItemCreateWithoutTenantInput[] | DispatchItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchItemCreateOrConnectWithoutTenantInput | DispatchItemCreateOrConnectWithoutTenantInput[]
-    createMany?: DispatchItemCreateManyTenantInputEnvelope
-    connect?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-  }
-
-  export type InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<InventoryTransactionCreateWithoutTenantInput, InventoryTransactionUncheckedCreateWithoutTenantInput> | InventoryTransactionCreateWithoutTenantInput[] | InventoryTransactionUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutTenantInput | InventoryTransactionCreateOrConnectWithoutTenantInput[]
-    createMany?: InventoryTransactionCreateManyTenantInputEnvelope
-    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-  }
-
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
-  export type UserUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutTenantInput | UserUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: UserCreateManyTenantInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutTenantInput | UserUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutTenantInput | UserUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type RoleUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<RoleCreateWithoutTenantInput, RoleUncheckedCreateWithoutTenantInput> | RoleCreateWithoutTenantInput[] | RoleUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RoleCreateOrConnectWithoutTenantInput | RoleCreateOrConnectWithoutTenantInput[]
-    upsert?: RoleUpsertWithWhereUniqueWithoutTenantInput | RoleUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: RoleCreateManyTenantInputEnvelope
-    set?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    disconnect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    delete?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    update?: RoleUpdateWithWhereUniqueWithoutTenantInput | RoleUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: RoleUpdateManyWithWhereWithoutTenantInput | RoleUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
-  }
-
-  export type CategoryUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<CategoryCreateWithoutTenantInput, CategoryUncheckedCreateWithoutTenantInput> | CategoryCreateWithoutTenantInput[] | CategoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CategoryCreateOrConnectWithoutTenantInput | CategoryCreateOrConnectWithoutTenantInput[]
-    upsert?: CategoryUpsertWithWhereUniqueWithoutTenantInput | CategoryUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: CategoryCreateManyTenantInputEnvelope
-    set?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    disconnect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    delete?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    update?: CategoryUpdateWithWhereUniqueWithoutTenantInput | CategoryUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: CategoryUpdateManyWithWhereWithoutTenantInput | CategoryUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
-  }
-
-  export type ItemUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<ItemCreateWithoutTenantInput, ItemUncheckedCreateWithoutTenantInput> | ItemCreateWithoutTenantInput[] | ItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: ItemCreateOrConnectWithoutTenantInput | ItemCreateOrConnectWithoutTenantInput[]
-    upsert?: ItemUpsertWithWhereUniqueWithoutTenantInput | ItemUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: ItemCreateManyTenantInputEnvelope
-    set?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    disconnect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    delete?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    update?: ItemUpdateWithWhereUniqueWithoutTenantInput | ItemUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: ItemUpdateManyWithWhereWithoutTenantInput | ItemUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: ItemScalarWhereInput | ItemScalarWhereInput[]
-  }
-
-  export type RackUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<RackCreateWithoutTenantInput, RackUncheckedCreateWithoutTenantInput> | RackCreateWithoutTenantInput[] | RackUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RackCreateOrConnectWithoutTenantInput | RackCreateOrConnectWithoutTenantInput[]
-    upsert?: RackUpsertWithWhereUniqueWithoutTenantInput | RackUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: RackCreateManyTenantInputEnvelope
-    set?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    disconnect?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    delete?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    connect?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    update?: RackUpdateWithWhereUniqueWithoutTenantInput | RackUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: RackUpdateManyWithWhereWithoutTenantInput | RackUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: RackScalarWhereInput | RackScalarWhereInput[]
-  }
-
-  export type StockUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<StockCreateWithoutTenantInput, StockUncheckedCreateWithoutTenantInput> | StockCreateWithoutTenantInput[] | StockUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutTenantInput | StockCreateOrConnectWithoutTenantInput[]
-    upsert?: StockUpsertWithWhereUniqueWithoutTenantInput | StockUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: StockCreateManyTenantInputEnvelope
-    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    update?: StockUpdateWithWhereUniqueWithoutTenantInput | StockUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: StockUpdateManyWithWhereWithoutTenantInput | StockUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
-  }
-
-  export type InventoryUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<InventoryCreateWithoutTenantInput, InventoryUncheckedCreateWithoutTenantInput> | InventoryCreateWithoutTenantInput[] | InventoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutTenantInput | InventoryCreateOrConnectWithoutTenantInput[]
-    upsert?: InventoryUpsertWithWhereUniqueWithoutTenantInput | InventoryUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: InventoryCreateManyTenantInputEnvelope
-    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    update?: InventoryUpdateWithWhereUniqueWithoutTenantInput | InventoryUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: InventoryUpdateManyWithWhereWithoutTenantInput | InventoryUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
-  }
-
-  export type VendorUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<VendorCreateWithoutTenantInput, VendorUncheckedCreateWithoutTenantInput> | VendorCreateWithoutTenantInput[] | VendorUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: VendorCreateOrConnectWithoutTenantInput | VendorCreateOrConnectWithoutTenantInput[]
-    upsert?: VendorUpsertWithWhereUniqueWithoutTenantInput | VendorUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: VendorCreateManyTenantInputEnvelope
-    set?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    disconnect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    delete?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    connect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    update?: VendorUpdateWithWhereUniqueWithoutTenantInput | VendorUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: VendorUpdateManyWithWhereWithoutTenantInput | VendorUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: VendorScalarWhereInput | VendorScalarWhereInput[]
-  }
-
-  export type PurchaseOrderUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<PurchaseOrderCreateWithoutTenantInput, PurchaseOrderUncheckedCreateWithoutTenantInput> | PurchaseOrderCreateWithoutTenantInput[] | PurchaseOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: PurchaseOrderCreateOrConnectWithoutTenantInput | PurchaseOrderCreateOrConnectWithoutTenantInput[]
-    upsert?: PurchaseOrderUpsertWithWhereUniqueWithoutTenantInput | PurchaseOrderUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: PurchaseOrderCreateManyTenantInputEnvelope
-    set?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    disconnect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    delete?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    connect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    update?: PurchaseOrderUpdateWithWhereUniqueWithoutTenantInput | PurchaseOrderUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: PurchaseOrderUpdateManyWithWhereWithoutTenantInput | PurchaseOrderUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
-  }
-
-  export type InventoryBatchUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<InventoryBatchCreateWithoutTenantInput, InventoryBatchUncheckedCreateWithoutTenantInput> | InventoryBatchCreateWithoutTenantInput[] | InventoryBatchUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryBatchCreateOrConnectWithoutTenantInput | InventoryBatchCreateOrConnectWithoutTenantInput[]
-    upsert?: InventoryBatchUpsertWithWhereUniqueWithoutTenantInput | InventoryBatchUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: InventoryBatchCreateManyTenantInputEnvelope
-    set?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    disconnect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    delete?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    update?: InventoryBatchUpdateWithWhereUniqueWithoutTenantInput | InventoryBatchUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: InventoryBatchUpdateManyWithWhereWithoutTenantInput | InventoryBatchUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
-  }
-
-  export type POLineItemUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<POLineItemCreateWithoutTenantInput, POLineItemUncheckedCreateWithoutTenantInput> | POLineItemCreateWithoutTenantInput[] | POLineItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: POLineItemCreateOrConnectWithoutTenantInput | POLineItemCreateOrConnectWithoutTenantInput[]
-    upsert?: POLineItemUpsertWithWhereUniqueWithoutTenantInput | POLineItemUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: POLineItemCreateManyTenantInputEnvelope
-    set?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    disconnect?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    delete?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    connect?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    update?: POLineItemUpdateWithWhereUniqueWithoutTenantInput | POLineItemUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: POLineItemUpdateManyWithWhereWithoutTenantInput | POLineItemUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: POLineItemScalarWhereInput | POLineItemScalarWhereInput[]
-  }
-
-  export type CustomerUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<CustomerCreateWithoutTenantInput, CustomerUncheckedCreateWithoutTenantInput> | CustomerCreateWithoutTenantInput[] | CustomerUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CustomerCreateOrConnectWithoutTenantInput | CustomerCreateOrConnectWithoutTenantInput[]
-    upsert?: CustomerUpsertWithWhereUniqueWithoutTenantInput | CustomerUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: CustomerCreateManyTenantInputEnvelope
-    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    update?: CustomerUpdateWithWhereUniqueWithoutTenantInput | CustomerUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: CustomerUpdateManyWithWhereWithoutTenantInput | CustomerUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
-  }
-
-  export type DispatchOrderUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<DispatchOrderCreateWithoutTenantInput, DispatchOrderUncheckedCreateWithoutTenantInput> | DispatchOrderCreateWithoutTenantInput[] | DispatchOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchOrderCreateOrConnectWithoutTenantInput | DispatchOrderCreateOrConnectWithoutTenantInput[]
-    upsert?: DispatchOrderUpsertWithWhereUniqueWithoutTenantInput | DispatchOrderUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: DispatchOrderCreateManyTenantInputEnvelope
-    set?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    disconnect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    delete?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    connect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    update?: DispatchOrderUpdateWithWhereUniqueWithoutTenantInput | DispatchOrderUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: DispatchOrderUpdateManyWithWhereWithoutTenantInput | DispatchOrderUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
-  }
-
-  export type DispatchItemUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<DispatchItemCreateWithoutTenantInput, DispatchItemUncheckedCreateWithoutTenantInput> | DispatchItemCreateWithoutTenantInput[] | DispatchItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchItemCreateOrConnectWithoutTenantInput | DispatchItemCreateOrConnectWithoutTenantInput[]
-    upsert?: DispatchItemUpsertWithWhereUniqueWithoutTenantInput | DispatchItemUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: DispatchItemCreateManyTenantInputEnvelope
-    set?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    disconnect?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    delete?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    connect?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    update?: DispatchItemUpdateWithWhereUniqueWithoutTenantInput | DispatchItemUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: DispatchItemUpdateManyWithWhereWithoutTenantInput | DispatchItemUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: DispatchItemScalarWhereInput | DispatchItemScalarWhereInput[]
-  }
-
-  export type InventoryTransactionUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<InventoryTransactionCreateWithoutTenantInput, InventoryTransactionUncheckedCreateWithoutTenantInput> | InventoryTransactionCreateWithoutTenantInput[] | InventoryTransactionUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutTenantInput | InventoryTransactionCreateOrConnectWithoutTenantInput[]
-    upsert?: InventoryTransactionUpsertWithWhereUniqueWithoutTenantInput | InventoryTransactionUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: InventoryTransactionCreateManyTenantInputEnvelope
-    set?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    disconnect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    delete?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    update?: InventoryTransactionUpdateWithWhereUniqueWithoutTenantInput | InventoryTransactionUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: InventoryTransactionUpdateManyWithWhereWithoutTenantInput | InventoryTransactionUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
-  }
-
-  export type UserUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutTenantInput | UserUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: UserCreateManyTenantInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutTenantInput | UserUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutTenantInput | UserUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type RoleUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<RoleCreateWithoutTenantInput, RoleUncheckedCreateWithoutTenantInput> | RoleCreateWithoutTenantInput[] | RoleUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RoleCreateOrConnectWithoutTenantInput | RoleCreateOrConnectWithoutTenantInput[]
-    upsert?: RoleUpsertWithWhereUniqueWithoutTenantInput | RoleUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: RoleCreateManyTenantInputEnvelope
-    set?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    disconnect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    delete?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    connect?: RoleWhereUniqueInput | RoleWhereUniqueInput[]
-    update?: RoleUpdateWithWhereUniqueWithoutTenantInput | RoleUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: RoleUpdateManyWithWhereWithoutTenantInput | RoleUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: RoleScalarWhereInput | RoleScalarWhereInput[]
-  }
-
-  export type CategoryUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<CategoryCreateWithoutTenantInput, CategoryUncheckedCreateWithoutTenantInput> | CategoryCreateWithoutTenantInput[] | CategoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CategoryCreateOrConnectWithoutTenantInput | CategoryCreateOrConnectWithoutTenantInput[]
-    upsert?: CategoryUpsertWithWhereUniqueWithoutTenantInput | CategoryUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: CategoryCreateManyTenantInputEnvelope
-    set?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    disconnect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    delete?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
-    update?: CategoryUpdateWithWhereUniqueWithoutTenantInput | CategoryUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: CategoryUpdateManyWithWhereWithoutTenantInput | CategoryUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
-  }
-
-  export type ItemUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<ItemCreateWithoutTenantInput, ItemUncheckedCreateWithoutTenantInput> | ItemCreateWithoutTenantInput[] | ItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: ItemCreateOrConnectWithoutTenantInput | ItemCreateOrConnectWithoutTenantInput[]
-    upsert?: ItemUpsertWithWhereUniqueWithoutTenantInput | ItemUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: ItemCreateManyTenantInputEnvelope
-    set?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    disconnect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    delete?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
-    update?: ItemUpdateWithWhereUniqueWithoutTenantInput | ItemUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: ItemUpdateManyWithWhereWithoutTenantInput | ItemUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: ItemScalarWhereInput | ItemScalarWhereInput[]
-  }
-
-  export type RackUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<RackCreateWithoutTenantInput, RackUncheckedCreateWithoutTenantInput> | RackCreateWithoutTenantInput[] | RackUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: RackCreateOrConnectWithoutTenantInput | RackCreateOrConnectWithoutTenantInput[]
-    upsert?: RackUpsertWithWhereUniqueWithoutTenantInput | RackUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: RackCreateManyTenantInputEnvelope
-    set?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    disconnect?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    delete?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    connect?: RackWhereUniqueInput | RackWhereUniqueInput[]
-    update?: RackUpdateWithWhereUniqueWithoutTenantInput | RackUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: RackUpdateManyWithWhereWithoutTenantInput | RackUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: RackScalarWhereInput | RackScalarWhereInput[]
-  }
-
-  export type StockUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<StockCreateWithoutTenantInput, StockUncheckedCreateWithoutTenantInput> | StockCreateWithoutTenantInput[] | StockUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutTenantInput | StockCreateOrConnectWithoutTenantInput[]
-    upsert?: StockUpsertWithWhereUniqueWithoutTenantInput | StockUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: StockCreateManyTenantInputEnvelope
-    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    update?: StockUpdateWithWhereUniqueWithoutTenantInput | StockUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: StockUpdateManyWithWhereWithoutTenantInput | StockUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
-  }
-
-  export type InventoryUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<InventoryCreateWithoutTenantInput, InventoryUncheckedCreateWithoutTenantInput> | InventoryCreateWithoutTenantInput[] | InventoryUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutTenantInput | InventoryCreateOrConnectWithoutTenantInput[]
-    upsert?: InventoryUpsertWithWhereUniqueWithoutTenantInput | InventoryUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: InventoryCreateManyTenantInputEnvelope
-    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    update?: InventoryUpdateWithWhereUniqueWithoutTenantInput | InventoryUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: InventoryUpdateManyWithWhereWithoutTenantInput | InventoryUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
-  }
-
-  export type VendorUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<VendorCreateWithoutTenantInput, VendorUncheckedCreateWithoutTenantInput> | VendorCreateWithoutTenantInput[] | VendorUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: VendorCreateOrConnectWithoutTenantInput | VendorCreateOrConnectWithoutTenantInput[]
-    upsert?: VendorUpsertWithWhereUniqueWithoutTenantInput | VendorUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: VendorCreateManyTenantInputEnvelope
-    set?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    disconnect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    delete?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    connect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-    update?: VendorUpdateWithWhereUniqueWithoutTenantInput | VendorUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: VendorUpdateManyWithWhereWithoutTenantInput | VendorUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: VendorScalarWhereInput | VendorScalarWhereInput[]
-  }
-
-  export type PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<PurchaseOrderCreateWithoutTenantInput, PurchaseOrderUncheckedCreateWithoutTenantInput> | PurchaseOrderCreateWithoutTenantInput[] | PurchaseOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: PurchaseOrderCreateOrConnectWithoutTenantInput | PurchaseOrderCreateOrConnectWithoutTenantInput[]
-    upsert?: PurchaseOrderUpsertWithWhereUniqueWithoutTenantInput | PurchaseOrderUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: PurchaseOrderCreateManyTenantInputEnvelope
-    set?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    disconnect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    delete?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    connect?: PurchaseOrderWhereUniqueInput | PurchaseOrderWhereUniqueInput[]
-    update?: PurchaseOrderUpdateWithWhereUniqueWithoutTenantInput | PurchaseOrderUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: PurchaseOrderUpdateManyWithWhereWithoutTenantInput | PurchaseOrderUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
-  }
-
-  export type InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<InventoryBatchCreateWithoutTenantInput, InventoryBatchUncheckedCreateWithoutTenantInput> | InventoryBatchCreateWithoutTenantInput[] | InventoryBatchUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryBatchCreateOrConnectWithoutTenantInput | InventoryBatchCreateOrConnectWithoutTenantInput[]
-    upsert?: InventoryBatchUpsertWithWhereUniqueWithoutTenantInput | InventoryBatchUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: InventoryBatchCreateManyTenantInputEnvelope
-    set?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    disconnect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    delete?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-    update?: InventoryBatchUpdateWithWhereUniqueWithoutTenantInput | InventoryBatchUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: InventoryBatchUpdateManyWithWhereWithoutTenantInput | InventoryBatchUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
-  }
-
-  export type POLineItemUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<POLineItemCreateWithoutTenantInput, POLineItemUncheckedCreateWithoutTenantInput> | POLineItemCreateWithoutTenantInput[] | POLineItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: POLineItemCreateOrConnectWithoutTenantInput | POLineItemCreateOrConnectWithoutTenantInput[]
-    upsert?: POLineItemUpsertWithWhereUniqueWithoutTenantInput | POLineItemUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: POLineItemCreateManyTenantInputEnvelope
-    set?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    disconnect?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    delete?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    connect?: POLineItemWhereUniqueInput | POLineItemWhereUniqueInput[]
-    update?: POLineItemUpdateWithWhereUniqueWithoutTenantInput | POLineItemUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: POLineItemUpdateManyWithWhereWithoutTenantInput | POLineItemUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: POLineItemScalarWhereInput | POLineItemScalarWhereInput[]
-  }
-
-  export type CustomerUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<CustomerCreateWithoutTenantInput, CustomerUncheckedCreateWithoutTenantInput> | CustomerCreateWithoutTenantInput[] | CustomerUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: CustomerCreateOrConnectWithoutTenantInput | CustomerCreateOrConnectWithoutTenantInput[]
-    upsert?: CustomerUpsertWithWhereUniqueWithoutTenantInput | CustomerUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: CustomerCreateManyTenantInputEnvelope
-    set?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    disconnect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    delete?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    connect?: CustomerWhereUniqueInput | CustomerWhereUniqueInput[]
-    update?: CustomerUpdateWithWhereUniqueWithoutTenantInput | CustomerUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: CustomerUpdateManyWithWhereWithoutTenantInput | CustomerUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
-  }
-
-  export type DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<DispatchOrderCreateWithoutTenantInput, DispatchOrderUncheckedCreateWithoutTenantInput> | DispatchOrderCreateWithoutTenantInput[] | DispatchOrderUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchOrderCreateOrConnectWithoutTenantInput | DispatchOrderCreateOrConnectWithoutTenantInput[]
-    upsert?: DispatchOrderUpsertWithWhereUniqueWithoutTenantInput | DispatchOrderUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: DispatchOrderCreateManyTenantInputEnvelope
-    set?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    disconnect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    delete?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    connect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
-    update?: DispatchOrderUpdateWithWhereUniqueWithoutTenantInput | DispatchOrderUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: DispatchOrderUpdateManyWithWhereWithoutTenantInput | DispatchOrderUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
-  }
-
-  export type DispatchItemUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<DispatchItemCreateWithoutTenantInput, DispatchItemUncheckedCreateWithoutTenantInput> | DispatchItemCreateWithoutTenantInput[] | DispatchItemUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: DispatchItemCreateOrConnectWithoutTenantInput | DispatchItemCreateOrConnectWithoutTenantInput[]
-    upsert?: DispatchItemUpsertWithWhereUniqueWithoutTenantInput | DispatchItemUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: DispatchItemCreateManyTenantInputEnvelope
-    set?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    disconnect?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    delete?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    connect?: DispatchItemWhereUniqueInput | DispatchItemWhereUniqueInput[]
-    update?: DispatchItemUpdateWithWhereUniqueWithoutTenantInput | DispatchItemUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: DispatchItemUpdateManyWithWhereWithoutTenantInput | DispatchItemUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: DispatchItemScalarWhereInput | DispatchItemScalarWhereInput[]
-  }
-
-  export type InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<InventoryTransactionCreateWithoutTenantInput, InventoryTransactionUncheckedCreateWithoutTenantInput> | InventoryTransactionCreateWithoutTenantInput[] | InventoryTransactionUncheckedCreateWithoutTenantInput[]
-    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutTenantInput | InventoryTransactionCreateOrConnectWithoutTenantInput[]
-    upsert?: InventoryTransactionUpsertWithWhereUniqueWithoutTenantInput | InventoryTransactionUpsertWithWhereUniqueWithoutTenantInput[]
-    createMany?: InventoryTransactionCreateManyTenantInputEnvelope
-    set?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    disconnect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    delete?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    update?: InventoryTransactionUpdateWithWhereUniqueWithoutTenantInput | InventoryTransactionUpdateWithWhereUniqueWithoutTenantInput[]
-    updateMany?: InventoryTransactionUpdateManyWithWhereWithoutTenantInput | InventoryTransactionUpdateManyWithWhereWithoutTenantInput[]
-    deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
-  }
-
   export type RoleCreateNestedOneWithoutUsersInput = {
     create?: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
     connectOrCreate?: RoleCreateOrConnectWithoutUsersInput
@@ -26230,17 +22860,23 @@ export namespace Prisma {
     connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
   }
 
-  export type TenantCreateNestedOneWithoutUsersInput = {
-    create?: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutUsersInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type InventoryTransactionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput> | InventoryTransactionCreateWithoutUserInput[] | InventoryTransactionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: InventoryTransactionCreateOrConnectWithoutUserInput | InventoryTransactionCreateOrConnectWithoutUserInput[]
     createMany?: InventoryTransactionCreateManyUserInputEnvelope
     connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type RoleUpdateOneWithoutUsersNestedInput = {
@@ -26265,14 +22901,6 @@ export namespace Prisma {
     update?: InventoryTransactionUpdateWithWhereUniqueWithoutUserInput | InventoryTransactionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: InventoryTransactionUpdateManyWithWhereWithoutUserInput | InventoryTransactionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
-  }
-
-  export type TenantUpdateOneRequiredWithoutUsersNestedInput = {
-    create?: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutUsersInput
-    upsert?: TenantUpsertWithoutUsersInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutUsersInput, TenantUpdateWithoutUsersInput>, TenantUncheckedUpdateWithoutUsersInput>
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -26300,12 +22928,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
-  export type TenantCreateNestedOneWithoutRolesInput = {
-    create?: XOR<TenantCreateWithoutRolesInput, TenantUncheckedCreateWithoutRolesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutRolesInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type UserUncheckedCreateNestedManyWithoutRoleObjInput = {
     create?: XOR<UserCreateWithoutRoleObjInput, UserUncheckedCreateWithoutRoleObjInput> | UserCreateWithoutRoleObjInput[] | UserUncheckedCreateWithoutRoleObjInput[]
     connectOrCreate?: UserCreateOrConnectWithoutRoleObjInput | UserCreateOrConnectWithoutRoleObjInput[]
@@ -26325,14 +22947,6 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutRoleObjInput | UserUpdateWithWhereUniqueWithoutRoleObjInput[]
     updateMany?: UserUpdateManyWithWhereWithoutRoleObjInput | UserUpdateManyWithWhereWithoutRoleObjInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type TenantUpdateOneRequiredWithoutRolesNestedInput = {
-    create?: XOR<TenantCreateWithoutRolesInput, TenantUncheckedCreateWithoutRolesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutRolesInput
-    upsert?: TenantUpsertWithoutRolesInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutRolesInput, TenantUpdateWithoutRolesInput>, TenantUncheckedUpdateWithoutRolesInput>
   }
 
   export type UserUncheckedUpdateManyWithoutRoleObjNestedInput = {
@@ -26356,12 +22970,6 @@ export namespace Prisma {
     connect?: ItemWhereUniqueInput | ItemWhereUniqueInput[]
   }
 
-  export type TenantCreateNestedOneWithoutCategoriesInput = {
-    create?: XOR<TenantCreateWithoutCategoriesInput, TenantUncheckedCreateWithoutCategoriesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutCategoriesInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type ItemUncheckedCreateNestedManyWithoutCategoryInput = {
     create?: XOR<ItemCreateWithoutCategoryInput, ItemUncheckedCreateWithoutCategoryInput> | ItemCreateWithoutCategoryInput[] | ItemUncheckedCreateWithoutCategoryInput[]
     connectOrCreate?: ItemCreateOrConnectWithoutCategoryInput | ItemCreateOrConnectWithoutCategoryInput[]
@@ -26381,14 +22989,6 @@ export namespace Prisma {
     update?: ItemUpdateWithWhereUniqueWithoutCategoryInput | ItemUpdateWithWhereUniqueWithoutCategoryInput[]
     updateMany?: ItemUpdateManyWithWhereWithoutCategoryInput | ItemUpdateManyWithWhereWithoutCategoryInput[]
     deleteMany?: ItemScalarWhereInput | ItemScalarWhereInput[]
-  }
-
-  export type TenantUpdateOneRequiredWithoutCategoriesNestedInput = {
-    create?: XOR<TenantCreateWithoutCategoriesInput, TenantUncheckedCreateWithoutCategoriesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutCategoriesInput
-    upsert?: TenantUpsertWithoutCategoriesInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutCategoriesInput, TenantUpdateWithoutCategoriesInput>, TenantUncheckedUpdateWithoutCategoriesInput>
   }
 
   export type ItemUncheckedUpdateManyWithoutCategoryNestedInput = {
@@ -26443,12 +23043,6 @@ export namespace Prisma {
     connectOrCreate?: StockCreateOrConnectWithoutItemInput | StockCreateOrConnectWithoutItemInput[]
     createMany?: StockCreateManyItemInputEnvelope
     connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-  }
-
-  export type TenantCreateNestedOneWithoutItemsInput = {
-    create?: XOR<TenantCreateWithoutItemsInput, TenantUncheckedCreateWithoutItemsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutItemsInput
-    connect?: TenantWhereUniqueInput
   }
 
   export type DispatchItemUncheckedCreateNestedManyWithoutItemInput = {
@@ -26567,14 +23161,6 @@ export namespace Prisma {
     deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
   }
 
-  export type TenantUpdateOneRequiredWithoutItemsNestedInput = {
-    create?: XOR<TenantCreateWithoutItemsInput, TenantUncheckedCreateWithoutItemsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutItemsInput
-    upsert?: TenantUpsertWithoutItemsInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutItemsInput, TenantUpdateWithoutItemsInput>, TenantUncheckedUpdateWithoutItemsInput>
-  }
-
   export type DispatchItemUncheckedUpdateManyWithoutItemNestedInput = {
     create?: XOR<DispatchItemCreateWithoutItemInput, DispatchItemUncheckedCreateWithoutItemInput> | DispatchItemCreateWithoutItemInput[] | DispatchItemUncheckedCreateWithoutItemInput[]
     connectOrCreate?: DispatchItemCreateOrConnectWithoutItemInput | DispatchItemCreateOrConnectWithoutItemInput[]
@@ -26655,12 +23241,6 @@ export namespace Prisma {
     connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
   }
 
-  export type TenantCreateNestedOneWithoutRacksInput = {
-    create?: XOR<TenantCreateWithoutRacksInput, TenantUncheckedCreateWithoutRacksInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutRacksInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type StockUncheckedCreateNestedManyWithoutRackInput = {
     create?: XOR<StockCreateWithoutRackInput, StockUncheckedCreateWithoutRackInput> | StockCreateWithoutRackInput[] | StockUncheckedCreateWithoutRackInput[]
     connectOrCreate?: StockCreateOrConnectWithoutRackInput | StockCreateOrConnectWithoutRackInput[]
@@ -26703,14 +23283,6 @@ export namespace Prisma {
     deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
   }
 
-  export type TenantUpdateOneRequiredWithoutRacksNestedInput = {
-    create?: XOR<TenantCreateWithoutRacksInput, TenantUncheckedCreateWithoutRacksInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutRacksInput
-    upsert?: TenantUpsertWithoutRacksInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutRacksInput, TenantUpdateWithoutRacksInput>, TenantUncheckedUpdateWithoutRacksInput>
-  }
-
   export type StockUncheckedUpdateManyWithoutRackNestedInput = {
     create?: XOR<StockCreateWithoutRackInput, StockUncheckedCreateWithoutRackInput> | StockCreateWithoutRackInput[] | StockUncheckedCreateWithoutRackInput[]
     connectOrCreate?: StockCreateOrConnectWithoutRackInput | StockCreateOrConnectWithoutRackInput[]
@@ -26751,12 +23323,6 @@ export namespace Prisma {
     connect?: RackWhereUniqueInput
   }
 
-  export type TenantCreateNestedOneWithoutStocksInput = {
-    create?: XOR<TenantCreateWithoutStocksInput, TenantUncheckedCreateWithoutStocksInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutStocksInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type ItemUpdateOneRequiredWithoutStocksNestedInput = {
     create?: XOR<ItemCreateWithoutStocksInput, ItemUncheckedCreateWithoutStocksInput>
     connectOrCreate?: ItemCreateOrConnectWithoutStocksInput
@@ -26773,14 +23339,6 @@ export namespace Prisma {
     update?: XOR<XOR<RackUpdateToOneWithWhereWithoutStocksInput, RackUpdateWithoutStocksInput>, RackUncheckedUpdateWithoutStocksInput>
   }
 
-  export type TenantUpdateOneRequiredWithoutStocksNestedInput = {
-    create?: XOR<TenantCreateWithoutStocksInput, TenantUncheckedCreateWithoutStocksInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutStocksInput
-    upsert?: TenantUpsertWithoutStocksInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutStocksInput, TenantUpdateWithoutStocksInput>, TenantUncheckedUpdateWithoutStocksInput>
-  }
-
   export type ItemCreateNestedOneWithoutInventoryInput = {
     create?: XOR<ItemCreateWithoutInventoryInput, ItemUncheckedCreateWithoutInventoryInput>
     connectOrCreate?: ItemCreateOrConnectWithoutInventoryInput
@@ -26792,12 +23350,6 @@ export namespace Prisma {
     connectOrCreate?: InventoryBatchCreateOrConnectWithoutInventoryInput | InventoryBatchCreateOrConnectWithoutInventoryInput[]
     createMany?: InventoryBatchCreateManyInventoryInputEnvelope
     connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-  }
-
-  export type TenantCreateNestedOneWithoutInventoriesInput = {
-    create?: XOR<TenantCreateWithoutInventoriesInput, TenantUncheckedCreateWithoutInventoriesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutInventoriesInput
-    connect?: TenantWhereUniqueInput
   }
 
   export type InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput = {
@@ -26827,14 +23379,6 @@ export namespace Prisma {
     update?: InventoryBatchUpdateWithWhereUniqueWithoutInventoryInput | InventoryBatchUpdateWithWhereUniqueWithoutInventoryInput[]
     updateMany?: InventoryBatchUpdateManyWithWhereWithoutInventoryInput | InventoryBatchUpdateManyWithWhereWithoutInventoryInput[]
     deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
-  }
-
-  export type TenantUpdateOneRequiredWithoutInventoriesNestedInput = {
-    create?: XOR<TenantCreateWithoutInventoriesInput, TenantUncheckedCreateWithoutInventoriesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutInventoriesInput
-    upsert?: TenantUpsertWithoutInventoriesInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutInventoriesInput, TenantUpdateWithoutInventoriesInput>, TenantUncheckedUpdateWithoutInventoriesInput>
   }
 
   export type InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput = {
@@ -26870,12 +23414,6 @@ export namespace Prisma {
     connectOrCreate?: InventoryBatchCreateOrConnectWithoutVendorInput | InventoryBatchCreateOrConnectWithoutVendorInput[]
     createMany?: InventoryBatchCreateManyVendorInputEnvelope
     connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-  }
-
-  export type TenantCreateNestedOneWithoutVendorsInput = {
-    create?: XOR<TenantCreateWithoutVendorsInput, TenantUncheckedCreateWithoutVendorsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutVendorsInput
-    connect?: TenantWhereUniqueInput
   }
 
   export type PurchaseOrderUncheckedCreateNestedManyWithoutVendorInput = {
@@ -26941,14 +23479,6 @@ export namespace Prisma {
     deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
   }
 
-  export type TenantUpdateOneRequiredWithoutVendorsNestedInput = {
-    create?: XOR<TenantCreateWithoutVendorsInput, TenantUncheckedCreateWithoutVendorsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutVendorsInput
-    upsert?: TenantUpsertWithoutVendorsInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutVendorsInput, TenantUpdateWithoutVendorsInput>, TenantUncheckedUpdateWithoutVendorsInput>
-  }
-
   export type PurchaseOrderUncheckedUpdateManyWithoutVendorNestedInput = {
     create?: XOR<PurchaseOrderCreateWithoutVendorInput, PurchaseOrderUncheckedCreateWithoutVendorInput> | PurchaseOrderCreateWithoutVendorInput[] | PurchaseOrderUncheckedCreateWithoutVendorInput[]
     connectOrCreate?: PurchaseOrderCreateOrConnectWithoutVendorInput | PurchaseOrderCreateOrConnectWithoutVendorInput[]
@@ -27011,12 +23541,6 @@ export namespace Prisma {
     connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
   }
 
-  export type TenantCreateNestedOneWithoutPurchaseOrdersInput = {
-    create?: XOR<TenantCreateWithoutPurchaseOrdersInput, TenantUncheckedCreateWithoutPurchaseOrdersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutPurchaseOrdersInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type POLineItemUncheckedCreateNestedManyWithoutPurchaseOrderInput = {
     create?: XOR<POLineItemCreateWithoutPurchaseOrderInput, POLineItemUncheckedCreateWithoutPurchaseOrderInput> | POLineItemCreateWithoutPurchaseOrderInput[] | POLineItemUncheckedCreateWithoutPurchaseOrderInput[]
     connectOrCreate?: POLineItemCreateOrConnectWithoutPurchaseOrderInput | POLineItemCreateOrConnectWithoutPurchaseOrderInput[]
@@ -27071,14 +23595,6 @@ export namespace Prisma {
     deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
   }
 
-  export type TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput = {
-    create?: XOR<TenantCreateWithoutPurchaseOrdersInput, TenantUncheckedCreateWithoutPurchaseOrdersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutPurchaseOrdersInput
-    upsert?: TenantUpsertWithoutPurchaseOrdersInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutPurchaseOrdersInput, TenantUpdateWithoutPurchaseOrdersInput>, TenantUncheckedUpdateWithoutPurchaseOrdersInput>
-  }
-
   export type POLineItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput = {
     create?: XOR<POLineItemCreateWithoutPurchaseOrderInput, POLineItemUncheckedCreateWithoutPurchaseOrderInput> | POLineItemCreateWithoutPurchaseOrderInput[] | POLineItemUncheckedCreateWithoutPurchaseOrderInput[]
     connectOrCreate?: POLineItemCreateOrConnectWithoutPurchaseOrderInput | POLineItemCreateOrConnectWithoutPurchaseOrderInput[]
@@ -27125,12 +23641,6 @@ export namespace Prisma {
     connect?: PurchaseOrderWhereUniqueInput
   }
 
-  export type TenantCreateNestedOneWithoutInventoryBatchesInput = {
-    create?: XOR<TenantCreateWithoutInventoryBatchesInput, TenantUncheckedCreateWithoutInventoryBatchesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutInventoryBatchesInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type InventoryUpdateOneRequiredWithoutBatchesNestedInput = {
     create?: XOR<InventoryCreateWithoutBatchesInput, InventoryUncheckedCreateWithoutBatchesInput>
     connectOrCreate?: InventoryCreateOrConnectWithoutBatchesInput
@@ -27157,14 +23667,6 @@ export namespace Prisma {
     update?: XOR<XOR<PurchaseOrderUpdateToOneWithWhereWithoutBatchesInput, PurchaseOrderUpdateWithoutBatchesInput>, PurchaseOrderUncheckedUpdateWithoutBatchesInput>
   }
 
-  export type TenantUpdateOneRequiredWithoutInventoryBatchesNestedInput = {
-    create?: XOR<TenantCreateWithoutInventoryBatchesInput, TenantUncheckedCreateWithoutInventoryBatchesInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutInventoryBatchesInput
-    upsert?: TenantUpsertWithoutInventoryBatchesInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutInventoryBatchesInput, TenantUpdateWithoutInventoryBatchesInput>, TenantUncheckedUpdateWithoutInventoryBatchesInput>
-  }
-
   export type ItemCreateNestedOneWithoutPoItemsInput = {
     create?: XOR<ItemCreateWithoutPoItemsInput, ItemUncheckedCreateWithoutPoItemsInput>
     connectOrCreate?: ItemCreateOrConnectWithoutPoItemsInput
@@ -27175,12 +23677,6 @@ export namespace Prisma {
     create?: XOR<PurchaseOrderCreateWithoutItemsInput, PurchaseOrderUncheckedCreateWithoutItemsInput>
     connectOrCreate?: PurchaseOrderCreateOrConnectWithoutItemsInput
     connect?: PurchaseOrderWhereUniqueInput
-  }
-
-  export type TenantCreateNestedOneWithoutPoLineItemsInput = {
-    create?: XOR<TenantCreateWithoutPoLineItemsInput, TenantUncheckedCreateWithoutPoLineItemsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutPoLineItemsInput
-    connect?: TenantWhereUniqueInput
   }
 
   export type ItemUpdateOneRequiredWithoutPoItemsNestedInput = {
@@ -27199,14 +23695,6 @@ export namespace Prisma {
     update?: XOR<XOR<PurchaseOrderUpdateToOneWithWhereWithoutItemsInput, PurchaseOrderUpdateWithoutItemsInput>, PurchaseOrderUncheckedUpdateWithoutItemsInput>
   }
 
-  export type TenantUpdateOneRequiredWithoutPoLineItemsNestedInput = {
-    create?: XOR<TenantCreateWithoutPoLineItemsInput, TenantUncheckedCreateWithoutPoLineItemsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutPoLineItemsInput
-    upsert?: TenantUpsertWithoutPoLineItemsInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutPoLineItemsInput, TenantUpdateWithoutPoLineItemsInput>, TenantUncheckedUpdateWithoutPoLineItemsInput>
-  }
-
   export type DispatchOrderCreateNestedManyWithoutCustomerInput = {
     create?: XOR<DispatchOrderCreateWithoutCustomerInput, DispatchOrderUncheckedCreateWithoutCustomerInput> | DispatchOrderCreateWithoutCustomerInput[] | DispatchOrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: DispatchOrderCreateOrConnectWithoutCustomerInput | DispatchOrderCreateOrConnectWithoutCustomerInput[]
@@ -27219,12 +23707,6 @@ export namespace Prisma {
     connectOrCreate?: InventoryTransactionCreateOrConnectWithoutCustomerInput | InventoryTransactionCreateOrConnectWithoutCustomerInput[]
     createMany?: InventoryTransactionCreateManyCustomerInputEnvelope
     connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-  }
-
-  export type TenantCreateNestedOneWithoutCustomersInput = {
-    create?: XOR<TenantCreateWithoutCustomersInput, TenantUncheckedCreateWithoutCustomersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutCustomersInput
-    connect?: TenantWhereUniqueInput
   }
 
   export type DispatchOrderUncheckedCreateNestedManyWithoutCustomerInput = {
@@ -27269,14 +23751,6 @@ export namespace Prisma {
     deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
   }
 
-  export type TenantUpdateOneRequiredWithoutCustomersNestedInput = {
-    create?: XOR<TenantCreateWithoutCustomersInput, TenantUncheckedCreateWithoutCustomersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutCustomersInput
-    upsert?: TenantUpsertWithoutCustomersInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutCustomersInput, TenantUpdateWithoutCustomersInput>, TenantUncheckedUpdateWithoutCustomersInput>
-  }
-
   export type DispatchOrderUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<DispatchOrderCreateWithoutCustomerInput, DispatchOrderUncheckedCreateWithoutCustomerInput> | DispatchOrderCreateWithoutCustomerInput[] | DispatchOrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: DispatchOrderCreateOrConnectWithoutCustomerInput | DispatchOrderCreateOrConnectWithoutCustomerInput[]
@@ -27318,12 +23792,6 @@ export namespace Prisma {
     connect?: CustomerWhereUniqueInput
   }
 
-  export type TenantCreateNestedOneWithoutDispatchOrdersInput = {
-    create?: XOR<TenantCreateWithoutDispatchOrdersInput, TenantUncheckedCreateWithoutDispatchOrdersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutDispatchOrdersInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type DispatchItemUncheckedCreateNestedManyWithoutDispatchOrderInput = {
     create?: XOR<DispatchItemCreateWithoutDispatchOrderInput, DispatchItemUncheckedCreateWithoutDispatchOrderInput> | DispatchItemCreateWithoutDispatchOrderInput[] | DispatchItemUncheckedCreateWithoutDispatchOrderInput[]
     connectOrCreate?: DispatchItemCreateOrConnectWithoutDispatchOrderInput | DispatchItemCreateOrConnectWithoutDispatchOrderInput[]
@@ -27353,14 +23821,6 @@ export namespace Prisma {
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutDispatchOrdersInput, CustomerUpdateWithoutDispatchOrdersInput>, CustomerUncheckedUpdateWithoutDispatchOrdersInput>
   }
 
-  export type TenantUpdateOneRequiredWithoutDispatchOrdersNestedInput = {
-    create?: XOR<TenantCreateWithoutDispatchOrdersInput, TenantUncheckedCreateWithoutDispatchOrdersInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutDispatchOrdersInput
-    upsert?: TenantUpsertWithoutDispatchOrdersInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutDispatchOrdersInput, TenantUpdateWithoutDispatchOrdersInput>, TenantUncheckedUpdateWithoutDispatchOrdersInput>
-  }
-
   export type DispatchItemUncheckedUpdateManyWithoutDispatchOrderNestedInput = {
     create?: XOR<DispatchItemCreateWithoutDispatchOrderInput, DispatchItemUncheckedCreateWithoutDispatchOrderInput> | DispatchItemCreateWithoutDispatchOrderInput[] | DispatchItemUncheckedCreateWithoutDispatchOrderInput[]
     connectOrCreate?: DispatchItemCreateOrConnectWithoutDispatchOrderInput | DispatchItemCreateOrConnectWithoutDispatchOrderInput[]
@@ -27387,12 +23847,6 @@ export namespace Prisma {
     connect?: ItemWhereUniqueInput
   }
 
-  export type TenantCreateNestedOneWithoutDispatchItemsInput = {
-    create?: XOR<TenantCreateWithoutDispatchItemsInput, TenantUncheckedCreateWithoutDispatchItemsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutDispatchItemsInput
-    connect?: TenantWhereUniqueInput
-  }
-
   export type DispatchOrderUpdateOneRequiredWithoutItemsNestedInput = {
     create?: XOR<DispatchOrderCreateWithoutItemsInput, DispatchOrderUncheckedCreateWithoutItemsInput>
     connectOrCreate?: DispatchOrderCreateOrConnectWithoutItemsInput
@@ -27407,14 +23861,6 @@ export namespace Prisma {
     upsert?: ItemUpsertWithoutDispatchItemsInput
     connect?: ItemWhereUniqueInput
     update?: XOR<XOR<ItemUpdateToOneWithWhereWithoutDispatchItemsInput, ItemUpdateWithoutDispatchItemsInput>, ItemUncheckedUpdateWithoutDispatchItemsInput>
-  }
-
-  export type TenantUpdateOneRequiredWithoutDispatchItemsNestedInput = {
-    create?: XOR<TenantCreateWithoutDispatchItemsInput, TenantUncheckedCreateWithoutDispatchItemsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutDispatchItemsInput
-    upsert?: TenantUpsertWithoutDispatchItemsInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutDispatchItemsInput, TenantUpdateWithoutDispatchItemsInput>, TenantUncheckedUpdateWithoutDispatchItemsInput>
   }
 
   export type ItemCreateNestedOneWithoutTransactionsInput = {
@@ -27445,12 +23891,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutTransactionsInput, UserUncheckedCreateWithoutTransactionsInput>
     connectOrCreate?: UserCreateOrConnectWithoutTransactionsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type TenantCreateNestedOneWithoutInventoryTransactionsInput = {
-    create?: XOR<TenantCreateWithoutInventoryTransactionsInput, TenantUncheckedCreateWithoutInventoryTransactionsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutInventoryTransactionsInput
-    connect?: TenantWhereUniqueInput
   }
 
   export type ItemUpdateOneRequiredWithoutTransactionsNestedInput = {
@@ -27501,14 +23941,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTransactionsInput, UserUpdateWithoutTransactionsInput>, UserUncheckedUpdateWithoutTransactionsInput>
   }
 
-  export type TenantUpdateOneRequiredWithoutInventoryTransactionsNestedInput = {
-    create?: XOR<TenantCreateWithoutInventoryTransactionsInput, TenantUncheckedCreateWithoutInventoryTransactionsInput>
-    connectOrCreate?: TenantCreateOrConnectWithoutInventoryTransactionsInput
-    upsert?: TenantUpsertWithoutInventoryTransactionsInput
-    connect?: TenantWhereUniqueInput
-    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutInventoryTransactionsInput, TenantUpdateWithoutInventoryTransactionsInput>, TenantUncheckedUpdateWithoutInventoryTransactionsInput>
-  }
-
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -27521,6 +23953,20 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -27567,42 +24013,6 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -27629,6 +24039,28 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -27706,923 +24138,16 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type UserCreateWithoutTenantInput = {
-    id?: string
-    username: string
-    password: string
-    name: string
-    role?: string
-    emailAlerts?: boolean
-    twoFactorEnabled?: boolean
-    createdAt?: Date | string
-    roleObj?: RoleCreateNestedOneWithoutUsersInput
-    transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutTenantInput = {
-    id?: string
-    username: string
-    password: string
-    name: string
-    role?: string
-    roleId?: string | null
-    emailAlerts?: boolean
-    twoFactorEnabled?: boolean
-    createdAt?: Date | string
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutTenantInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
-  }
-
-  export type UserCreateManyTenantInputEnvelope = {
-    data: UserCreateManyTenantInput | UserCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RoleCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    description?: string | null
-    permissions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    users?: UserCreateNestedManyWithoutRoleObjInput
-  }
-
-  export type RoleUncheckedCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    description?: string | null
-    permissions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutRoleObjInput
-  }
-
-  export type RoleCreateOrConnectWithoutTenantInput = {
-    where: RoleWhereUniqueInput
-    create: XOR<RoleCreateWithoutTenantInput, RoleUncheckedCreateWithoutTenantInput>
-  }
-
-  export type RoleCreateManyTenantInputEnvelope = {
-    data: RoleCreateManyTenantInput | RoleCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type CategoryCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    items?: ItemCreateNestedManyWithoutCategoryInput
-  }
-
-  export type CategoryUncheckedCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    items?: ItemUncheckedCreateNestedManyWithoutCategoryInput
-  }
-
-  export type CategoryCreateOrConnectWithoutTenantInput = {
-    where: CategoryWhereUniqueInput
-    create: XOR<CategoryCreateWithoutTenantInput, CategoryUncheckedCreateWithoutTenantInput>
-  }
-
-  export type CategoryCreateManyTenantInputEnvelope = {
-    data: CategoryCreateManyTenantInput | CategoryCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ItemCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    sku: string
-    unit: string
-    createdAt?: Date | string
-    isCritical?: boolean
-    minStockLevel?: number
-    dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
-    transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
-    category: CategoryCreateNestedOneWithoutItemsInput
-    poItems?: POLineItemCreateNestedManyWithoutItemInput
-    stocks?: StockCreateNestedManyWithoutItemInput
-  }
-
-  export type ItemUncheckedCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    sku: string
-    categoryId: string
-    unit: string
-    createdAt?: Date | string
-    isCritical?: boolean
-    minStockLevel?: number
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutItemInput
-    poItems?: POLineItemUncheckedCreateNestedManyWithoutItemInput
-    stocks?: StockUncheckedCreateNestedManyWithoutItemInput
-  }
-
-  export type ItemCreateOrConnectWithoutTenantInput = {
-    where: ItemWhereUniqueInput
-    create: XOR<ItemCreateWithoutTenantInput, ItemUncheckedCreateWithoutTenantInput>
-  }
-
-  export type ItemCreateManyTenantInputEnvelope = {
-    data: ItemCreateManyTenantInput | ItemCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RackCreateWithoutTenantInput = {
-    id?: string
-    rackNumber: string
-    zone?: string | null
-    stocks?: StockCreateNestedManyWithoutRackInput
-    transactions?: InventoryTransactionCreateNestedManyWithoutRackInput
-  }
-
-  export type RackUncheckedCreateWithoutTenantInput = {
-    id?: string
-    rackNumber: string
-    zone?: string | null
-    stocks?: StockUncheckedCreateNestedManyWithoutRackInput
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutRackInput
-  }
-
-  export type RackCreateOrConnectWithoutTenantInput = {
-    where: RackWhereUniqueInput
-    create: XOR<RackCreateWithoutTenantInput, RackUncheckedCreateWithoutTenantInput>
-  }
-
-  export type RackCreateManyTenantInputEnvelope = {
-    data: RackCreateManyTenantInput | RackCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type StockCreateWithoutTenantInput = {
-    id?: string
-    quantity?: number
-    updatedAt?: Date | string
-    item: ItemCreateNestedOneWithoutStocksInput
-    rack: RackCreateNestedOneWithoutStocksInput
-  }
-
-  export type StockUncheckedCreateWithoutTenantInput = {
-    id?: string
-    itemId: string
-    rackId: string
-    quantity?: number
-    updatedAt?: Date | string
-  }
-
-  export type StockCreateOrConnectWithoutTenantInput = {
-    where: StockWhereUniqueInput
-    create: XOR<StockCreateWithoutTenantInput, StockUncheckedCreateWithoutTenantInput>
-  }
-
-  export type StockCreateManyTenantInputEnvelope = {
-    data: StockCreateManyTenantInput | StockCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InventoryCreateWithoutTenantInput = {
-    id?: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
-    updatedAt?: Date | string
-    item: ItemCreateNestedOneWithoutInventoryInput
-    batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
-  }
-
-  export type InventoryUncheckedCreateWithoutTenantInput = {
-    id?: string
-    itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
-    updatedAt?: Date | string
-    batches?: InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput
-  }
-
-  export type InventoryCreateOrConnectWithoutTenantInput = {
-    where: InventoryWhereUniqueInput
-    create: XOR<InventoryCreateWithoutTenantInput, InventoryUncheckedCreateWithoutTenantInput>
-  }
-
-  export type InventoryCreateManyTenantInputEnvelope = {
-    data: InventoryCreateManyTenantInput | InventoryCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type VendorCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    contact?: string | null
-    email?: string | null
-    preferredPaymentMode?: string | null
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutVendorInput
-    transactions?: InventoryTransactionCreateNestedManyWithoutVendorInput
-    batches?: InventoryBatchCreateNestedManyWithoutVendorInput
-  }
-
-  export type VendorUncheckedCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    contact?: string | null
-    email?: string | null
-    preferredPaymentMode?: string | null
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutVendorInput
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutVendorInput
-    batches?: InventoryBatchUncheckedCreateNestedManyWithoutVendorInput
-  }
-
-  export type VendorCreateOrConnectWithoutTenantInput = {
-    where: VendorWhereUniqueInput
-    create: XOR<VendorCreateWithoutTenantInput, VendorUncheckedCreateWithoutTenantInput>
-  }
-
-  export type VendorCreateManyTenantInputEnvelope = {
-    data: VendorCreateManyTenantInput | VendorCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type PurchaseOrderCreateWithoutTenantInput = {
-    id?: string
-    status?: string
-    paymentMode?: string | null
-    expectedDelivery?: Date | string | null
-    orderDate?: Date | string
-    createdAt?: Date | string
-    vendor: VendorCreateNestedOneWithoutPurchaseOrdersInput
-    items?: POLineItemCreateNestedManyWithoutPurchaseOrderInput
-    batches?: InventoryBatchCreateNestedManyWithoutPurchaseOrderInput
-  }
-
-  export type PurchaseOrderUncheckedCreateWithoutTenantInput = {
-    id?: string
-    vendorId: string
-    status?: string
-    paymentMode?: string | null
-    expectedDelivery?: Date | string | null
-    orderDate?: Date | string
-    createdAt?: Date | string
-    items?: POLineItemUncheckedCreateNestedManyWithoutPurchaseOrderInput
-    batches?: InventoryBatchUncheckedCreateNestedManyWithoutPurchaseOrderInput
-  }
-
-  export type PurchaseOrderCreateOrConnectWithoutTenantInput = {
-    where: PurchaseOrderWhereUniqueInput
-    create: XOR<PurchaseOrderCreateWithoutTenantInput, PurchaseOrderUncheckedCreateWithoutTenantInput>
-  }
-
-  export type PurchaseOrderCreateManyTenantInputEnvelope = {
-    data: PurchaseOrderCreateManyTenantInput | PurchaseOrderCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InventoryBatchCreateWithoutTenantInput = {
-    id?: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
-    purchaseDate: Date | string
-    createdAt?: Date | string
-    inventory: InventoryCreateNestedOneWithoutBatchesInput
-    vendor: VendorCreateNestedOneWithoutBatchesInput
-    purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
-  }
-
-  export type InventoryBatchUncheckedCreateWithoutTenantInput = {
-    id?: string
-    inventoryId: string
-    vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
-    purchaseDate: Date | string
-    purchaseOrderId?: string | null
-    createdAt?: Date | string
-  }
-
-  export type InventoryBatchCreateOrConnectWithoutTenantInput = {
-    where: InventoryBatchWhereUniqueInput
-    create: XOR<InventoryBatchCreateWithoutTenantInput, InventoryBatchUncheckedCreateWithoutTenantInput>
-  }
-
-  export type InventoryBatchCreateManyTenantInputEnvelope = {
-    data: InventoryBatchCreateManyTenantInput | InventoryBatchCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type POLineItemCreateWithoutTenantInput = {
-    id?: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
-    item: ItemCreateNestedOneWithoutPoItemsInput
-    purchaseOrder: PurchaseOrderCreateNestedOneWithoutItemsInput
-  }
-
-  export type POLineItemUncheckedCreateWithoutTenantInput = {
-    id?: string
-    purchaseOrderId: string
-    itemId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
-  }
-
-  export type POLineItemCreateOrConnectWithoutTenantInput = {
-    where: POLineItemWhereUniqueInput
-    create: XOR<POLineItemCreateWithoutTenantInput, POLineItemUncheckedCreateWithoutTenantInput>
-  }
-
-  export type POLineItemCreateManyTenantInputEnvelope = {
-    data: POLineItemCreateManyTenantInput | POLineItemCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type CustomerCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    email?: string | null
-    contact?: string | null
-    address?: string | null
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutCustomerInput
-    transactions?: InventoryTransactionCreateNestedManyWithoutCustomerInput
-  }
-
-  export type CustomerUncheckedCreateWithoutTenantInput = {
-    id?: string
-    name: string
-    email?: string | null
-    contact?: string | null
-    address?: string | null
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutCustomerInput
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCustomerInput
-  }
-
-  export type CustomerCreateOrConnectWithoutTenantInput = {
-    where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutTenantInput, CustomerUncheckedCreateWithoutTenantInput>
-  }
-
-  export type CustomerCreateManyTenantInputEnvelope = {
-    data: CustomerCreateManyTenantInput | CustomerCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type DispatchOrderCreateWithoutTenantInput = {
-    id?: string
-    status?: string
-    paymentMode?: string | null
-    expectedDelivery?: Date | string | null
-    orderDate?: Date | string
-    createdAt?: Date | string
-    items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
-    customer: CustomerCreateNestedOneWithoutDispatchOrdersInput
-  }
-
-  export type DispatchOrderUncheckedCreateWithoutTenantInput = {
-    id?: string
-    customerId: string
-    status?: string
-    paymentMode?: string | null
-    expectedDelivery?: Date | string | null
-    orderDate?: Date | string
-    createdAt?: Date | string
-    items?: DispatchItemUncheckedCreateNestedManyWithoutDispatchOrderInput
-  }
-
-  export type DispatchOrderCreateOrConnectWithoutTenantInput = {
-    where: DispatchOrderWhereUniqueInput
-    create: XOR<DispatchOrderCreateWithoutTenantInput, DispatchOrderUncheckedCreateWithoutTenantInput>
-  }
-
-  export type DispatchOrderCreateManyTenantInputEnvelope = {
-    data: DispatchOrderCreateManyTenantInput | DispatchOrderCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type DispatchItemCreateWithoutTenantInput = {
-    id?: string
-    quantity: number
-    sellingPrice: number
-    dispatchOrder: DispatchOrderCreateNestedOneWithoutItemsInput
-    item: ItemCreateNestedOneWithoutDispatchItemsInput
-  }
-
-  export type DispatchItemUncheckedCreateWithoutTenantInput = {
-    id?: string
-    dispatchOrderId: string
-    itemId: string
-    quantity: number
-    sellingPrice: number
-  }
-
-  export type DispatchItemCreateOrConnectWithoutTenantInput = {
-    where: DispatchItemWhereUniqueInput
-    create: XOR<DispatchItemCreateWithoutTenantInput, DispatchItemUncheckedCreateWithoutTenantInput>
-  }
-
-  export type DispatchItemCreateManyTenantInputEnvelope = {
-    data: DispatchItemCreateManyTenantInput | DispatchItemCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InventoryTransactionCreateWithoutTenantInput = {
-    id?: string
-    type: string
-    quantity: number
-    referenceType?: string | null
-    referenceId?: string | null
-    createdAt?: Date | string
-    item: ItemCreateNestedOneWithoutTransactionsInput
-    rack?: RackCreateNestedOneWithoutTransactionsInput
-    customer?: CustomerCreateNestedOneWithoutTransactionsInput
-    vendor?: VendorCreateNestedOneWithoutTransactionsInput
-    user?: UserCreateNestedOneWithoutTransactionsInput
-  }
-
-  export type InventoryTransactionUncheckedCreateWithoutTenantInput = {
-    id?: string
-    itemId: string
-    rackId?: string | null
-    userId?: string | null
-    customerId?: string | null
-    vendorId?: string | null
-    type: string
-    quantity: number
-    referenceType?: string | null
-    referenceId?: string | null
-    createdAt?: Date | string
-  }
-
-  export type InventoryTransactionCreateOrConnectWithoutTenantInput = {
-    where: InventoryTransactionWhereUniqueInput
-    create: XOR<InventoryTransactionCreateWithoutTenantInput, InventoryTransactionUncheckedCreateWithoutTenantInput>
-  }
-
-  export type InventoryTransactionCreateManyTenantInputEnvelope = {
-    data: InventoryTransactionCreateManyTenantInput | InventoryTransactionCreateManyTenantInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserUpsertWithWhereUniqueWithoutTenantInput = {
-    where: UserWhereUniqueInput
-    update: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
-    create: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
-  }
-
-  export type UserUpdateWithWhereUniqueWithoutTenantInput = {
-    where: UserWhereUniqueInput
-    data: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type UserUpdateManyWithWhereWithoutTenantInput = {
-    where: UserScalarWhereInput
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type UserScalarWhereInput = {
-    AND?: UserScalarWhereInput | UserScalarWhereInput[]
-    OR?: UserScalarWhereInput[]
-    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
-    id?: StringFilter<"User"> | string
-    tenantId?: StringFilter<"User"> | string
-    username?: StringFilter<"User"> | string
-    password?: StringFilter<"User"> | string
-    name?: StringFilter<"User"> | string
-    role?: StringFilter<"User"> | string
-    roleId?: StringNullableFilter<"User"> | string | null
-    emailAlerts?: BoolFilter<"User"> | boolean
-    twoFactorEnabled?: BoolFilter<"User"> | boolean
-    createdAt?: DateTimeFilter<"User"> | Date | string
-  }
-
-  export type RoleUpsertWithWhereUniqueWithoutTenantInput = {
-    where: RoleWhereUniqueInput
-    update: XOR<RoleUpdateWithoutTenantInput, RoleUncheckedUpdateWithoutTenantInput>
-    create: XOR<RoleCreateWithoutTenantInput, RoleUncheckedCreateWithoutTenantInput>
-  }
-
-  export type RoleUpdateWithWhereUniqueWithoutTenantInput = {
-    where: RoleWhereUniqueInput
-    data: XOR<RoleUpdateWithoutTenantInput, RoleUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type RoleUpdateManyWithWhereWithoutTenantInput = {
-    where: RoleScalarWhereInput
-    data: XOR<RoleUpdateManyMutationInput, RoleUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type RoleScalarWhereInput = {
-    AND?: RoleScalarWhereInput | RoleScalarWhereInput[]
-    OR?: RoleScalarWhereInput[]
-    NOT?: RoleScalarWhereInput | RoleScalarWhereInput[]
-    id?: StringFilter<"Role"> | string
-    tenantId?: StringFilter<"Role"> | string
-    name?: StringFilter<"Role"> | string
-    description?: StringNullableFilter<"Role"> | string | null
-    permissions?: JsonNullableFilter<"Role">
-    createdAt?: DateTimeFilter<"Role"> | Date | string
-  }
-
-  export type CategoryUpsertWithWhereUniqueWithoutTenantInput = {
-    where: CategoryWhereUniqueInput
-    update: XOR<CategoryUpdateWithoutTenantInput, CategoryUncheckedUpdateWithoutTenantInput>
-    create: XOR<CategoryCreateWithoutTenantInput, CategoryUncheckedCreateWithoutTenantInput>
-  }
-
-  export type CategoryUpdateWithWhereUniqueWithoutTenantInput = {
-    where: CategoryWhereUniqueInput
-    data: XOR<CategoryUpdateWithoutTenantInput, CategoryUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type CategoryUpdateManyWithWhereWithoutTenantInput = {
-    where: CategoryScalarWhereInput
-    data: XOR<CategoryUpdateManyMutationInput, CategoryUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type CategoryScalarWhereInput = {
-    AND?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
-    OR?: CategoryScalarWhereInput[]
-    NOT?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
-    id?: StringFilter<"Category"> | string
-    tenantId?: StringFilter<"Category"> | string
-    name?: StringFilter<"Category"> | string
-  }
-
-  export type ItemUpsertWithWhereUniqueWithoutTenantInput = {
-    where: ItemWhereUniqueInput
-    update: XOR<ItemUpdateWithoutTenantInput, ItemUncheckedUpdateWithoutTenantInput>
-    create: XOR<ItemCreateWithoutTenantInput, ItemUncheckedCreateWithoutTenantInput>
-  }
-
-  export type ItemUpdateWithWhereUniqueWithoutTenantInput = {
-    where: ItemWhereUniqueInput
-    data: XOR<ItemUpdateWithoutTenantInput, ItemUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type ItemUpdateManyWithWhereWithoutTenantInput = {
-    where: ItemScalarWhereInput
-    data: XOR<ItemUpdateManyMutationInput, ItemUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type ItemScalarWhereInput = {
-    AND?: ItemScalarWhereInput | ItemScalarWhereInput[]
-    OR?: ItemScalarWhereInput[]
-    NOT?: ItemScalarWhereInput | ItemScalarWhereInput[]
-    id?: StringFilter<"Item"> | string
-    tenantId?: StringFilter<"Item"> | string
-    name?: StringFilter<"Item"> | string
-    sku?: StringFilter<"Item"> | string
-    categoryId?: StringFilter<"Item"> | string
-    unit?: StringFilter<"Item"> | string
-    createdAt?: DateTimeFilter<"Item"> | Date | string
-    isCritical?: BoolFilter<"Item"> | boolean
-    minStockLevel?: FloatFilter<"Item"> | number
-  }
-
-  export type RackUpsertWithWhereUniqueWithoutTenantInput = {
-    where: RackWhereUniqueInput
-    update: XOR<RackUpdateWithoutTenantInput, RackUncheckedUpdateWithoutTenantInput>
-    create: XOR<RackCreateWithoutTenantInput, RackUncheckedCreateWithoutTenantInput>
-  }
-
-  export type RackUpdateWithWhereUniqueWithoutTenantInput = {
-    where: RackWhereUniqueInput
-    data: XOR<RackUpdateWithoutTenantInput, RackUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type RackUpdateManyWithWhereWithoutTenantInput = {
-    where: RackScalarWhereInput
-    data: XOR<RackUpdateManyMutationInput, RackUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type RackScalarWhereInput = {
-    AND?: RackScalarWhereInput | RackScalarWhereInput[]
-    OR?: RackScalarWhereInput[]
-    NOT?: RackScalarWhereInput | RackScalarWhereInput[]
-    id?: StringFilter<"Rack"> | string
-    tenantId?: StringFilter<"Rack"> | string
-    rackNumber?: StringFilter<"Rack"> | string
-    zone?: StringNullableFilter<"Rack"> | string | null
-  }
-
-  export type StockUpsertWithWhereUniqueWithoutTenantInput = {
-    where: StockWhereUniqueInput
-    update: XOR<StockUpdateWithoutTenantInput, StockUncheckedUpdateWithoutTenantInput>
-    create: XOR<StockCreateWithoutTenantInput, StockUncheckedCreateWithoutTenantInput>
-  }
-
-  export type StockUpdateWithWhereUniqueWithoutTenantInput = {
-    where: StockWhereUniqueInput
-    data: XOR<StockUpdateWithoutTenantInput, StockUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type StockUpdateManyWithWhereWithoutTenantInput = {
-    where: StockScalarWhereInput
-    data: XOR<StockUpdateManyMutationInput, StockUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type StockScalarWhereInput = {
-    AND?: StockScalarWhereInput | StockScalarWhereInput[]
-    OR?: StockScalarWhereInput[]
-    NOT?: StockScalarWhereInput | StockScalarWhereInput[]
-    id?: StringFilter<"Stock"> | string
-    tenantId?: StringFilter<"Stock"> | string
-    itemId?: StringFilter<"Stock"> | string
-    rackId?: StringFilter<"Stock"> | string
-    quantity?: FloatFilter<"Stock"> | number
-    updatedAt?: DateTimeFilter<"Stock"> | Date | string
-  }
-
-  export type InventoryUpsertWithWhereUniqueWithoutTenantInput = {
-    where: InventoryWhereUniqueInput
-    update: XOR<InventoryUpdateWithoutTenantInput, InventoryUncheckedUpdateWithoutTenantInput>
-    create: XOR<InventoryCreateWithoutTenantInput, InventoryUncheckedCreateWithoutTenantInput>
-  }
-
-  export type InventoryUpdateWithWhereUniqueWithoutTenantInput = {
-    where: InventoryWhereUniqueInput
-    data: XOR<InventoryUpdateWithoutTenantInput, InventoryUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type InventoryUpdateManyWithWhereWithoutTenantInput = {
-    where: InventoryScalarWhereInput
-    data: XOR<InventoryUpdateManyMutationInput, InventoryUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type InventoryScalarWhereInput = {
-    AND?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
-    OR?: InventoryScalarWhereInput[]
-    NOT?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
-    id?: StringFilter<"Inventory"> | string
-    tenantId?: StringFilter<"Inventory"> | string
-    itemId?: StringFilter<"Inventory"> | string
-    quantityAvailable?: FloatFilter<"Inventory"> | number
-    incomingQty?: FloatFilter<"Inventory"> | number
-    quantityReserved?: FloatFilter<"Inventory"> | number
-    quantityInTransit?: FloatFilter<"Inventory"> | number
-    updatedAt?: DateTimeFilter<"Inventory"> | Date | string
-  }
-
-  export type VendorUpsertWithWhereUniqueWithoutTenantInput = {
-    where: VendorWhereUniqueInput
-    update: XOR<VendorUpdateWithoutTenantInput, VendorUncheckedUpdateWithoutTenantInput>
-    create: XOR<VendorCreateWithoutTenantInput, VendorUncheckedCreateWithoutTenantInput>
-  }
-
-  export type VendorUpdateWithWhereUniqueWithoutTenantInput = {
-    where: VendorWhereUniqueInput
-    data: XOR<VendorUpdateWithoutTenantInput, VendorUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type VendorUpdateManyWithWhereWithoutTenantInput = {
-    where: VendorScalarWhereInput
-    data: XOR<VendorUpdateManyMutationInput, VendorUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type VendorScalarWhereInput = {
-    AND?: VendorScalarWhereInput | VendorScalarWhereInput[]
-    OR?: VendorScalarWhereInput[]
-    NOT?: VendorScalarWhereInput | VendorScalarWhereInput[]
-    id?: StringFilter<"Vendor"> | string
-    tenantId?: StringFilter<"Vendor"> | string
-    name?: StringFilter<"Vendor"> | string
-    contact?: StringNullableFilter<"Vendor"> | string | null
-    email?: StringNullableFilter<"Vendor"> | string | null
-    preferredPaymentMode?: StringNullableFilter<"Vendor"> | string | null
-  }
-
-  export type PurchaseOrderUpsertWithWhereUniqueWithoutTenantInput = {
-    where: PurchaseOrderWhereUniqueInput
-    update: XOR<PurchaseOrderUpdateWithoutTenantInput, PurchaseOrderUncheckedUpdateWithoutTenantInput>
-    create: XOR<PurchaseOrderCreateWithoutTenantInput, PurchaseOrderUncheckedCreateWithoutTenantInput>
-  }
-
-  export type PurchaseOrderUpdateWithWhereUniqueWithoutTenantInput = {
-    where: PurchaseOrderWhereUniqueInput
-    data: XOR<PurchaseOrderUpdateWithoutTenantInput, PurchaseOrderUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type PurchaseOrderUpdateManyWithWhereWithoutTenantInput = {
-    where: PurchaseOrderScalarWhereInput
-    data: XOR<PurchaseOrderUpdateManyMutationInput, PurchaseOrderUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type PurchaseOrderScalarWhereInput = {
-    AND?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
-    OR?: PurchaseOrderScalarWhereInput[]
-    NOT?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
-    id?: StringFilter<"PurchaseOrder"> | string
-    tenantId?: StringFilter<"PurchaseOrder"> | string
-    vendorId?: StringFilter<"PurchaseOrder"> | string
-    status?: StringFilter<"PurchaseOrder"> | string
-    paymentMode?: StringNullableFilter<"PurchaseOrder"> | string | null
-    expectedDelivery?: DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
-    orderDate?: DateTimeFilter<"PurchaseOrder"> | Date | string
-    createdAt?: DateTimeFilter<"PurchaseOrder"> | Date | string
-  }
-
-  export type InventoryBatchUpsertWithWhereUniqueWithoutTenantInput = {
-    where: InventoryBatchWhereUniqueInput
-    update: XOR<InventoryBatchUpdateWithoutTenantInput, InventoryBatchUncheckedUpdateWithoutTenantInput>
-    create: XOR<InventoryBatchCreateWithoutTenantInput, InventoryBatchUncheckedCreateWithoutTenantInput>
-  }
-
-  export type InventoryBatchUpdateWithWhereUniqueWithoutTenantInput = {
-    where: InventoryBatchWhereUniqueInput
-    data: XOR<InventoryBatchUpdateWithoutTenantInput, InventoryBatchUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type InventoryBatchUpdateManyWithWhereWithoutTenantInput = {
-    where: InventoryBatchScalarWhereInput
-    data: XOR<InventoryBatchUpdateManyMutationInput, InventoryBatchUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type InventoryBatchScalarWhereInput = {
-    AND?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
-    OR?: InventoryBatchScalarWhereInput[]
-    NOT?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
-    id?: StringFilter<"InventoryBatch"> | string
-    tenantId?: StringFilter<"InventoryBatch"> | string
-    inventoryId?: StringFilter<"InventoryBatch"> | string
-    vendorId?: StringFilter<"InventoryBatch"> | string
-    quantity?: FloatFilter<"InventoryBatch"> | number
-    remainingQty?: FloatFilter<"InventoryBatch"> | number
-    costPerUnit?: FloatFilter<"InventoryBatch"> | number
-    purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
-    purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
-    createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
-  }
-
-  export type POLineItemUpsertWithWhereUniqueWithoutTenantInput = {
-    where: POLineItemWhereUniqueInput
-    update: XOR<POLineItemUpdateWithoutTenantInput, POLineItemUncheckedUpdateWithoutTenantInput>
-    create: XOR<POLineItemCreateWithoutTenantInput, POLineItemUncheckedCreateWithoutTenantInput>
-  }
-
-  export type POLineItemUpdateWithWhereUniqueWithoutTenantInput = {
-    where: POLineItemWhereUniqueInput
-    data: XOR<POLineItemUpdateWithoutTenantInput, POLineItemUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type POLineItemUpdateManyWithWhereWithoutTenantInput = {
-    where: POLineItemScalarWhereInput
-    data: XOR<POLineItemUpdateManyMutationInput, POLineItemUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type POLineItemScalarWhereInput = {
-    AND?: POLineItemScalarWhereInput | POLineItemScalarWhereInput[]
-    OR?: POLineItemScalarWhereInput[]
-    NOT?: POLineItemScalarWhereInput | POLineItemScalarWhereInput[]
-    id?: StringFilter<"POLineItem"> | string
-    tenantId?: StringFilter<"POLineItem"> | string
-    purchaseOrderId?: StringFilter<"POLineItem"> | string
-    itemId?: StringFilter<"POLineItem"> | string
-    quantityOrdered?: FloatFilter<"POLineItem"> | number
-    quantityReceived?: FloatFilter<"POLineItem"> | number
-    costPrice?: FloatFilter<"POLineItem"> | number
-  }
-
-  export type CustomerUpsertWithWhereUniqueWithoutTenantInput = {
-    where: CustomerWhereUniqueInput
-    update: XOR<CustomerUpdateWithoutTenantInput, CustomerUncheckedUpdateWithoutTenantInput>
-    create: XOR<CustomerCreateWithoutTenantInput, CustomerUncheckedCreateWithoutTenantInput>
-  }
-
-  export type CustomerUpdateWithWhereUniqueWithoutTenantInput = {
-    where: CustomerWhereUniqueInput
-    data: XOR<CustomerUpdateWithoutTenantInput, CustomerUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type CustomerUpdateManyWithWhereWithoutTenantInput = {
-    where: CustomerScalarWhereInput
-    data: XOR<CustomerUpdateManyMutationInput, CustomerUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type CustomerScalarWhereInput = {
-    AND?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
-    OR?: CustomerScalarWhereInput[]
-    NOT?: CustomerScalarWhereInput | CustomerScalarWhereInput[]
-    id?: StringFilter<"Customer"> | string
-    tenantId?: StringFilter<"Customer"> | string
-    name?: StringFilter<"Customer"> | string
-    email?: StringNullableFilter<"Customer"> | string | null
-    contact?: StringNullableFilter<"Customer"> | string | null
-    address?: StringNullableFilter<"Customer"> | string | null
-  }
-
-  export type DispatchOrderUpsertWithWhereUniqueWithoutTenantInput = {
-    where: DispatchOrderWhereUniqueInput
-    update: XOR<DispatchOrderUpdateWithoutTenantInput, DispatchOrderUncheckedUpdateWithoutTenantInput>
-    create: XOR<DispatchOrderCreateWithoutTenantInput, DispatchOrderUncheckedCreateWithoutTenantInput>
-  }
-
-  export type DispatchOrderUpdateWithWhereUniqueWithoutTenantInput = {
-    where: DispatchOrderWhereUniqueInput
-    data: XOR<DispatchOrderUpdateWithoutTenantInput, DispatchOrderUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type DispatchOrderUpdateManyWithWhereWithoutTenantInput = {
-    where: DispatchOrderScalarWhereInput
-    data: XOR<DispatchOrderUpdateManyMutationInput, DispatchOrderUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type DispatchOrderScalarWhereInput = {
-    AND?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
-    OR?: DispatchOrderScalarWhereInput[]
-    NOT?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
-    id?: StringFilter<"DispatchOrder"> | string
-    tenantId?: StringFilter<"DispatchOrder"> | string
-    customerId?: StringFilter<"DispatchOrder"> | string
-    status?: StringFilter<"DispatchOrder"> | string
-    paymentMode?: StringNullableFilter<"DispatchOrder"> | string | null
-    expectedDelivery?: DateTimeNullableFilter<"DispatchOrder"> | Date | string | null
-    orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
-    createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
-  }
-
-  export type DispatchItemUpsertWithWhereUniqueWithoutTenantInput = {
-    where: DispatchItemWhereUniqueInput
-    update: XOR<DispatchItemUpdateWithoutTenantInput, DispatchItemUncheckedUpdateWithoutTenantInput>
-    create: XOR<DispatchItemCreateWithoutTenantInput, DispatchItemUncheckedCreateWithoutTenantInput>
-  }
-
-  export type DispatchItemUpdateWithWhereUniqueWithoutTenantInput = {
-    where: DispatchItemWhereUniqueInput
-    data: XOR<DispatchItemUpdateWithoutTenantInput, DispatchItemUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type DispatchItemUpdateManyWithWhereWithoutTenantInput = {
-    where: DispatchItemScalarWhereInput
-    data: XOR<DispatchItemUpdateManyMutationInput, DispatchItemUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type DispatchItemScalarWhereInput = {
-    AND?: DispatchItemScalarWhereInput | DispatchItemScalarWhereInput[]
-    OR?: DispatchItemScalarWhereInput[]
-    NOT?: DispatchItemScalarWhereInput | DispatchItemScalarWhereInput[]
-    id?: StringFilter<"DispatchItem"> | string
-    tenantId?: StringFilter<"DispatchItem"> | string
-    dispatchOrderId?: StringFilter<"DispatchItem"> | string
-    itemId?: StringFilter<"DispatchItem"> | string
-    quantity?: FloatFilter<"DispatchItem"> | number
-    sellingPrice?: FloatFilter<"DispatchItem"> | number
-  }
-
-  export type InventoryTransactionUpsertWithWhereUniqueWithoutTenantInput = {
-    where: InventoryTransactionWhereUniqueInput
-    update: XOR<InventoryTransactionUpdateWithoutTenantInput, InventoryTransactionUncheckedUpdateWithoutTenantInput>
-    create: XOR<InventoryTransactionCreateWithoutTenantInput, InventoryTransactionUncheckedCreateWithoutTenantInput>
-  }
-
-  export type InventoryTransactionUpdateWithWhereUniqueWithoutTenantInput = {
-    where: InventoryTransactionWhereUniqueInput
-    data: XOR<InventoryTransactionUpdateWithoutTenantInput, InventoryTransactionUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type InventoryTransactionUpdateManyWithWhereWithoutTenantInput = {
-    where: InventoryTransactionScalarWhereInput
-    data: XOR<InventoryTransactionUpdateManyMutationInput, InventoryTransactionUncheckedUpdateManyWithoutTenantInput>
-  }
-
-  export type InventoryTransactionScalarWhereInput = {
-    AND?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
-    OR?: InventoryTransactionScalarWhereInput[]
-    NOT?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
-    id?: StringFilter<"InventoryTransaction"> | string
-    tenantId?: StringFilter<"InventoryTransaction"> | string
-    itemId?: StringFilter<"InventoryTransaction"> | string
-    rackId?: StringNullableFilter<"InventoryTransaction"> | string | null
-    userId?: StringNullableFilter<"InventoryTransaction"> | string | null
-    customerId?: StringNullableFilter<"InventoryTransaction"> | string | null
-    vendorId?: StringNullableFilter<"InventoryTransaction"> | string | null
-    type?: StringFilter<"InventoryTransaction"> | string
-    quantity?: FloatFilter<"InventoryTransaction"> | number
-    referenceType?: StringNullableFilter<"InventoryTransaction"> | string | null
-    referenceId?: StringNullableFilter<"InventoryTransaction"> | string | null
-    createdAt?: DateTimeFilter<"InventoryTransaction"> | Date | string
-  }
-
   export type RoleCreateWithoutUsersInput = {
     id?: string
     name: string
     description?: string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
-    tenant: TenantCreateNestedOneWithoutRolesInput
   }
 
   export type RoleUncheckedCreateWithoutUsersInput = {
     id?: string
-    tenantId: string
     name: string
     description?: string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
@@ -28645,12 +24170,10 @@ export namespace Prisma {
     rack?: RackCreateNestedOneWithoutTransactionsInput
     customer?: CustomerCreateNestedOneWithoutTransactionsInput
     vendor?: VendorCreateNestedOneWithoutTransactionsInput
-    tenant: TenantCreateNestedOneWithoutInventoryTransactionsInput
   }
 
   export type InventoryTransactionUncheckedCreateWithoutUserInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     customerId?: string | null
@@ -28672,57 +24195,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TenantCreateWithoutUsersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutUsersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutUsersInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
-  }
-
   export type RoleUpsertWithoutUsersInput = {
     update: XOR<RoleUpdateWithoutUsersInput, RoleUncheckedUpdateWithoutUsersInput>
     create: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
@@ -28740,12 +24212,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tenant?: TenantUpdateOneRequiredWithoutRolesNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     permissions?: NullableJsonNullValueInput | InputJsonValue
@@ -28768,61 +24238,21 @@ export namespace Prisma {
     data: XOR<InventoryTransactionUpdateManyMutationInput, InventoryTransactionUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type TenantUpsertWithoutUsersInput = {
-    update: XOR<TenantUpdateWithoutUsersInput, TenantUncheckedUpdateWithoutUsersInput>
-    create: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutUsersInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutUsersInput, TenantUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type TenantUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
+  export type InventoryTransactionScalarWhereInput = {
+    AND?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
+    OR?: InventoryTransactionScalarWhereInput[]
+    NOT?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
+    id?: StringFilter<"InventoryTransaction"> | string
+    itemId?: StringFilter<"InventoryTransaction"> | string
+    rackId?: StringNullableFilter<"InventoryTransaction"> | string | null
+    userId?: StringNullableFilter<"InventoryTransaction"> | string | null
+    customerId?: StringNullableFilter<"InventoryTransaction"> | string | null
+    vendorId?: StringNullableFilter<"InventoryTransaction"> | string | null
+    type?: StringFilter<"InventoryTransaction"> | string
+    quantity?: FloatFilter<"InventoryTransaction"> | number
+    referenceType?: StringNullableFilter<"InventoryTransaction"> | string | null
+    referenceId?: StringNullableFilter<"InventoryTransaction"> | string | null
+    createdAt?: DateTimeFilter<"InventoryTransaction"> | Date | string
   }
 
   export type UserCreateWithoutRoleObjInput = {
@@ -28835,12 +24265,10 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
-    tenant: TenantCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutRoleObjInput = {
     id?: string
-    tenantId: string
     username: string
     password: string
     name: string
@@ -28861,57 +24289,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TenantCreateWithoutRolesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutRolesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutRolesInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutRolesInput, TenantUncheckedCreateWithoutRolesInput>
-  }
-
   export type UserUpsertWithWhereUniqueWithoutRoleObjInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutRoleObjInput, UserUncheckedUpdateWithoutRoleObjInput>
@@ -28928,61 +24305,19 @@ export namespace Prisma {
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutRoleObjInput>
   }
 
-  export type TenantUpsertWithoutRolesInput = {
-    update: XOR<TenantUpdateWithoutRolesInput, TenantUncheckedUpdateWithoutRolesInput>
-    create: XOR<TenantCreateWithoutRolesInput, TenantUncheckedCreateWithoutRolesInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutRolesInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutRolesInput, TenantUncheckedUpdateWithoutRolesInput>
-  }
-
-  export type TenantUpdateWithoutRolesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutRolesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    username?: StringFilter<"User"> | string
+    password?: StringFilter<"User"> | string
+    name?: StringFilter<"User"> | string
+    role?: StringFilter<"User"> | string
+    roleId?: StringNullableFilter<"User"> | string | null
+    emailAlerts?: BoolFilter<"User"> | boolean
+    twoFactorEnabled?: BoolFilter<"User"> | boolean
+    createdAt?: DateTimeFilter<"User"> | Date | string
   }
 
   export type ItemCreateWithoutCategoryInput = {
@@ -28998,12 +24333,10 @@ export namespace Prisma {
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
     poItems?: POLineItemCreateNestedManyWithoutItemInput
     stocks?: StockCreateNestedManyWithoutItemInput
-    tenant: TenantCreateNestedOneWithoutItemsInput
   }
 
   export type ItemUncheckedCreateWithoutCategoryInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     unit: string
@@ -29027,57 +24360,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TenantCreateWithoutCategoriesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutCategoriesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutCategoriesInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutCategoriesInput, TenantUncheckedCreateWithoutCategoriesInput>
-  }
-
   export type ItemUpsertWithWhereUniqueWithoutCategoryInput = {
     where: ItemWhereUniqueInput
     update: XOR<ItemUpdateWithoutCategoryInput, ItemUncheckedUpdateWithoutCategoryInput>
@@ -29094,61 +24376,18 @@ export namespace Prisma {
     data: XOR<ItemUpdateManyMutationInput, ItemUncheckedUpdateManyWithoutCategoryInput>
   }
 
-  export type TenantUpsertWithoutCategoriesInput = {
-    update: XOR<TenantUpdateWithoutCategoriesInput, TenantUncheckedUpdateWithoutCategoriesInput>
-    create: XOR<TenantCreateWithoutCategoriesInput, TenantUncheckedCreateWithoutCategoriesInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutCategoriesInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutCategoriesInput, TenantUncheckedUpdateWithoutCategoriesInput>
-  }
-
-  export type TenantUpdateWithoutCategoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutCategoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
+  export type ItemScalarWhereInput = {
+    AND?: ItemScalarWhereInput | ItemScalarWhereInput[]
+    OR?: ItemScalarWhereInput[]
+    NOT?: ItemScalarWhereInput | ItemScalarWhereInput[]
+    id?: StringFilter<"Item"> | string
+    name?: StringFilter<"Item"> | string
+    sku?: StringFilter<"Item"> | string
+    categoryId?: StringFilter<"Item"> | string
+    unit?: StringFilter<"Item"> | string
+    createdAt?: DateTimeFilter<"Item"> | Date | string
+    isCritical?: BoolFilter<"Item"> | boolean
+    minStockLevel?: FloatFilter<"Item"> | number
   }
 
   export type DispatchItemCreateWithoutItemInput = {
@@ -29156,12 +24395,10 @@ export namespace Prisma {
     quantity: number
     sellingPrice: number
     dispatchOrder: DispatchOrderCreateNestedOneWithoutItemsInput
-    tenant: TenantCreateNestedOneWithoutDispatchItemsInput
   }
 
   export type DispatchItemUncheckedCreateWithoutItemInput = {
     id?: string
-    tenantId: string
     dispatchOrderId: string
     quantity: number
     sellingPrice: number
@@ -29185,12 +24422,10 @@ export namespace Prisma {
     quantityInTransit?: number
     updatedAt?: Date | string
     batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
-    tenant: TenantCreateNestedOneWithoutInventoriesInput
   }
 
   export type InventoryUncheckedCreateWithoutItemInput = {
     id?: string
-    tenantId: string
     quantityAvailable?: number
     incomingQty?: number
     quantityReserved?: number
@@ -29215,12 +24450,10 @@ export namespace Prisma {
     customer?: CustomerCreateNestedOneWithoutTransactionsInput
     vendor?: VendorCreateNestedOneWithoutTransactionsInput
     user?: UserCreateNestedOneWithoutTransactionsInput
-    tenant: TenantCreateNestedOneWithoutInventoryTransactionsInput
   }
 
   export type InventoryTransactionUncheckedCreateWithoutItemInput = {
     id?: string
-    tenantId: string
     rackId?: string | null
     userId?: string | null
     customerId?: string | null
@@ -29245,12 +24478,10 @@ export namespace Prisma {
   export type CategoryCreateWithoutItemsInput = {
     id?: string
     name: string
-    tenant: TenantCreateNestedOneWithoutCategoriesInput
   }
 
   export type CategoryUncheckedCreateWithoutItemsInput = {
     id?: string
-    tenantId: string
     name: string
   }
 
@@ -29265,12 +24496,10 @@ export namespace Prisma {
     quantityReceived?: number
     costPrice: number
     purchaseOrder: PurchaseOrderCreateNestedOneWithoutItemsInput
-    tenant: TenantCreateNestedOneWithoutPoLineItemsInput
   }
 
   export type POLineItemUncheckedCreateWithoutItemInput = {
     id?: string
-    tenantId: string
     purchaseOrderId: string
     quantityOrdered: number
     quantityReceived?: number
@@ -29292,12 +24521,10 @@ export namespace Prisma {
     quantity?: number
     updatedAt?: Date | string
     rack: RackCreateNestedOneWithoutStocksInput
-    tenant: TenantCreateNestedOneWithoutStocksInput
   }
 
   export type StockUncheckedCreateWithoutItemInput = {
     id?: string
-    tenantId: string
     rackId: string
     quantity?: number
     updatedAt?: Date | string
@@ -29311,57 +24538,6 @@ export namespace Prisma {
   export type StockCreateManyItemInputEnvelope = {
     data: StockCreateManyItemInput | StockCreateManyItemInput[]
     skipDuplicates?: boolean
-  }
-
-  export type TenantCreateWithoutItemsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutItemsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutItemsInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutItemsInput, TenantUncheckedCreateWithoutItemsInput>
   }
 
   export type DispatchItemUpsertWithWhereUniqueWithoutItemInput = {
@@ -29378,6 +24554,17 @@ export namespace Prisma {
   export type DispatchItemUpdateManyWithWhereWithoutItemInput = {
     where: DispatchItemScalarWhereInput
     data: XOR<DispatchItemUpdateManyMutationInput, DispatchItemUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type DispatchItemScalarWhereInput = {
+    AND?: DispatchItemScalarWhereInput | DispatchItemScalarWhereInput[]
+    OR?: DispatchItemScalarWhereInput[]
+    NOT?: DispatchItemScalarWhereInput | DispatchItemScalarWhereInput[]
+    id?: StringFilter<"DispatchItem"> | string
+    dispatchOrderId?: StringFilter<"DispatchItem"> | string
+    itemId?: StringFilter<"DispatchItem"> | string
+    quantity?: FloatFilter<"DispatchItem"> | number
+    sellingPrice?: FloatFilter<"DispatchItem"> | number
   }
 
   export type InventoryUpsertWithoutItemInput = {
@@ -29399,12 +24586,10 @@ export namespace Prisma {
     quantityInTransit?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoriesNestedInput
   }
 
   export type InventoryUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     quantityAvailable?: FloatFieldUpdateOperationsInput | number
     incomingQty?: FloatFieldUpdateOperationsInput | number
     quantityReserved?: FloatFieldUpdateOperationsInput | number
@@ -29443,12 +24628,10 @@ export namespace Prisma {
   export type CategoryUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    tenant?: TenantUpdateOneRequiredWithoutCategoriesNestedInput
   }
 
   export type CategoryUncheckedUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
   }
 
@@ -29468,6 +24651,18 @@ export namespace Prisma {
     data: XOR<POLineItemUpdateManyMutationInput, POLineItemUncheckedUpdateManyWithoutItemInput>
   }
 
+  export type POLineItemScalarWhereInput = {
+    AND?: POLineItemScalarWhereInput | POLineItemScalarWhereInput[]
+    OR?: POLineItemScalarWhereInput[]
+    NOT?: POLineItemScalarWhereInput | POLineItemScalarWhereInput[]
+    id?: StringFilter<"POLineItem"> | string
+    purchaseOrderId?: StringFilter<"POLineItem"> | string
+    itemId?: StringFilter<"POLineItem"> | string
+    quantityOrdered?: FloatFilter<"POLineItem"> | number
+    quantityReceived?: FloatFilter<"POLineItem"> | number
+    costPrice?: FloatFilter<"POLineItem"> | number
+  }
+
   export type StockUpsertWithWhereUniqueWithoutItemInput = {
     where: StockWhereUniqueInput
     update: XOR<StockUpdateWithoutItemInput, StockUncheckedUpdateWithoutItemInput>
@@ -29484,61 +24679,15 @@ export namespace Prisma {
     data: XOR<StockUpdateManyMutationInput, StockUncheckedUpdateManyWithoutItemInput>
   }
 
-  export type TenantUpsertWithoutItemsInput = {
-    update: XOR<TenantUpdateWithoutItemsInput, TenantUncheckedUpdateWithoutItemsInput>
-    create: XOR<TenantCreateWithoutItemsInput, TenantUncheckedCreateWithoutItemsInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutItemsInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutItemsInput, TenantUncheckedUpdateWithoutItemsInput>
-  }
-
-  export type TenantUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
+  export type StockScalarWhereInput = {
+    AND?: StockScalarWhereInput | StockScalarWhereInput[]
+    OR?: StockScalarWhereInput[]
+    NOT?: StockScalarWhereInput | StockScalarWhereInput[]
+    id?: StringFilter<"Stock"> | string
+    itemId?: StringFilter<"Stock"> | string
+    rackId?: StringFilter<"Stock"> | string
+    quantity?: FloatFilter<"Stock"> | number
+    updatedAt?: DateTimeFilter<"Stock"> | Date | string
   }
 
   export type StockCreateWithoutRackInput = {
@@ -29546,12 +24695,10 @@ export namespace Prisma {
     quantity?: number
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutStocksInput
-    tenant: TenantCreateNestedOneWithoutStocksInput
   }
 
   export type StockUncheckedCreateWithoutRackInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantity?: number
     updatedAt?: Date | string
@@ -29578,12 +24725,10 @@ export namespace Prisma {
     customer?: CustomerCreateNestedOneWithoutTransactionsInput
     vendor?: VendorCreateNestedOneWithoutTransactionsInput
     user?: UserCreateNestedOneWithoutTransactionsInput
-    tenant: TenantCreateNestedOneWithoutInventoryTransactionsInput
   }
 
   export type InventoryTransactionUncheckedCreateWithoutRackInput = {
     id?: string
-    tenantId: string
     itemId: string
     userId?: string | null
     customerId?: string | null
@@ -29603,57 +24748,6 @@ export namespace Prisma {
   export type InventoryTransactionCreateManyRackInputEnvelope = {
     data: InventoryTransactionCreateManyRackInput | InventoryTransactionCreateManyRackInput[]
     skipDuplicates?: boolean
-  }
-
-  export type TenantCreateWithoutRacksInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutRacksInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutRacksInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutRacksInput, TenantUncheckedCreateWithoutRacksInput>
   }
 
   export type StockUpsertWithWhereUniqueWithoutRackInput = {
@@ -29688,63 +24782,6 @@ export namespace Prisma {
     data: XOR<InventoryTransactionUpdateManyMutationInput, InventoryTransactionUncheckedUpdateManyWithoutRackInput>
   }
 
-  export type TenantUpsertWithoutRacksInput = {
-    update: XOR<TenantUpdateWithoutRacksInput, TenantUncheckedUpdateWithoutRacksInput>
-    create: XOR<TenantCreateWithoutRacksInput, TenantUncheckedCreateWithoutRacksInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutRacksInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutRacksInput, TenantUncheckedUpdateWithoutRacksInput>
-  }
-
-  export type TenantUpdateWithoutRacksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutRacksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
-  }
-
   export type ItemCreateWithoutStocksInput = {
     id?: string
     name: string
@@ -29758,12 +24795,10 @@ export namespace Prisma {
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
     category: CategoryCreateNestedOneWithoutItemsInput
     poItems?: POLineItemCreateNestedManyWithoutItemInput
-    tenant: TenantCreateNestedOneWithoutItemsInput
   }
 
   export type ItemUncheckedCreateWithoutStocksInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -29787,12 +24822,10 @@ export namespace Prisma {
     rackNumber: string
     zone?: string | null
     transactions?: InventoryTransactionCreateNestedManyWithoutRackInput
-    tenant: TenantCreateNestedOneWithoutRacksInput
   }
 
   export type RackUncheckedCreateWithoutStocksInput = {
     id?: string
-    tenantId: string
     rackNumber: string
     zone?: string | null
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutRackInput
@@ -29801,57 +24834,6 @@ export namespace Prisma {
   export type RackCreateOrConnectWithoutStocksInput = {
     where: RackWhereUniqueInput
     create: XOR<RackCreateWithoutStocksInput, RackUncheckedCreateWithoutStocksInput>
-  }
-
-  export type TenantCreateWithoutStocksInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutStocksInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutStocksInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutStocksInput, TenantUncheckedCreateWithoutStocksInput>
   }
 
   export type ItemUpsertWithoutStocksInput = {
@@ -29878,12 +24860,10 @@ export namespace Prisma {
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
     poItems?: POLineItemUpdateManyWithoutItemNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutStocksInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -29913,72 +24893,13 @@ export namespace Prisma {
     rackNumber?: StringFieldUpdateOperationsInput | string
     zone?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: InventoryTransactionUpdateManyWithoutRackNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutRacksNestedInput
   }
 
   export type RackUncheckedUpdateWithoutStocksInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackNumber?: StringFieldUpdateOperationsInput | string
     zone?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutRackNestedInput
-  }
-
-  export type TenantUpsertWithoutStocksInput = {
-    update: XOR<TenantUpdateWithoutStocksInput, TenantUncheckedUpdateWithoutStocksInput>
-    create: XOR<TenantCreateWithoutStocksInput, TenantUncheckedCreateWithoutStocksInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutStocksInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutStocksInput, TenantUncheckedUpdateWithoutStocksInput>
-  }
-
-  export type TenantUpdateWithoutStocksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutStocksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ItemCreateWithoutInventoryInput = {
@@ -29994,12 +24915,10 @@ export namespace Prisma {
     category: CategoryCreateNestedOneWithoutItemsInput
     poItems?: POLineItemCreateNestedManyWithoutItemInput
     stocks?: StockCreateNestedManyWithoutItemInput
-    tenant: TenantCreateNestedOneWithoutItemsInput
   }
 
   export type ItemUncheckedCreateWithoutInventoryInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -30027,12 +24946,10 @@ export namespace Prisma {
     createdAt?: Date | string
     vendor: VendorCreateNestedOneWithoutBatchesInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
-    tenant: TenantCreateNestedOneWithoutInventoryBatchesInput
   }
 
   export type InventoryBatchUncheckedCreateWithoutInventoryInput = {
     id?: string
-    tenantId: string
     vendorId: string
     quantity: number
     remainingQty: number
@@ -30050,57 +24967,6 @@ export namespace Prisma {
   export type InventoryBatchCreateManyInventoryInputEnvelope = {
     data: InventoryBatchCreateManyInventoryInput | InventoryBatchCreateManyInventoryInput[]
     skipDuplicates?: boolean
-  }
-
-  export type TenantCreateWithoutInventoriesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutInventoriesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutInventoriesInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutInventoriesInput, TenantUncheckedCreateWithoutInventoriesInput>
   }
 
   export type ItemUpsertWithoutInventoryInput = {
@@ -30127,12 +24993,10 @@ export namespace Prisma {
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
     poItems?: POLineItemUpdateManyWithoutItemNestedInput
     stocks?: StockUpdateManyWithoutItemNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutInventoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -30162,61 +25026,19 @@ export namespace Prisma {
     data: XOR<InventoryBatchUpdateManyMutationInput, InventoryBatchUncheckedUpdateManyWithoutInventoryInput>
   }
 
-  export type TenantUpsertWithoutInventoriesInput = {
-    update: XOR<TenantUpdateWithoutInventoriesInput, TenantUncheckedUpdateWithoutInventoriesInput>
-    create: XOR<TenantCreateWithoutInventoriesInput, TenantUncheckedCreateWithoutInventoriesInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutInventoriesInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutInventoriesInput, TenantUncheckedUpdateWithoutInventoriesInput>
-  }
-
-  export type TenantUpdateWithoutInventoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutInventoriesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
+  export type InventoryBatchScalarWhereInput = {
+    AND?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
+    OR?: InventoryBatchScalarWhereInput[]
+    NOT?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
+    id?: StringFilter<"InventoryBatch"> | string
+    inventoryId?: StringFilter<"InventoryBatch"> | string
+    vendorId?: StringFilter<"InventoryBatch"> | string
+    quantity?: FloatFilter<"InventoryBatch"> | number
+    remainingQty?: FloatFilter<"InventoryBatch"> | number
+    costPerUnit?: FloatFilter<"InventoryBatch"> | number
+    purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
+    purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
+    createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
   }
 
   export type PurchaseOrderCreateWithoutVendorInput = {
@@ -30228,12 +25050,10 @@ export namespace Prisma {
     createdAt?: Date | string
     items?: POLineItemCreateNestedManyWithoutPurchaseOrderInput
     batches?: InventoryBatchCreateNestedManyWithoutPurchaseOrderInput
-    tenant: TenantCreateNestedOneWithoutPurchaseOrdersInput
   }
 
   export type PurchaseOrderUncheckedCreateWithoutVendorInput = {
     id?: string
-    tenantId: string
     status?: string
     paymentMode?: string | null
     expectedDelivery?: Date | string | null
@@ -30264,12 +25084,10 @@ export namespace Prisma {
     rack?: RackCreateNestedOneWithoutTransactionsInput
     customer?: CustomerCreateNestedOneWithoutTransactionsInput
     user?: UserCreateNestedOneWithoutTransactionsInput
-    tenant: TenantCreateNestedOneWithoutInventoryTransactionsInput
   }
 
   export type InventoryTransactionUncheckedCreateWithoutVendorInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     userId?: string | null
@@ -30300,12 +25118,10 @@ export namespace Prisma {
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
-    tenant: TenantCreateNestedOneWithoutInventoryBatchesInput
   }
 
   export type InventoryBatchUncheckedCreateWithoutVendorInput = {
     id?: string
-    tenantId: string
     inventoryId: string
     quantity: number
     remainingQty: number
@@ -30325,57 +25141,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TenantCreateWithoutVendorsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutVendorsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutVendorsInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutVendorsInput, TenantUncheckedCreateWithoutVendorsInput>
-  }
-
   export type PurchaseOrderUpsertWithWhereUniqueWithoutVendorInput = {
     where: PurchaseOrderWhereUniqueInput
     update: XOR<PurchaseOrderUpdateWithoutVendorInput, PurchaseOrderUncheckedUpdateWithoutVendorInput>
@@ -30390,6 +25155,19 @@ export namespace Prisma {
   export type PurchaseOrderUpdateManyWithWhereWithoutVendorInput = {
     where: PurchaseOrderScalarWhereInput
     data: XOR<PurchaseOrderUpdateManyMutationInput, PurchaseOrderUncheckedUpdateManyWithoutVendorInput>
+  }
+
+  export type PurchaseOrderScalarWhereInput = {
+    AND?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
+    OR?: PurchaseOrderScalarWhereInput[]
+    NOT?: PurchaseOrderScalarWhereInput | PurchaseOrderScalarWhereInput[]
+    id?: StringFilter<"PurchaseOrder"> | string
+    vendorId?: StringFilter<"PurchaseOrder"> | string
+    status?: StringFilter<"PurchaseOrder"> | string
+    paymentMode?: StringNullableFilter<"PurchaseOrder"> | string | null
+    expectedDelivery?: DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
+    orderDate?: DateTimeFilter<"PurchaseOrder"> | Date | string
+    createdAt?: DateTimeFilter<"PurchaseOrder"> | Date | string
   }
 
   export type InventoryTransactionUpsertWithWhereUniqueWithoutVendorInput = {
@@ -30424,63 +25202,6 @@ export namespace Prisma {
     data: XOR<InventoryBatchUpdateManyMutationInput, InventoryBatchUncheckedUpdateManyWithoutVendorInput>
   }
 
-  export type TenantUpsertWithoutVendorsInput = {
-    update: XOR<TenantUpdateWithoutVendorsInput, TenantUncheckedUpdateWithoutVendorsInput>
-    create: XOR<TenantCreateWithoutVendorsInput, TenantUncheckedCreateWithoutVendorsInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutVendorsInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutVendorsInput, TenantUncheckedUpdateWithoutVendorsInput>
-  }
-
-  export type TenantUpdateWithoutVendorsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutVendorsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
-  }
-
   export type VendorCreateWithoutPurchaseOrdersInput = {
     id?: string
     name: string
@@ -30489,12 +25210,10 @@ export namespace Prisma {
     preferredPaymentMode?: string | null
     transactions?: InventoryTransactionCreateNestedManyWithoutVendorInput
     batches?: InventoryBatchCreateNestedManyWithoutVendorInput
-    tenant: TenantCreateNestedOneWithoutVendorsInput
   }
 
   export type VendorUncheckedCreateWithoutPurchaseOrdersInput = {
     id?: string
-    tenantId: string
     name: string
     contact?: string | null
     email?: string | null
@@ -30514,12 +25233,10 @@ export namespace Prisma {
     quantityReceived?: number
     costPrice: number
     item: ItemCreateNestedOneWithoutPoItemsInput
-    tenant: TenantCreateNestedOneWithoutPoLineItemsInput
   }
 
   export type POLineItemUncheckedCreateWithoutPurchaseOrderInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantityOrdered: number
     quantityReceived?: number
@@ -30545,12 +25262,10 @@ export namespace Prisma {
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
     vendor: VendorCreateNestedOneWithoutBatchesInput
-    tenant: TenantCreateNestedOneWithoutInventoryBatchesInput
   }
 
   export type InventoryBatchUncheckedCreateWithoutPurchaseOrderInput = {
     id?: string
-    tenantId: string
     inventoryId: string
     vendorId: string
     quantity: number
@@ -30568,57 +25283,6 @@ export namespace Prisma {
   export type InventoryBatchCreateManyPurchaseOrderInputEnvelope = {
     data: InventoryBatchCreateManyPurchaseOrderInput | InventoryBatchCreateManyPurchaseOrderInput[]
     skipDuplicates?: boolean
-  }
-
-  export type TenantCreateWithoutPurchaseOrdersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutPurchaseOrdersInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutPurchaseOrdersInput, TenantUncheckedCreateWithoutPurchaseOrdersInput>
   }
 
   export type VendorUpsertWithoutPurchaseOrdersInput = {
@@ -30640,12 +25304,10 @@ export namespace Prisma {
     preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: InventoryTransactionUpdateManyWithoutVendorNestedInput
     batches?: InventoryBatchUpdateManyWithoutVendorNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutVendorsNestedInput
   }
 
   export type VendorUncheckedUpdateWithoutPurchaseOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30686,63 +25348,6 @@ export namespace Prisma {
     data: XOR<InventoryBatchUpdateManyMutationInput, InventoryBatchUncheckedUpdateManyWithoutPurchaseOrderInput>
   }
 
-  export type TenantUpsertWithoutPurchaseOrdersInput = {
-    update: XOR<TenantUpdateWithoutPurchaseOrdersInput, TenantUncheckedUpdateWithoutPurchaseOrdersInput>
-    create: XOR<TenantCreateWithoutPurchaseOrdersInput, TenantUncheckedCreateWithoutPurchaseOrdersInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutPurchaseOrdersInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutPurchaseOrdersInput, TenantUncheckedUpdateWithoutPurchaseOrdersInput>
-  }
-
-  export type TenantUpdateWithoutPurchaseOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
-  }
-
   export type InventoryCreateWithoutBatchesInput = {
     id?: string
     quantityAvailable?: number
@@ -30751,12 +25356,10 @@ export namespace Prisma {
     quantityInTransit?: number
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutInventoryInput
-    tenant: TenantCreateNestedOneWithoutInventoriesInput
   }
 
   export type InventoryUncheckedCreateWithoutBatchesInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantityAvailable?: number
     incomingQty?: number
@@ -30778,12 +25381,10 @@ export namespace Prisma {
     preferredPaymentMode?: string | null
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutVendorInput
     transactions?: InventoryTransactionCreateNestedManyWithoutVendorInput
-    tenant: TenantCreateNestedOneWithoutVendorsInput
   }
 
   export type VendorUncheckedCreateWithoutBatchesInput = {
     id?: string
-    tenantId: string
     name: string
     contact?: string | null
     email?: string | null
@@ -30806,12 +25407,10 @@ export namespace Prisma {
     createdAt?: Date | string
     vendor: VendorCreateNestedOneWithoutPurchaseOrdersInput
     items?: POLineItemCreateNestedManyWithoutPurchaseOrderInput
-    tenant: TenantCreateNestedOneWithoutPurchaseOrdersInput
   }
 
   export type PurchaseOrderUncheckedCreateWithoutBatchesInput = {
     id?: string
-    tenantId: string
     vendorId: string
     status?: string
     paymentMode?: string | null
@@ -30824,57 +25423,6 @@ export namespace Prisma {
   export type PurchaseOrderCreateOrConnectWithoutBatchesInput = {
     where: PurchaseOrderWhereUniqueInput
     create: XOR<PurchaseOrderCreateWithoutBatchesInput, PurchaseOrderUncheckedCreateWithoutBatchesInput>
-  }
-
-  export type TenantCreateWithoutInventoryBatchesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutInventoryBatchesInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutInventoryBatchesInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutInventoryBatchesInput, TenantUncheckedCreateWithoutInventoryBatchesInput>
   }
 
   export type InventoryUpsertWithoutBatchesInput = {
@@ -30896,12 +25444,10 @@ export namespace Prisma {
     quantityInTransit?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoriesNestedInput
   }
 
   export type InventoryUncheckedUpdateWithoutBatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantityAvailable?: FloatFieldUpdateOperationsInput | number
     incomingQty?: FloatFieldUpdateOperationsInput | number
@@ -30929,12 +25475,10 @@ export namespace Prisma {
     preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseOrders?: PurchaseOrderUpdateManyWithoutVendorNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutVendorNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutVendorsNestedInput
   }
 
   export type VendorUncheckedUpdateWithoutBatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30963,12 +25507,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     vendor?: VendorUpdateOneRequiredWithoutPurchaseOrdersNestedInput
     items?: POLineItemUpdateManyWithoutPurchaseOrderNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
   }
 
   export type PurchaseOrderUncheckedUpdateWithoutBatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30976,63 +25518,6 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: POLineItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput
-  }
-
-  export type TenantUpsertWithoutInventoryBatchesInput = {
-    update: XOR<TenantUpdateWithoutInventoryBatchesInput, TenantUncheckedUpdateWithoutInventoryBatchesInput>
-    create: XOR<TenantCreateWithoutInventoryBatchesInput, TenantUncheckedCreateWithoutInventoryBatchesInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutInventoryBatchesInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutInventoryBatchesInput, TenantUncheckedUpdateWithoutInventoryBatchesInput>
-  }
-
-  export type TenantUpdateWithoutInventoryBatchesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutInventoryBatchesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ItemCreateWithoutPoItemsInput = {
@@ -31048,12 +25533,10 @@ export namespace Prisma {
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
     category: CategoryCreateNestedOneWithoutItemsInput
     stocks?: StockCreateNestedManyWithoutItemInput
-    tenant: TenantCreateNestedOneWithoutItemsInput
   }
 
   export type ItemUncheckedCreateWithoutPoItemsInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -31081,12 +25564,10 @@ export namespace Prisma {
     createdAt?: Date | string
     vendor: VendorCreateNestedOneWithoutPurchaseOrdersInput
     batches?: InventoryBatchCreateNestedManyWithoutPurchaseOrderInput
-    tenant: TenantCreateNestedOneWithoutPurchaseOrdersInput
   }
 
   export type PurchaseOrderUncheckedCreateWithoutItemsInput = {
     id?: string
-    tenantId: string
     vendorId: string
     status?: string
     paymentMode?: string | null
@@ -31099,57 +25580,6 @@ export namespace Prisma {
   export type PurchaseOrderCreateOrConnectWithoutItemsInput = {
     where: PurchaseOrderWhereUniqueInput
     create: XOR<PurchaseOrderCreateWithoutItemsInput, PurchaseOrderUncheckedCreateWithoutItemsInput>
-  }
-
-  export type TenantCreateWithoutPoLineItemsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutPoLineItemsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutPoLineItemsInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutPoLineItemsInput, TenantUncheckedCreateWithoutPoLineItemsInput>
   }
 
   export type ItemUpsertWithoutPoItemsInput = {
@@ -31176,12 +25606,10 @@ export namespace Prisma {
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
     stocks?: StockUpdateManyWithoutItemNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutPoItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -31215,12 +25643,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     vendor?: VendorUpdateOneRequiredWithoutPurchaseOrdersNestedInput
     batches?: InventoryBatchUpdateManyWithoutPurchaseOrderNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
   }
 
   export type PurchaseOrderUncheckedUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31228,63 +25654,6 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     batches?: InventoryBatchUncheckedUpdateManyWithoutPurchaseOrderNestedInput
-  }
-
-  export type TenantUpsertWithoutPoLineItemsInput = {
-    update: XOR<TenantUpdateWithoutPoLineItemsInput, TenantUncheckedUpdateWithoutPoLineItemsInput>
-    create: XOR<TenantCreateWithoutPoLineItemsInput, TenantUncheckedCreateWithoutPoLineItemsInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutPoLineItemsInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutPoLineItemsInput, TenantUncheckedUpdateWithoutPoLineItemsInput>
-  }
-
-  export type TenantUpdateWithoutPoLineItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutPoLineItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type DispatchOrderCreateWithoutCustomerInput = {
@@ -31295,12 +25664,10 @@ export namespace Prisma {
     orderDate?: Date | string
     createdAt?: Date | string
     items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
-    tenant: TenantCreateNestedOneWithoutDispatchOrdersInput
   }
 
   export type DispatchOrderUncheckedCreateWithoutCustomerInput = {
     id?: string
-    tenantId: string
     status?: string
     paymentMode?: string | null
     expectedDelivery?: Date | string | null
@@ -31330,12 +25697,10 @@ export namespace Prisma {
     rack?: RackCreateNestedOneWithoutTransactionsInput
     vendor?: VendorCreateNestedOneWithoutTransactionsInput
     user?: UserCreateNestedOneWithoutTransactionsInput
-    tenant: TenantCreateNestedOneWithoutInventoryTransactionsInput
   }
 
   export type InventoryTransactionUncheckedCreateWithoutCustomerInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     userId?: string | null
@@ -31357,57 +25722,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TenantCreateWithoutCustomersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutCustomersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutCustomersInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutCustomersInput, TenantUncheckedCreateWithoutCustomersInput>
-  }
-
   export type DispatchOrderUpsertWithWhereUniqueWithoutCustomerInput = {
     where: DispatchOrderWhereUniqueInput
     update: XOR<DispatchOrderUpdateWithoutCustomerInput, DispatchOrderUncheckedUpdateWithoutCustomerInput>
@@ -31422,6 +25736,19 @@ export namespace Prisma {
   export type DispatchOrderUpdateManyWithWhereWithoutCustomerInput = {
     where: DispatchOrderScalarWhereInput
     data: XOR<DispatchOrderUpdateManyMutationInput, DispatchOrderUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type DispatchOrderScalarWhereInput = {
+    AND?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
+    OR?: DispatchOrderScalarWhereInput[]
+    NOT?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
+    id?: StringFilter<"DispatchOrder"> | string
+    customerId?: StringFilter<"DispatchOrder"> | string
+    status?: StringFilter<"DispatchOrder"> | string
+    paymentMode?: StringNullableFilter<"DispatchOrder"> | string | null
+    expectedDelivery?: DateTimeNullableFilter<"DispatchOrder"> | Date | string | null
+    orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
+    createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
   }
 
   export type InventoryTransactionUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -31440,74 +25767,15 @@ export namespace Prisma {
     data: XOR<InventoryTransactionUpdateManyMutationInput, InventoryTransactionUncheckedUpdateManyWithoutCustomerInput>
   }
 
-  export type TenantUpsertWithoutCustomersInput = {
-    update: XOR<TenantUpdateWithoutCustomersInput, TenantUncheckedUpdateWithoutCustomersInput>
-    create: XOR<TenantCreateWithoutCustomersInput, TenantUncheckedCreateWithoutCustomersInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutCustomersInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutCustomersInput, TenantUncheckedUpdateWithoutCustomersInput>
-  }
-
-  export type TenantUpdateWithoutCustomersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutCustomersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
-  }
-
   export type DispatchItemCreateWithoutDispatchOrderInput = {
     id?: string
     quantity: number
     sellingPrice: number
     item: ItemCreateNestedOneWithoutDispatchItemsInput
-    tenant: TenantCreateNestedOneWithoutDispatchItemsInput
   }
 
   export type DispatchItemUncheckedCreateWithoutDispatchOrderInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantity: number
     sellingPrice: number
@@ -31530,12 +25798,10 @@ export namespace Prisma {
     contact?: string | null
     address?: string | null
     transactions?: InventoryTransactionCreateNestedManyWithoutCustomerInput
-    tenant: TenantCreateNestedOneWithoutCustomersInput
   }
 
   export type CustomerUncheckedCreateWithoutDispatchOrdersInput = {
     id?: string
-    tenantId: string
     name: string
     email?: string | null
     contact?: string | null
@@ -31546,57 +25812,6 @@ export namespace Prisma {
   export type CustomerCreateOrConnectWithoutDispatchOrdersInput = {
     where: CustomerWhereUniqueInput
     create: XOR<CustomerCreateWithoutDispatchOrdersInput, CustomerUncheckedCreateWithoutDispatchOrdersInput>
-  }
-
-  export type TenantCreateWithoutDispatchOrdersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutDispatchOrdersInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutDispatchOrdersInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutDispatchOrdersInput, TenantUncheckedCreateWithoutDispatchOrdersInput>
   }
 
   export type DispatchItemUpsertWithWhereUniqueWithoutDispatchOrderInput = {
@@ -31633,74 +25848,15 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: InventoryTransactionUpdateManyWithoutCustomerNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutCustomersNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutDispatchOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type TenantUpsertWithoutDispatchOrdersInput = {
-    update: XOR<TenantUpdateWithoutDispatchOrdersInput, TenantUncheckedUpdateWithoutDispatchOrdersInput>
-    create: XOR<TenantCreateWithoutDispatchOrdersInput, TenantUncheckedCreateWithoutDispatchOrdersInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutDispatchOrdersInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutDispatchOrdersInput, TenantUncheckedUpdateWithoutDispatchOrdersInput>
-  }
-
-  export type TenantUpdateWithoutDispatchOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutDispatchOrdersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type DispatchOrderCreateWithoutItemsInput = {
@@ -31711,12 +25867,10 @@ export namespace Prisma {
     orderDate?: Date | string
     createdAt?: Date | string
     customer: CustomerCreateNestedOneWithoutDispatchOrdersInput
-    tenant: TenantCreateNestedOneWithoutDispatchOrdersInput
   }
 
   export type DispatchOrderUncheckedCreateWithoutItemsInput = {
     id?: string
-    tenantId: string
     customerId: string
     status?: string
     paymentMode?: string | null
@@ -31743,12 +25897,10 @@ export namespace Prisma {
     category: CategoryCreateNestedOneWithoutItemsInput
     poItems?: POLineItemCreateNestedManyWithoutItemInput
     stocks?: StockCreateNestedManyWithoutItemInput
-    tenant: TenantCreateNestedOneWithoutItemsInput
   }
 
   export type ItemUncheckedCreateWithoutDispatchItemsInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -31765,57 +25917,6 @@ export namespace Prisma {
   export type ItemCreateOrConnectWithoutDispatchItemsInput = {
     where: ItemWhereUniqueInput
     create: XOR<ItemCreateWithoutDispatchItemsInput, ItemUncheckedCreateWithoutDispatchItemsInput>
-  }
-
-  export type TenantCreateWithoutDispatchItemsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutDispatchItemsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryTransactions?: InventoryTransactionUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutDispatchItemsInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutDispatchItemsInput, TenantUncheckedCreateWithoutDispatchItemsInput>
   }
 
   export type DispatchOrderUpsertWithoutItemsInput = {
@@ -31837,12 +25938,10 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: CustomerUpdateOneRequiredWithoutDispatchOrdersNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutDispatchOrdersNestedInput
   }
 
   export type DispatchOrderUncheckedUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31875,12 +25974,10 @@ export namespace Prisma {
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
     poItems?: POLineItemUpdateManyWithoutItemNestedInput
     stocks?: StockUpdateManyWithoutItemNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutDispatchItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -31892,63 +25989,6 @@ export namespace Prisma {
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutItemNestedInput
     poItems?: POLineItemUncheckedUpdateManyWithoutItemNestedInput
     stocks?: StockUncheckedUpdateManyWithoutItemNestedInput
-  }
-
-  export type TenantUpsertWithoutDispatchItemsInput = {
-    update: XOR<TenantUpdateWithoutDispatchItemsInput, TenantUncheckedUpdateWithoutDispatchItemsInput>
-    create: XOR<TenantCreateWithoutDispatchItemsInput, TenantUncheckedCreateWithoutDispatchItemsInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutDispatchItemsInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutDispatchItemsInput, TenantUncheckedUpdateWithoutDispatchItemsInput>
-  }
-
-  export type TenantUpdateWithoutDispatchItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutDispatchItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryTransactions?: InventoryTransactionUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ItemCreateWithoutTransactionsInput = {
@@ -31964,12 +26004,10 @@ export namespace Prisma {
     category: CategoryCreateNestedOneWithoutItemsInput
     poItems?: POLineItemCreateNestedManyWithoutItemInput
     stocks?: StockCreateNestedManyWithoutItemInput
-    tenant: TenantCreateNestedOneWithoutItemsInput
   }
 
   export type ItemUncheckedCreateWithoutTransactionsInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     categoryId: string
@@ -31993,12 +26031,10 @@ export namespace Prisma {
     rackNumber: string
     zone?: string | null
     stocks?: StockCreateNestedManyWithoutRackInput
-    tenant: TenantCreateNestedOneWithoutRacksInput
   }
 
   export type RackUncheckedCreateWithoutTransactionsInput = {
     id?: string
-    tenantId: string
     rackNumber: string
     zone?: string | null
     stocks?: StockUncheckedCreateNestedManyWithoutRackInput
@@ -32016,12 +26052,10 @@ export namespace Prisma {
     contact?: string | null
     address?: string | null
     dispatchOrders?: DispatchOrderCreateNestedManyWithoutCustomerInput
-    tenant: TenantCreateNestedOneWithoutCustomersInput
   }
 
   export type CustomerUncheckedCreateWithoutTransactionsInput = {
     id?: string
-    tenantId: string
     name: string
     email?: string | null
     contact?: string | null
@@ -32042,12 +26076,10 @@ export namespace Prisma {
     preferredPaymentMode?: string | null
     purchaseOrders?: PurchaseOrderCreateNestedManyWithoutVendorInput
     batches?: InventoryBatchCreateNestedManyWithoutVendorInput
-    tenant: TenantCreateNestedOneWithoutVendorsInput
   }
 
   export type VendorUncheckedCreateWithoutTransactionsInput = {
     id?: string
-    tenantId: string
     name: string
     contact?: string | null
     email?: string | null
@@ -32071,12 +26103,10 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     roleObj?: RoleCreateNestedOneWithoutUsersInput
-    tenant: TenantCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
     id?: string
-    tenantId: string
     username: string
     password: string
     name: string
@@ -32090,57 +26120,6 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutTransactionsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutTransactionsInput, UserUncheckedCreateWithoutTransactionsInput>
-  }
-
-  export type TenantCreateWithoutInventoryTransactionsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserCreateNestedManyWithoutTenantInput
-    roles?: RoleCreateNestedManyWithoutTenantInput
-    categories?: CategoryCreateNestedManyWithoutTenantInput
-    items?: ItemCreateNestedManyWithoutTenantInput
-    racks?: RackCreateNestedManyWithoutTenantInput
-    stocks?: StockCreateNestedManyWithoutTenantInput
-    inventories?: InventoryCreateNestedManyWithoutTenantInput
-    vendors?: VendorCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemCreateNestedManyWithoutTenantInput
-    customers?: CustomerCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantUncheckedCreateWithoutInventoryTransactionsInput = {
-    id?: string
-    name: string
-    subdomain: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    users?: UserUncheckedCreateNestedManyWithoutTenantInput
-    roles?: RoleUncheckedCreateNestedManyWithoutTenantInput
-    categories?: CategoryUncheckedCreateNestedManyWithoutTenantInput
-    items?: ItemUncheckedCreateNestedManyWithoutTenantInput
-    racks?: RackUncheckedCreateNestedManyWithoutTenantInput
-    stocks?: StockUncheckedCreateNestedManyWithoutTenantInput
-    inventories?: InventoryUncheckedCreateNestedManyWithoutTenantInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutTenantInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
-    inventoryBatches?: InventoryBatchUncheckedCreateNestedManyWithoutTenantInput
-    poLineItems?: POLineItemUncheckedCreateNestedManyWithoutTenantInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutTenantInput
-    dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutTenantInput
-    dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutTenantInput
-  }
-
-  export type TenantCreateOrConnectWithoutInventoryTransactionsInput = {
-    where: TenantWhereUniqueInput
-    create: XOR<TenantCreateWithoutInventoryTransactionsInput, TenantUncheckedCreateWithoutInventoryTransactionsInput>
   }
 
   export type ItemUpsertWithoutTransactionsInput = {
@@ -32167,12 +26146,10 @@ export namespace Prisma {
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
     poItems?: POLineItemUpdateManyWithoutItemNestedInput
     stocks?: StockUpdateManyWithoutItemNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutTransactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -32202,12 +26179,10 @@ export namespace Prisma {
     rackNumber?: StringFieldUpdateOperationsInput | string
     zone?: NullableStringFieldUpdateOperationsInput | string | null
     stocks?: StockUpdateManyWithoutRackNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutRacksNestedInput
   }
 
   export type RackUncheckedUpdateWithoutTransactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackNumber?: StringFieldUpdateOperationsInput | string
     zone?: NullableStringFieldUpdateOperationsInput | string | null
     stocks?: StockUncheckedUpdateManyWithoutRackNestedInput
@@ -32231,12 +26206,10 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchOrders?: DispatchOrderUpdateManyWithoutCustomerNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutCustomersNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutTransactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32263,12 +26236,10 @@ export namespace Prisma {
     preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     purchaseOrders?: PurchaseOrderUpdateManyWithoutVendorNestedInput
     batches?: InventoryBatchUpdateManyWithoutVendorNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutVendorsNestedInput
   }
 
   export type VendorUncheckedUpdateWithoutTransactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32298,12 +26269,10 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roleObj?: RoleUpdateOneWithoutUsersNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -32311,663 +26280,11 @@ export namespace Prisma {
     roleId?: NullableStringFieldUpdateOperationsInput | string | null
     emailAlerts?: BoolFieldUpdateOperationsInput | boolean
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TenantUpsertWithoutInventoryTransactionsInput = {
-    update: XOR<TenantUpdateWithoutInventoryTransactionsInput, TenantUncheckedUpdateWithoutInventoryTransactionsInput>
-    create: XOR<TenantCreateWithoutInventoryTransactionsInput, TenantUncheckedCreateWithoutInventoryTransactionsInput>
-    where?: TenantWhereInput
-  }
-
-  export type TenantUpdateToOneWithWhereWithoutInventoryTransactionsInput = {
-    where?: TenantWhereInput
-    data: XOR<TenantUpdateWithoutInventoryTransactionsInput, TenantUncheckedUpdateWithoutInventoryTransactionsInput>
-  }
-
-  export type TenantUpdateWithoutInventoryTransactionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutTenantNestedInput
-    roles?: RoleUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUpdateManyWithoutTenantNestedInput
-    items?: ItemUpdateManyWithoutTenantNestedInput
-    racks?: RackUpdateManyWithoutTenantNestedInput
-    stocks?: StockUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUpdateManyWithoutTenantNestedInput
-  }
-
-  export type TenantUncheckedUpdateWithoutInventoryTransactionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    subdomain?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutTenantNestedInput
-    categories?: CategoryUncheckedUpdateManyWithoutTenantNestedInput
-    items?: ItemUncheckedUpdateManyWithoutTenantNestedInput
-    racks?: RackUncheckedUpdateManyWithoutTenantNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutTenantNestedInput
-    inventories?: InventoryUncheckedUpdateManyWithoutTenantNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutTenantNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
-    inventoryBatches?: InventoryBatchUncheckedUpdateManyWithoutTenantNestedInput
-    poLineItems?: POLineItemUncheckedUpdateManyWithoutTenantNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutTenantNestedInput
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutTenantNestedInput
-  }
-
-  export type UserCreateManyTenantInput = {
-    id?: string
-    username: string
-    password: string
-    name: string
-    role?: string
-    roleId?: string | null
-    emailAlerts?: boolean
-    twoFactorEnabled?: boolean
-    createdAt?: Date | string
-  }
-
-  export type RoleCreateManyTenantInput = {
-    id?: string
-    name: string
-    description?: string | null
-    permissions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type CategoryCreateManyTenantInput = {
-    id?: string
-    name: string
-  }
-
-  export type ItemCreateManyTenantInput = {
-    id?: string
-    name: string
-    sku: string
-    categoryId: string
-    unit: string
-    createdAt?: Date | string
-    isCritical?: boolean
-    minStockLevel?: number
-  }
-
-  export type RackCreateManyTenantInput = {
-    id?: string
-    rackNumber: string
-    zone?: string | null
-  }
-
-  export type StockCreateManyTenantInput = {
-    id?: string
-    itemId: string
-    rackId: string
-    quantity?: number
-    updatedAt?: Date | string
-  }
-
-  export type InventoryCreateManyTenantInput = {
-    id?: string
-    itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
-    updatedAt?: Date | string
-  }
-
-  export type VendorCreateManyTenantInput = {
-    id?: string
-    name: string
-    contact?: string | null
-    email?: string | null
-    preferredPaymentMode?: string | null
-  }
-
-  export type PurchaseOrderCreateManyTenantInput = {
-    id?: string
-    vendorId: string
-    status?: string
-    paymentMode?: string | null
-    expectedDelivery?: Date | string | null
-    orderDate?: Date | string
-    createdAt?: Date | string
-  }
-
-  export type InventoryBatchCreateManyTenantInput = {
-    id?: string
-    inventoryId: string
-    vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
-    purchaseDate: Date | string
-    purchaseOrderId?: string | null
-    createdAt?: Date | string
-  }
-
-  export type POLineItemCreateManyTenantInput = {
-    id?: string
-    purchaseOrderId: string
-    itemId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
-  }
-
-  export type CustomerCreateManyTenantInput = {
-    id?: string
-    name: string
-    email?: string | null
-    contact?: string | null
-    address?: string | null
-  }
-
-  export type DispatchOrderCreateManyTenantInput = {
-    id?: string
-    customerId: string
-    status?: string
-    paymentMode?: string | null
-    expectedDelivery?: Date | string | null
-    orderDate?: Date | string
-    createdAt?: Date | string
-  }
-
-  export type DispatchItemCreateManyTenantInput = {
-    id?: string
-    dispatchOrderId: string
-    itemId: string
-    quantity: number
-    sellingPrice: number
-  }
-
-  export type InventoryTransactionCreateManyTenantInput = {
-    id?: string
-    itemId: string
-    rackId?: string | null
-    userId?: string | null
-    customerId?: string | null
-    vendorId?: string | null
-    type: string
-    quantity: number
-    referenceType?: string | null
-    referenceId?: string | null
-    createdAt?: Date | string
-  }
-
-  export type UserUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    emailAlerts?: BoolFieldUpdateOperationsInput | boolean
-    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roleObj?: RoleUpdateOneWithoutUsersNestedInput
-    transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    roleId?: NullableStringFieldUpdateOperationsInput | string | null
-    emailAlerts?: BoolFieldUpdateOperationsInput | boolean
-    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    roleId?: NullableStringFieldUpdateOperationsInput | string | null
-    emailAlerts?: BoolFieldUpdateOperationsInput | boolean
-    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RoleUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    permissions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutRoleObjNestedInput
-  }
-
-  export type RoleUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    permissions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutRoleObjNestedInput
-  }
-
-  export type RoleUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    permissions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CategoryUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    items?: ItemUpdateManyWithoutCategoryNestedInput
-  }
-
-  export type CategoryUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    items?: ItemUncheckedUpdateManyWithoutCategoryNestedInput
-  }
-
-  export type CategoryUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type ItemUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: StringFieldUpdateOperationsInput | string
-    unit?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
-    dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
-    transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
-    category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
-    poItems?: POLineItemUpdateManyWithoutItemNestedInput
-    stocks?: StockUpdateManyWithoutItemNestedInput
-  }
-
-  export type ItemUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: StringFieldUpdateOperationsInput | string
-    categoryId?: StringFieldUpdateOperationsInput | string
-    unit?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
-    dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutItemNestedInput
-    poItems?: POLineItemUncheckedUpdateManyWithoutItemNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutItemNestedInput
-  }
-
-  export type ItemUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: StringFieldUpdateOperationsInput | string
-    categoryId?: StringFieldUpdateOperationsInput | string
-    unit?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
-  }
-
-  export type RackUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rackNumber?: StringFieldUpdateOperationsInput | string
-    zone?: NullableStringFieldUpdateOperationsInput | string | null
-    stocks?: StockUpdateManyWithoutRackNestedInput
-    transactions?: InventoryTransactionUpdateManyWithoutRackNestedInput
-  }
-
-  export type RackUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rackNumber?: StringFieldUpdateOperationsInput | string
-    zone?: NullableStringFieldUpdateOperationsInput | string | null
-    stocks?: StockUncheckedUpdateManyWithoutRackNestedInput
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutRackNestedInput
-  }
-
-  export type RackUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rackNumber?: StringFieldUpdateOperationsInput | string
-    zone?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type StockUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: ItemUpdateOneRequiredWithoutStocksNestedInput
-    rack?: RackUpdateOneRequiredWithoutStocksNestedInput
-  }
-
-  export type StockUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type StockUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InventoryUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
-    batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
-  }
-
-  export type InventoryUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    batches?: InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput
-  }
-
-  export type InventoryUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VendorUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutVendorNestedInput
-    transactions?: InventoryTransactionUpdateManyWithoutVendorNestedInput
-    batches?: InventoryBatchUpdateManyWithoutVendorNestedInput
-  }
-
-  export type VendorUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutVendorNestedInput
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutVendorNestedInput
-    batches?: InventoryBatchUncheckedUpdateManyWithoutVendorNestedInput
-  }
-
-  export type VendorUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type PurchaseOrderUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    vendor?: VendorUpdateOneRequiredWithoutPurchaseOrdersNestedInput
-    items?: POLineItemUpdateManyWithoutPurchaseOrderNestedInput
-    batches?: InventoryBatchUpdateManyWithoutPurchaseOrderNestedInput
-  }
-
-  export type PurchaseOrderUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    vendorId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    items?: POLineItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput
-    batches?: InventoryBatchUncheckedUpdateManyWithoutPurchaseOrderNestedInput
-  }
-
-  export type PurchaseOrderUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    vendorId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InventoryBatchUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
-    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
-    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
-    purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
-  }
-
-  export type InventoryBatchUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    inventoryId?: StringFieldUpdateOperationsInput | string
-    vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
-    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InventoryBatchUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    inventoryId?: StringFieldUpdateOperationsInput | string
-    vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
-    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type POLineItemUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
-    item?: ItemUpdateOneRequiredWithoutPoItemsNestedInput
-    purchaseOrder?: PurchaseOrderUpdateOneRequiredWithoutItemsNestedInput
-  }
-
-  export type POLineItemUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    purchaseOrderId?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
-  }
-
-  export type POLineItemUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    purchaseOrderId?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
-  }
-
-  export type CustomerUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    dispatchOrders?: DispatchOrderUpdateManyWithoutCustomerNestedInput
-    transactions?: InventoryTransactionUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type CustomerUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutCustomerNestedInput
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type CustomerUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type DispatchOrderUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
-    customer?: CustomerUpdateOneRequiredWithoutDispatchOrdersNestedInput
-  }
-
-  export type DispatchOrderUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    customerId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    items?: DispatchItemUncheckedUpdateManyWithoutDispatchOrderNestedInput
-  }
-
-  export type DispatchOrderUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    customerId?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DispatchItemUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
-    dispatchOrder?: DispatchOrderUpdateOneRequiredWithoutItemsNestedInput
-    item?: ItemUpdateOneRequiredWithoutDispatchItemsNestedInput
-  }
-
-  export type DispatchItemUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    dispatchOrderId?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
-  }
-
-  export type DispatchItemUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    dispatchOrderId?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
-  }
-
-  export type InventoryTransactionUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    referenceType?: NullableStringFieldUpdateOperationsInput | string | null
-    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: ItemUpdateOneRequiredWithoutTransactionsNestedInput
-    rack?: RackUpdateOneWithoutTransactionsNestedInput
-    customer?: CustomerUpdateOneWithoutTransactionsNestedInput
-    vendor?: VendorUpdateOneWithoutTransactionsNestedInput
-    user?: UserUpdateOneWithoutTransactionsNestedInput
-  }
-
-  export type InventoryTransactionUncheckedUpdateWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    rackId?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
-    vendorId?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    referenceType?: NullableStringFieldUpdateOperationsInput | string | null
-    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InventoryTransactionUncheckedUpdateManyWithoutTenantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    rackId?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableStringFieldUpdateOperationsInput | string | null
-    vendorId?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    referenceType?: NullableStringFieldUpdateOperationsInput | string | null
-    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryTransactionCreateManyUserInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     customerId?: string | null
@@ -32990,12 +26307,10 @@ export namespace Prisma {
     rack?: RackUpdateOneWithoutTransactionsNestedInput
     customer?: CustomerUpdateOneWithoutTransactionsNestedInput
     vendor?: VendorUpdateOneWithoutTransactionsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryTransactionsNestedInput
   }
 
   export type InventoryTransactionUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33009,7 +26324,6 @@ export namespace Prisma {
 
   export type InventoryTransactionUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33023,7 +26337,6 @@ export namespace Prisma {
 
   export type UserCreateManyRoleObjInput = {
     id?: string
-    tenantId: string
     username: string
     password: string
     name: string
@@ -33043,12 +26356,10 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRoleObjInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -33061,7 +26372,6 @@ export namespace Prisma {
 
   export type UserUncheckedUpdateManyWithoutRoleObjInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -33073,7 +26383,6 @@ export namespace Prisma {
 
   export type ItemCreateManyCategoryInput = {
     id?: string
-    tenantId: string
     name: string
     sku: string
     unit: string
@@ -33095,12 +26404,10 @@ export namespace Prisma {
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
     poItems?: POLineItemUpdateManyWithoutItemNestedInput
     stocks?: StockUpdateManyWithoutItemNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemUncheckedUpdateWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     unit?: StringFieldUpdateOperationsInput | string
@@ -33116,7 +26423,6 @@ export namespace Prisma {
 
   export type ItemUncheckedUpdateManyWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     sku?: StringFieldUpdateOperationsInput | string
     unit?: StringFieldUpdateOperationsInput | string
@@ -33127,7 +26433,6 @@ export namespace Prisma {
 
   export type DispatchItemCreateManyItemInput = {
     id?: string
-    tenantId: string
     dispatchOrderId: string
     quantity: number
     sellingPrice: number
@@ -33135,7 +26440,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCreateManyItemInput = {
     id?: string
-    tenantId: string
     rackId?: string | null
     userId?: string | null
     customerId?: string | null
@@ -33149,7 +26453,6 @@ export namespace Prisma {
 
   export type POLineItemCreateManyItemInput = {
     id?: string
-    tenantId: string
     purchaseOrderId: string
     quantityOrdered: number
     quantityReceived?: number
@@ -33158,7 +26461,6 @@ export namespace Prisma {
 
   export type StockCreateManyItemInput = {
     id?: string
-    tenantId: string
     rackId: string
     quantity?: number
     updatedAt?: Date | string
@@ -33169,12 +26471,10 @@ export namespace Prisma {
     quantity?: FloatFieldUpdateOperationsInput | number
     sellingPrice?: FloatFieldUpdateOperationsInput | number
     dispatchOrder?: DispatchOrderUpdateOneRequiredWithoutItemsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutDispatchItemsNestedInput
   }
 
   export type DispatchItemUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     sellingPrice?: FloatFieldUpdateOperationsInput | number
@@ -33182,7 +26482,6 @@ export namespace Prisma {
 
   export type DispatchItemUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     sellingPrice?: FloatFieldUpdateOperationsInput | number
@@ -33199,12 +26498,10 @@ export namespace Prisma {
     customer?: CustomerUpdateOneWithoutTransactionsNestedInput
     vendor?: VendorUpdateOneWithoutTransactionsNestedInput
     user?: UserUpdateOneWithoutTransactionsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryTransactionsNestedInput
   }
 
   export type InventoryTransactionUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33218,7 +26515,6 @@ export namespace Prisma {
 
   export type InventoryTransactionUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33236,12 +26532,10 @@ export namespace Prisma {
     quantityReceived?: FloatFieldUpdateOperationsInput | number
     costPrice?: FloatFieldUpdateOperationsInput | number
     purchaseOrder?: PurchaseOrderUpdateOneRequiredWithoutItemsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutPoLineItemsNestedInput
   }
 
   export type POLineItemUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
     quantityOrdered?: FloatFieldUpdateOperationsInput | number
     quantityReceived?: FloatFieldUpdateOperationsInput | number
@@ -33250,7 +26544,6 @@ export namespace Prisma {
 
   export type POLineItemUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
     quantityOrdered?: FloatFieldUpdateOperationsInput | number
     quantityReceived?: FloatFieldUpdateOperationsInput | number
@@ -33262,12 +26555,10 @@ export namespace Prisma {
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rack?: RackUpdateOneRequiredWithoutStocksNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutStocksNestedInput
   }
 
   export type StockUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33275,7 +26566,6 @@ export namespace Prisma {
 
   export type StockUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33283,7 +26573,6 @@ export namespace Prisma {
 
   export type StockCreateManyRackInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantity?: number
     updatedAt?: Date | string
@@ -33291,7 +26580,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCreateManyRackInput = {
     id?: string
-    tenantId: string
     itemId: string
     userId?: string | null
     customerId?: string | null
@@ -33308,12 +26596,10 @@ export namespace Prisma {
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutStocksNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutStocksNestedInput
   }
 
   export type StockUncheckedUpdateWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33321,7 +26607,6 @@ export namespace Prisma {
 
   export type StockUncheckedUpdateManyWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33338,12 +26623,10 @@ export namespace Prisma {
     customer?: CustomerUpdateOneWithoutTransactionsNestedInput
     vendor?: VendorUpdateOneWithoutTransactionsNestedInput
     user?: UserUpdateOneWithoutTransactionsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryTransactionsNestedInput
   }
 
   export type InventoryTransactionUncheckedUpdateWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33357,7 +26640,6 @@ export namespace Prisma {
 
   export type InventoryTransactionUncheckedUpdateManyWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33371,7 +26653,6 @@ export namespace Prisma {
 
   export type InventoryBatchCreateManyInventoryInput = {
     id?: string
-    tenantId: string
     vendorId: string
     quantity: number
     remainingQty: number
@@ -33390,12 +26671,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryBatchesNestedInput
   }
 
   export type InventoryBatchUncheckedUpdateWithoutInventoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     remainingQty?: FloatFieldUpdateOperationsInput | number
@@ -33407,7 +26686,6 @@ export namespace Prisma {
 
   export type InventoryBatchUncheckedUpdateManyWithoutInventoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     remainingQty?: FloatFieldUpdateOperationsInput | number
@@ -33419,7 +26697,6 @@ export namespace Prisma {
 
   export type PurchaseOrderCreateManyVendorInput = {
     id?: string
-    tenantId: string
     status?: string
     paymentMode?: string | null
     expectedDelivery?: Date | string | null
@@ -33429,7 +26706,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCreateManyVendorInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     userId?: string | null
@@ -33443,7 +26719,6 @@ export namespace Prisma {
 
   export type InventoryBatchCreateManyVendorInput = {
     id?: string
-    tenantId: string
     inventoryId: string
     quantity: number
     remainingQty: number
@@ -33462,12 +26737,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: POLineItemUpdateManyWithoutPurchaseOrderNestedInput
     batches?: InventoryBatchUpdateManyWithoutPurchaseOrderNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
   }
 
   export type PurchaseOrderUncheckedUpdateWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33479,7 +26752,6 @@ export namespace Prisma {
 
   export type PurchaseOrderUncheckedUpdateManyWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33498,12 +26770,10 @@ export namespace Prisma {
     rack?: RackUpdateOneWithoutTransactionsNestedInput
     customer?: CustomerUpdateOneWithoutTransactionsNestedInput
     user?: UserUpdateOneWithoutTransactionsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryTransactionsNestedInput
   }
 
   export type InventoryTransactionUncheckedUpdateWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33517,7 +26787,6 @@ export namespace Prisma {
 
   export type InventoryTransactionUncheckedUpdateManyWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33538,12 +26807,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryBatchesNestedInput
   }
 
   export type InventoryBatchUncheckedUpdateWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     remainingQty?: FloatFieldUpdateOperationsInput | number
@@ -33555,7 +26822,6 @@ export namespace Prisma {
 
   export type InventoryBatchUncheckedUpdateManyWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     remainingQty?: FloatFieldUpdateOperationsInput | number
@@ -33567,7 +26833,6 @@ export namespace Prisma {
 
   export type POLineItemCreateManyPurchaseOrderInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantityOrdered: number
     quantityReceived?: number
@@ -33576,7 +26841,6 @@ export namespace Prisma {
 
   export type InventoryBatchCreateManyPurchaseOrderInput = {
     id?: string
-    tenantId: string
     inventoryId: string
     vendorId: string
     quantity: number
@@ -33592,12 +26856,10 @@ export namespace Prisma {
     quantityReceived?: FloatFieldUpdateOperationsInput | number
     costPrice?: FloatFieldUpdateOperationsInput | number
     item?: ItemUpdateOneRequiredWithoutPoItemsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutPoLineItemsNestedInput
   }
 
   export type POLineItemUncheckedUpdateWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantityOrdered?: FloatFieldUpdateOperationsInput | number
     quantityReceived?: FloatFieldUpdateOperationsInput | number
@@ -33606,7 +26868,6 @@ export namespace Prisma {
 
   export type POLineItemUncheckedUpdateManyWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantityOrdered?: FloatFieldUpdateOperationsInput | number
     quantityReceived?: FloatFieldUpdateOperationsInput | number
@@ -33622,12 +26883,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
     vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryBatchesNestedInput
   }
 
   export type InventoryBatchUncheckedUpdateWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -33639,7 +26898,6 @@ export namespace Prisma {
 
   export type InventoryBatchUncheckedUpdateManyWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
@@ -33651,7 +26909,6 @@ export namespace Prisma {
 
   export type DispatchOrderCreateManyCustomerInput = {
     id?: string
-    tenantId: string
     status?: string
     paymentMode?: string | null
     expectedDelivery?: Date | string | null
@@ -33661,7 +26918,6 @@ export namespace Prisma {
 
   export type InventoryTransactionCreateManyCustomerInput = {
     id?: string
-    tenantId: string
     itemId: string
     rackId?: string | null
     userId?: string | null
@@ -33681,12 +26937,10 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutDispatchOrdersNestedInput
   }
 
   export type DispatchOrderUncheckedUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33697,7 +26951,6 @@ export namespace Prisma {
 
   export type DispatchOrderUncheckedUpdateManyWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMode?: NullableStringFieldUpdateOperationsInput | string | null
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33716,12 +26969,10 @@ export namespace Prisma {
     rack?: RackUpdateOneWithoutTransactionsNestedInput
     vendor?: VendorUpdateOneWithoutTransactionsNestedInput
     user?: UserUpdateOneWithoutTransactionsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutInventoryTransactionsNestedInput
   }
 
   export type InventoryTransactionUncheckedUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33735,7 +26986,6 @@ export namespace Prisma {
 
   export type InventoryTransactionUncheckedUpdateManyWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33749,7 +26999,6 @@ export namespace Prisma {
 
   export type DispatchItemCreateManyDispatchOrderInput = {
     id?: string
-    tenantId: string
     itemId: string
     quantity: number
     sellingPrice: number
@@ -33760,12 +27009,10 @@ export namespace Prisma {
     quantity?: FloatFieldUpdateOperationsInput | number
     sellingPrice?: FloatFieldUpdateOperationsInput | number
     item?: ItemUpdateOneRequiredWithoutDispatchItemsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutDispatchItemsNestedInput
   }
 
   export type DispatchItemUncheckedUpdateWithoutDispatchOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     sellingPrice?: FloatFieldUpdateOperationsInput | number
@@ -33773,7 +27020,6 @@ export namespace Prisma {
 
   export type DispatchItemUncheckedUpdateManyWithoutDispatchOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     sellingPrice?: FloatFieldUpdateOperationsInput | number

@@ -120,18 +120,8 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.TenantScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  subdomain: 'subdomain',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   username: 'username',
   password: 'password',
   name: 'name',
@@ -144,7 +134,6 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   name: 'name',
   description: 'description',
   permissions: 'permissions',
@@ -153,13 +142,11 @@ exports.Prisma.RoleScalarFieldEnum = {
 
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   name: 'name'
 };
 
 exports.Prisma.ItemScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   name: 'name',
   sku: 'sku',
   categoryId: 'categoryId',
@@ -171,14 +158,12 @@ exports.Prisma.ItemScalarFieldEnum = {
 
 exports.Prisma.RackScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   rackNumber: 'rackNumber',
   zone: 'zone'
 };
 
 exports.Prisma.StockScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   itemId: 'itemId',
   rackId: 'rackId',
   quantity: 'quantity',
@@ -187,7 +172,6 @@ exports.Prisma.StockScalarFieldEnum = {
 
 exports.Prisma.InventoryScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   itemId: 'itemId',
   quantityAvailable: 'quantityAvailable',
   incomingQty: 'incomingQty',
@@ -198,7 +182,6 @@ exports.Prisma.InventoryScalarFieldEnum = {
 
 exports.Prisma.VendorScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   name: 'name',
   contact: 'contact',
   email: 'email',
@@ -207,7 +190,6 @@ exports.Prisma.VendorScalarFieldEnum = {
 
 exports.Prisma.PurchaseOrderScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   vendorId: 'vendorId',
   status: 'status',
   paymentMode: 'paymentMode',
@@ -218,7 +200,6 @@ exports.Prisma.PurchaseOrderScalarFieldEnum = {
 
 exports.Prisma.InventoryBatchScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   inventoryId: 'inventoryId',
   vendorId: 'vendorId',
   quantity: 'quantity',
@@ -231,7 +212,6 @@ exports.Prisma.InventoryBatchScalarFieldEnum = {
 
 exports.Prisma.POLineItemScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   purchaseOrderId: 'purchaseOrderId',
   itemId: 'itemId',
   quantityOrdered: 'quantityOrdered',
@@ -241,7 +221,6 @@ exports.Prisma.POLineItemScalarFieldEnum = {
 
 exports.Prisma.CustomerScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   name: 'name',
   email: 'email',
   contact: 'contact',
@@ -250,7 +229,6 @@ exports.Prisma.CustomerScalarFieldEnum = {
 
 exports.Prisma.DispatchOrderScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   customerId: 'customerId',
   status: 'status',
   paymentMode: 'paymentMode',
@@ -261,7 +239,6 @@ exports.Prisma.DispatchOrderScalarFieldEnum = {
 
 exports.Prisma.DispatchItemScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   dispatchOrderId: 'dispatchOrderId',
   itemId: 'itemId',
   quantity: 'quantity',
@@ -270,7 +247,6 @@ exports.Prisma.DispatchItemScalarFieldEnum = {
 
 exports.Prisma.InventoryTransactionScalarFieldEnum = {
   id: 'id',
-  tenantId: 'tenantId',
   itemId: 'itemId',
   rackId: 'rackId',
   userId: 'userId',
@@ -311,7 +287,6 @@ exports.Prisma.JsonNullValueFilter = {
 
 
 exports.Prisma.ModelName = {
-  Tenant: 'Tenant',
   User: 'User',
   Role: 'Role',
   Category: 'Category',

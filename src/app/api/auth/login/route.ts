@@ -4,26 +4,19 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { login } from "@/lib/auth";
-import { getTenantId } from "@/lib/tenant";
 
 export async function POST(request: Request) {
   try {
-    const tenantId = await getTenantId();
-    if (!tenantId) {
-      return NextResponse.json({ error: "Tenant not found or invalid subdomain" }, { status: 400 });
-    }
-
     const { username, password } = await request.json();
 
     if (!username || !password) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // Explicitly filter by tenantId during login
+    // Simplified user lookup: Ignore tenantId
     const user = await (prisma as any).user.findFirst({
       where: {
-        username,
-        tenantId
+        username
       },
       include: { roleObj: true }
     });
@@ -38,7 +31,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Proceed with login
+    // Login without tenant context
     await login(user.id, user.username, user.role, user.roleId || undefined);
 
     return NextResponse.json({

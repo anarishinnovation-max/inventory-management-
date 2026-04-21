@@ -1,121 +1,113 @@
 import { PrismaClient } from "../src/generated/client";
-const prisma = new PrismaClient();
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+import bcrypt from "bcryptjs";
+import "dotenv/config";
+
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Seeding database for multi-tenancy...");
+  console.log("Seeding database (Single Tenant)...");
 
-  // 1. Create Default Tenant
-  const defaultTenant = await (prisma as any).tenant.upsert({
-    where: { subdomain: "admin" },
-    update: {},
-    create: {
-      name: "Admin Workspace",
-      subdomain: "admin",
-      isActive: true,
-    },
-  });
-
-  console.log(`Using Tenant: ${defaultTenant.name} (${defaultTenant.id})`);
-
-  // 2. Create Categories
+  // 1. Create Categories
   const categories = ["Inserts", "Tool Holders", "Drills", "Milling", "Spare Parts"];
   const categoryMap: Record<string, string> = {};
 
   for (const name of categories) {
-    const cat = await (prisma as any).category.upsert({
-      where: { tenantId_name: { tenantId: defaultTenant.id, name } },
+    const cat = await prisma.category.upsert({
+      where: { name },
       update: {},
-      create: { name, tenantId: defaultTenant.id },
+      create: { name },
     });
     categoryMap[name] = cat.id;
   }
 
-  // 3. Create Racks
+  // 2. Create Racks
   const racks = ["A1", "A2", "B1", "B2", "C1"];
   const rackMap: Record<string, string> = {};
 
   for (const rackNumber of racks) {
-    const r = await (prisma as any).rack.upsert({
-      where: { tenantId_rackNumber: { tenantId: defaultTenant.id, rackNumber } },
+    const r = await prisma.rack.upsert({
+      where: { rackNumber },
       update: {},
-      create: { rackNumber, tenantId: defaultTenant.id },
+      create: { rackNumber },
     });
     rackMap[rackNumber] = r.id;
   }
 
-  // 4. Create Vendors
+  // 3. Create Vendors
   const vendorsData = ["SANDVIK", "KENNAMETAL", "WIDIA", "LOCAL_SUPPLIER"];
   const vendorMap: Record<string, string> = {};
 
   for (const name of vendorsData) {
-    const v = await (prisma as any).vendor.upsert({
-      where: { tenantId_name: { tenantId: defaultTenant.id, name } },
+    const v = await prisma.vendor.upsert({
+      where: { name },
       update: {},
-      create: { name, tenantId: defaultTenant.id },
+      create: { name },
     });
     vendorMap[name] = v.id;
   }
 
-  // 5. Create Items
+  // 4. Create Items
   const itemsData = [
     { name: "ETJNL 2525 M16", sku: "ETJNL-2525", category: "Tool Holders" },
     { name: "ECLNL 2525 M12", sku: "ECLNL-2525", category: "Tool Holders" },
     { name: "TNMG 160408 PM", sku: "TNMG-160408", category: "Inserts" },
   ];
 
-  const itemMap: Record<string, string> = {};
-
   for (const item of itemsData) {
-    const createdItem = await (prisma as any).item.upsert({
-      where: { tenantId_sku: { tenantId: defaultTenant.id, sku: item.sku } },
+    const createdItem = await prisma.item.upsert({
+      where: { sku: item.sku },
       update: { name: item.name },
       create: {
-        tenantId: defaultTenant.id,
         name: item.name,
         sku: item.sku,
         unit: "PCS",
         categoryId: categoryMap[item.category],
       },
     });
-    itemMap[item.name] = createdItem.id;
 
     // Initialize Inventory for each item
-    await (prisma as any).inventory.upsert({
+    await prisma.inventory.upsert({
       where: { itemId: createdItem.id },
       update: {},
       create: {
-        tenantId: defaultTenant.id,
         itemId: createdItem.id,
         quantityAvailable: 100,
       }
     });
   }
 
-  // 6. Create Roles and Users
+  // 5. Create Roles and Users
   const roles = ["ADMIN", "MANAGER", "STAFF"];
+  const hashedPassword = await bcrypt.hash("admin123", 10);
+
   for (const roleName of roles) {
-    const role = await (prisma as any).role.upsert({
-      where: { tenantId_name: { tenantId: defaultTenant.id, name: roleName } },
+    const role = await prisma.role.upsert({
+      where: { name: roleName },
       update: {},
-      create: { name: roleName, tenantId: defaultTenant.id },
+      create: { name: roleName },
     });
 
     if (roleName === "ADMIN") {
-      await (prisma as any).user.upsert({
+      await prisma.user.upsert({
           where: { username: "admin" },
-          update: {},
+          update: { password: hashedPassword },
           create: {
-              tenantId: defaultTenant.id,
               username: "admin",
-              password: "password123", // In real apps, this should be hashed
+              password: hashedPassword,
               name: "System Admin",
-              roleId: role.id
+              roleId: role.id,
+              role: "admin"
           }
       });
     }
   }
 
-  console.log("✅ Seed database for multi-tenancy completed successfully!");
+  console.log("✅ Seed database completed successfully!");
 }
 
 main()
@@ -125,4 +117,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });

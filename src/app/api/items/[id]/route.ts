@@ -1,20 +1,15 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
-import { getTenantId } from "@/lib/tenant";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tenantId = await getTenantId();
-    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     const { id } = await params;
 
     const item = await (prisma as any).item.findFirst({
-      where: { id, tenantId },
+      where: { id },
       include: {
         category: true,
         inventory: true,
@@ -52,27 +47,24 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tenantId = await getTenantId();
-    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     const { id } = await params;
     const body = await request.json();
     const { name, sku, categoryId, unit, minStockLevel, isCritical } = body;
 
-    const existingItem = await (prisma as any).item.findFirst({ where: { id, tenantId } });
+    const existingItem = await (prisma as any).item.findFirst({ where: { id } });
     if (!existingItem) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
     if (sku && sku !== existingItem.sku) {
-        const skuCheck = await (prisma as any).item.findFirst({ where: { sku, tenantId } });
+        const skuCheck = await (prisma as any).item.findFirst({ where: { sku } });
         if (skuCheck) {
             return NextResponse.json({ error: "SKU already exists" }, { status: 400 });
         }
     }
 
     const updatedItem = await (prisma as any).item.update({
-      where: { id, tenantId },
+      where: { id },
       data: {
         name: name !== undefined ? name : undefined,
         sku: sku !== undefined ? sku : undefined,
@@ -95,13 +87,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tenantId = await getTenantId();
-    if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     const { id } = await params;
 
     const stockCount = await (prisma as any).stock.count({
-      where: { itemId: id, quantity: { gt: 0 }, tenantId },
+      where: { itemId: id, quantity: { gt: 0 } },
     });
 
     if (stockCount > 0) {
@@ -111,10 +100,10 @@ export async function DELETE(
     }
 
     await (prisma as any).$transaction([
-        (prisma as any).inventory.deleteMany({ where: { itemId: id, tenantId } }),
-        (prisma as any).stock.deleteMany({ where: { itemId: id, tenantId } }),
-        (prisma as any).inventoryTransaction.deleteMany({ where: { itemId: id, tenantId } }),
-        (prisma as any).item.delete({ where: { id, tenantId } })
+        (prisma as any).inventory.deleteMany({ where: { itemId: id } }),
+        (prisma as any).stock.deleteMany({ where: { itemId: id } }),
+        (prisma as any).inventoryTransaction.deleteMany({ where: { itemId: id } }),
+        (prisma as any).item.delete({ where: { id } })
     ]);
 
     return NextResponse.json({ message: "Item deleted successfully" });
