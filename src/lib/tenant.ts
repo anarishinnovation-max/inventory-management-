@@ -8,21 +8,28 @@ export async function getTenantId(): Promise<string | null> {
     const h = await headers();
     subdomain = h.get("x-tenant-subdomain");
   } catch (e) {
-    // Silence error when called outside of request context (e.g. during build or static generation)
+    // Expected during build or non-request contexts
   }
   
-  if (!subdomain || subdomain === "localhost" || subdomain === "admin") {
-    // For local dev or default admin subdomain, return the first tenant as fallback
-    // We use basePrisma here to avoid circular dependency and recursion with the tenant extension
-    const defaultTenant = await (basePrisma as any).tenant.findFirst({
-      where: { subdomain: "admin" }
+  try {
+    if (!subdomain || subdomain === "localhost" || subdomain === "admin") {
+      const defaultTenant = await (basePrisma as any).tenant.findFirst({
+        where: { subdomain: "admin" }
+      });
+      return defaultTenant?.id || null;
+    }
+
+    const tenant = await (basePrisma as any).tenant.findFirst({
+      where: { subdomain, isActive: true }
     });
-    return defaultTenant?.id || null;
+
+    if (!tenant) {
+        console.warn(`[Tenant] No active tenant found for subdomain: ${subdomain}`);
+    }
+
+    return tenant?.id || null;
+  } catch (err) {
+    console.error("[Tenant] Database error during tenant resolution:", err);
+    return null; // Return null rather than crashing
   }
-
-  const tenant = await (basePrisma as any).tenant.findFirst({
-    where: { subdomain, isActive: true }
-  });
-
-  return tenant?.id || null;
 }
