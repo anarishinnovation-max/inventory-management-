@@ -110,11 +110,11 @@ async function getInventory(q?: string, status?: string, category?: string, page
       const reserved = item.quantityReserved;
       const netAvailable = (total + incoming) - reserved;
 
-      if (status === 'shortage') return netAvailable < 0;
+      if (status === 'urgent') return netAvailable < 0;
       if (status === 'partial') return total > 0 && total < reserved;
       if (status === 'low') return total > 0 && total <= item.minStockLevel && netAvailable >= 0;
       if (status === 'instock') return total > item.minStockLevel && total >= reserved;
-      if (status === 'outofstock') return total === 0 && incoming === 0;
+      if (status === 'outofstock') return total <= 0;
       if (status === 'ordered') return incoming > 0 && netAvailable >= 0;
       return true;
     });
@@ -193,8 +193,8 @@ export default async function InventoryPage({
               <tr className="table-header">
                 <th className="table-cell-header">Item Name & SKU</th>
                 <th className="table-cell-header">Category</th>
-                <th className="table-cell-header text-right">Amount</th>
-                <th className="table-cell-header">Where it is</th>
+                <th className="table-cell-header text-right">Units</th>
+                <th className="table-cell-header">Rack</th>
                 <th className="table-cell-header">Status</th>
                 <th className="table-cell-header text-right">Actions</th>
               </tr>
@@ -235,8 +235,13 @@ export default async function InventoryPage({
                       <div className="flex flex-col items-end">
                         <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"
                           }`}>
-                          {totalStock} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
+                          {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
                         </span>
+                        {totalStock < 0 && (
+                          <span className="text-[9px] font-black uppercase tracking-tight text-error mt-1 px-1.5 py-0.5 bg-error/5 rounded-md border border-error/10">
+                            {totalStock} Pending
+                          </span>
+                        )}
                         {incomingQty > 0 && (
                           <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
                             +{incomingQty} Ordered

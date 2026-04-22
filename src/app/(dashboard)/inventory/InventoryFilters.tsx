@@ -76,10 +76,10 @@ export default function InventoryFilters({
             <span>Low Stock</span>
           </button>
           <button
-            onClick={() => setFilter("status", "shortage")}
+            onClick={() => setFilter("status", "outofstock")}
             className={cn(
               "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'shortage' ? "bg-error text-white border-error shadow-[0_0_12px_oklch(0.55_0.2_25_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
+              currentStatus === 'outofstock' ? "bg-error/10 text-error border-error/20 ring-4 ring-error/5" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
             )}
             suppressHydrationWarning
           >
@@ -96,10 +96,10 @@ export default function InventoryFilters({
             <span>Ordered</span>
           </button>
           <button
-            onClick={() => setFilter("status", "outofstock")}
+            onClick={() => setFilter("status", "urgent")}
             className={cn(
               "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'outofstock' ? "bg-error text-white border-error shadow-[0_0_12_oklch(0.55_0.2_25_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
+              currentStatus === 'urgent' ? "bg-error text-white border-error shadow-[0_0_12px_oklch(0.55_0.2_25_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
             )}
             suppressHydrationWarning
           >
