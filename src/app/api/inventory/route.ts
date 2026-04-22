@@ -23,7 +23,13 @@ function computeInventoryStatus(params: {
 export async function GET() {
   try {
     const inventory = await prisma.inventory.findMany({
-      include: { item: { include: { category: true } } },
+      include: {
+        item: { include: { category: true } },
+        batches: {
+          include: { vendor: true },
+          orderBy: { purchaseDate: 'desc' }
+        }
+      },
       orderBy: { item: { name: "asc" } },
     });
 

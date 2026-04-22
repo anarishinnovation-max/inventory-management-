@@ -5,6 +5,7 @@ import {
   AlertCircle,
   ArrowLeft,
   CheckCircle2,
+  Eye,
   Loader2,
   Package,
   Plus,
@@ -27,6 +28,15 @@ interface LineItem {
   sellingPrice: number;
 }
 
+interface InventoryBatch {
+  id: string;
+  vendor?: { name: string };
+  quantity: number;
+  remainingQty: number;
+  costPerUnit: number;
+  purchaseDate: string;
+}
+
 interface InventoryItem {
   id: string;
   itemId?: string;
@@ -34,6 +44,7 @@ interface InventoryItem {
   incomingQty: number;
   reservedQty: number;
   status: string;
+  batches?: InventoryBatch[];
 }
 
 interface ShortageInfo {
@@ -139,6 +150,7 @@ export default function NewDispatchOrderPage() {
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantity: 1, sellingPrice: 0 }
   ]);
+  const [expandedBatches, setExpandedBatches] = useState<Record<number, boolean>>({});
   const [itemSearches, setItemSearches] = useState<Record<number, string>>({});
   const [openDropdowns, setOpenDropdowns] = useState<Record<number, boolean>>({});
 
@@ -166,7 +178,8 @@ export default function NewDispatchOrderPage() {
               quantityAvailable: inv.quantityAvailable || 0,
               incomingQty: inv.incomingQty || 0,
               reservedQty: inv.quantityReserved || 0,
-              status: inv.status
+              status: inv.status,
+              batches: inv.batches || []
             });
           });
           setInventoryMap(map);
@@ -479,14 +492,54 @@ export default function NewDispatchOrderPage() {
                       </div>
                       
                       {item.itemId && (
-                        <div className="mt-2 text-xs font-bold">
-                          <span className={`inline-block px-3 py-1 rounded-lg ${
-                            available > 0 
-                              ? 'bg-emerald-500/10 text-emerald-700' 
-                              : 'bg-error/10 text-error'
-                          }`}>
-                            Available: {available} units
-                          </span>
+                        <div className="mt-3 space-y-3">
+                          <div className="flex items-center gap-2">
+                             <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg ${
+                               available > 0 
+                                 ? 'bg-emerald-500/10 text-emerald-700' 
+                                 : 'bg-error/10 text-error'
+                             }`}>
+                               Available: {available} units
+                             </span>
+                             {item.itemId && (
+                               <button
+                                 type="button"
+                                 onClick={() => setExpandedBatches(prev => ({ ...prev, [index]: !prev[index] }))}
+                                 className={cn(
+                                   "p-1.5 rounded-lg transition-colors",
+                                   expandedBatches[index] ? "bg-primary/20 text-primary" : "bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                                 )}
+                                 title="Show Stock Breakdown"
+                               >
+                                 <Eye className="w-3.5 h-3.5" />
+                               </button>
+                             )}
+                          </div>
+
+                          {expandedBatches[index] && getInventoryData(item.itemId)?.batches && getInventoryData(item.itemId)!.batches!.length > 0 && (
+                            <div className="overflow-hidden rounded-2xl border border-border-ghost bg-surface-low/30 animate-in slide-in-from-top-2 duration-300">
+                              <table className="w-full text-[10px] text-left border-collapse">
+                                <thead>
+                                  <tr className="bg-surface-low border-b border-border-ghost">
+                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground">Vendor</th>
+                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground">Date</th>
+                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground">Cost</th>
+                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground text-right">Units</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border-ghost/50">
+                                  {getInventoryData(item.itemId)!.batches!.filter(b => b.remainingQty > 0).map((batch: InventoryBatch) => (
+                                    <tr key={batch.id} className="hover:bg-white/50 transition-colors">
+                                      <td className="px-3 py-2 font-bold text-foreground truncate max-w-[100px]">{batch.vendor?.name || 'N/A'}</td>
+                                      <td className="px-3 py-2 font-bold text-muted-foreground/70">{new Date(batch.purchaseDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</td>
+                                      <td className="px-3 py-2 font-mono font-black text-primary">₹{batch.costPerUnit}</td>
+                                      <td className="px-3 py-2 font-black text-foreground text-right">{batch.remainingQty}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
