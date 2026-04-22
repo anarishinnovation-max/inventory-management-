@@ -12,7 +12,15 @@ export async function GET(
       where: { id },
       include: {
         category: true,
-        inventory: true,
+        inventory: {
+          include: {
+            batches: {
+              include: { vendor: true },
+              orderBy: { purchaseDate: 'desc' },
+              take: 1
+            }
+          }
+        },
         stocks: {
           include: {
             rack: true

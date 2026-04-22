@@ -8,9 +8,7 @@ export async function POST(
 ) {
   try {
     const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const userId = session?.id || "system";
 
     const { id: itemId } = await params;
     const { rackId, quantity, remarks } = await request.json();
@@ -23,7 +21,7 @@ export async function POST(
         itemId, 
         rackId, 
         parseFloat(quantity), 
-        session.id,
+        userId,
         remarks
     );
 

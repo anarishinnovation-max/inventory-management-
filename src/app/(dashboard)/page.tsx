@@ -14,6 +14,7 @@ import {
     Package,
     PlusSquare,
     ShoppingCart,
+    Timer,
     TrendingUp,
     Truck,
     Zap
@@ -97,7 +98,6 @@ async function getDashboardAnalytics() {
     LIMIT 4
   `;
 
-  // 8. Priority Replenish (Low items list)
   const replenishItems = await prisma.$queryRaw<any[]>`
     SELECT 
       i.id, i.name, i.sku, i."minStockLevel",
@@ -109,6 +109,18 @@ async function getDashboardAnalytics() {
     ORDER BY (inv."quantityAvailable" + inv."incomingQty") ASC
     LIMIT 3
   `;
+
+  // 9. Oldest Items (Top 5 items in inventory created longest ago)
+  const oldestItems = await prisma.item.findMany({
+    where: {
+      inventory: { quantityAvailable: { gt: 0 } }
+    },
+    orderBy: { createdAt: 'asc' },
+    take: 5,
+    include: {
+      inventory: true
+    }
+  });
 
   return {
     kpis: {
@@ -132,7 +144,8 @@ async function getDashboardAnalytics() {
       sku: tx.item.sku
     })),
     velocity: velocityResult,
-    replenish: replenishItems
+    replenish: replenishItems,
+    oldestItems
   };
 }
 
@@ -144,7 +157,8 @@ export default async function DashboardPage() {
       flow: [],
       recentActivity: [],
       velocity: [],
-      replenish: []
+      replenish: [],
+      oldestItems: []
     };
   });
 
@@ -440,6 +454,39 @@ export default async function DashboardPage() {
                 <button className="text-[10px] font-black text-primary uppercase tracking-widest mt-3 flex items-center gap-1 hover:gap-2 transition-all" suppressHydrationWarning>Re-order <ChevronRight className="w-3 h-3" /></button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Oldest Items Row */}
+      <div className="grid grid-cols-1 gap-8">
+        <div className="card-premium flex flex-col !p-8 border-warning/10 bg-warning/[0.02]">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 bg-warning/10 rounded-lg">
+              <Timer className="w-4 h-4 text-warning" />
+            </div>
+            <h3 className="text-lg font-black text-foreground">Oldest Items in Inventory</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {data.oldestItems.map((item: any, idx: number) => (
+              <div key={item.id} className="bg-white p-4 rounded-xl border border-warning/5 shadow-sm hover:border-warning/20 transition-all">
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
+                <p className="text-xs font-bold text-foreground mt-1 truncate">{item.name}</p>
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-ghost">
+                  <span className="text-[10px] font-bold text-muted-foreground">
+                    {new Date(item.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
+                  </span>
+                  <span className="text-xs font-black text-warning">
+                    {item.inventory?.quantityAvailable} Units
+                  </span>
+                </div>
+              </div>
+            ))}
+            {data.oldestItems.length === 0 && (
+              <div className="col-span-full py-8 text-center text-muted-foreground font-medium text-xs italic">
+                No items found.
+              </div>
+            )}
           </div>
         </div>
       </div>

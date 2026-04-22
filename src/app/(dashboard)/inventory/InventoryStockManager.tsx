@@ -151,7 +151,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                    </select>
                 </div>
                 <div className="space-y-1.5">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Starting Amount</label>
+                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Units</label>
                    <input 
                       type="number"
                       value={newQuantity}
