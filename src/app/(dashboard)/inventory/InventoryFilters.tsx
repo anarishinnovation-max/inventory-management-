@@ -5,7 +5,7 @@ import { Filter, Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";
-import CustomSelect from "@/components/CustomSelect";
+import PremiumSelect from "@/components/PremiumSelect";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -113,11 +113,12 @@ export default function InventoryFilters({
         <div className="space-y-4 flex-1">
           <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block text-left">Filter by Category</label>
           <div className="flex flex-col gap-3">
-            <CustomSelect
+            <PremiumSelect
               options={categories}
               value={currentCategory}
               onChange={(val) => setFilter("category", val)}
               disabled={isPending}
+              placeholder="All Categories"
             />
           </div>
         </div>

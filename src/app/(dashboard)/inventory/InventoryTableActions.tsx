@@ -94,6 +94,7 @@ export default function InventoryTableActions({
         onClick={() => setShowScrap(true)}
         className="p-2 hover:bg-error/10 rounded-xl text-error transition-all border border-transparent hover:border-error/20"
         title="Scrap Inventory"
+        suppressHydrationWarning
       >
         <Flame className="w-4 h-4" />
       </button>

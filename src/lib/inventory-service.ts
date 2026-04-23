@@ -399,6 +399,78 @@ export const InventoryService = {
   },
 
   /**
+   * Records scrapped inventory for multiple items.
+   */
+  async bulkScrapInventory(itemIds: string[], reason?: string) {
+    return await (prisma as any).$transaction(async (tx: any) => {
+      for (const itemId of itemIds) {
+        const inventory = await tx.inventory.findFirst({ where: { itemId } });
+        if (!inventory || inventory.quantityAvailable <= 0) continue;
+
+        const qty = inventory.quantityAvailable;
+
+        await tx.inventoryTransaction.create({
+          data: {
+            item: { connect: { id: itemId } },
+            type: "SCRAP",
+            quantity: -qty,
+            referenceType: "MANUAL_BULK",
+            referenceId: reason || "Bulk Scrap Action",
+          },
+        });
+
+        await tx.inventory.update({
+          where: { itemId },
+          data: {
+            quantityAvailable: 0,
+          },
+        });
+
+        // Clear per-rack stock as well
+        await tx.stock.deleteMany({
+          where: { itemId }
+        });
+
+        // Clear batches
+        await tx.inventoryBatch.deleteMany({
+          where: { inventoryId: inventory.id }
+        });
+      }
+      return { success: true };
+    });
+  },
+
+  /**
+   * Bulk deletes items if they have no inventory dependencies.
+   */
+  async bulkDeleteItems(itemIds: string[]) {
+    return await (prisma as any).$transaction(async (tx: any) => {
+      // Check if any have stock
+      const stockCheck = await tx.inventory.findMany({
+        where: { 
+          itemId: { in: itemIds },
+          quantityAvailable: { gt: 0 }
+        }
+      });
+
+      if (stockCheck.length > 0) {
+        throw new Error("Cannot delete items that still have available stock. Please scrap them first.");
+      }
+
+      // Delete dependencies first
+      await tx.inventory.deleteMany({ where: { itemId: { in: itemIds } } });
+      await tx.inventoryTransaction.deleteMany({ where: { itemId: { in: itemIds } } });
+      await tx.stock.deleteMany({ where: { itemId: { in: itemIds } } });
+      await tx.pOLineItem.deleteMany({ where: { itemId: { in: itemIds } } });
+      await tx.dispatchItem.deleteMany({ where: { itemId: { in: itemIds } } });
+
+      return await tx.item.deleteMany({
+        where: { id: { in: itemIds } },
+      });
+    });
+  },
+
+  /**
    * Cancels a dispatch order and releases reserved stock.
    */
   async cancelDispatchOrder(orderId: string) {

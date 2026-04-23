@@ -73,6 +73,7 @@ export default function InventoryPagination({
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1 || isPending}
           className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground disabled:opacity-30 border border-transparent hover:border-border-ghost transition-all"
+          suppressHydrationWarning
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -90,6 +91,7 @@ export default function InventoryPagination({
                   ? "bg-transparent text-muted-foreground cursor-default"
                   : "bg-surface-lowest text-muted-foreground hover:bg-surface-low border border-border-ghost hover:border-primary/30"
             )}
+            suppressHydrationWarning
           >
             {page}
           </button>
@@ -99,6 +101,7 @@ export default function InventoryPagination({
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages || isPending}
           className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground disabled:opacity-30 border border-transparent hover:border-border-ghost transition-all"
+          suppressHydrationWarning
         >
           <ChevronRight className="w-5 h-5" />
         </button>

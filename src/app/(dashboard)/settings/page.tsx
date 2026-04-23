@@ -5,8 +5,6 @@ import {
   ShieldCheck, 
   ChevronRight,
   LogOut,
-  Moon,
-  Sun,
   Palette
 } from "lucide-react";
 import { getSession } from "@/lib/auth";
@@ -99,19 +97,7 @@ export default async function SettingsPage() {
                 ))}
             </nav>
             <div className="pt-6 mt-6 border-t border-border-ghost/50 space-y-6">
-                 <div>
-                    <h4 className="px-4 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">Space Appearance</h4>
-                    <div className="flex items-center gap-2 px-2">
-                        <button className="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl border border-primary/20 bg-primary/5 text-primary shadow-inner">
-                            <Sun className="w-4 h-4" />
-                            <span className="text-[9px] font-black uppercase">Light</span>
-                        </button>
-                        <button className="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl border border-border-ghost bg-white/50 text-muted-foreground hover:bg-white transition-all shadow-sm">
-                            <Moon className="w-4 h-4" />
-                            <span className="text-[9px] font-black uppercase">Dark</span>
-                        </button>
-                    </div>
-                 </div>
+
                  
                  <form action={async () => {
                    "use server";

@@ -142,182 +142,277 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
   const isDelivered = order.status.toUpperCase() === "DELIVERED";
 
   return (
-    <div className="p-8 lg:p-12 space-y-10 max-w-7xl mx-auto pb-24">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div className="space-y-4">
-          <Link href="/orders/purchase" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Procurement List</span>
-          </Link>
-          <div className="flex items-center gap-4">
-             <h1 className="text-4xl font-black tracking-tight text-foreground">PO #{order.id.split('-')[0].toUpperCase()}</h1>
-             <span className={cn(
-                "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border",
-                (order.status.toUpperCase() === "RECEIVED" || isDelivered) ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-blue-50 text-blue-600 border-blue-100"
-             )}>
-                {isDelivered ? "RECEIVED" : order.status}
-             </span>
+    <div className="min-h-screen bg-surface-lowest">
+      {/* Premium Header with Background Glow */}
+      <div className="relative overflow-hidden bg-white border-b border-border-ghost">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -mr-64 -mt-64"></div>
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[80px] -ml-32 -mb-32"></div>
+        
+        <div className="max-w-7xl mx-auto px-8 lg:px-12 py-10 relative z-10">
+          <div className="space-y-6">
+            <Link href="/orders/purchase" className="group flex items-center gap-2 text-muted-foreground font-bold text-xs uppercase tracking-widest hover:text-primary transition-colors w-fit">
+              <div className="p-2 bg-surface-low rounded-lg group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                <ArrowLeft className="w-3 h-3" />
+              </div>
+              <span>Back to Procurement List</span>
+            </Link>
+            
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+              <div className="space-y-3">
+                <div className="flex items-center gap-4">
+                  <h1 className="text-4xl font-black tracking-tight text-foreground">PO #{order.id.split('-')[0].toUpperCase()}</h1>
+                  <span className={cn(
+                    "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm",
+                    (order.status.toUpperCase() === "RECEIVED" || isDelivered) 
+                      ? "bg-emerald-500 text-white border-emerald-400 shadow-emerald-200" 
+                      : order.status.toUpperCase() === "PARTIAL"
+                      ? "bg-amber-500 text-white border-amber-400 shadow-amber-200"
+                      : "bg-primary text-white border-primary shadow-primary/20"
+                  )}>
+                    {isDelivered ? "DELIVERED" : order.status}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground font-medium">
+                  <p className="flex items-center gap-2">
+                    <Truck className="w-4 h-4 opacity-50" />
+                    Verified source: <span className="text-foreground font-black">{order.vendor.name}</span>
+                  </p>
+                  <p className="flex items-center gap-2 border-l border-border-ghost pl-6">
+                    <Clock className="w-4 h-4 opacity-50" />
+                    Order Date: <span className="text-foreground font-black">{new Date(order.orderDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-surface-low/50 p-2 rounded-2xl border border-border-ghost backdrop-blur-sm">
+                <div className="px-4 py-2">
+                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1.5">Total Value</p>
+                  <p className="text-lg font-black text-foreground leading-none">
+                    ₹{order.items.reduce((acc: number, item: any) => acc + (item.costPrice * item.quantityOrdered), 0).toLocaleString('en-IN')}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-muted-foreground text-lg font-medium">Verified supply source: <span className="text-foreground font-black">{order.vendor.name}</span></p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Left Column: Line Items */}
-        <div className="lg:col-span-8 space-y-8">
-           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost">
-              <h3 className="text-xl font-black text-foreground mb-8 border-b border-border-ghost pb-6 flex items-center gap-3">
-                 <Package className="w-6 h-6 text-primary" />
-                 Inbound Line Items
-              </h3>
+      <div className="max-w-7xl mx-auto px-8 lg:px-12 py-12 pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left Column: Line Items */}
+          <div className="lg:col-span-8 space-y-8">
+            <div className="card-premium !p-0 overflow-hidden">
+              <header className="p-8 border-b border-border-ghost flex items-center justify-between bg-surface-low/30">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                    <Package className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-foreground">Inbound Line Items</h3>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mt-0.5">{order.items.length} items to verify</p>
+                  </div>
+                </div>
 
-              {!isFullyReceived && !isDelivered && order.status.toUpperCase() !== "RECEIVED" && (
-                 <div className="mb-6 flex justify-end">
-                    <button 
-                     onClick={async () => {
-                        const allForm: any = {};
-                        order.items.forEach((item: any) => {
-                           const remaining = Math.max(0, Number(item.quantityOrdered) - Number(item.quantityReceived));
-                           if (remaining > 0) {
-                              allForm[item.itemId] = remaining;
-                           }
-                        });
-                        
-                        const itemsToReceive = Object.entries(allForm).map(([itemId, receivedQty]) => ({ 
-                           itemId, 
-                           receivedQty 
-                        }));
+                {!isFullyReceived && !isDelivered && order.status.toUpperCase() !== "RECEIVED" && (
+                  <button 
+                    onClick={handleMarkAllReceived}
+                    disabled={submitting}
+                    className="group px-5 py-2.5 bg-white hover:bg-primary hover:text-white rounded-xl border border-border-ghost hover:border-primary shadow-sm transition-all duration-300 flex items-center gap-2"
+                  >
+                    <span className="text-[11px] font-black uppercase tracking-widest">Mark All Received</span>
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                )}
+              </header>
 
-                        if (itemsToReceive.length > 0) {
-                           setSubmitting(true);
-                           try {
-                              const res = await fetch(`/api/purchase-orders/${id}/receive`, {
-                                 method: "POST",
-                                 headers: { "Content-Type": "application/json" },
-                                 body: JSON.stringify({ items: itemsToReceive }),
-                              });
-                              if (res.ok) window.location.reload();
-                              else {
-                                 const data = await res.json();
-                                 setError(data.error || "Failed to receive goods.");
-                              }
-                           } catch (err) {
-                              setError("Network error during receipt.");
-                           } finally {
-                              setSubmitting(false);
-                           }
-                        }
-                     }}
-                     disabled={submitting}
-                     className="text-xs font-black text-primary hover:text-primary-semibold flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
-                    >
-                      {submitting ? <Loader2 className="w-3 h-3 animate-spin" /> : "🚀"} 
-                      {submitting ? "Processing..." : "Mark All Pending as Received"}
-                    </button>
-                 </div>
-               )}
-              
-              <div className="space-y-6">
-                 {order.items.map((item: any) => (
-                    <div key={item.id} className="p-6 bg-surface-low/30 rounded-3xl border border-border-ghost flex flex-col lg:flex-row items-center gap-8">
-                        <div className="flex items-center gap-5 flex-1 min-w-0 w-full">
-                           <div className="w-14 h-14 rounded-2xl bg-white border border-border-ghost flex items-center justify-center font-black text-xl text-primary shadow-sm shrink-0">
-                              {item.item.sku[0]}
-                           </div>
-                           <div className="min-w-0">
+              <div className="divide-y divide-border-ghost">
+                {order.items.map((item: any) => {
+                  const percent = Math.min(100, (item.quantityReceived / item.quantityOrdered) * 100);
+                  return (
+                    <div key={item.id} className="p-8 hover:bg-surface-low/20 transition-all group">
+                      <div className="flex flex-col xl:flex-row xl:items-center gap-8">
+                        <div className="flex items-center gap-6 flex-1 min-w-0">
+                          <div className="w-16 h-16 rounded-[1.25rem] bg-white border border-border-ghost flex items-center justify-center text-2xl shadow-sm group-hover:shadow-md group-hover:border-primary/20 transition-all shrink-0">
+                            <span className="font-black text-primary/40 group-hover:text-primary transition-colors">{item.item.sku[0]}</span>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 mb-1">
                               <p className="font-black text-foreground text-lg truncate">{item.item.name}</p>
-                              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">SKU: {item.item.sku}</p>
-                           </div>
+                              {item.quantityReceived >= item.quantityOrdered && (
+                                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                              )}
+                            </div>
+                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">SKU: {item.item.sku}</p>
+                            
+                            {/* Progress bar per item */}
+                            <div className="mt-4 w-full h-1.5 bg-surface-low rounded-full overflow-hidden border border-border-ghost/50 max-w-xs">
+                              <div 
+                                className={cn(
+                                  "h-full transition-all duration-1000",
+                                  percent === 100 ? "bg-emerald-500" : "bg-primary"
+                                )}
+                                style={{ width: `${percent}%` }}
+                              ></div>
+                            </div>
+                          </div>
                         </div>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10 text-center shrink-0 w-full lg:w-auto bg-white/50 p-6 rounded-2xl border border-border-ghost/50">
-                           <div className="flex flex-col items-center">
-                              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Rate</p>
-                              <p className="text-sm font-black text-foreground bg-surface-low px-3 py-1 rounded-lg border border-border-ghost">₹{Number(item.costPrice).toLocaleString('en-IN')}</p>
-                           </div>
-                           <div className="flex flex-col items-center">
-                              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Ordered</p>
-                              <p className="text-xl font-black text-foreground leading-none">{item.quantityOrdered}</p>
-                           </div>
-                           <div className="flex flex-col items-center">
-                              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Received</p>
-                              <p className={cn(
-                                 "text-xl font-black leading-none",
-                                 item.quantityReceived >= item.quantityOrdered ? "text-emerald-600" : "text-orange-500"
-                              )}>{item.quantityReceived}</p>
-                           </div>
-                           <div className="flex flex-col items-center border-t md:border-t-0 md:border-l border-border-ghost pt-4 md:pt-0 md:pl-8">
-                              <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-2">Receive Now</p>
+                        <div className="flex flex-wrap items-center gap-x-12 gap-y-6">
+                          <div className="text-center min-w-[60px]">
+                            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Rate</p>
+                            <p className="text-sm font-black text-foreground">₹{Number(item.costPrice).toLocaleString('en-IN')}</p>
+                          </div>
+                          <div className="text-center min-w-[60px]">
+                            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Order</p>
+                            <p className="text-lg font-black text-foreground">{item.quantityOrdered}</p>
+                          </div>
+                          <div className="text-center min-w-[60px]">
+                            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Recv.</p>
+                            <p className={cn(
+                              "text-lg font-black",
+                              item.quantityReceived >= item.quantityOrdered ? "text-emerald-600" : "text-amber-500"
+                            )}>{item.quantityReceived}</p>
+                          </div>
+                          <div className="pl-8 border-l border-border-ghost">
+                            <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-2">Receive Now</p>
+                            <div className="relative group/input">
                               <input 
-                                 type="number"
-                                 disabled={item.quantityReceived >= item.quantityOrdered || isDelivered || order.status.toUpperCase() === "RECEIVED"}
-                                 value={receiveForm[item.itemId] || 0}
-                                 onChange={(e) => setReceiveForm({...receiveForm, [item.itemId]: parseFloat(e.target.value)})}
-                                 className="w-24 bg-white border-2 border-primary/20 rounded-xl px-3 py-2 text-center font-black text-base focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all disabled:opacity-30 disabled:border-border-ghost"
+                                type="number"
+                                disabled={item.quantityReceived >= item.quantityOrdered || isDelivered || order.status.toUpperCase() === "RECEIVED"}
+                                value={receiveForm[item.itemId] || 0}
+                                onChange={(e) => setReceiveForm({...receiveForm, [item.itemId]: parseFloat(e.target.value)})}
+                                className="w-24 bg-surface-low/50 border-2 border-transparent group-hover/input:border-primary/20 rounded-xl px-3 py-2 text-center font-black text-base focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all disabled:opacity-30 disabled:border-transparent"
                               />
-                           </div>
+                            </div>
+                          </div>
                         </div>
+                      </div>
                     </div>
-                 ))}
+                  );
+                })}
               </div>
-           </div>
-        </div>
+            </div>
+          </div>
 
-        {/* Right Column: Execution */}
-        <div className="lg:col-span-4 space-y-8">
-           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
-              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Logistics Action</h3>
+          {/* Right Column: Execution */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="card-premium space-y-10">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-black text-foreground tracking-tight">Logistics Action</h3>
+                <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center text-muted-foreground">
+                  <Truck className="w-5 h-5" />
+                </div>
+              </div>
               
               <div className="space-y-6">
-                 <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
-                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Vendor Summary</p>
-                    <p className="text-lg font-black text-foreground">{order.vendor.name}</p>
-                    <p className="text-xs font-medium text-muted-foreground mt-1">Ready for inbound verification.</p>
-                 </div>
+                <div className="p-6 rounded-3xl bg-primary/[0.03] border border-primary/10 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 opacity-5">
+                    <Truck className="w-12 h-12" />
+                  </div>
+                  <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2 relative z-10">Vendor Summary</p>
+                  <p className="text-xl font-black text-foreground relative z-10">{order.vendor.name}</p>
+                  <p className="text-xs font-bold text-muted-foreground mt-1 relative z-10 uppercase tracking-tight">Verified supply source</p>
+                </div>
 
-                 <div className="p-6 rounded-2xl bg-surface-low border border-border-ghost space-y-4">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Order Meta</p>
-                    <div>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Payment Mode</p>
-                      <p className="text-sm font-black text-foreground mt-1">{order.paymentMode || "Cash"}</p>
+                {/* Overall Fulfillment Progress */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-end px-1">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Receipt Fulfillment</p>
+                    <p className="text-[11px] font-black text-foreground">
+                      {order.items.reduce((acc: number, i: any) => acc + i.quantityReceived, 0)} / {order.items.reduce((acc: number, i: any) => acc + i.quantityOrdered, 0)}
+                    </p>
+                  </div>
+                  <div className="h-3 bg-surface-low rounded-full overflow-hidden border border-border-ghost">
+                    <div 
+                      className="h-full bg-gradient-to-r from-primary to-indigo-500 transition-all duration-1000 shadow-[0_0_12px_rgba(79,70,229,0.3)]"
+                      style={{ 
+                        width: `${Math.min(100, (order.items.reduce((acc: number, i: any) => acc + i.quantityReceived, 0) / order.items.reduce((acc: number, i: any) => acc + i.quantityOrdered, 0)) * 100)}%` 
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-3xl bg-surface-lowest border border-border-ghost space-y-5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-surface-low rounded-lg">
+                      <Clock className="w-4 h-4 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Expected Delivery</p>
-                      <p className="text-sm font-black text-foreground mt-1">{formatDateTime(order.expectedDelivery)}</p>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1">Expected Delivery</p>
+                      <p className="text-sm font-black text-foreground leading-none">{formatDateTime(order.expectedDelivery)}</p>
                     </div>
                   </div>
-
-                 {isFullyReceived ? (
-                    <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center gap-4">
-                       <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-                       <p className="text-sm font-black text-emerald-900">Order fully received & synced to inventory.</p>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-surface-low rounded-lg">
+                      <Package className="w-4 h-4 text-muted-foreground" />
                     </div>
-                 ) : (
-                    <button 
-                      onClick={handleReceive}
-                      disabled={submitting}
-                      className="w-full py-4 bg-foreground text-white rounded-2xl font-black text-[15px] shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
-                    >
-                      {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <PlusCircle className="w-5 h-5 text-emerald-400" />}
-                      {submitting ? "Verifying..." : "Confirm Receipt"}
-                    </button>
-                 )}
-              </div>
-           </div>
+                    <div>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1">Payment Mode</p>
+                      <p className="text-sm font-black text-foreground leading-none">{order.paymentMode || "Cash"}</p>
+                    </div>
+                  </div>
+                </div>
 
-           <div className="primary-gradient p-8 rounded-[2.5rem] text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
-              <div className="flex items-center gap-3 mb-4 relative z-10">
-                 <Clock className="w-5 h-5 opacity-80" />
-                 <p className="text-[10px] font-black uppercase tracking-widest">In-Transit Sync</p>
+                {isFullyReceived ? (
+                  <div className="p-8 rounded-[2rem] bg-emerald-500 text-white shadow-xl shadow-emerald-200 flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
+                      <CheckCircle2 className="w-8 h-8 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-black uppercase tracking-tight">Order Received</p>
+                      <p className="text-xs font-bold text-white/80 mt-1 uppercase tracking-widest">Inventory Fully Synced</p>
+                    </div>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={handleReceive}
+                    disabled={submitting}
+                    className="w-full py-5 bg-foreground text-white rounded-[2rem] font-black text-base shadow-2xl hover:bg-primary transition-all duration-500 disabled:opacity-50 flex items-center justify-center gap-3 relative overflow-hidden group/btn active:scale-95"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
+                    <span className="relative z-10 flex items-center gap-3">
+                      {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <PlusCircle className="w-5 h-5" />}
+                      {submitting ? "Verifying..." : "Confirm Receipt"}
+                    </span>
+                  </button>
+                )}
               </div>
-              <p className="text-sm font-medium leading-relaxed relative z-10">
-                Receiving these goods will decrement <strong>Quantity In-Transit</strong> and increment <strong>Quantity Available</strong> in the main inventory ledger.
-              </p>
-           </div>
+            </div>
+
+            <div className="bg-indigo-600 p-8 rounded-[2.5rem] text-white shadow-2xl shadow-indigo-200 relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+               <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
+                    <AlertCircle className="w-4 h-4" />
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Audit System Note</p>
+               </div>
+               <p className="text-sm font-medium leading-relaxed opacity-90 italic">
+                 Confirming this receipt will automatically update the inventory levels and log a transaction audit record for <strong>{order.vendor.name}</strong>.
+               </p>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Floating Error Toast */}
+      {error && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-10">
+          <div className="bg-error text-white px-8 py-4 rounded-2xl shadow-2xl font-black text-sm flex items-center gap-4">
+             <AlertCircle className="w-5 h-5" />
+             {error}
+             <button onClick={() => setError("")} className="ml-4 p-1 hover:bg-white/10 rounded-lg"><X className="w-4 h-4" /></button>
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+function X({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+    </svg>
   );
 }

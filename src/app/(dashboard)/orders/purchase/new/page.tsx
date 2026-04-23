@@ -162,10 +162,24 @@ function NewPurchaseOrderForm() {
           setItems(itemsData);
 
           // Auto-fill from query params
+          const bulkItems = searchParams.get("bulk");
           const qItemId = searchParams.get("itemId");
           const qQuantity = searchParams.get("quantity");
           
-          if (qItemId) {
+          if (bulkItems) {
+            try {
+              const decoded = JSON.parse(decodeURIComponent(bulkItems));
+              if (Array.isArray(decoded)) {
+                setLineItems(decoded.map(item => ({
+                  itemId: item.id,
+                  quantityOrdered: item.q || 1,
+                  costPrice: 0
+                })));
+              }
+            } catch (e) {
+              console.error("Bulk parse error:", e);
+            }
+          } else if (qItemId) {
             setLineItems([{ 
               itemId: qItemId, 
               quantityOrdered: qQuantity ? parseFloat(qQuantity) : 1, 

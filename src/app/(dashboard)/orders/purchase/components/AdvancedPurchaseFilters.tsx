@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import CustomSelect from "@/components/CustomSelect";
+import PremiumSelect from "@/components/PremiumSelect";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -149,7 +149,7 @@ export default function AdvancedPurchaseFilters({
             <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <User className="w-3 h-3" /> Filter by Vendor
             </label>
-            <CustomSelect
+            <PremiumSelect
               options={vendors.map(v => v.name)}
               value={vendors.find(v => v.id === currentFilters.vendorId)?.name || "all"}
               onChange={(val) => {
@@ -157,6 +157,7 @@ export default function AdvancedPurchaseFilters({
                 updateFilters({ vendorId: vendor?.id || "all" });
               }}
               placeholder="All Vendors"
+              icon={<User className="w-3.5 h-3.5" />}
             />
           </div>
 
@@ -165,7 +166,7 @@ export default function AdvancedPurchaseFilters({
             <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Package className="w-3 h-3" /> Filter by Item
             </label>
-            <CustomSelect
+            <PremiumSelect
               options={items.map(i => i.name)}
               value={items.find(i => i.id === currentFilters.itemId)?.name || "all"}
               onChange={(val) => {
@@ -173,6 +174,7 @@ export default function AdvancedPurchaseFilters({
                 updateFilters({ itemId: item?.id || "all" });
               }}
               placeholder="All Items"
+              icon={<Package className="w-3.5 h-3.5" />}
             />
           </div>
 
