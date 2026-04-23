@@ -23,6 +23,23 @@ export async function GET() {
 
     // Add rows
     inventory.forEach(inv => {
+      const total = inv.quantityAvailable;
+      const incoming = (inv.incomingQty || 0) + (inv.quantityInTransit || 0);
+      const reserved = inv.quantityReserved;
+      const netAvailable = (total + incoming) - reserved;
+      const minStock = inv.item.minStockLevel;
+
+      let status = "In Stock";
+      if (total <= 0) {
+        status = "Out of Stock";
+      } else if (netAvailable < 0) {
+        status = "Urgent Reorder";
+      } else if (total <= minStock) {
+        status = "Low Stock";
+      } else if (incoming > 0) {
+        status = "Ordered";
+      }
+
       const row = [
         inv.item.sku,
         inv.item.name.replace(/,/g, ""), // Remove commas to prevent CSV breaking
@@ -31,7 +48,7 @@ export async function GET() {
         inv.incomingQty,
         inv.quantityReserved,
         inv.item.minStockLevel,
-        inv.status
+        status
       ];
       csv += row.join(",") + "\n";
     });
