@@ -39,94 +39,7 @@ interface LineItem {
 
 const PAYMENT_MODE_OPTIONS = ["Cash", "Bank Transfer", "UPI", "Credit"];
 
-function SearchableItemSelect({ 
-  items, 
-  value, 
-  onChange, 
-  placeholder = "Select Item from List" 
-}: { 
-  items: any[], 
-  value: string, 
-  onChange: (val: string) => void,
-  placeholder?: string
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const dropdownRef = useState<HTMLDivElement | null>(null)[0];
-
-  const selectedItem = items.find(i => i.id === value);
-  const filteredItems = items.filter(i => 
-    i.name.toLowerCase().includes(search.toLowerCase()) || 
-    i.sku.toLowerCase().includes(search.toLowerCase())
-  );
-
-  return (
-    <div className="relative">
-      <div 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer flex items-center justify-between"
-      >
-        <span className={cn(!selectedItem && "text-muted-foreground")}>
-          {selectedItem ? `${selectedItem.sku} - ${selectedItem.name}` : placeholder}
-        </span>
-        <ChevronDown className={cn("w-4 h-4 transition-transform", isOpen && "rotate-180")} />
-      </div>
-
-      {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-surface-lowest border border-border-ghost rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-          <div className="p-3 border-b border-border-ghost bg-surface-low/30">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input 
-                type="text"
-                autoFocus
-                placeholder="Search SKU or Name..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-surface-lowest border border-border-ghost rounded-lg pl-9 pr-4 py-2 text-sm font-bold focus:ring-2 focus:ring-primary outline-none"
-              />
-            </div>
-          </div>
-          <div className="max-h-60 overflow-y-auto p-2">
-            {filteredItems.length > 0 ? (
-              filteredItems.map(item => (
-                <div 
-                  key={item.id}
-                  onClick={() => {
-                    onChange(item.id);
-                    setIsOpen(false);
-                    setSearch("");
-                  }}
-                  className={cn(
-                    "flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-colors",
-                    item.id === value ? "bg-primary text-white" : "hover:bg-surface-low text-foreground"
-                  )}
-                >
-                  <div className="flex flex-col">
-                    <span className="text-xs font-black">{item.sku}</span>
-                    <span className="text-[11px] opacity-80">{item.name}</span>
-                  </div>
-                  {item.id === value && <Check className="w-4 h-4" />}
-                </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-xs font-bold text-muted-foreground">
-                No items found
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-    </div>
-  );
-}
+import { SearchableSelect } from "@/components/SearchableSelect";
 
 
 function NewPurchaseOrderForm() {
@@ -151,8 +64,8 @@ function NewPurchaseOrderForm() {
     async function fetchData() {
       try {
         const [vMsg, iMsg] = await Promise.all([
-          fetch("/api/vendors"),
-          fetch("/api/items")
+          fetch("/api/vendors?minimal=true"),
+          fetch("/api/items?minimal=true")
         ]);
         
         if (vMsg.ok && iMsg.ok) {
@@ -349,12 +262,13 @@ function NewPurchaseOrderForm() {
                 <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 bg-surface-low/30 rounded-3xl border border-border-ghost group relative hover:border-primary/20 transition-all">
                   <div className="md:col-span-12 lg:col-span-5 relative">
                     <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Details</label>
-                    <SearchableItemSelect 
+                    <SearchableSelect 
                       items={items.filter(i => 
                         !lineItems.some((li, liIndex) => liIndex !== index && li.itemId === i.id)
                       )}
                       value={item.itemId}
                       onChange={(val) => updateLineItem(index, "itemId", val)}
+                      placeholder="Select Item from List"
                     />
                     
                     {item.itemId && (() => {
@@ -448,19 +362,12 @@ function NewPurchaseOrderForm() {
                       <Building2 className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                       <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Vendor Source</label>
                    </div>
-                   <div className="relative">
-                     <select 
-                       value={selectedVendor}
-                       onChange={(e) => setSelectedVendor(e.target.value)}
-                       className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none transition-all hover:bg-surface-lowest hover:border-primary/20"
-                     >
-                       <option value="">Select Vendor</option>
-                       {vendors.map(v => (
-                         <option key={v.id} value={v.id}>{v.name}</option>
-                       ))}
-                     </select>
-                     <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                   </div>
+                   <SearchableSelect 
+                     items={vendors}
+                     value={selectedVendor}
+                     onChange={(val) => setSelectedVendor(val)}
+                     placeholder="Select Vendor"
+                   />
                 </div>
 
                 <div className="group">
@@ -468,21 +375,12 @@ function NewPurchaseOrderForm() {
                       <CreditCard className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                       <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Payment Method</label>
                    </div>
-                   <div className="relative">
-                     <select 
-                       value={paymentMode}
-                       onChange={(e) => setPaymentMode(e.target.value)}
-                       className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none transition-all hover:bg-surface-lowest hover:border-primary/20"
-                     >
-                       {PAYMENT_MODE_OPTIONS.map((mode) => (
-                         <option key={mode} value={mode}>{mode}</option>
-                       ))}
-                       {!PAYMENT_MODE_OPTIONS.includes(paymentMode) && (
-                         <option value={paymentMode}>{paymentMode}</option>
-                       )}
-                     </select>
-                     <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                   </div>
+                   <SearchableSelect 
+                     items={[...PAYMENT_MODE_OPTIONS, ...(!PAYMENT_MODE_OPTIONS.includes(paymentMode) ? [paymentMode] : [])].map(m => ({ id: m, name: m }))}
+                     value={paymentMode}
+                     onChange={(val) => setPaymentMode(val)}
+                     placeholder="Select Payment Method"
+                   />
                 </div>
 
                 <div className="group">

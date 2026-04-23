@@ -11,8 +11,11 @@ import {
   Plus,
   Search,
   Send,
-  Trash2
+  Trash2,
+  ChevronDown
 } from "lucide-react";
+import { SearchableSelect } from "@/components/SearchableSelect";
+import { PremiumDateTimePicker } from "@/components/DateTimePicker";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -256,9 +259,9 @@ export default function NewDispatchOrderPage() {
     async function fetchData() {
       try {
         const [cRes, iRes, invRes] = await Promise.all([
-          fetch("/api/customers"),
-          fetch("/api/items"),
-          fetch("/api/inventory")
+          fetch("/api/customers?minimal=true"),
+          fetch("/api/items?minimal=true"),
+          fetch("/api/inventory?minimal=true")
         ]);
 
         if (cRes.ok && iRes.ok && invRes.ok) {
@@ -545,54 +548,32 @@ export default function NewDispatchOrderPage() {
                 
                 return (
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end" key={index}>
-                    <div className="md:col-span-5 relative" data-item-search>
+                    <div className="md:col-span-5 relative">
                       <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Details</label>
-                      <div className="relative">
-                        <div className="absolute left-4 top-3.5 text-muted-foreground pointer-events-none">
-                          <Search className="w-4 h-4" />
-                        </div>
-                        <input
-                          type="text"
-                          placeholder="Search items..."
-                          value={itemSearches[index] || ""}
-                          onChange={(e) => handleSearchChange(index, e.target.value)}
-                          onFocus={() => setOpenDropdowns({ ...openDropdowns, [index]: true })}
-                          className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-10 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
-                        />
-                        
-                        {/* Dropdown List */}
-                        {openDropdowns[index] && (
-                          <div className="absolute top-full left-0 right-0 mt-2 bg-surface-lowest border border-border-ghost rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto">
-                            {getFilteredItems(itemSearches[index] || "").length > 0 ? (
-                              getFilteredItems(itemSearches[index] || "").map(i => (
-                                <button
-                                  key={i.id}
-                                  onClick={() => handleItemSelect(index, i.id, `${i.sku} - ${i.name}`)}
-                                  className="w-full text-left px-4 py-3 hover:bg-primary/10 border-b border-border-ghost/50 last:border-b-0 transition-colors font-bold text-sm"
-                                >
-                                  <div className="flex justify-between items-start">
-                                    <div>
-                                      <div className="font-bold">{i.sku} - {i.name}</div>
-                                      <div className="text-xs text-muted-foreground">{i.unit}</div>
-                                    </div>
-                                    <div className={`text-xs font-bold px-2 py-1 rounded ${
-                                      getAvailableStock(i.id) > 0 
-                                        ? 'bg-emerald-500/10 text-emerald-700' 
-                                        : 'bg-error/10 text-error'
-                                    }`}>
-                                      {getAvailableStock(i.id)} units
-                                    </div>
-                                  </div>
-                                </button>
-                              ))
-                            ) : (
-                              <div className="px-4 py-3 text-sm text-muted-foreground text-center">
-                                No items found
-                              </div>
-                            )}
+                      <SearchableSelect 
+                        items={items}
+                        value={item.itemId}
+                        onChange={(val) => {
+                          const i = items.find(it => it.id === val);
+                          handleItemSelect(index, val, i ? `${i.sku} - ${i.name}` : "");
+                        }}
+                        placeholder="Search items..."
+                        renderItem={(i) => (
+                          <div className="flex justify-between items-center w-full">
+                            <div className="flex flex-col min-w-0">
+                               <span className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-0.5 truncate">{i.sku}</span>
+                               <span className="text-sm font-bold truncate">{i.name}</span>
+                            </div>
+                            <div className={`text-[10px] font-black px-2 py-1 rounded-lg ml-3 shrink-0 ${
+                              getAvailableStock(i.id) > 0 
+                                ? 'bg-emerald-500/10 text-emerald-700' 
+                                : 'bg-error/10 text-error'
+                            }`}>
+                              {getAvailableStock(i.id)} units
+                            </div>
                           </div>
                         )}
-                      </div>
+                      />
                       
                       {item.itemId && (
                         <div className="mt-3 space-y-3">
@@ -675,42 +656,30 @@ export default function NewDispatchOrderPage() {
               
               <div>
                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Customer Name</label>
-                 <select 
+                 <SearchableSelect 
+                   items={customers}
                    value={selectedCustomer}
-                   onChange={(e) => setSelectedCustomer(e.target.value)}
-                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
-                 >
-                   <option value="">Select Customer</option>
-                   {customers.map(c => (
-                     <option key={c.id} value={c.id}>{c.name}</option>
-                   ))}
-                 </select>
+                   onChange={(val) => setSelectedCustomer(val)}
+                   placeholder="Select Customer"
+                 />
               </div>
 
               <div>
                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">How they paid</label>
-                 <select 
+                 <SearchableSelect 
+                   items={["Cash", "Credit Card", "Debit Card", "Bank Transfer", "Check", "Digital Wallet", "UPI"].map(m => ({ id: m, name: m }))}
                    value={paymentMode}
-                   onChange={(e) => setPaymentMode(e.target.value)}
-                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
-                 >
-                   <option value="Cash">Cash</option>
-                   <option value="Credit Card">Credit Card</option>
-                   <option value="Debit Card">Debit Card</option>
-                   <option value="Bank Transfer">Bank Transfer</option>
-                   <option value="Check">Check</option>
-                   <option value="Digital Wallet">Digital Wallet</option>
-                   <option value="UPI">UPI</option>
-                 </select>
+                   onChange={(val) => setPaymentMode(val)}
+                   placeholder="Select Payment Method"
+                 />
               </div>
 
               <div>
                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Expected Delivery</label>
-                 <input 
-                   type="datetime-local"
+                 <PremiumDateTimePicker 
                    value={expectedDelivery}
-                   onChange={(e) => setExpectedDelivery(e.target.value)}
-                   className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                   onChange={(val) => setExpectedDelivery(val)}
+                   placeholder="Select Delivery Date & Time"
                  />
               </div>
 

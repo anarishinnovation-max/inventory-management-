@@ -20,11 +20,14 @@ function computeInventoryStatus(params: {
   return totalQty > 0 ? "IN_STOCK" : "OUT_OF_STOCK";
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const minimal = searchParams.get("minimal") === "true";
+
     const inventory = await prisma.inventory.findMany({
       include: {
-        item: { include: { category: true } },
+        item: minimal ? false : { include: { category: true } },
         batches: {
           include: { vendor: true },
           orderBy: { purchaseDate: 'desc' }

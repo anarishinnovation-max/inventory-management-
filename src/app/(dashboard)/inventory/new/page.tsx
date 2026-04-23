@@ -9,8 +9,10 @@ import {
   QrCode,
   Settings,
   ShieldCheck,
-  TrendingUp
+  TrendingUp,
+  ChevronDown
 } from "lucide-react";
+import { SearchableSelect } from "@/components/SearchableSelect";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,6 +31,8 @@ export default function NewItemPage() {
   const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
   const [racks, setRacks] = useState<{id: string, rackNumber: string}[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [unit, setUnit] = useState("Pieces");
+  const [selectedRackId, setSelectedRackId] = useState("");
   const [isCritical, setIsCritical] = useState(false);
 
   useEffect(() => {
@@ -36,7 +40,7 @@ export default function NewItemPage() {
       try {
         const [catRes, rackRes] = await Promise.all([
           fetch("/api/categories"),
-          fetch("/api/racks")
+          fetch("/api/racks?minimal=true")
         ]);
 
         if (catRes.ok) {
@@ -153,14 +157,18 @@ export default function NewItemPage() {
                   </div>
                 </div>
                 
-                <div>
                   <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
-                  <select name="unit" required className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold appearance-none cursor-pointer text-foreground">
-                    <option value="Pieces">Piece (pcs)</option>
-                    <option value="Kilograms">Kilogram (kg)</option>
-                    <option value="Boxes">Box (box)</option>
-                  </select>
-                </div>
+                  <SearchableSelect 
+                    items={[
+                      { id: "Pieces", name: "Piece (pcs)" },
+                      { id: "Kilograms", name: "Kilogram (kg)" },
+                      { id: "Boxes", name: "Box (box)" }
+                    ]}
+                    value={unit}
+                    onChange={(val) => setUnit(val)}
+                    placeholder="Select Unit"
+                  />
+                  <input type="hidden" name="unit" value={unit} />
               </div>
               
               <div>
@@ -252,14 +260,13 @@ export default function NewItemPage() {
               <div className="pt-4 border-t border-border-ghost">
                 <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4">Main Spot in Rack</label>
                 <div className="space-y-2">
-                  <p className="text-[10px] font-bold text-muted-foreground ml-1">Area / Rack</p>
-                  <select className="w-full px-4 py-3 bg-surface-lowest border border-border-ghost rounded-xl text-sm font-bold text-foreground focus:ring-2 focus:ring-primary outline-none cursor-pointer hover:bg-surface-low transition-colors">
-                    {racks.length > 0 ? racks.map(rack => (
-                      <option key={rack.id} value={rack.id}>Rack {rack.rackNumber}</option>
-                    )) : (
-                      <option disabled>No Racks Found</option>
-                    )}
-                  </select>
+                  <SearchableSelect 
+                    items={racks.map(r => ({ id: r.id, name: `Rack ${r.rackNumber}` }))}
+                    value={selectedRackId}
+                    onChange={(val) => setSelectedRackId(val)}
+                    placeholder="Select Rack Location"
+                  />
+                  <input type="hidden" name="rackId" value={selectedRackId} />
                 </div>
               </div>
             </div>

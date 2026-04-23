@@ -1,10 +1,18 @@
 "use client";
 
-import { Bell, Search, Plus, Command, User, Settings as SettingsIcon } from "lucide-react";
+import { Bell, Search, Plus, Command, User, Settings as SettingsIcon, ShoppingCart, Truck } from "lucide-react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,10 +45,70 @@ export default function Header() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 px-4 py-2 bg-foreground text-white rounded-xl text-sm font-bold shadow-premium hover:opacity-90 active:scale-95 transition-all" suppressHydrationWarning>
-             <Plus className="w-4 h-4" />
-             <span>Quick Entry</span>
-          </button>
+          <div className="relative">
+            <button 
+              onClick={() => setIsOpen(!isOpen)}
+              className="flex items-center gap-2 px-4 py-2 bg-foreground text-white rounded-xl text-sm font-bold shadow-premium hover:opacity-90 active:scale-95 transition-all" 
+              suppressHydrationWarning
+            >
+               <Plus className={cn("w-4 h-4 transition-transform duration-300", isOpen && "rotate-45")} />
+               <span>Quick Entry</span>
+            </button>
+
+            {isOpen && (
+              <>
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setIsOpen(false)}
+                />
+                <div className="absolute right-0 mt-2 w-56 bg-surface-lowest border border-border-ghost rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                  <div className="p-2 space-y-1">
+                    <Link 
+                      href="/inventory/new" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-foreground hover:bg-surface-low rounded-xl transition-all group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Plus className="w-4 h-4" />
+                      </div>
+                      New Item
+                    </Link>
+                    <Link 
+                      href="/orders/purchase/new" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-foreground hover:bg-surface-low rounded-xl transition-all group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-success/10 text-success flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <ShoppingCart className="w-4 h-4" />
+                      </div>
+                      Purchase Order
+                    </Link>
+                    <Link 
+                      href="/orders/dispatch/new" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-foreground hover:bg-surface-low rounded-xl transition-all group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Truck className="w-4 h-4" />
+                      </div>
+                      Dispatch Items
+                    </Link>
+                    <div className="h-px bg-border-ghost my-2 mx-4" />
+                    <Link 
+                      href="/vendors" 
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-foreground hover:bg-surface-low rounded-xl transition-all group"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-surface-low text-muted-foreground flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <SettingsIcon className="w-4 h-4" />
+                      </div>
+                      Manage Vendors
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
 
           <div className="h-6 w-px bg-border-ghost mx-2" />
 

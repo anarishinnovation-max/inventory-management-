@@ -28,129 +28,134 @@ function cn(...inputs: ClassValue[]) {
 
 export const dynamic = "force-dynamic";
 
-async function getDashboardAnalytics() {
-  // 1. Total Items
-  const itemsCount = await prisma.item.count();
+import { cacheQuery } from "@/lib/cache";
+import { DashboardActions } from "./components/DashboardActions";
 
-  // 2. Stock Value (Derived from POLineItems cost price or fallback to 0)
-  // We'll take the average cost price for each item if multiple POs exist
-  const stockValueResult = await prisma.$queryRaw<any[]>`
-    SELECT SUM(t.avg_cost * inv."quantityAvailable")::numeric(15,2) as total
-    FROM "Inventory" inv
-    JOIN (
-      SELECT "itemId", AVG("costPrice") as avg_cost 
-      FROM "POLineItem" 
-      GROUP BY "itemId"
-    ) t ON inv."itemId" = t."itemId"
-  `;
-  const stockValue = stockValueResult[0]?.total || 0;
+const getCachedDashboardAnalytics = cacheQuery(
+  async () => {
+    const [
+      stockStats,
+      stockValueResult,
+      vendorsCount,
+      flowResult,
+      recentActivity,
+      velocityResult,
+      replenishItems,
+      oldestItems
+    ] = await Promise.all([
+      // 1. Consolidated Stock Stats (Total, Low, Out of Stock)
+      prisma.$queryRaw<any[]>`
+        SELECT 
+          COUNT(*)::int as total,
+          COUNT(CASE WHEN inv."quantityAvailable" <= 0 OR inv.id IS NULL THEN 1 END)::int as out_of_stock,
+          COUNT(CASE WHEN inv."quantityAvailable" > 0 AND inv."quantityAvailable" <= i."minStockLevel" THEN 1 END)::int as low_stock
+        FROM "Item" i
+        LEFT JOIN "Inventory" inv ON i.id = inv."itemId"
+      `,
 
-  // 3. Stock Health Indicators
-  const outOfStockResult = await prisma.$queryRaw<any[]>`
-    SELECT COUNT(*)::int as count 
-    FROM "Item" i 
-    JOIN "Inventory" inv ON i.id = inv."itemId" 
-    WHERE inv."quantityAvailable" <= 0
-  `;
+      // 2. Stock Value (Optimized)
+      prisma.$queryRaw<any[]>`
+        SELECT SUM(t.avg_cost * inv."quantityAvailable")::numeric(15,2) as total
+        FROM "Inventory" inv
+        INNER JOIN (
+          SELECT "itemId", AVG("costPrice") as avg_cost 
+          FROM "POLineItem" 
+          GROUP BY "itemId"
+        ) t ON inv."itemId" = t."itemId"
+        WHERE inv."quantityAvailable" > 0
+      `,
 
-  const lowStockResult = await prisma.$queryRaw<any[]>`
-    SELECT COUNT(*)::int as count 
-    FROM "Item" i 
-    JOIN "Inventory" inv ON i.id = inv."itemId" 
-    WHERE inv."quantityAvailable" > 0 AND inv."quantityAvailable" <= i."minStockLevel"
-  `;
+      // 3. Vendor Count
+      prisma.vendor.count(),
 
-  // 4. Vendor Count
-  const vendorsCount = await prisma.vendor.count();
+      // 4. Stock Flow Dynamics (Last 30 days)
+      prisma.$queryRaw<any[]>`
+        SELECT 
+          date_trunc('day', t."createdAt") as day,
+          SUM(CASE WHEN t.type IN ('PURCHASE', 'ADJUSTMENT_IN') THEN ABS(t.quantity) ELSE 0 END)::int as inbound,
+          SUM(CASE WHEN t.type IN ('SALE', 'ADJUSTMENT_OUT') THEN ABS(t.quantity) ELSE 0 END)::int as outbound
+        FROM "InventoryTransaction" t
+        WHERE t."createdAt" > (NOW() - INTERVAL '30 days')
+        GROUP BY 1
+        ORDER BY 1 DESC
+        LIMIT 10
+      `,
 
-  // 5. Stock Flow Dynamics (Last 30 days)
-  const flowResult = await prisma.$queryRaw<any[]>`
-    SELECT 
-      date_trunc('day', t."createdAt") as day,
-      SUM(CASE WHEN t.type IN ('PURCHASE', 'ADJUSTMENT_IN') THEN ABS(t.quantity) ELSE 0 END)::int as inbound,
-      SUM(CASE WHEN t.type IN ('SALE', 'ADJUSTMENT_OUT') THEN ABS(t.quantity) ELSE 0 END)::int as outbound
-    FROM "InventoryTransaction" t
-    WHERE t."createdAt" > NOW() - INTERVAL '30 days'
-    GROUP BY 1
-    ORDER BY 1 DESC
-    LIMIT 10
-  `;
+      // 5. Recent Stock Activity
+      prisma.inventoryTransaction.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        include: { item: true }
+      }),
 
-  // 6. Recent Stock Activity
-  const recentActivity = await prisma.inventoryTransaction.findMany({
-    take: 5,
-    orderBy: { createdAt: 'desc' },
-    include: {
-      item: true
-    }
-  });
+      // 6. Velocity Analysis
+      prisma.$queryRaw<any[]>`
+        SELECT 
+          i.name, 
+          SUM(ABS(t.quantity))::int as units
+        FROM "InventoryTransaction" t
+        INNER JOIN "Item" i ON t."itemId" = i.id
+        WHERE t.type = 'SALE' AND t."createdAt" > (NOW() - INTERVAL '30 days')
+        GROUP BY i.id, i.name
+        ORDER BY units DESC
+        LIMIT 4
+      `,
 
-  // 7. Velocity Analysis (Sum of SALE quantities)
-  const velocityResult = await prisma.$queryRaw<any[]>`
-    SELECT 
-      i.name, 
-      SUM(ABS(t.quantity))::int as units
-    FROM "InventoryTransaction" t
-    JOIN "Item" i ON t."itemId" = i.id
-    WHERE t.type = 'SALE' AND t."createdAt" > NOW() - INTERVAL '30 days'
-    GROUP BY i.id, i.name
-    ORDER BY units DESC
-    LIMIT 4
-  `;
+      // 7. Replenish
+      prisma.$queryRaw<any[]>`
+        SELECT 
+          i.id, i.name, i.sku, i."minStockLevel",
+          inv."quantityAvailable"::int as current_qty,
+          inv."incomingQty"::int as incoming_qty
+        FROM "Item" i
+        INNER JOIN "Inventory" inv ON i.id = inv."itemId"
+        WHERE (inv."quantityAvailable" + inv."incomingQty") < i."minStockLevel"
+        ORDER BY (inv."quantityAvailable" + inv."incomingQty") ASC
+        LIMIT 3
+      `,
 
-  const replenishItems = await prisma.$queryRaw<any[]>`
-    SELECT 
-      i.id, i.name, i.sku, i."minStockLevel",
-      inv."quantityAvailable"::int as current_qty,
-      inv."incomingQty"::int as incoming_qty
-    FROM "Item" i
-    JOIN "Inventory" inv ON i.id = inv."itemId"
-    WHERE (inv."quantityAvailable" + inv."incomingQty") < i."minStockLevel"
-    ORDER BY (inv."quantityAvailable" + inv."incomingQty") ASC
-    LIMIT 3
-  `;
+      // 8. Oldest Items
+      prisma.item.findMany({
+        where: {
+          inventory: { quantityAvailable: { gt: 0 } }
+        },
+        orderBy: { createdAt: 'asc' },
+        take: 5,
+        include: { inventory: true }
+      })
+    ]);
 
-  // 9. Oldest Items (Top 5 items in inventory created longest ago)
-  const oldestItems = await prisma.item.findMany({
-    where: {
-      inventory: { quantityAvailable: { gt: 0 } }
-    },
-    orderBy: { createdAt: 'asc' },
-    take: 5,
-    include: {
-      inventory: true
-    }
-  });
+    const stats = stockStats[0] || { total: 0, out_of_stock: 0, low_stock: 0 };
+    const stockValue = stockValueResult[0]?.total || 0;
 
-  return {
-    kpis: {
-      totalItems: itemsCount,
-      stockValue: stockValue,
-      lowStockCount: lowStockResult[0]?.count || 0,
-      outOfStockCount: outOfStockResult[0]?.count || 0,
-      vendorsCount: vendorsCount,
-    },
-    flow: flowResult.reverse(),
-    recentActivity: recentActivity.map((tx: Prisma.InventoryTransactionGetPayload<{
-      include: {
-        item: true;
-      };
-    }>) => ({
-      id: tx.id,
-      type: tx.type,
-      quantity: Math.abs(tx.quantity),
-      createdAt: tx.createdAt,
-      item_name: tx.item.name,
-      sku: tx.item.sku
-    })),
-    velocity: velocityResult,
-    replenish: replenishItems,
-    oldestItems
-  };
-}
+    return {
+      kpis: {
+        totalItems: stats.total,
+        stockValue: stockValue,
+        lowStockCount: stats.low_stock,
+        outOfStockCount: stats.out_of_stock,
+        vendorsCount: vendorsCount,
+      },
+      flow: (flowResult || []).reverse(),
+      recentActivity: (recentActivity || []).map((tx: any) => ({
+        id: tx.id,
+        type: tx.type,
+        quantity: Math.abs(tx.quantity),
+        createdAt: tx.createdAt,
+        item_name: tx.item.name,
+        sku: tx.item.sku
+      })),
+      velocity: velocityResult || [],
+      replenish: replenishItems || [],
+      oldestItems: oldestItems || []
+    };
+  },
+  ["dashboard-analytics"],
+  30 // Cache for 30 seconds
+);
 
 export default async function DashboardPage() {
-  const data = await getDashboardAnalytics().catch((e) => {
+  const data = await getCachedDashboardAnalytics().catch((e) => {
     console.error("Dashboard data fetch error:", e);
     return {
       kpis: { totalItems: 0, stockValue: 0, lowStockCount: 0, outOfStockCount: 0, vendorsCount: 0 },
@@ -170,16 +175,7 @@ export default async function DashboardPage() {
           <h1 className="heading-xl tracking-tight">Summary</h1>
           <p className="text-muted-foreground mt-2 text-lg font-medium">See what is happening with your stock now.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="btn-secondary" suppressHydrationWarning>
-            <FileDown className="w-4 h-4 text-primary" />
-            <span>Get Report</span>
-          </button>
-          <button className="btn-primary shadow-glow" suppressHydrationWarning>
-            <PlusSquare className="w-4 h-4" />
-            <span>Add Stock</span>
-          </button>
-        </div>
+        <DashboardActions />
       </header>
 
       {/* KPI Bento Grid */}

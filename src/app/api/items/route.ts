@@ -4,8 +4,30 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const minimal = searchParams.get("minimal") === "true";
+
+    if (minimal) {
+      const items = await (prisma as any).item.findMany({
+        select: {
+          id: true,
+          sku: true,
+          name: true,
+          unit: true,
+          minStockLevel: true,
+          inventory: {
+            select: {
+              quantityAvailable: true
+            }
+          }
+        },
+        orderBy: { name: "asc" },
+      });
+      return NextResponse.json(items);
+    }
+
     const items = await (prisma as any).item.findMany({
       include: {
         category: true,

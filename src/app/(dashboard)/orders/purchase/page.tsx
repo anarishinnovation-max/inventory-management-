@@ -36,10 +36,11 @@ function formatTime(value: string | Date) {
   });
 }
 
-async function getPurchaseOrders(filters: {
+import { cacheQuery } from "@/lib/cache";
+
+async function getPurchaseOrdersRaw(filters: {
   q?: string;
   status?: string;
-  paymentStatus?: string;
   vendorId?: string;
   itemId?: string;
   startDate?: string;
@@ -47,7 +48,7 @@ async function getPurchaseOrders(filters: {
   minAmount?: string;
   maxAmount?: string;
 }) {
-  const { q, status, paymentStatus, vendorId, itemId, startDate, endDate, minAmount, maxAmount } = filters;
+  const { q, status, vendorId, itemId, startDate, endDate, minAmount, maxAmount } = filters;
 
   const where: any = {
     AND: []
@@ -72,12 +73,6 @@ async function getPurchaseOrders(filters: {
         status: { equals: status.toUpperCase() }
       });
     }
-  }
-
-  if (paymentStatus && paymentStatus !== 'all') {
-    where.AND.push({
-      paymentStatus: { equals: paymentStatus.toUpperCase() }
-    });
   }
 
   if (vendorId && vendorId !== 'all') {
@@ -138,6 +133,13 @@ async function getPurchaseOrders(filters: {
   return filteredOrders;
 }
 
+const getPurchaseOrders = (filters: any) => 
+  cacheQuery(
+    () => getPurchaseOrdersRaw(filters),
+    ["purchase-orders", JSON.stringify(filters)],
+    60
+  )();
+
 export default async function PurchaseOrdersPage({
   searchParams,
 }: {
@@ -147,7 +149,7 @@ export default async function PurchaseOrdersPage({
   const filters = {
     q: typeof sParams.q === 'string' ? sParams.q : '',
     status: typeof sParams.status === 'string' ? sParams.status : 'all',
-    paymentStatus: typeof sParams.paymentStatus === 'string' ? sParams.paymentStatus : 'all',
+
     vendorId: typeof sParams.vendorId === 'string' ? sParams.vendorId : 'all',
     itemId: typeof sParams.itemId === 'string' ? sParams.itemId : 'all',
     startDate: typeof sParams.startDate === 'string' ? sParams.startDate : undefined,
@@ -168,7 +170,7 @@ export default async function PurchaseOrdersPage({
   const allPos = await prisma.purchaseOrder.findMany({ select: { status: true, paymentStatus: true } });
   const pendingCount = allPos.filter(o => o.status.toUpperCase() === "PENDING").length;
   const orderedCount = allPos.filter(o => o.status.toUpperCase() === "ORDERED").length;
-  const unpaidCount = allPos.filter(o => (o.paymentStatus || "PENDING").toUpperCase() === "PENDING").length;
+  const unpaidCount = 0; // Removed payment tracking
 
   return (
     <div className="space-y-10 pb-10">
@@ -189,7 +191,7 @@ export default async function PurchaseOrdersPage({
       </header>
 
       {/* KPI Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="card-premium group border-warning/5 bg-warning/[0.01]">
            <div className="flex justify-between items-start">
               <div className="p-3 rounded-xl bg-warning/10 text-warning transition-transform group-hover:scale-110">
@@ -214,17 +216,7 @@ export default async function PurchaseOrdersPage({
            </div>
         </div>
 
-        <div className="card-premium group border-success/5 bg-success/[0.01]">
-           <div className="flex justify-between items-start">
-              <div className="p-3 rounded-xl bg-success/10 text-success transition-transform group-hover:scale-110">
-                 <DollarSign className="w-5 h-5" />
-              </div>
-           </div>
-           <div className="mt-6">
-              <p className="text-[9px] font-black text-success uppercase tracking-widest">Unpaid Bills</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{unpaidCount}</h2>
-           </div>
-        </div>
+
       </div>
 
       <div className="space-y-6">
@@ -251,7 +243,7 @@ export default async function PurchaseOrdersPage({
                 <th className="table-cell-header">Items</th>
                 <th className="table-cell-header text-right">Total Cost</th>
                 <th className="table-cell-header">Order Status</th>
-                <th className="table-cell-header">Payment</th>
+
                 <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
@@ -259,7 +251,7 @@ export default async function PurchaseOrdersPage({
               {pos.length > 0 ? pos.map((po: any) => {
                 const totalValue = po.items.reduce((acc: number, curr: any) => acc + (Number(curr.costPrice) * curr.quantityOrdered), 0);
                 const statusLabel = po.status.toUpperCase();
-                const payStatus = (po.paymentStatus || "PENDING").toUpperCase();
+                const payStatus = "PENDING";
                 
                 return (
                   <tr key={po.id} className="group hover:bg-surface-low/30 transition-all cursor-pointer border-b border-border-ghost last:border-0">
@@ -307,15 +299,7 @@ export default async function PurchaseOrdersPage({
                         {statusLabel === "DELIVERED" ? "RECEIVED" : statusLabel}
                       </span>
                     </td>
-                    <td className="px-8 py-5">
-                      <span className={cn(
-                        "badge rounded-lg gap-1.5 border-none transition-all",
-                        payStatus === "PAID" ? "bg-success/10 text-success" : "bg-error/10 text-error"
-                      )}>
-                        {payStatus === "PAID" ? <CheckCircle2 className="w-3 h-3" /> : <CreditCard className="w-3 h-3" />}
-                        {payStatus}
-                      </span>
-                    </td>
+
                     <td className="px-8 py-5 text-right">
                       <Link href={`/orders/purchase/${po.id}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-low text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm border border-transparent hover:border-primary">
                         <Eye className="w-3 h-3" />

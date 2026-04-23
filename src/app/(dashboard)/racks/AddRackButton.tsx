@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, X, Loader2, MapPin } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { clsx, type ClassValue } from "clsx";
+import { Loader2, MapPin, Plus, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -51,7 +51,7 @@ export default function AddRackButton() {
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
         className="bg-linear-to-r from-primary to-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform"
       >
@@ -61,11 +61,11 @@ export default function AddRackButton() {
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-foreground/20 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
-          
+
           <div className="relative w-full max-w-md bg-surface-lowest rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="p-8">
               <div className="flex justify-between items-start mb-6">
@@ -73,7 +73,7 @@ export default function AddRackButton() {
                   <h3 className="text-2xl font-black text-foreground tracking-tight">Setup New Rack</h3>
                   <p className="text-sm text-muted-foreground font-medium mt-1">Initialize a new storage location.</p>
                 </div>
-                <button 
+                <button
                   onClick={() => setIsOpen(false)}
                   className="p-2 hover:bg-surface-low rounded-xl transition-colors text-muted-foreground"
                 >

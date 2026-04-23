@@ -27,7 +27,6 @@ interface AdvancedPurchaseFiltersProps {
     vendorId?: string;
     itemId?: string;
     status?: string;
-    paymentStatus?: string;
     startDate?: string;
     endDate?: string;
     minAmount?: string;
@@ -93,29 +92,7 @@ export default function AdvancedPurchaseFilters({
           ))}
         </div>
 
-        <div className="h-8 w-px bg-border-ghost hidden md:block"></div>
 
-        {/* Quick Payment Status */}
-        <div className="flex bg-surface-low p-1 rounded-2xl border border-border-ghost">
-          {[
-            { label: "All Payments", value: "all" },
-            { label: "Unpaid", value: "PENDING" },
-            { label: "Paid", value: "PAID" },
-          ].map((s) => (
-            <button
-              key={s.value}
-              onClick={() => updateFilters({ paymentStatus: s.value })}
-              className={cn(
-                "px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-                (currentFilters.paymentStatus || "all") === s.value
-                  ? "bg-white text-success shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}

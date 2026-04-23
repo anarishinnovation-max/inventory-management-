@@ -1,31 +1,31 @@
 export const dynamic = 'force-dynamic';
 
-import { 
-  Filter, 
-  Download, 
-  Printer,
-  Edit,
-  MoreVertical,
-  TrendingUp,
-  SquareStack,
-  Plus,
+import SearchInput from "@/components/SearchInput";
+import prisma from "@/lib/prisma";
+import { clsx, type ClassValue } from "clsx";
+import {
   ChevronLeft,
   ChevronRight,
-  MapPin
+  Download,
+  Edit,
+  Filter,
+  MapPin,
+  MoreVertical,
+  Printer,
+  TrendingUp
 } from "lucide-react";
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import prisma from "@/lib/prisma";
 import AddRackButton from "./AddRackButton";
-import SearchInput from "@/components/SearchInput";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-async function getRacks(query?: string) {
+import { cacheQuery } from "@/lib/cache";
+
+async function getRacksRaw(query?: string) {
   const where: any = {};
-  
+
   if (query) {
     where.OR = [
       { rackNumber: { contains: query, mode: 'insensitive' } },
@@ -57,11 +57,18 @@ async function getRacks(query?: string) {
     rackNumber: r.rackNumber,
     zone: r.zone,
     items: (r.stocks || []).map((s: any) => ({
-        name: s.item.name,
-        quantity: s.quantity
+      name: s.item.name,
+      quantity: s.quantity
     }))
   }));
 }
+
+const getRacks = (query?: string) =>
+  cacheQuery(
+    () => getRacksRaw(query),
+    ["racks", query || "none"],
+    60
+  )();
 
 export default async function RacksPage({
   searchParams,
@@ -70,7 +77,7 @@ export default async function RacksPage({
 }) {
   const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
-  
+
   const racks = await getRacks(q).catch((e) => {
     console.error("Failed to fetch racks:", e);
     return [];
@@ -90,11 +97,11 @@ export default async function RacksPage({
           <p className="text-muted-foreground mt-2 font-medium">See where all your items are stored.</p>
         </div>
         <div className="flex gap-3">
-            <button className="btn-secondary h-14">
-                <MapPin className="w-4 h-4 text-primary" />
-                View 3D Map
-            </button>
-            <AddRackButton />
+          <button className="btn-secondary h-14">
+            <MapPin className="w-4 h-4 text-primary" />
+            View 3D Map
+          </button>
+          <AddRackButton />
         </div>
       </div>
 
@@ -110,10 +117,10 @@ export default async function RacksPage({
             <span className="text-[10px] font-bold text-success">+2.1%</span>
           </div>
           <div className="w-full bg-surface-low h-1.5 rounded-full mt-4 overflow-hidden shadow-inner">
-             <div className="bg-primary h-full w-[72%] shadow-[0_0_8px_oklch(0.55_0.18_250)]"></div>
+            <div className="bg-primary h-full w-[72%] shadow-[0_0_8px_oklch(0.55_0.18_250)]"></div>
           </div>
         </div>
-        
+
         <div className="card-premium group">
           <div className="flex justify-between items-start mb-4">
             <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Total Racks</span>
@@ -121,7 +128,7 @@ export default async function RacksPage({
           <span className="text-3xl font-black tracking-tighter text-foreground">{racks.length}</span>
           <p className="text-[10px] text-muted-foreground mt-4 font-bold uppercase tracking-widest">Racks in use</p>
         </div>
-        
+
         <div className="card-premium group border-warning/5 bg-warning/[0.01]">
           <div className="flex justify-between items-start mb-4">
             <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Empty Spots</span>
@@ -130,7 +137,7 @@ export default async function RacksPage({
           <span className="text-3xl font-black tracking-tighter text-foreground">12</span>
           <p className="text-[10px] text-warning/70 mt-4 font-bold uppercase tracking-widest leading-none">Space available for use.</p>
         </div>
-        
+
         <div className="card-premium group border-primary/10 bg-primary/[0.02]">
           <div className="flex justify-between items-start mb-4">
             <span className="text-[10px] uppercase font-black tracking-widest text-primary">Storage Rating</span>
@@ -144,10 +151,10 @@ export default async function RacksPage({
       </div>
 
       <div className="flex-1 max-w-2xl">
-          <SearchInput 
-              defaultValue={q}
-              placeholder="Search Rack Number, Zone or Item..."
-          />
+        <SearchInput
+          defaultValue={q}
+          placeholder="Search Rack Number, Zone or Item..."
+        />
       </div>
 
       {/* Control Strip */}
@@ -156,8 +163,8 @@ export default async function RacksPage({
           <div className="flex items-center gap-4">
             <span className="text-[13px] font-black text-foreground uppercase tracking-wider">Rack Items</span>
             <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-border-ghost text-[9px] font-black text-muted-foreground uppercase tracking-widest shadow-sm hover:border-primary/20 transition-all cursor-pointer">
-                <Filter className="w-3 h-3 text-primary" />
-                Filter
+              <Filter className="w-3 h-3 text-primary" />
+              Filter
             </div>
           </div>
           <div className="flex gap-1">
@@ -165,7 +172,7 @@ export default async function RacksPage({
             <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Printer className="w-3.5 h-3.5" /></button>
           </div>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -180,15 +187,15 @@ export default async function RacksPage({
             <tbody className="divide-y divide-border-ghost">
               {racks.length > 0 ? racks.map((row: any) => {
                 const totalQty = row.items ? row.items.reduce((acc: number, curr: any) => acc + curr.quantity, 0) : 0;
-                const fillPercent = Math.min(totalQty / 100, 100); 
+                const fillPercent = Math.min(totalQty / 100, 100);
                 const itemList = row.items && row.items.length > 0 ? row.items.map((it: any) => it.name).join(", ") : "Empty";
-                
+
                 return (
                   <tr key={row.id} className="hover:bg-surface-low/40 transition-all group cursor-pointer border-b border-border-ghost last:border-0">
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center font-black text-xs border border-primary/20 shadow-inner group-hover:bg-primary group-hover:text-white transition-all">
-                           {row.rackNumber}
+                          {row.rackNumber}
                         </div>
                         <div>
                           <p className="text-sm font-black text-foreground group-hover:text-primary transition-all">Rack {row.rackNumber}</p>
@@ -197,14 +204,14 @@ export default async function RacksPage({
                       </div>
                     </td>
                     <td className="px-8 py-5">
-                       <span className="bg-surface-low border border-border-ghost px-3 py-1.5 rounded-lg text-[10px] font-black text-foreground uppercase tracking-widest">
-                          {row.zone || "Main Hall"}
-                       </span>
+                      <span className="bg-surface-low border border-border-ghost px-3 py-1.5 rounded-lg text-[10px] font-black text-foreground uppercase tracking-widest">
+                        {row.zone || "Main Hall"}
+                      </span>
                     </td>
                     <td className="px-8 py-5">
-                       <p className="text-xs text-muted-foreground font-medium truncate max-w-[250px]" title={itemList}>
-                          {itemList}
-                       </p>
+                      <p className="text-xs text-muted-foreground font-medium truncate max-w-[250px]" title={itemList}>
+                        {itemList}
+                      </p>
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex flex-col items-end gap-2">
@@ -219,33 +226,33 @@ export default async function RacksPage({
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex justify-end gap-2">
-                         <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><Edit className="w-4 h-4" /></button>
-                         <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><MoreVertical className="w-4 h-4" /></button>
+                        <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><Edit className="w-4 h-4" /></button>
+                        <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><MoreVertical className="w-4 h-4" /></button>
                       </div>
                     </td>
                   </tr>
                 );
               }) : (
                 <tr>
-                   <td colSpan={5} className="px-8 py-20 text-center text-muted-foreground font-medium italic">
-                      No racks found matching your search.
-                   </td>
+                  <td colSpan={5} className="px-8 py-20 text-center text-muted-foreground font-medium italic">
+                    No racks found matching your search.
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        
+
         <div className="px-8 py-5 bg-surface-low/30 border-t border-border-ghost flex items-center justify-between">
           <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Showing {racks.length} Racks</span>
           <div className="flex gap-1.5">
             <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-surface-low text-muted-foreground hover:bg-surface-high transition-colors" disabled>
-               <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4" />
             </button>
             <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-primary text-white text-xs font-black shadow-md">1</button>
             <button className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low border border-transparent hover:border-border-ghost text-muted-foreground text-xs font-black transition-colors">2</button>
             <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-surface-low text-muted-foreground hover:bg-surface-high transition-colors border border-transparent hover:border-border-ghost">
-               <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>

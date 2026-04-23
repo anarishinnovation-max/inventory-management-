@@ -17,7 +17,9 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-async function getTransactions() {
+import { cacheQuery } from "@/lib/cache";
+
+async function getTransactionsRaw() {
   const transactions = await (prisma as any).inventoryTransaction.findMany({
     include: {
       item: true,
@@ -33,6 +35,12 @@ async function getTransactions() {
 
   return transactions;
 }
+
+const getTransactions = cacheQuery(
+  () => getTransactionsRaw(),
+  ["transactions-log"],
+  60
+);
 
 export default async function TransactionsPage() {
   const transactions = await getTransactions().catch((e) => {

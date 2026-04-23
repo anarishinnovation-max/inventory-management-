@@ -37,7 +37,9 @@ export interface MappedItem {
 
 const PAGE_SIZE = 10;
 
-async function getInventory(q?: string, status?: string, category?: string, page: number = 1, limit?: number) {
+import { cacheQuery } from "@/lib/cache";
+
+async function getInventoryRaw(q?: string, status?: string, category?: string, page: number = 1, limit?: number) {
   const where: Record<string, unknown> = {
     AND: [
       q ? {
@@ -117,6 +119,13 @@ async function getInventory(q?: string, status?: string, category?: string, page
   return { items: paginatedItems, totalItems };
 }
 
+const getInventory = (q?: string, status?: string, category?: string, page: number = 1, limit?: number) => 
+  cacheQuery(
+    () => getInventoryRaw(q, status, category, page, limit),
+    ["inventory", q || "none", status || "all", category || "all", page.toString(), (limit || 0).toString()],
+    60
+  )();
+
 export default async function InventoryPage({
   searchParams,
 }: {
@@ -128,21 +137,26 @@ export default async function InventoryPage({
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const { items, totalItems } = await getInventory(q, status, category, page, PAGE_SIZE).catch((e) => {
+  const [
+    { items, totalItems },
+    { items: allLowItems },
+    { items: allUrgentItems },
+    { items: allOutOfStockItems }
+  ] = await Promise.all([
+    getInventory(q, status, category, page, PAGE_SIZE),
+    getInventory("", "low", "all"),
+    getInventory("", "urgent", "all"),
+    getInventory("", "outofstock", "all")
+  ]).catch((e) => {
     console.error("Inventory fetch error:", e);
-    return { items: [], totalItems: 0 };
+    return [{ items: [], totalItems: 0 }, { items: [] }, { items: [] }, { items: [] }];
   });
-
+  
   const allCategories = await prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } });
   const categoryNames = allCategories.map((c: { name: string }) => c.name);
 
-  // For Quick PO, we need all low/out-of-stock items, not just the paginated ones
-  const { items: allLowItems } = await getInventory("", "low", "all");
-  const { items: allUrgentItems } = await getInventory("", "urgent", "all");
-  const { items: allOutOfStockItems } = await getInventory("", "outofstock", "all");
-  
   // Combine and deduplicate
-  const reorderPool = [...allLowItems, ...allUrgentItems, ...allOutOfStockItems];
+  const reorderPool = [...(allLowItems || []), ...(allUrgentItems || []), ...(allOutOfStockItems || [])];
   const uniqueReorderPool = Array.from(new Map(reorderPool.map(item => [item.id, item])).values());
 
   return (
@@ -192,10 +206,10 @@ export default async function InventoryPage({
           />
       </div>
 
-      <InventoryList items={items} />
+      <InventoryList items={items ?? []} />
 
       <InventoryPagination
-        totalItems={totalItems}
+        totalItems={totalItems ?? 0}
         pageSize={PAGE_SIZE}
         currentPage={page}
       />

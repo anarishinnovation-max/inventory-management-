@@ -3,8 +3,27 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const minimal = searchParams.get("minimal") === "true";
+
+    if (minimal) {
+      const orders = await prisma.purchaseOrder.findMany({
+        select: {
+          id: true,
+          status: true,
+          paymentMode: true,
+          createdAt: true,
+          vendor: {
+            select: { name: true }
+          }
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      return NextResponse.json(orders);
+    }
+
     const orders = await prisma.purchaseOrder.findMany({
       include: {
         vendor: true,

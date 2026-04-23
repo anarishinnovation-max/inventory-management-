@@ -4,8 +4,23 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const minimal = searchParams.get("minimal") === "true";
+
+    if (minimal) {
+      const racks = await (prisma as any).rack.findMany({
+        select: {
+          id: true,
+          rackNumber: true,
+          zone: true
+        },
+        orderBy: { rackNumber: "asc" },
+      });
+      return NextResponse.json(racks);
+    }
+
     const racks = await (prisma as any).rack.findMany({
       orderBy: { rackNumber: "asc" },
       include: {

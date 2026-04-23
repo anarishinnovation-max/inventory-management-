@@ -7,6 +7,7 @@ import {
    AlertCircle
 } from "lucide-react";
 import prisma from "@/lib/prisma";
+import { ReportActions } from "./components/ReportActions";
 
 async function getReportData() {
    try {
@@ -130,16 +131,7 @@ export default async function ReportsPage() {
                <h1 className="heading-xl tracking-tight">Enterprise Analytics</h1>
                <p className="text-muted-foreground mt-2 font-medium">Real-time throughput metrics and resource utilization heatmaps.</p>
             </div>
-            <div className="flex gap-3">
-               <button className="btn-secondary">
-                  <Calendar className="w-4 h-4 text-primary" />
-                  Dynamic Range
-               </button>
-               <button className="btn-primary shadow-glow">
-                  <Download className="w-4 h-4" />
-                  Export Dossier
-               </button>
-            </div>
+            <ReportActions />
          </header>
 
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
