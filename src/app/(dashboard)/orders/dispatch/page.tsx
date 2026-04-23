@@ -9,12 +9,24 @@ import {
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
+import SearchInput from "@/components/SearchInput";
+
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-async function getDispatchOrders() {
+async function getDispatchOrders(query?: string) {
+  const where: Prisma.DispatchOrderWhereInput = {};
+  
+  if (query) {
+    where.OR = [
+      { id: { contains: query, mode: 'insensitive' } },
+      { customer: { name: { contains: query, mode: 'insensitive' } } },
+    ];
+  }
+
   const orders = await prisma.dispatchOrder.findMany({
+    where,
     include: {
       customer: true,
       items: {
@@ -31,30 +43,19 @@ async function getDispatchOrders() {
   return orders;
 }
 
-export default async function DispatchPage() {
-  const orders = await getDispatchOrders().catch(() => []);
+export default async function DispatchPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sParams = await searchParams;
+  const q = typeof sParams.q === 'string' ? sParams.q : '';
+  
+  const orders = await getDispatchOrders(q).catch(() => []);
 
   // Calculate stats
-  const pendingCount = orders.filter((o: Prisma.DispatchOrderGetPayload<{
-    include: {
-      customer: true;
-      items: {
-        include: {
-          item: true;
-        };
-      };
-    };
-  }>) => o.status === "pending").length;
-  const dispatchedCount = orders.filter((o: Prisma.DispatchOrderGetPayload<{
-    include: {
-      customer: true;
-      items: {
-        include: {
-          item: true;
-        };
-      };
-    };
-  }>) => o.status === "dispatched").length;
+  const pendingCount = orders.filter((o: any) => o.status === "pending").length;
+  const dispatchedCount = orders.filter((o: any) => o.status === "dispatched").length;
 
   return (
     <div className="space-y-10 pb-10">
@@ -68,9 +69,9 @@ export default async function DispatchPage() {
           <h1 className="heading-xl tracking-tight">Selling Bills</h1>
           <p className="text-muted-foreground mt-2 font-medium">Manage selling and sending items to customers.</p>
         </div>
-        <Link href="/orders/dispatch/new" className="btn-primary shadow-glow">
-          <Plus className="w-4 h-4" />
-          <span>New Sale Order</span>
+        <Link href="/orders/dispatch/new" className="btn-primary shadow-glow w-full md:w-auto h-14">
+            <Plus className="w-4 h-4" />
+            <span>New Sale Order</span>
         </Link>
       </header>
 
@@ -99,6 +100,13 @@ export default async function DispatchPage() {
               <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mt-1">Items Sent</p>
            </div>
         </div>
+      </div>
+
+      <div className="flex-1 max-w-2xl">
+          <SearchInput 
+              defaultValue={q}
+              placeholder="Search Customer or Order ID..."
+          />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">

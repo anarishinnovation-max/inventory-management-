@@ -192,6 +192,7 @@ exports.Prisma.PurchaseOrderScalarFieldEnum = {
   id: 'id',
   vendorId: 'vendorId',
   status: 'status',
+  paymentStatus: 'paymentStatus',
   paymentMode: 'paymentMode',
   expectedDelivery: 'expectedDelivery',
   orderDate: 'orderDate',

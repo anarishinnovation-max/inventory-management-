@@ -6,10 +6,15 @@ import {
   Clock,
   Eye,
   Plus,
-  Truck
+  Truck,
+  Search,
+  CreditCard,
+  DollarSign
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import SearchInput from "@/components/SearchInput";
+import AdvancedPurchaseFilters from "./components/AdvancedPurchaseFilters";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,8 +36,81 @@ function formatTime(value: string | Date) {
   });
 }
 
-async function getPurchaseOrders() {
+async function getPurchaseOrders(filters: {
+  q?: string;
+  status?: string;
+  paymentStatus?: string;
+  vendorId?: string;
+  itemId?: string;
+  startDate?: string;
+  endDate?: string;
+  minAmount?: string;
+  maxAmount?: string;
+}) {
+  const { q, status, paymentStatus, vendorId, itemId, startDate, endDate, minAmount, maxAmount } = filters;
+
+  const where: any = {
+    AND: []
+  };
+
+  if (q) {
+    where.AND.push({
+      OR: [
+        { id: { contains: q, mode: 'insensitive' } },
+        { vendor: { name: { contains: q, mode: 'insensitive' } } }
+      ]
+    });
+  }
+
+  if (status && status !== 'all') {
+    if (status === 'received') {
+      where.AND.push({
+        status: { in: ['RECEIVED', 'DELIVERED'] }
+      });
+    } else {
+      where.AND.push({
+        status: { equals: status.toUpperCase() }
+      });
+    }
+  }
+
+  if (paymentStatus && paymentStatus !== 'all') {
+    where.AND.push({
+      paymentStatus: { equals: paymentStatus.toUpperCase() }
+    });
+  }
+
+  if (vendorId && vendorId !== 'all') {
+    where.AND.push({
+      vendorId: { equals: vendorId }
+    });
+  }
+
+  if (itemId && itemId !== 'all') {
+    where.AND.push({
+      items: {
+        some: {
+          itemId: itemId
+        }
+      }
+    });
+  }
+
+  if (startDate || endDate) {
+    const dateFilter: any = {};
+    if (startDate) dateFilter.gte = new Date(startDate);
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      dateFilter.lte = end;
+    }
+    where.AND.push({
+      createdAt: dateFilter
+    });
+  }
+
   const orders = await prisma.purchaseOrder.findMany({
+    where,
     include: {
       vendor: true,
       items: {
@@ -46,43 +124,51 @@ async function getPurchaseOrders() {
     }
   });
 
-  return orders;
+  // Memory filtering for amount range (as total is calculated)
+  let filteredOrders = orders;
+  if (minAmount || maxAmount) {
+    filteredOrders = orders.filter(po => {
+      const total = po.items.reduce((acc, curr) => acc + (Number(curr.costPrice) * curr.quantityOrdered), 0);
+      const min = minAmount ? Number(minAmount) : -Infinity;
+      const max = maxAmount ? Number(maxAmount) : Infinity;
+      return total >= min && total <= max;
+    });
+  }
+
+  return filteredOrders;
 }
 
-export default async function PurchaseOrdersPage() {
-  const pos = await getPurchaseOrders().catch(() => []);
+export default async function PurchaseOrdersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sParams = await searchParams;
+  const filters = {
+    q: typeof sParams.q === 'string' ? sParams.q : '',
+    status: typeof sParams.status === 'string' ? sParams.status : 'all',
+    paymentStatus: typeof sParams.paymentStatus === 'string' ? sParams.paymentStatus : 'all',
+    vendorId: typeof sParams.vendorId === 'string' ? sParams.vendorId : 'all',
+    itemId: typeof sParams.itemId === 'string' ? sParams.itemId : 'all',
+    startDate: typeof sParams.startDate === 'string' ? sParams.startDate : undefined,
+    endDate: typeof sParams.endDate === 'string' ? sParams.endDate : undefined,
+    minAmount: typeof sParams.minAmount === 'string' ? sParams.minAmount : undefined,
+    maxAmount: typeof sParams.maxAmount === 'string' ? sParams.maxAmount : undefined,
+  };
 
-  // Calculate stats
-  const pendingCount = pos.filter((o: Prisma.PurchaseOrderGetPayload<{
-    include: {
-      vendor: true;
-      items: {
-        include: {
-          item: true;
-        };
-      };
-    };
-  }>) => o.status.toUpperCase() === "PENDING").length;
-  const orderedCount = pos.filter((o: Prisma.PurchaseOrderGetPayload<{
-    include: {
-      vendor: true;
-      items: {
-        include: {
-          item: true;
-        };
-      };
-    };
-  }>) => o.status.toUpperCase() === "ORDERED").length;
-  const receivedCount = pos.filter((o: Prisma.PurchaseOrderGetPayload<{
-    include: {
-      vendor: true;
-      items: {
-        include: {
-          item: true;
-        };
-      };
-    };
-  }>) => ["RECEIVED", "DELIVERED"].includes(o.status.toUpperCase())).length;
+  const pos = await getPurchaseOrders(filters).catch(() => []);
+
+  // Fetch data for filters
+  const [vendors, items] = await Promise.all([
+    prisma.vendor.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+    prisma.item.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+  ]);
+
+  // Calculate stats for the KPI grid
+  const allPos = await prisma.purchaseOrder.findMany({ select: { status: true, paymentStatus: true } });
+  const pendingCount = allPos.filter(o => o.status.toUpperCase() === "PENDING").length;
+  const orderedCount = allPos.filter(o => o.status.toUpperCase() === "ORDERED").length;
+  const unpaidCount = allPos.filter(o => (o.paymentStatus || "PENDING").toUpperCase() === "PENDING").length;
 
   return (
     <div className="space-y-10 pb-10">
@@ -91,10 +177,10 @@ export default async function PurchaseOrdersPage() {
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Purchase Bills</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Item Movement</span>
+            <span className="text-primary">Financial & Ops</span>
           </nav>
           <h1 className="heading-xl tracking-tight">Purchase Bills</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Manage items coming in from vendors.</p>
+          <p className="text-muted-foreground mt-2 font-medium">Manage procurement, payments, and vendor tracking.</p>
         </div>
         <Link href="/orders/purchase/new" className="btn-primary shadow-glow">
           <Plus className="w-4 h-4" />
@@ -111,7 +197,7 @@ export default async function PurchaseOrdersPage() {
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[9px] font-black text-warning uppercase tracking-widest">Waiting</p>
+              <p className="text-[9px] font-black text-warning uppercase tracking-widest">Stock Pending</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingCount}</h2>
            </div>
         </div>
@@ -123,7 +209,7 @@ export default async function PurchaseOrdersPage() {
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[9px] font-black text-primary uppercase tracking-widest">On the Way</p>
+              <p className="text-[9px] font-black text-primary uppercase tracking-widest">In Transit</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{orderedCount}</h2>
            </div>
         </div>
@@ -131,14 +217,28 @@ export default async function PurchaseOrdersPage() {
         <div className="card-premium group border-success/5 bg-success/[0.01]">
            <div className="flex justify-between items-start">
               <div className="p-3 rounded-xl bg-success/10 text-success transition-transform group-hover:scale-110">
-                 <CheckCircle2 className="w-5 h-5" />
+                 <DollarSign className="w-5 h-5" />
               </div>
            </div>
            <div className="mt-6">
-              <p className="text-[9px] font-black text-success uppercase tracking-widest">Items Received</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{receivedCount}</h2>
+              <p className="text-[9px] font-black text-success uppercase tracking-widest">Unpaid Bills</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{unpaidCount}</h2>
            </div>
         </div>
+      </div>
+
+      <div className="space-y-6">
+        <div className="flex-1 max-w-2xl">
+          <SearchInput 
+            defaultValue={filters.q} 
+            placeholder="Search by Order ID or Vendor Name..."
+          />
+        </div>
+        <AdvancedPurchaseFilters 
+          vendors={vendors}
+          items={items}
+          currentFilters={filters}
+        />
       </div>
 
       {/* Main Table Container */}
@@ -150,19 +250,16 @@ export default async function PurchaseOrdersPage() {
                 <th className="table-cell-header">Order ID</th>
                 <th className="table-cell-header">Items</th>
                 <th className="table-cell-header text-right">Total Cost</th>
-                <th className="table-cell-header">Status</th>
-                <th className="table-cell-header">Date & Time</th>
+                <th className="table-cell-header">Order Status</th>
+                <th className="table-cell-header">Payment</th>
                 <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
               {pos.length > 0 ? pos.map((po: any) => {
                 const totalValue = po.items.reduce((acc: number, curr: any) => acc + (Number(curr.costPrice) * curr.quantityOrdered), 0);
-                const status = po.status.toUpperCase();
-                const paymentMode = po.paymentMode || "Cash";
-                const expectedDeliveryLabel = po.expectedDelivery
-                  ? `${formatDate(po.expectedDelivery)} | ${formatTime(po.expectedDelivery)}`
-                  : "Not scheduled";
+                const statusLabel = po.status.toUpperCase();
+                const payStatus = (po.paymentStatus || "PENDING").toUpperCase();
                 
                 return (
                   <tr key={po.id} className="group hover:bg-surface-low/30 transition-all cursor-pointer border-b border-border-ghost last:border-0">
@@ -185,15 +282,11 @@ export default async function PurchaseOrdersPage() {
                               <span className="text-[9px] font-black text-muted-foreground bg-surface-low px-1.5 py-0.5 rounded-md border border-border-ghost">{po.items[0].quantityOrdered} Units</span>
                            </div>
                         ) : (
-                           <span className="text-foreground font-black text-xs">{po.items.length} Primary Assets</span>
+                           <span className="text-foreground font-black text-xs">{po.items.length} Assets</span>
                         )}
                         <div className="flex items-center gap-3">
                             <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
-                                <span className="opacity-50">PAY:</span> <span className="text-foreground">{paymentMode}</span>
-                            </div>
-                            <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
-                                <span className="opacity-50">ETA:</span> <span className="text-foreground">{po.expectedDelivery ? formatDate(po.expectedDelivery) : 'Unscheduled'}</span>
+                                <span className="opacity-50">DATE:</span> <span className="text-foreground">{formatDate(po.createdAt)}</span>
                             </div>
                         </div>
                       </div>
@@ -203,27 +296,30 @@ export default async function PurchaseOrdersPage() {
                     </td>
                     <td className="px-8 py-5">
                       <span className={cn(
-                        "badge rounded-lg gap-1.5 border-none transition-all group-hover:scale-105",
-                        status === "PENDING" ? "bg-warning/10 text-warning shadow-[0_2px_8px_oklch(0.85_0.15_85_/_0.1)]" :
-                        status === "ORDERED" ? "bg-primary/10 text-primary shadow-[0_2px_8px_oklch(0.55_0.2_250_/_0.1)]" :
-                        "bg-success/10 text-success shadow-[0_2px_8px_oklch(0.65_0.2_150_/_0.1)]"
+                        "badge rounded-lg gap-1.5 border-none transition-all",
+                        statusLabel === "PENDING" ? "bg-warning/10 text-warning" :
+                        statusLabel === "ORDERED" ? "bg-primary/10 text-primary" :
+                        "bg-success/10 text-success"
                       )}>
-                        {status === "PENDING" && <Clock className="w-3 h-3" />}
-                        {status === "ORDERED" && <Truck className="w-3 h-3" />}
-                        {(status === "RECEIVED" || status === "DELIVERED") && <CheckCircle2 className="w-3 h-3" />}
-                        {status === "DELIVERED" ? "RECEIVED" : status}
+                        {statusLabel === "PENDING" && <Clock className="w-3 h-3" />}
+                        {statusLabel === "ORDERED" && <Truck className="w-3 h-3" />}
+                        {(statusLabel === "RECEIVED" || statusLabel === "DELIVERED") && <CheckCircle2 className="w-3 h-3" />}
+                        {statusLabel === "DELIVERED" ? "RECEIVED" : statusLabel}
                       </span>
                     </td>
                     <td className="px-8 py-5">
-                      <div className="flex flex-col">
-                         <span className="text-xs font-bold text-foreground">{formatDate(po.createdAt)}</span>
-                         <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{formatTime(po.createdAt)}</span>
-                      </div>
+                      <span className={cn(
+                        "badge rounded-lg gap-1.5 border-none transition-all",
+                        payStatus === "PAID" ? "bg-success/10 text-success" : "bg-error/10 text-error"
+                      )}>
+                        {payStatus === "PAID" ? <CheckCircle2 className="w-3 h-3" /> : <CreditCard className="w-3 h-3" />}
+                        {payStatus}
+                      </span>
                     </td>
                     <td className="px-8 py-5 text-right">
                       <Link href={`/orders/purchase/${po.id}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-low text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm border border-transparent hover:border-primary">
                         <Eye className="w-3 h-3" />
-                        View Details
+                        Details
                       </Link>
                     </td>
                   </tr>
@@ -233,14 +329,17 @@ export default async function PurchaseOrdersPage() {
                    <td colSpan={7} className="px-8 py-40 text-center">
                       <div className="flex flex-col items-center gap-6">
                         <div className="w-20 h-20 rounded-4xl bg-surface-low border border-border-ghost flex items-center justify-center text-muted-foreground opacity-30">
-                          <Truck className="w-10 h-10" />
+                          <Search className="w-10 h-10" />
                         </div>
                         <div>
-                          <p className="text-2xl font-black text-foreground tracking-tight">No Orders Found</p>
-                          <p className="text-[15px] font-medium text-muted-foreground mt-2 max-w-sm mx-auto">Your orders will show up here after you create them.</p>
+                          <p className="text-2xl font-black text-foreground tracking-tight">No Matching Bills</p>
+                          <p className="text-[15px] font-medium text-muted-foreground mt-2 max-w-sm mx-auto">Try adjusting your filters or search query.</p>
                         </div>
-                        <Link href="/orders/purchase/new" className="px-8 py-3.5 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
-                          Create First Order
+                        <Link 
+                          href="/orders/purchase"
+                          className="px-8 py-3.5 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl hover:scale-105 transition-transform"
+                        >
+                          Clear All Filters
                         </Link>
                       </div>
                    </td>

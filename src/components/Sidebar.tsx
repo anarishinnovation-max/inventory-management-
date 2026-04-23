@@ -47,6 +47,7 @@ const menuSections: MenuSection[] = [
     title: "Orders",
     items: [
       { name: "Purchase Bills", icon: ShoppingCart, href: "/orders/purchase" },
+      { name: "Supply Inwards", icon: Truck, href: "/orders/supply-inwards" },
       { name: "Sell Bills", icon: Truck, href: "/orders/dispatch" },
     ]
   },

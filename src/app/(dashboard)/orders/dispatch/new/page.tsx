@@ -134,6 +134,102 @@ function ShortagePopup({
   );
 }
 
+function StockBreakdownPopup({ 
+  itemName, 
+  batches, 
+  onClose 
+}: { 
+  itemName: string; 
+  batches: InventoryBatch[]; 
+  onClose: () => void; 
+}) {
+  const totalQty = batches.reduce((acc, b) => acc + b.remainingQty, 0);
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-300">
+        <div className="p-10">
+          <div className="flex justify-between items-start mb-8">
+            <div className="space-y-1">
+               <h2 className="text-3xl font-black text-foreground tracking-tighter leading-none">Stock Breakdown</h2>
+               <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest">{itemName}</p>
+            </div>
+            <button 
+              onClick={onClose}
+              className="p-3 rounded-2xl bg-surface-low text-muted-foreground hover:bg-error hover:text-white transition-all active:scale-90"
+            >
+              <Trash2 className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-8">
+             <div className="card-premium !p-6 bg-primary/5 border-primary/10">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">Total Available</p>
+                <p className="text-3xl font-black text-primary mt-1">{totalQty} <span className="text-sm font-medium opacity-60">Units</span></p>
+             </div>
+             <div className="card-premium !p-6 bg-surface-low border-border-ghost">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Active Batches</p>
+                <p className="text-3xl font-black text-foreground mt-1">{batches.length} <span className="text-sm font-medium opacity-60">Sources</span></p>
+             </div>
+          </div>
+
+          <div className="bg-surface-low/50 rounded-3xl border border-border-ghost overflow-hidden">
+            <div className="max-h-[350px] overflow-y-auto no-scrollbar">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-surface-low border-b border-border-ghost">
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Vendor & Source</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Purchase Date</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Rate</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Remaining</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-ghost/50">
+                  {batches.map((batch) => (
+                    <tr key={batch.id} className="hover:bg-white transition-colors group">
+                      <td className="px-6 py-4">
+                         <div className="flex flex-col">
+                            <span className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">{batch.vendor?.name || 'Stock Adjustment'}</span>
+                            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">#{batch.id.split('-')[0].toUpperCase()}</span>
+                         </div>
+                      </td>
+                      <td className="px-6 py-4">
+                         <span className="text-xs font-bold text-muted-foreground">
+                            {new Date(batch.purchaseDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                         </span>
+                      </td>
+                      <td className="px-6 py-4">
+                         <div className="flex flex-col">
+                            <span className="font-mono font-black text-primary text-sm">₹{batch.costPerUnit}</span>
+                            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight mt-0.5">Per Unit</span>
+                         </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                         <span className="text-sm font-black text-foreground">{batch.remainingQty}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <footer className="px-10 py-6 bg-surface-low border-t border-border-ghost flex justify-between items-center">
+           <p className="text-[10px] font-bold text-muted-foreground italic max-w-[250px]">
+             * Batches are processed on a First-In-First-Out (FIFO) basis during dispatch.
+           </p>
+           <button 
+             onClick={onClose} 
+             className="px-8 py-3 bg-foreground text-white rounded-xl font-black text-xs shadow-lg hover:scale-105 active:scale-95 transition-all"
+           >
+             Close Details
+           </button>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
 export default function NewDispatchOrderPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -150,11 +246,11 @@ export default function NewDispatchOrderPage() {
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantity: 1, sellingPrice: 0 }
   ]);
-  const [expandedBatches, setExpandedBatches] = useState<Record<number, boolean>>({});
   const [itemSearches, setItemSearches] = useState<Record<number, string>>({});
   const [openDropdowns, setOpenDropdowns] = useState<Record<number, boolean>>({});
 
   const [shortageInfo, setShortageInfo] = useState<ShortageInfo | null>(null);
+  const [activeBreakdown, setActiveBreakdown] = useState<{ itemName: string, batches: InventoryBatch[] } | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -383,6 +479,13 @@ export default function NewDispatchOrderPage() {
           onAction={handleShortageAction}
         />
       )}
+      {activeBreakdown && (
+        <StockBreakdownPopup 
+          itemName={activeBreakdown.itemName}
+          batches={activeBreakdown.batches}
+          onClose={() => setActiveBreakdown(null)}
+        />
+      )}
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div className="space-y-4">
@@ -504,42 +607,22 @@ export default function NewDispatchOrderPage() {
                              {item.itemId && (
                                <button
                                  type="button"
-                                 onClick={() => setExpandedBatches(prev => ({ ...prev, [index]: !prev[index] }))}
-                                 className={cn(
-                                   "p-1.5 rounded-lg transition-colors",
-                                   expandedBatches[index] ? "bg-primary/20 text-primary" : "bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary"
-                                 )}
+                                 onClick={() => {
+                                   const data = getInventoryData(item.itemId);
+                                   if (data && data.batches) {
+                                      setActiveBreakdown({
+                                         itemName: itemSearches[index] || "Selected Item",
+                                         batches: data.batches
+                                      });
+                                   }
+                                 }}
+                                 className="p-1.5 rounded-lg bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                                  title="Show Stock Breakdown"
                                >
                                  <Eye className="w-3.5 h-3.5" />
                                </button>
                              )}
                           </div>
-
-                          {expandedBatches[index] && getInventoryData(item.itemId)?.batches && getInventoryData(item.itemId)!.batches!.length > 0 && (
-                            <div className="overflow-hidden rounded-2xl border border-border-ghost bg-surface-low/30 animate-in slide-in-from-top-2 duration-300">
-                              <table className="w-full text-[10px] text-left border-collapse">
-                                <thead>
-                                  <tr className="bg-surface-low border-b border-border-ghost">
-                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground">Vendor</th>
-                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground">Date</th>
-                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground">Cost</th>
-                                    <th className="px-3 py-2 font-black uppercase tracking-[0.1em] text-muted-foreground text-right">Units</th>
-                                  </tr>
-                                </thead>
-                                <tbody className="divide-y divide-border-ghost/50">
-                                  {getInventoryData(item.itemId)!.batches!.filter(b => b.remainingQty > 0).map((batch: InventoryBatch) => (
-                                    <tr key={batch.id} className="hover:bg-white/50 transition-colors">
-                                      <td className="px-3 py-2 font-bold text-foreground truncate max-w-[100px]">{batch.vendor?.name || 'N/A'}</td>
-                                      <td className="px-3 py-2 font-bold text-muted-foreground/70">{new Date(batch.purchaseDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</td>
-                                      <td className="px-3 py-2 font-mono font-black text-primary">₹{batch.costPerUnit}</td>
-                                      <td className="px-3 py-2 font-black text-foreground text-right">{batch.remainingQty}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          )}
                         </div>
                       )}
                     </div>

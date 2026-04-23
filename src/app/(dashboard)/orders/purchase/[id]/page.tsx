@@ -174,51 +174,90 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
 
               {!isFullyReceived && !isDelivered && order.status.toUpperCase() !== "RECEIVED" && (
                  <div className="mb-6 flex justify-end">
-                   <button 
-                    onClick={handleMarkAllReceived}
-                    className="text-xs font-black text-primary hover:text-primary-semibold flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10"
-                   >
-                     🚀 Mark All Pending as Received
-                   </button>
+                    <button 
+                     onClick={async () => {
+                        const allForm: any = {};
+                        order.items.forEach((item: any) => {
+                           const remaining = Math.max(0, Number(item.quantityOrdered) - Number(item.quantityReceived));
+                           if (remaining > 0) {
+                              allForm[item.itemId] = remaining;
+                           }
+                        });
+                        
+                        const itemsToReceive = Object.entries(allForm).map(([itemId, receivedQty]) => ({ 
+                           itemId, 
+                           receivedQty 
+                        }));
+
+                        if (itemsToReceive.length > 0) {
+                           setSubmitting(true);
+                           try {
+                              const res = await fetch(`/api/purchase-orders/${id}/receive`, {
+                                 method: "POST",
+                                 headers: { "Content-Type": "application/json" },
+                                 body: JSON.stringify({ items: itemsToReceive }),
+                              });
+                              if (res.ok) window.location.reload();
+                              else {
+                                 const data = await res.json();
+                                 setError(data.error || "Failed to receive goods.");
+                              }
+                           } catch (err) {
+                              setError("Network error during receipt.");
+                           } finally {
+                              setSubmitting(false);
+                           }
+                        }
+                     }}
+                     disabled={submitting}
+                     className="text-xs font-black text-primary hover:text-primary-semibold flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+                    >
+                      {submitting ? <Loader2 className="w-3 h-3 animate-spin" /> : "🚀"} 
+                      {submitting ? "Processing..." : "Mark All Pending as Received"}
+                    </button>
                  </div>
                )}
               
               <div className="space-y-6">
                  {order.items.map((item: any) => (
-                    <div key={item.id} className="p-6 bg-surface-low/30 rounded-3xl border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-6">
-                       <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-bold text-primary">
-                             {item.item.sku[0]}
-                          </div>
-                          <div>
-                             <p className="font-black text-foreground">{item.item.name}</p>
-                             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{item.item.sku}</p>
-                          </div>
-                       </div>
-                       
-                       <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center flex-1 max-w-md">
-                          <div>
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Ordered</p>
-                             <p className="text-lg font-black text-foreground">{item.quantityOrdered}</p>
-                          </div>
-                          <div>
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Received</p>
-                             <p className={cn(
-                                "text-lg font-black",
-                                item.quantityReceived >= item.quantityOrdered ? "text-emerald-600" : "text-orange-500"
-                             )}>{item.quantityReceived}</p>
-                          </div>
-                          <div className="col-span-2 md:col-span-1 border-t md:border-t-0 md:border-l border-border-ghost pt-4 md:pt-0">
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Receive Now</p>
-                             <input 
-                                type="number"
-                                disabled={item.quantityReceived >= item.quantityOrdered || isDelivered || order.status.toUpperCase() === "RECEIVED"}
-                                value={receiveForm[item.itemId] || 0}
-                                onChange={(e) => setReceiveForm({...receiveForm, [item.itemId]: parseFloat(e.target.value)})}
-                                className="w-20 bg-white border border-border-ghost rounded-lg px-2 py-1 text-center font-bold text-sm focus:ring-2 focus:ring-primary outline-none disabled:opacity-50"
-                             />
-                          </div>
-                       </div>
+                    <div key={item.id} className="p-6 bg-surface-low/30 rounded-3xl border border-border-ghost flex flex-col lg:flex-row items-center gap-8">
+                        <div className="flex items-center gap-5 flex-1 min-w-0 w-full">
+                           <div className="w-14 h-14 rounded-2xl bg-white border border-border-ghost flex items-center justify-center font-black text-xl text-primary shadow-sm shrink-0">
+                              {item.item.sku[0]}
+                           </div>
+                           <div className="min-w-0">
+                              <p className="font-black text-foreground text-lg truncate">{item.item.name}</p>
+                              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">SKU: {item.item.sku}</p>
+                           </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10 text-center shrink-0 w-full lg:w-auto bg-white/50 p-6 rounded-2xl border border-border-ghost/50">
+                           <div className="flex flex-col items-center">
+                              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Rate</p>
+                              <p className="text-sm font-black text-foreground bg-surface-low px-3 py-1 rounded-lg border border-border-ghost">₹{Number(item.costPrice).toLocaleString('en-IN')}</p>
+                           </div>
+                           <div className="flex flex-col items-center">
+                              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Ordered</p>
+                              <p className="text-xl font-black text-foreground leading-none">{item.quantityOrdered}</p>
+                           </div>
+                           <div className="flex flex-col items-center">
+                              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Received</p>
+                              <p className={cn(
+                                 "text-xl font-black leading-none",
+                                 item.quantityReceived >= item.quantityOrdered ? "text-emerald-600" : "text-orange-500"
+                              )}>{item.quantityReceived}</p>
+                           </div>
+                           <div className="flex flex-col items-center border-t md:border-t-0 md:border-l border-border-ghost pt-4 md:pt-0 md:pl-8">
+                              <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-2">Receive Now</p>
+                              <input 
+                                 type="number"
+                                 disabled={item.quantityReceived >= item.quantityOrdered || isDelivered || order.status.toUpperCase() === "RECEIVED"}
+                                 value={receiveForm[item.itemId] || 0}
+                                 onChange={(e) => setReceiveForm({...receiveForm, [item.itemId]: parseFloat(e.target.value)})}
+                                 className="w-24 bg-white border-2 border-primary/20 rounded-xl px-3 py-2 text-center font-black text-base focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all disabled:opacity-30 disabled:border-border-ghost"
+                              />
+                           </div>
+                        </div>
                     </div>
                  ))}
               </div>

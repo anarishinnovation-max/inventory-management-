@@ -101,6 +101,7 @@ model PurchaseOrder {
   id               String       @id @default(uuid())
   vendorId         String
   status           String       @default("DRAFT")
+  paymentStatus    String       @default("PENDING")
   paymentMode      String?      @default("Cash")
   expectedDelivery DateTime?
   orderDate        DateTime     @default(now())

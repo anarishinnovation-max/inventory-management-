@@ -1,6 +1,6 @@
 import InventoryFilters from "@/app/(dashboard)/inventory/InventoryFilters";
 import InventoryPagination from "@/app/(dashboard)/inventory/InventoryPagination";
-import InventorySearch from "@/app/(dashboard)/inventory/InventorySearch";
+import SearchInput from "@/components/SearchInput";
 import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableActions";
 import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
@@ -50,7 +50,6 @@ async function getInventory(q?: string, status?: string, category?: string, page
     ]
   };
 
-  // Fetch all potential matches for q and category first (memory filtering is safer for minStockLevel comparison)
   const allItems = await prisma.item.findMany({
     where,
     include: {
@@ -67,18 +66,7 @@ async function getInventory(q?: string, status?: string, category?: string, page
     }
   });
 
-  // Map and calculate stock levels
-  let mappedItems = allItems.map((item: Prisma.ItemGetPayload<{
-    include: {
-      category: true;
-      inventory: true;
-      stocks: {
-        include: {
-          rack: true;
-        };
-      };
-    };
-  }>) => ({
+  let mappedItems = allItems.map((item: any) => ({
     id: item.id,
     name: item.name,
     sku: item.sku,
@@ -87,12 +75,12 @@ async function getInventory(q?: string, status?: string, category?: string, page
     minStockLevel: item.minStockLevel ?? 0,
     isCritical: item.isCritical,
     totalStock: (item.stocks || []).length > 0
-      ? (item.stocks || []).reduce((acc: number, s) => acc + s.quantity, 0)
+      ? (item.stocks || []).reduce((acc: number, s: any) => acc + s.quantity, 0)
       : (item.inventory?.quantityAvailable ?? 0),
     incomingQty: item.inventory?.incomingQty ?? 0,
     quantityReserved: item.inventory?.quantityReserved ?? 0,
     quantityInTransit: item.inventory?.quantityInTransit ?? 0,
-    stocks: (item.stocks || []).map((s) => ({
+    stocks: (item.stocks || []).map((s: any) => ({
       id: s.id,
       quantity: s.quantity,
       rack: {
@@ -102,7 +90,6 @@ async function getInventory(q?: string, status?: string, category?: string, page
     }))
   }));
 
-  // Apply Status Filtering in memory for 100% accuracy against minStockLevel
   if (status && status !== 'all') {
     mappedItems = mappedItems.filter((item: MappedItem) => {
       const total = item.totalStock;
@@ -138,7 +125,7 @@ export default async function InventoryPage({
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
   const { items, totalItems } = await getInventory(q, status, category, page).catch((e) => {
-    console.error("DEBUG: Inventory fetch error:", e);
+    console.error("Inventory fetch error:", e);
     return { items: [], totalItems: 0 };
   });
 
@@ -147,22 +134,21 @@ export default async function InventoryPage({
 
   return (
     <div className="space-y-8 pb-10">
-      {/* Header & Actions */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Home</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Stock</span>
           </nav>
-          <h2 className="heading-xl">Stock List</h2>
+          <h2 className="heading-xl tracking-tight">Stock List</h2>
           <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
-        <Link href="/inventory/new" className="btn-primary shadow-glow">
+        <Link href="/inventory/new" className="btn-primary shadow-glow h-14">
           <PlusCircle className="w-4 h-4" />
           <span>Add New Item</span>
         </Link>
-      </div>
+      </header>
 
       {/* Bento Stats & Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -183,9 +169,13 @@ export default async function InventoryPage({
         </div>
       </div>
 
-      <InventorySearch defaultValue={q} />
+      <div className="flex-1 max-w-2xl">
+          <SearchInput 
+              defaultValue={q}
+              placeholder="Search items, SKU, or Rack..."
+          />
+      </div>
 
-      {/* Data Table */}
       <div className="card-premium !p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -203,8 +193,6 @@ export default async function InventoryPage({
               {items.length > 0 ? items.map((item: MappedItem) => {
                 const totalStock = item.totalStock;
                 const incomingQty = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
-
-                // Reliability logic based on physical on-hand stock and availability
                 const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
                 const isUrgent = netAvailable < 0;
                 const isShortage = totalStock <= 0;
@@ -233,8 +221,7 @@ export default async function InventoryPage({
                     </td>
                     <td className="px-6 py-5 text-right">
                       <div className="flex flex-col items-end">
-                        <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"
-                          }`}>
+                        <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
                           {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
                         </span>
                         {totalStock < 0 && (
@@ -311,7 +298,6 @@ export default async function InventoryPage({
         </div>
       </div>
 
-      {/* Pagination Footer */}
       <InventoryPagination
         totalItems={totalItems}
         pageSize={PAGE_SIZE}

@@ -5,6 +5,7 @@ import { Filter, Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";
+import CustomSelect from "@/components/CustomSelect";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -112,23 +113,12 @@ export default function InventoryFilters({
         <div className="space-y-4 flex-1">
           <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block text-left">Filter by Category</label>
           <div className="flex flex-col gap-3">
-            <div className="relative">
-              <select
-                value={currentCategory}
-                onChange={(e) => setFilter("category", e.target.value)}
-                className={cn(
-                  "w-full bg-surface-low/50 border border-transparent rounded-lg px-3 py-2 text-xs font-bold text-foreground outline-none focus:border-primary/20 appearance-none cursor-pointer group-hover:bg-white transition-all",
-                  isPending && "opacity-50"
-                )}
-                suppressHydrationWarning
-              >
-                <option value="all">All Categories</option>
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-              <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
-            </div>
+            <CustomSelect
+              options={categories}
+              value={currentCategory}
+              onChange={(val) => setFilter("category", val)}
+              disabled={isPending}
+            />
           </div>
         </div>
         <div className="h-10 w-px bg-border-ghost mx-5"></div>

@@ -17,13 +17,26 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import prisma from "@/lib/prisma";
 import AddRackButton from "./AddRackButton";
+import SearchInput from "@/components/SearchInput";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-async function getRacks() {
+async function getRacks(query?: string) {
+  const where: any = {};
+  
+  if (query) {
+    where.OR = [
+      { rackNumber: { contains: query, mode: 'insensitive' } },
+      { zone: { contains: query, mode: 'insensitive' } },
+      { stocks: { some: { item: { name: { contains: query, mode: 'insensitive' } } } } },
+      { stocks: { some: { item: { sku: { contains: query, mode: 'insensitive' } } } } },
+    ];
+  }
+
   const racks = await (prisma as any).rack.findMany({
+    where,
     include: {
       stocks: {
         where: {
@@ -50,8 +63,15 @@ async function getRacks() {
   }));
 }
 
-export default async function RacksPage() {
-  const racks = await getRacks().catch((e) => {
+export default async function RacksPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sParams = await searchParams;
+  const q = typeof sParams.q === 'string' ? sParams.q : '';
+  
+  const racks = await getRacks(q).catch((e) => {
     console.error("Failed to fetch racks:", e);
     return [];
   });
@@ -70,7 +90,7 @@ export default async function RacksPage() {
           <p className="text-muted-foreground mt-2 font-medium">See where all your items are stored.</p>
         </div>
         <div className="flex gap-3">
-            <button className="btn-secondary">
+            <button className="btn-secondary h-14">
                 <MapPin className="w-4 h-4 text-primary" />
                 View 3D Map
             </button>
@@ -123,6 +143,13 @@ export default async function RacksPage() {
         </div>
       </div>
 
+      <div className="flex-1 max-w-2xl">
+          <SearchInput 
+              defaultValue={q}
+              placeholder="Search Rack Number, Zone or Item..."
+          />
+      </div>
+
       {/* Control Strip */}
       <div className="card-premium !p-0 overflow-hidden">
         <div className="px-8 py-4 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
@@ -151,7 +178,7 @@ export default async function RacksPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
-              {racks.map((row: any) => {
+              {racks.length > 0 ? racks.map((row: any) => {
                 const totalQty = row.items ? row.items.reduce((acc: number, curr: any) => acc + curr.quantity, 0) : 0;
                 const fillPercent = Math.min(totalQty / 100, 100); 
                 const itemList = row.items && row.items.length > 0 ? row.items.map((it: any) => it.name).join(", ") : "Empty";
@@ -175,7 +202,7 @@ export default async function RacksPage() {
                        </span>
                     </td>
                     <td className="px-8 py-5">
-                       <p className="text-xs text-muted-foreground font-medium truncate max-w-62.5" title={itemList}>
+                       <p className="text-xs text-muted-foreground font-medium truncate max-w-[250px]" title={itemList}>
                           {itemList}
                        </p>
                     </td>
@@ -198,7 +225,13 @@ export default async function RacksPage() {
                     </td>
                   </tr>
                 );
-              })}
+              }) : (
+                <tr>
+                   <td colSpan={5} className="px-8 py-20 text-center text-muted-foreground font-medium italic">
+                      No racks found matching your search.
+                   </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
