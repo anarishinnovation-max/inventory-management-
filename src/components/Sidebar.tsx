@@ -10,6 +10,7 @@ import {
   LogOut,
   Package,
   Settings,
+  ShieldCheck,
   ShoppingCart,
   SquareStack,
   Truck,
@@ -66,6 +67,7 @@ const menuSections: MenuSection[] = [
     title: "More",
     items: [
       { name: "Activity Log", icon: History, href: "/transactions", roles: ["OWNER", "MANAGER"] },
+      { name: "Admin Control", icon: ShieldCheck, href: "/admin", roles: ["OWNER"] },
       { name: "Settings", icon: Settings, href: "/settings", roles: ["OWNER", "MANAGER"] },
     ]
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Shield, Users, Settings, Activity, Lock } from "lucide-react";
+import Link from "next/link";
 
 export default function AdminPage() {
   return (
@@ -17,15 +18,17 @@ export default function AdminPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* User Management */}
-        <div className="p-8 bg-surface-lowest border border-border-ghost rounded-[2.5rem] shadow-ambient-soft flex flex-col gap-6 group hover:border-primary/30 transition-all cursor-pointer">
-          <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
-            <Users className="w-8 h-8 text-primary group-hover:text-white transition-colors" />
+        <Link href="/admin/users" className="contents">
+          <div className="p-8 bg-surface-lowest border border-border-ghost rounded-[2.5rem] shadow-ambient-soft flex flex-col gap-6 group hover:border-primary/30 transition-all cursor-pointer">
+            <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+              <Users className="w-8 h-8 text-primary group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-2">User Management</h3>
+              <p className="text-sm text-muted-foreground">Manage roles, permissions, and active sessions for all employees.</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-bold mb-2">User Management</h3>
-            <p className="text-sm text-muted-foreground">Manage roles, permissions, and active sessions for all employees.</p>
-          </div>
-        </div>
+        </Link>
 
         {/* System Policies */}
         <div className="p-8 bg-surface-lowest border border-border-ghost rounded-[2.5rem] shadow-ambient-soft flex flex-col gap-6 group hover:border-primary/30 transition-all cursor-pointer">
