@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { UserRole } from "@/lib/types";
+import bcrypt from "bcryptjs";
 
 export async function POST(
   request: Request,
@@ -34,10 +35,11 @@ export async function POST(
       return NextResponse.json({ error: "User not found or access denied" }, { status: 404 });
     }
 
-    // In a real app, hash this!
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
     await prisma.user.update({
       where: { id },
-      data: { password: newPassword }
+      data: { password: hashedPassword }
     });
 
     return NextResponse.json({ success: true, message: "Password reset successfully" });

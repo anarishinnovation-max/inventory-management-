@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac-utils";
@@ -35,6 +36,7 @@ export async function GET() {
   }
 }
 
+
 export async function POST(request: Request) {
   try {
     const session = await getSession();
@@ -63,10 +65,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Username already taken" }, { status: 409 });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await prisma.user.create({
       data: {
         username,
-        password, // In a real app, hash this!
+        password: hashedPassword,
         name,
         role: role as UserRole,
         companyId: session.companyId

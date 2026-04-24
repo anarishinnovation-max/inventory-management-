@@ -31,26 +31,30 @@ export default function AdminPage() {
         </Link>
 
         {/* System Policies */}
-        <div className="p-8 bg-surface-lowest border border-border-ghost rounded-[2.5rem] shadow-ambient-soft flex flex-col gap-6 group hover:border-primary/30 transition-all cursor-pointer">
-          <div className="w-16 h-16 rounded-3xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary transition-colors">
-            <Lock className="w-8 h-8 text-secondary group-hover:text-white transition-colors" />
+        <Link href="/admin/security" className="contents">
+          <div className="p-8 bg-surface-lowest border border-border-ghost rounded-[2.5rem] shadow-ambient-soft flex flex-col gap-6 group hover:border-primary/30 transition-all cursor-pointer">
+            <div className="w-16 h-16 rounded-3xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary transition-colors">
+              <Lock className="w-8 h-8 text-secondary group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-2">Security & RBAC</h3>
+              <p className="text-sm text-muted-foreground">Configure global authentication policies and role-based access rules.</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-bold mb-2">Security & RBAC</h3>
-            <p className="text-sm text-muted-foreground">Configure global authentication policies and role-based access rules.</p>
-          </div>
-        </div>
+        </Link>
 
         {/* Warehouse Config */}
-        <div className="p-8 bg-surface-lowest border border-border-ghost rounded-[2.5rem] shadow-ambient-soft flex flex-col gap-6 group hover:border-primary/30 transition-all cursor-pointer">
-          <div className="w-16 h-16 rounded-3xl bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500 transition-colors">
-            <Settings className="w-8 h-8 text-amber-500 group-hover:text-white transition-colors" />
+        <Link href="/admin/settings" className="contents">
+          <div className="p-8 bg-surface-lowest border border-border-ghost rounded-[2.5rem] shadow-ambient-soft flex flex-col gap-6 group hover:border-primary/30 transition-all cursor-pointer">
+            <div className="w-16 h-16 rounded-3xl bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500 transition-colors">
+              <Settings className="w-8 h-8 text-amber-500 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-2">Global Settings</h3>
+              <p className="text-sm text-muted-foreground">Adjust warehouse capacity thresholds and system-wide default values.</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-bold mb-2">Global Settings</h3>
-            <p className="text-sm text-muted-foreground">Adjust warehouse capacity thresholds and system-wide default values.</p>
-          </div>
-        </div>
+        </Link>
       </div>
 
       <div className="p-10 bg-surface-lowest border border-border-ghost rounded-[3rem] shadow-ambient flex flex-col gap-6">
