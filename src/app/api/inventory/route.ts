@@ -22,10 +22,19 @@ function computeInventoryStatus(params: {
 
 export async function GET(request: Request) {
   try {
+    const { getSession } = await import("@/lib/auth");
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
 
     const inventory = await prisma.inventory.findMany({
+      where: {
+        companyId: session.companyId
+      },
       include: {
         item: minimal ? false : { include: { category: true } },
         batches: {
@@ -67,10 +76,14 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   // This could be for SCRAP
   try {
+    const { getSession } = await import("@/lib/auth");
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { itemId, quantity, reason } = await request.json();
     if (!itemId || !quantity) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
-    const updated = await InventoryService.scrapInventory(itemId, parseFloat(quantity), reason);
+    const updated = await InventoryService.scrapInventory(itemId, session.companyId, parseFloat(quantity), reason);
     return NextResponse.json(updated);
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);

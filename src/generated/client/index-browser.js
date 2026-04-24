@@ -120,29 +120,29 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.CompanyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  settings: 'settings',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
   password: 'password',
   name: 'name',
-  role: 'role',
-  roleId: 'roleId',
   emailAlerts: 'emailAlerts',
   twoFactorEnabled: 'twoFactorEnabled',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.RoleScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  permissions: 'permissions',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  companyId: 'companyId',
+  role: 'role'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  companyId: 'companyId'
 };
 
 exports.Prisma.ItemScalarFieldEnum = {
@@ -153,13 +153,15 @@ exports.Prisma.ItemScalarFieldEnum = {
   unit: 'unit',
   createdAt: 'createdAt',
   isCritical: 'isCritical',
-  minStockLevel: 'minStockLevel'
+  minStockLevel: 'minStockLevel',
+  companyId: 'companyId'
 };
 
 exports.Prisma.RackScalarFieldEnum = {
   id: 'id',
   rackNumber: 'rackNumber',
-  zone: 'zone'
+  zone: 'zone',
+  companyId: 'companyId'
 };
 
 exports.Prisma.StockScalarFieldEnum = {
@@ -167,7 +169,8 @@ exports.Prisma.StockScalarFieldEnum = {
   itemId: 'itemId',
   rackId: 'rackId',
   quantity: 'quantity',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  companyId: 'companyId'
 };
 
 exports.Prisma.InventoryScalarFieldEnum = {
@@ -177,7 +180,8 @@ exports.Prisma.InventoryScalarFieldEnum = {
   incomingQty: 'incomingQty',
   quantityReserved: 'quantityReserved',
   quantityInTransit: 'quantityInTransit',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  companyId: 'companyId'
 };
 
 exports.Prisma.VendorScalarFieldEnum = {
@@ -185,18 +189,20 @@ exports.Prisma.VendorScalarFieldEnum = {
   name: 'name',
   contact: 'contact',
   email: 'email',
-  preferredPaymentMode: 'preferredPaymentMode'
+  preferredPaymentMode: 'preferredPaymentMode',
+  companyId: 'companyId'
 };
 
 exports.Prisma.PurchaseOrderScalarFieldEnum = {
   id: 'id',
   vendorId: 'vendorId',
   status: 'status',
-  paymentStatus: 'paymentStatus',
   paymentMode: 'paymentMode',
   expectedDelivery: 'expectedDelivery',
   orderDate: 'orderDate',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  paymentStatus: 'paymentStatus',
+  companyId: 'companyId'
 };
 
 exports.Prisma.InventoryBatchScalarFieldEnum = {
@@ -225,7 +231,8 @@ exports.Prisma.CustomerScalarFieldEnum = {
   name: 'name',
   email: 'email',
   contact: 'contact',
-  address: 'address'
+  address: 'address',
+  companyId: 'companyId'
 };
 
 exports.Prisma.DispatchOrderScalarFieldEnum = {
@@ -235,7 +242,8 @@ exports.Prisma.DispatchOrderScalarFieldEnum = {
   paymentMode: 'paymentMode',
   expectedDelivery: 'expectedDelivery',
   orderDate: 'orderDate',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  companyId: 'companyId'
 };
 
 exports.Prisma.DispatchItemScalarFieldEnum = {
@@ -257,7 +265,8 @@ exports.Prisma.InventoryTransactionScalarFieldEnum = {
   quantity: 'quantity',
   referenceType: 'referenceType',
   referenceId: 'referenceId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  companyId: 'companyId'
 };
 
 exports.Prisma.SortOrder = {
@@ -275,21 +284,25 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.UserRole = exports.$Enums.UserRole = {
+  OWNER: 'OWNER',
+  MANAGER: 'MANAGER',
+  EMPLOYEE: 'EMPLOYEE'
+};
 
 exports.Prisma.ModelName = {
+  Company: 'Company',
   User: 'User',
-  Role: 'Role',
   Category: 'Category',
   Item: 'Item',
   Rack: 'Rack',

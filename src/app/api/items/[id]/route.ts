@@ -1,15 +1,21 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
+import { requirePermission } from "@/lib/rbac-utils";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    await requirePermission("items:view");
+
     const { id } = await params;
 
     const item = await (prisma as any).item.findFirst({
-      where: { id },
+      where: { id, companyId: session.companyId },
       include: {
         category: true,
         inventory: {
@@ -55,17 +61,31 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Managers can do full CRUD, Employees can do limited update
+    // We'll check 'items:update' or 'items:update-limited'
+    try {
+      await requirePermission("items:update");
+    } catch {
+      await requirePermission("items:update-limited");
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { name, sku, categoryId, unit, minStockLevel, isCritical } = body;
 
-    const existingItem = await (prisma as any).item.findFirst({ where: { id } });
+    const existingItem = await (prisma as any).item.findFirst({ 
+      where: { id, companyId: session.companyId } 
+    });
     if (!existingItem) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
     if (sku && sku !== existingItem.sku) {
-        const skuCheck = await (prisma as any).item.findFirst({ where: { sku } });
+        const skuCheck = await (prisma as any).item.findFirst({ 
+          where: { sku, companyId: session.companyId } 
+        });
         if (skuCheck) {
             return NextResponse.json({ error: "SKU already exists" }, { status: 400 });
         }
@@ -95,7 +115,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    await requirePermission("items:delete");
+
     const { id } = await params;
+
+    const existingItem = await (prisma as any).item.findFirst({ 
+      where: { id, companyId: session.companyId } 
+    });
+    if (!existingItem) {
+      return NextResponse.json({ error: "Item not found" }, { status: 404 });
+    }
 
     const stockCount = await (prisma as any).stock.count({
       where: { itemId: id, quantity: { gt: 0 } },

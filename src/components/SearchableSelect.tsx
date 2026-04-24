@@ -63,7 +63,7 @@ export function SearchableSelect({
   }, []);
 
   return (
-    <div className={cn("relative w-full", className)} ref={containerRef}>
+    <div className={cn("relative w-full", className, isOpen && "z-50")} ref={containerRef}>
       <div
         onClick={() => setIsOpen(!isOpen)}
         className="w-full bg-surface-lowest border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer flex items-center justify-between transition-all hover:bg-surface-lowest hover:border-primary/20 shadow-sm"

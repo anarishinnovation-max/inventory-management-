@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { MappedItem } from "./page";
 import InventoryTableActions from "./InventoryTableActions";
 
-export default function InventoryList({ items }: { items: MappedItem[] }) {
+export default function InventoryList({ items, userRole }: { items: MappedItem[], userRole: string }) {
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
@@ -202,6 +202,7 @@ export default function InventoryList({ items }: { items: MappedItem[] }) {
                         totalStock={totalStock}
                         incomingQty={incomingQty}
                         minStockLevel={item.minStockLevel || 0}
+                        userRole={userRole}
                       />
                     </td>
                   </tr>
@@ -224,7 +225,7 @@ export default function InventoryList({ items }: { items: MappedItem[] }) {
       </div>
 
       {/* Floating Bulk Action Bar */}
-      {selectedIds.size > 0 && (
+      {selectedIds.size > 0 && userRole !== 'EMPLOYEE' && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500">
           <div className="bg-foreground text-white rounded-[2rem] shadow-2xl shadow-black/30 flex items-center gap-2 p-2 pl-6 border border-white/10 backdrop-blur-xl bg-opacity-90">
             <div className="flex flex-col pr-6 border-r border-white/10">

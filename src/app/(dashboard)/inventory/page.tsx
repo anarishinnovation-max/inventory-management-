@@ -8,6 +8,7 @@ import prisma from "@/lib/prisma";
 import { ImageIcon, Package, PlusCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import QuickPOButton from "./QuickPOButton";
+import { cacheQuery } from "@/lib/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -37,10 +38,14 @@ export interface MappedItem {
 
 const PAGE_SIZE = 10;
 
-import { cacheQuery } from "@/lib/cache";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-async function getInventoryRaw(q?: string, status?: string, category?: string, page: number = 1, limit?: number) {
-  const where: Record<string, unknown> = {
+async function getInventoryRaw(q?: string, status?: string, category?: string, page: number = 1, limit?: number, companyId?: string) {
+  if (!companyId) return { items: [], totalItems: 0 };
+  
+  const where: any = {
+    companyId,
     AND: [
       q ? {
         OR: [
@@ -49,7 +54,7 @@ async function getInventoryRaw(q?: string, status?: string, category?: string, p
         ]
       } : {},
       category && category !== 'all' && category !== 'All Categories' ? {
-        category: { name: category }
+        category: { name: category, companyId }
       } : {},
     ]
   };
@@ -119,10 +124,10 @@ async function getInventoryRaw(q?: string, status?: string, category?: string, p
   return { items: paginatedItems, totalItems };
 }
 
-const getInventory = (q?: string, status?: string, category?: string, page: number = 1, limit?: number) => 
+const getInventory = (q?: string, status?: string, category?: string, page: number = 1, limit?: number, companyId?: string) => 
   cacheQuery(
-    () => getInventoryRaw(q, status, category, page, limit),
-    ["inventory", q || "none", status || "all", category || "all", page.toString(), (limit || 0).toString()],
+    () => getInventoryRaw(q, status, category, page, limit, companyId),
+    ["inventory", q || "none", status || "all", category || "all", page.toString(), (limit || 0).toString(), companyId || "none"],
     60
   )();
 
@@ -131,6 +136,11 @@ export default async function InventoryPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const session = await getSession();
+  if (!session) {
+    redirect("/login");
+  }
+
   const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
   const status = typeof sParams.status === 'string' ? sParams.status : 'all';
@@ -143,16 +153,20 @@ export default async function InventoryPage({
     { items: allUrgentItems },
     { items: allOutOfStockItems }
   ] = await Promise.all([
-    getInventory(q, status, category, page, PAGE_SIZE),
-    getInventory("", "low", "all"),
-    getInventory("", "urgent", "all"),
-    getInventory("", "outofstock", "all")
+    getInventory(q, status, category, page, PAGE_SIZE, session.companyId),
+    getInventory("", "low", "all", 1, 0, session.companyId),
+    getInventory("", "urgent", "all", 1, 0, session.companyId),
+    getInventory("", "outofstock", "all", 1, 0, session.companyId)
   ]).catch((e) => {
     console.error("Inventory fetch error:", e);
     return [{ items: [], totalItems: 0 }, { items: [] }, { items: [] }, { items: [] }];
   });
   
-  const allCategories = await prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } });
+  const allCategories = await prisma.category.findMany({ 
+    where: { companyId: session.companyId },
+    select: { name: true }, 
+    orderBy: { name: 'asc' } 
+  });
   const categoryNames = allCategories.map((c: { name: string }) => c.name);
 
   // Combine and deduplicate
@@ -166,17 +180,19 @@ export default async function InventoryPage({
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Home</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Stock</span>
+            <span className="text-primary">Inventory</span>
           </nav>
-          <h2 className="heading-xl tracking-tight">Stock List</h2>
+          <h2 className="heading-xl tracking-tight">Inventory List</h2>
           <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
         <div className="flex items-center gap-3">
             <QuickPOButton items={uniqueReorderPool} />
-            <Link href="/inventory/new" className="btn-primary shadow-glow h-14">
-              <PlusCircle className="w-4 h-4" />
-              <span>Add New Item</span>
-            </Link>
+            {(session.role === 'OWNER' || session.role === 'MANAGER') && (
+              <Link href="/inventory/new" className="btn-primary shadow-glow h-14">
+                <PlusCircle className="w-4 h-4" />
+                <span>Add New Item</span>
+              </Link>
+            )}
         </div>
       </header>
 
@@ -206,7 +222,7 @@ export default async function InventoryPage({
           />
       </div>
 
-      <InventoryList items={items ?? []} />
+      <InventoryList items={items ?? []} userRole={session.role} />
 
       <InventoryPagination
         totalItems={totalItems ?? 0}

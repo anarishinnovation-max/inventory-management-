@@ -17,6 +17,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+import { handleLogout } from "@/lib/user-actions";
+
 export default async function SettingsPage() {
   const session = await getSession();
   const user = session?.id ? await prisma.user.findUnique({ where: { id: session.id } }) : null;
@@ -40,6 +42,7 @@ export default async function SettingsPage() {
       description: "Keep your account secure with multi-factor auth and password management.",
       icon: Lock,
       color: "bg-emerald-500",
+      roles: ["OWNER"], // Critical setting restricted to OWNER
       fields: [
         { label: "Password", value: "********", type: "password_action" },
         { label: "Two-Factor Auth", value: user?.twoFactorEnabled ? "Enabled" : "Disabled", type: "toggle", key: "twoFactorEnabled" },
@@ -57,7 +60,7 @@ export default async function SettingsPage() {
         { label: "Push Notifications", value: "Off", type: "toggle" },
       ]
     }
-  ];
+  ].filter(s => !s.roles || (session?.role && s.roles.includes(session.role.toUpperCase())));
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-20">
@@ -99,13 +102,7 @@ export default async function SettingsPage() {
             <div className="pt-6 mt-6 border-t border-border-ghost/50 space-y-6">
 
                  
-                 <form action={async () => {
-                   "use server";
-                   const { logout } = await import("@/lib/auth");
-                   const { redirect } = await import("next/navigation");
-                   await logout();
-                   redirect("/login");
-                 }}>
+                 <form action={handleLogout}>
                      <button type="submit" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-error/70 hover:text-error hover:bg-error/5 transition-all text-xs font-black uppercase tracking-widest border border-transparent hover:border-error/10">
                         <LogOut className="w-4 h-4" />
                         Sign Out

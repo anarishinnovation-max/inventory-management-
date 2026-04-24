@@ -7,58 +7,79 @@ datasource db {
   provider = "postgresql"
 }
 
+model Company {
+  id           String                 @id @default(uuid())
+  name         String
+  settings     Json?                  @default("{}")
+  createdAt    DateTime               @default(now())
+  categories   Category[]
+  customers    Customer[]
+  dispatches   DispatchOrder[]
+  transactions InventoryTransaction[]
+  items        Item[]
+  pos          PurchaseOrder[]
+  racks        Rack[]
+  users        User[]
+  vendors      Vendor[]
+  stocks       Stock[]                @relation("CompanyToStock")
+  inventory    Inventory[]            @relation("CompanyToInventory")
+}
+
 model User {
   id               String                 @id @default(uuid())
   username         String                 @unique
   password         String
   name             String
-  role             String                 @default("employee")
-  roleId           String?                @map("role_id")
-  roleObj          Role?                  @relation(fields: [roleId], references: [id])
   emailAlerts      Boolean                @default(true)
   twoFactorEnabled Boolean                @default(false)
   createdAt        DateTime               @default(now())
+  companyId        String
+  role             UserRole               @default(EMPLOYEE)
   transactions     InventoryTransaction[]
-}
-
-model Role {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  permissions Json?    @default("[]")
-  users       User[]
-  createdAt   DateTime @default(now())
+  company          Company                @relation(fields: [companyId], references: [id])
 }
 
 model Category {
-  id    String @id @default(uuid())
-  name  String @unique
-  items Item[]
+  id        String  @id @default(uuid())
+  name      String
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  items     Item[]
+
+  @@unique([name, companyId])
 }
 
 model Item {
   id            String                 @id @default(uuid())
   name          String
-  sku           String                 @unique
+  sku           String
   categoryId    String
   unit          String
   createdAt     DateTime               @default(now())
   isCritical    Boolean                @default(false)
   minStockLevel Float                  @default(0)
+  companyId     String
   dispatchItems DispatchItem[]
   inventory     Inventory?
   transactions  InventoryTransaction[]
   category      Category               @relation(fields: [categoryId], references: [id])
+  company       Company                @relation(fields: [companyId], references: [id])
   poItems       POLineItem[]
   stocks        Stock[]
+
+  @@unique([sku, companyId])
 }
 
 model Rack {
   id           String                 @id @default(uuid())
-  rackNumber   String                 @unique
+  rackNumber   String
   zone         String?
-  stocks       Stock[]
+  companyId    String
   transactions InventoryTransaction[]
+  company      Company                @relation(fields: [companyId], references: [id])
+  stocks       Stock[]
+
+  @@unique([rackNumber, companyId])
 }
 
 model Stock {
@@ -67,11 +88,14 @@ model Stock {
   rackId    String
   quantity  Float    @default(0)
   updatedAt DateTime @updatedAt
+  companyId String
   item      Item     @relation(fields: [itemId], references: [id])
   rack      Rack     @relation(fields: [rackId], references: [id])
+  company   Company  @relation(fields: [companyId], references: [id], name: "CompanyToStock")
 
   @@index([itemId])
   @@index([rackId])
+  @@index([companyId])
 }
 
 model Inventory {
@@ -82,36 +106,47 @@ model Inventory {
   quantityReserved  Float            @default(0)
   quantityInTransit Float            @default(0)
   updatedAt         DateTime         @updatedAt
+  companyId         String
   item              Item             @relation(fields: [itemId], references: [id])
   batches           InventoryBatch[]
+  company           Company          @relation(fields: [companyId], references: [id], name: "CompanyToInventory")
+
+  @@index([companyId])
 }
 
 model Vendor {
   id                   String                 @id @default(uuid())
-  name                 String                 @unique
+  name                 String
   contact              String?
   email                String?
   preferredPaymentMode String?                @default("Cash")
-  purchaseOrders       PurchaseOrder[]
-  transactions         InventoryTransaction[]
+  companyId            String
   batches              InventoryBatch[]
+  transactions         InventoryTransaction[]
+  purchaseOrders       PurchaseOrder[]
+  company              Company                @relation(fields: [companyId], references: [id])
+
+  @@unique([name, companyId])
 }
 
 model PurchaseOrder {
   id               String           @id @default(uuid())
   vendorId         String
   status           String           @default("DRAFT")
-  paymentStatus    String           @default("PENDING")
   paymentMode      String?          @default("Cash")
   expectedDelivery DateTime?
   orderDate        DateTime         @default(now())
   createdAt        DateTime         @default(now())
-  vendor           Vendor           @relation(fields: [vendorId], references: [id])
-  items            POLineItem[]
+  paymentStatus    String           @default("PENDING")
+  companyId        String
   batches          InventoryBatch[]
+  items            POLineItem[]
+  company          Company          @relation(fields: [companyId], references: [id])
+  vendor           Vendor           @relation(fields: [vendorId], references: [id])
 
   @@index([status])
   @@index([vendorId])
+  @@index([companyId])
 }
 
 model InventoryBatch {
@@ -125,8 +160,8 @@ model InventoryBatch {
   purchaseOrderId String?
   createdAt       DateTime       @default(now())
   inventory       Inventory      @relation(fields: [inventoryId], references: [id])
-  vendor          Vendor         @relation(fields: [vendorId], references: [id])
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
+  vendor          Vendor         @relation(fields: [vendorId], references: [id])
 
   @@unique([purchaseOrderId, inventoryId])
   @@index([inventoryId, purchaseDate])
@@ -146,12 +181,16 @@ model POLineItem {
 
 model Customer {
   id             String                 @id @default(uuid())
-  name           String                 @unique
+  name           String
   email          String?
   contact        String?
   address        String?
+  companyId      String
+  company        Company                @relation(fields: [companyId], references: [id])
   dispatchOrders DispatchOrder[]
   transactions   InventoryTransaction[]
+
+  @@unique([name, companyId])
 }
 
 model DispatchOrder {
@@ -162,11 +201,14 @@ model DispatchOrder {
   expectedDelivery DateTime?
   orderDate        DateTime       @default(now())
   createdAt        DateTime       @default(now())
+  companyId        String
   items            DispatchItem[]
+  company          Company        @relation(fields: [companyId], references: [id])
   customer         Customer       @relation(fields: [customerId], references: [id])
 
   @@index([status])
   @@index([customerId])
+  @@index([companyId])
 }
 
 model DispatchItem {
@@ -191,13 +233,22 @@ model InventoryTransaction {
   referenceType String?
   referenceId   String?
   createdAt     DateTime  @default(now())
+  companyId     String
+  company       Company   @relation(fields: [companyId], references: [id])
+  customer      Customer? @relation(fields: [customerId], references: [id])
   item          Item      @relation(fields: [itemId], references: [id])
   rack          Rack?     @relation(fields: [rackId], references: [id])
-  customer      Customer? @relation(fields: [customerId], references: [id])
-  vendor        Vendor?   @relation(fields: [vendorId], references: [id])
   user          User?     @relation(fields: [userId], references: [id])
+  vendor        Vendor?   @relation(fields: [vendorId], references: [id])
 
   @@index([itemId])
   @@index([type])
   @@index([createdAt])
+  @@index([companyId])
+}
+
+enum UserRole {
+  OWNER
+  MANAGER
+  EMPLOYEE
 }

@@ -17,11 +17,19 @@ function cn(...inputs: ClassValue[]) {
 import { CustomerModal } from "./CustomerModal";
 import { CustomerSearch } from "./CustomerSearch";
 
-async function getCustomersWithStats(query?: string) {
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+async function getCustomersWithStats(query?: string, companyId?: string) {
+  if (!companyId) return [];
+  
+  const where: any = { companyId };
+  if (query) {
+    where.name = { contains: query, mode: "insensitive" };
+  }
+
   const customers = await prisma.customer.findMany({
-    where: query ? {
-      name: { contains: query, mode: "insensitive" }
-    } : undefined,
+    where,
     include: {
       transactions: {
         select: {
@@ -49,8 +57,11 @@ async function getCustomersWithStats(query?: string) {
 }
 
 export default async function CustomersPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
   const { q } = await searchParams;
-  const customers = await getCustomersWithStats(q).catch((e) => {
+  const customers = await getCustomersWithStats(q, session.companyId).catch((e) => {
     console.error("Failed to fetch customers:", e);
     return [];
   });
@@ -69,7 +80,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
         </div>
         <div className="flex items-center gap-3">
             <CustomerSearch />
-            <CustomerModal />
+            {(session.role === 'OWNER' || session.role === 'MANAGER') && <CustomerModal />}
         </div>
       </header>
 

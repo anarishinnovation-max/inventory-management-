@@ -29,8 +29,14 @@ function formatDate(value: string | Date) {
   });
 }
 
-async function getInwardData(query?: string) {
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+async function getInwardData(query?: string, companyId?: string) {
+  if (!companyId) return { pendingPOs: [], pendingItems: [], recentTransactions: [] };
+
   const wherePO: Prisma.PurchaseOrderWhereInput = {
+    companyId,
     status: { in: ["PENDING", "ORDERED", "PARTIAL"] }
   };
 
@@ -60,6 +66,7 @@ async function getInwardData(query?: string) {
     }),
     prisma.inventoryTransaction.findMany({
       where: {
+        companyId,
         type: "PURCHASE",
         OR: query ? [
           { item: { name: { contains: query, mode: 'insensitive' } } },
@@ -99,10 +106,13 @@ export default async function SupplyInwardsPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
   const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
   
-  const { pendingPOs, pendingItems, recentTransactions } = await getInwardData(q).catch(() => ({ pendingPOs: [], pendingItems: [], recentTransactions: [] }));
+  const { pendingPOs, pendingItems, recentTransactions } = await getInwardData(q, session.companyId).catch(() => ({ pendingPOs: [], pendingItems: [], recentTransactions: [] }));
 
   const totalPendingQty = pendingItems.reduce((acc, item) => acc + (item.quantityOrdered - item.quantityReceived), 0);
 

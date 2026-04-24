@@ -15,8 +15,12 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-async function getDispatchOrders(query?: string) {
-  const where: Prisma.DispatchOrderWhereInput = {};
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+async function getDispatchOrders(query?: string, companyId?: string) {
+  if (!companyId) return [];
+  const where: Prisma.DispatchOrderWhereInput = { companyId };
   
   if (query) {
     where.OR = [
@@ -48,10 +52,13 @@ export default async function DispatchPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
   const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
   
-  const orders = await getDispatchOrders(q).catch(() => []);
+  const orders = await getDispatchOrders(q, session.companyId).catch(() => []);
 
   // Calculate stats
   const pendingCount = orders.filter((o: any) => o.status === "pending").length;
@@ -69,10 +76,12 @@ export default async function DispatchPage({
           <h1 className="heading-xl tracking-tight">Selling Bills</h1>
           <p className="text-muted-foreground mt-2 font-medium">Manage selling and sending items to customers.</p>
         </div>
-        <Link href="/orders/dispatch/new" className="btn-primary shadow-glow w-full md:w-auto h-14">
-            <Plus className="w-4 h-4" />
-            <span>New Sale Order</span>
-        </Link>
+        {(session.role === 'OWNER' || session.role === 'MANAGER') && (
+          <Link href="/orders/dispatch/new" className="btn-primary shadow-glow w-full md:w-auto h-14">
+              <Plus className="w-4 h-4" />
+              <span>New Sale Order</span>
+          </Link>
+        )}
       </header>
 
       {/* Stats row */}

@@ -80,6 +80,11 @@ body {
 .card-premium {
   @apply bg-surface-lowest p-6 rounded-3xl border border-border-ghost transition-all duration-300;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+.card-premium:focus-within {
+  z-index: 40;
 }
 
 .card-premium:hover {

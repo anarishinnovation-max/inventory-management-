@@ -1,24 +1,32 @@
 "use client";
 
-import { Edit, Eye, Flame, Loader2, ShoppingCart, Trash2 } from "lucide-react";
+import { clsx, type ClassValue } from "clsx";
+import { Edit, Eye, Flame, Loader2, MapPin, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { ItemBreakdownModal } from "./ItemBreakdownModal";
 import { ScrapModal } from "./ScrapModal";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export default function InventoryTableActions({
   itemId,
   itemName,
   totalStock,
   incomingQty,
-  minStockLevel
+  minStockLevel,
+  userRole
 }: {
   itemId: string;
   itemName: string;
   totalStock: number;
   incomingQty: number;
   minStockLevel: number;
+  userRole: string;
 }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -68,6 +76,17 @@ export default function InventoryTableActions({
         <Eye className="w-5 h-5" />
       </button>
 
+      <button
+        onClick={() => router.push(`/inventory/${itemId}/edit`)}
+        className={cn(
+          "p-2 rounded-xl transition-all",
+          userRole === 'EMPLOYEE' ? "hover:bg-primary/10 text-primary" : "hover:bg-surface-low text-muted-foreground"
+        )}
+        title={userRole === 'EMPLOYEE' ? "Manage Stock & Rack" : "Edit Item"}
+      >
+        {userRole === 'EMPLOYEE' ? <MapPin className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
+      </button>
+
       <ItemBreakdownModal
         isOpen={showBreakdown}
         onClose={() => setShowBreakdown(false)}
@@ -83,21 +102,16 @@ export default function InventoryTableActions({
         itemName={itemName}
         totalStock={totalStock}
       />
-      <Link
-        href={`/inventory/${itemId}/edit`}
-        className="p-2 hover:bg-surface-low rounded-xl text-muted-foreground transition-colors"
-        title="Edit Item"
-      >
-        <Edit className="w-4 h-4" />
-      </Link>
-      <button
-        onClick={() => setShowScrap(true)}
-        className="p-2 hover:bg-error/10 rounded-xl text-error transition-all border border-transparent hover:border-error/20"
-        title="Scrap Inventory"
-        suppressHydrationWarning
-      >
-        <Flame className="w-4 h-4" />
-      </button>
+      {userRole !== 'EMPLOYEE' && (
+        <button
+          onClick={() => setShowScrap(true)}
+          className="p-2 hover:bg-error/10 rounded-xl text-error transition-all border border-transparent hover:border-error/20"
+          title="Scrap Inventory"
+          suppressHydrationWarning
+        >
+          <Flame className="w-4 h-4" />
+        </button>
+      )}
       {/* <button
         onClick={handleDelete}
         disabled={isDeleting}

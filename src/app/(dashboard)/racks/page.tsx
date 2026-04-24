@@ -16,22 +16,29 @@ import {
 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import AddRackButton from "./AddRackButton";
+import { cacheQuery } from "@/lib/cache";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-import { cacheQuery } from "@/lib/cache";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-async function getRacksRaw(query?: string) {
-  const where: any = {};
+async function getRacksRaw(query?: string, companyId?: string) {
+  if (!companyId) return [];
+  const where: any = { companyId };
 
   if (query) {
-    where.OR = [
-      { rackNumber: { contains: query, mode: 'insensitive' } },
-      { zone: { contains: query, mode: 'insensitive' } },
-      { stocks: { some: { item: { name: { contains: query, mode: 'insensitive' } } } } },
-      { stocks: { some: { item: { sku: { contains: query, mode: 'insensitive' } } } } },
+    where.AND = [
+      {
+        OR: [
+          { rackNumber: { contains: query, mode: 'insensitive' } },
+          { zone: { contains: query, mode: 'insensitive' } },
+          { stocks: { some: { item: { name: { contains: query, mode: 'insensitive' } } } } },
+          { stocks: { some: { item: { sku: { contains: query, mode: 'insensitive' } } } } },
+        ]
+      }
     ];
   }
 
@@ -63,10 +70,10 @@ async function getRacksRaw(query?: string) {
   }));
 }
 
-const getRacks = (query?: string) =>
+const getRacks = (query?: string, companyId?: string) =>
   cacheQuery(
-    () => getRacksRaw(query),
-    ["racks", query || "none"],
+    () => getRacksRaw(query, companyId),
+    ["racks", query || "none", companyId || "none"],
     60
   )();
 
@@ -75,10 +82,13 @@ export default async function RacksPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
   const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
 
-  const racks = await getRacks(q).catch((e) => {
+  const racks = await getRacks(q, session.companyId).catch((e: any) => {
     console.error("Failed to fetch racks:", e);
     return [];
   });
@@ -91,17 +101,13 @@ export default async function RacksPage({
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Home</span>
             <span className="opacity-30">/</span>
-            <span className="text-primary">Stock Room</span>
+            <span className="text-primary">Inventory Room</span>
           </nav>
           <h2 className="heading-xl tracking-tight">Rack List</h2>
           <p className="text-muted-foreground mt-2 font-medium">See where all your items are stored.</p>
         </div>
         <div className="flex gap-3">
-          <button className="btn-secondary h-14">
-            <MapPin className="w-4 h-4 text-primary" />
-            View 3D Map
-          </button>
-          <AddRackButton />
+          {(session.role === 'OWNER' || session.role === 'MANAGER') && <AddRackButton />}
         </div>
       </div>
 

@@ -10,12 +10,16 @@ export const InventoryService = {
     sku: string;
     categoryId: string;
     unit: string;
+    companyId: string;
     minStockLevel?: number;
     isCritical?: boolean;
   }) {
-    // 0. Check SKU uniqueness
-    const existing = await (prisma as any).item.findFirst({
-      where: { sku: data.sku },
+    // 0. Check SKU uniqueness within company
+    const existing = await prisma.item.findFirst({
+      where: { 
+        sku: data.sku,
+        companyId: data.companyId
+      },
     });
     if (existing) {
       throw new Error(`SKU_EXISTS:${data.sku}`);
@@ -28,6 +32,7 @@ export const InventoryService = {
           sku: data.sku,
           unit: data.unit,
           category: { connect: { id: data.categoryId } },
+          company: { connect: { id: data.companyId } },
           minStockLevel: data.minStockLevel || 0,
           isCritical: data.isCritical || false
         },
@@ -39,12 +44,14 @@ export const InventoryService = {
           quantityAvailable: 0,
           quantityReserved: 0,
           quantityInTransit: 0,
+          company: { connect: { id: data.companyId } },
         },
       });
 
       await tx.inventoryTransaction.create({
         data: {
           item: { connect: { id: item.id } },
+          company: { connect: { id: data.companyId } },
           type: "INITIAL_REGISTRY",
           quantity: 0,
           referenceType: "ITEM_CREATE",
@@ -87,6 +94,7 @@ export const InventoryService = {
           data: {
             item: { connect: { id: update.itemId } },
             vendor: { connect: { id: po.vendorId } },
+            company: { connect: { id: po.companyId } },
             user: userExists ? { connect: { id: userId } } : undefined,
             type: "PURCHASE",
             quantity: update.receivedQty,
@@ -126,7 +134,12 @@ export const InventoryService = {
             });
           } else {
             await tx.stock.create({
-              data: { itemId: update.itemId, rackId: defaultRack.id, quantity: update.receivedQty },
+              data: { 
+                itemId: update.itemId, 
+                rackId: defaultRack.id, 
+                quantity: update.receivedQty,
+                companyId: po.companyId
+              },
             });
           }
         }
@@ -190,7 +203,7 @@ export const InventoryService = {
   /**
    * Creates a new Dispatch Order.
    */
-  async createDispatchOrder(data: { customerId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date }) {
+  async createDispatchOrder(data: { customerId: string; companyId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date }) {
     const status = data.status || "pending";
 
     return await (prisma as any).$transaction(async (tx: any) => {
@@ -198,6 +211,7 @@ export const InventoryService = {
       const order = await tx.dispatchOrder.create({
         data: {
           customerId: data.customerId,
+          companyId: data.companyId,
           status: status,
           paymentMode: data.paymentMode || "Cash",
           expectedDelivery: data.expectedDelivery ? new Date(data.expectedDelivery) : null,
@@ -259,6 +273,7 @@ export const InventoryService = {
         await tx.inventoryTransaction.create({
           data: {
             item: { connect: { id: line.itemId } },
+            company: { connect: { id: order.companyId } },
             customer: order.customerId ? { connect: { id: order.customerId } } : undefined,
             type: "SALE",
             quantity: -line.quantity,
@@ -279,11 +294,12 @@ export const InventoryService = {
   /**
    * Records scrapped inventory.
    */
-  async scrapInventory(itemId: string, qty: number, reason?: string) {
+  async scrapInventory(itemId: string, companyId: string, qty: number, reason?: string) {
     return await (prisma as any).$transaction(async (tx: any) => {
       await tx.inventoryTransaction.create({
         data: {
           item: { connect: { id: itemId } },
+          company: { connect: { id: companyId } },
           type: "SCRAP",
           quantity: -qty,
           referenceType: "MANUAL",
@@ -303,7 +319,7 @@ export const InventoryService = {
   /**
    * Updates stock in a specific rack.
    */
-  async updateStock(itemId: string, rackId: string, quantity: number, userId: string, remarks?: string) {
+  async updateStock(itemId: string, rackId: string, quantity: number, userId: string, companyId: string, remarks?: string) {
     return await (prisma as any).$transaction(async (tx: any) => {
       const currentStock = await tx.stock.findFirst({
         where: { itemId, rackId },
@@ -319,11 +335,11 @@ export const InventoryService = {
         });
       } else {
         await tx.stock.create({
-          data: { itemId, rackId, quantity },
+          data: { itemId, rackId, quantity, companyId },
         });
       }
 
-      const existingInv = await tx.inventory.findFirst({ where: { itemId } });
+      const existingInv = await tx.inventory.findUnique({ where: { itemId } });
       if (existingInv) {
         await tx.inventory.update({
             where: { id: existingInv.id },
@@ -332,10 +348,11 @@ export const InventoryService = {
       } else {
         await tx.inventory.create({
             data: {
-                item: { connect: { id: itemId } },
+                itemId: itemId,
                 quantityAvailable: quantity,
                 quantityInTransit: 0,
                 quantityReserved: 0,
+                companyId: companyId
             }
         });
       }
@@ -344,6 +361,7 @@ export const InventoryService = {
         data: {
           item: { connect: { id: itemId } },
           rack: { connect: { id: rackId } },
+          company: { connect: { id: companyId } },
           type: adjustmentQty >= 0 ? "ADJUSTMENT_IN" : "ADJUSTMENT_OUT",
           quantity: Math.abs(adjustmentQty),
           referenceType: "MANUAL",
@@ -362,6 +380,7 @@ export const InventoryService = {
     itemId: string;
     rackId: string;
     userId: string;
+    companyId: string;
     quantity: number;
     customerId?: string;
     remarks?: string;
@@ -389,6 +408,7 @@ export const InventoryService = {
         data: {
           item: { connect: { id: params.itemId } },
           rack: { connect: { id: params.rackId } },
+          company: { connect: { id: params.companyId } },
           type: "OUTWARD",
           quantity: -params.quantity,
           referenceType: "MANUAL_DISPATCH",
@@ -401,7 +421,7 @@ export const InventoryService = {
   /**
    * Records scrapped inventory for multiple items.
    */
-  async bulkScrapInventory(itemIds: string[], reason?: string) {
+  async bulkScrapInventory(itemIds: string[], companyId: string, reason?: string) {
     return await (prisma as any).$transaction(async (tx: any) => {
       for (const itemId of itemIds) {
         const inventory = await tx.inventory.findFirst({ where: { itemId } });
@@ -412,6 +432,7 @@ export const InventoryService = {
         await tx.inventoryTransaction.create({
           data: {
             item: { connect: { id: itemId } },
+            company: { connect: { id: companyId } },
             type: "SCRAP",
             quantity: -qty,
             referenceType: "MANUAL_BULK",

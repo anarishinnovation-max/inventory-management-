@@ -24,16 +24,24 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-async function getVendorsWithPricing(query?: string) {
-  const where: any = {};
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+async function getVendorsWithPricing(query?: string, companyId?: string) {
+  if (!companyId) return [];
+  const where: any = { companyId };
   
   if (query) {
-    where.OR = [
-      { name: { contains: query, mode: 'insensitive' } },
-      { contactPerson: { contains: query, mode: 'insensitive' } },
-      { email: { contains: query, mode: 'insensitive' } },
-      { purchaseOrders: { some: { items: { some: { item: { name: { contains: query, mode: 'insensitive' } } } } } } },
-      { purchaseOrders: { some: { items: { some: { item: { sku: { contains: query, mode: 'insensitive' } } } } } } },
+    where.AND = [
+      {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { contactPerson: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } },
+          { purchaseOrders: { some: { items: { some: { item: { name: { contains: query, mode: 'insensitive' } } } } } } },
+          { purchaseOrders: { some: { items: { some: { item: { sku: { contains: query, mode: 'insensitive' } } } } } } },
+        ]
+      }
     ];
   }
 
@@ -73,10 +81,13 @@ export default async function VendorsPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
   const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
 
-  const vendors = await getVendorsWithPricing(q).catch(() => []);
+  const vendors = await getVendorsWithPricing(q, session.companyId).catch(() => []);
 
   const allCompetitiveItems: any[] = [];
   vendors.forEach((v: any) => {
@@ -118,7 +129,7 @@ export default async function VendorsPage({
                     placeholder="Search Vendor, Item or SKU..."
                 />
             </div>
-            <VendorModal />
+            {(session.role === 'OWNER' || session.role === 'MANAGER') && <VendorModal />}
         </div>
       </header>
 

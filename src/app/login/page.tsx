@@ -1,41 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User, Eye, EyeOff } from "lucide-react";
+import { handleLoginAction } from "@/lib/user-actions";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
 
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
 
-      if (res.ok) {
-        router.push("/");
-        router.refresh();
-      } else {
-        const data = await res.json();
-        setError(data.error || "Login failed");
+    startTransition(async () => {
+      const result = await handleLoginAction(formData);
+      if (result?.error) {
+        setError(result.error);
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return (
@@ -51,8 +42,8 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl primary-gradient shadow-glow mb-6 transform hover:rotate-6 transition-transform duration-500">
             <Lock className="text-white w-10 h-10" />
           </div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground mb-2">SS Cutting Tools</h1>
-          <p className="text-muted-foreground font-medium">Warehouse Management System</p>
+          <h1 className="text-4xl font-black tracking-tight text-foreground mb-2">IMS Portal</h1>
+          <p className="text-muted-foreground font-medium">Inventory Management System</p>
         </div>
 
         <div className="card-premium p-8">
@@ -111,10 +102,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={isPending}
               className="btn-primary w-full py-4 text-lg"
             >
-              {loading ? (
+              {isPending ? (
                 <span className="flex items-center gap-3">
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   Authenticating...

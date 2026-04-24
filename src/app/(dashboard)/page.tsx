@@ -28,10 +28,12 @@ function cn(...inputs: ClassValue[]) {
 
 export const dynamic = "force-dynamic";
 
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { cacheQuery } from "@/lib/cache";
 import { DashboardActions } from "./components/DashboardActions";
 
-const getCachedDashboardAnalytics = cacheQuery(
+const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
   async () => {
     const [
       stockStats,
@@ -51,22 +53,24 @@ const getCachedDashboardAnalytics = cacheQuery(
           COUNT(CASE WHEN inv."quantityAvailable" > 0 AND inv."quantityAvailable" <= i."minStockLevel" THEN 1 END)::int as low_stock
         FROM "Item" i
         LEFT JOIN "Inventory" inv ON i.id = inv."itemId"
+        WHERE i."companyId" = ${companyId}
       `,
 
       // 2. Stock Value (Optimized)
       prisma.$queryRaw<any[]>`
         SELECT SUM(t.avg_cost * inv."quantityAvailable")::numeric(15,2) as total
         FROM "Inventory" inv
+        INNER JOIN "Item" i ON inv."itemId" = i.id
         INNER JOIN (
           SELECT "itemId", AVG("costPrice") as avg_cost 
           FROM "POLineItem" 
           GROUP BY "itemId"
         ) t ON inv."itemId" = t."itemId"
-        WHERE inv."quantityAvailable" > 0
+        WHERE inv."quantityAvailable" > 0 AND i."companyId" = ${companyId}
       `,
 
       // 3. Vendor Count
-      prisma.vendor.count(),
+      prisma.vendor.count({ where: { companyId } }),
 
       // 4. Stock Flow Dynamics (Last 30 days)
       prisma.$queryRaw<any[]>`
@@ -75,7 +79,7 @@ const getCachedDashboardAnalytics = cacheQuery(
           SUM(CASE WHEN t.type IN ('PURCHASE', 'ADJUSTMENT_IN') THEN ABS(t.quantity) ELSE 0 END)::int as inbound,
           SUM(CASE WHEN t.type IN ('SALE', 'ADJUSTMENT_OUT') THEN ABS(t.quantity) ELSE 0 END)::int as outbound
         FROM "InventoryTransaction" t
-        WHERE t."createdAt" > (NOW() - INTERVAL '30 days')
+        WHERE t."createdAt" > (NOW() - INTERVAL '30 days') AND t."companyId" = ${companyId}
         GROUP BY 1
         ORDER BY 1 DESC
         LIMIT 10
@@ -83,6 +87,7 @@ const getCachedDashboardAnalytics = cacheQuery(
 
       // 5. Recent Stock Activity
       prisma.inventoryTransaction.findMany({
+        where: { companyId },
         take: 5,
         orderBy: { createdAt: 'desc' },
         include: { item: true }
@@ -95,7 +100,7 @@ const getCachedDashboardAnalytics = cacheQuery(
           SUM(ABS(t.quantity))::int as units
         FROM "InventoryTransaction" t
         INNER JOIN "Item" i ON t."itemId" = i.id
-        WHERE t.type = 'SALE' AND t."createdAt" > (NOW() - INTERVAL '30 days')
+        WHERE t.type = 'SALE' AND t."createdAt" > (NOW() - INTERVAL '30 days') AND t."companyId" = ${companyId}
         GROUP BY i.id, i.name
         ORDER BY units DESC
         LIMIT 4
@@ -109,7 +114,7 @@ const getCachedDashboardAnalytics = cacheQuery(
           inv."incomingQty"::int as incoming_qty
         FROM "Item" i
         INNER JOIN "Inventory" inv ON i.id = inv."itemId"
-        WHERE (inv."quantityAvailable" + inv."incomingQty") < i."minStockLevel"
+        WHERE (inv."quantityAvailable" + inv."incomingQty") < i."minStockLevel" AND i."companyId" = ${companyId}
         ORDER BY (inv."quantityAvailable" + inv."incomingQty") ASC
         LIMIT 3
       `,
@@ -117,6 +122,7 @@ const getCachedDashboardAnalytics = cacheQuery(
       // 8. Oldest Items
       prisma.item.findMany({
         where: {
+          companyId,
           inventory: { quantityAvailable: { gt: 0 } }
         },
         orderBy: { createdAt: 'asc' },
@@ -150,12 +156,17 @@ const getCachedDashboardAnalytics = cacheQuery(
       oldestItems: oldestItems || []
     };
   },
-  ["dashboard-analytics"],
+  ["dashboard-analytics", companyId],
   30 // Cache for 30 seconds
-);
+)();
 
 export default async function DashboardPage() {
-  const data = await getCachedDashboardAnalytics().catch((e) => {
+  const session = await getSession();
+  if (!session) {
+    redirect("/login");
+  }
+
+  const data = await getCachedDashboardAnalytics(session.companyId).catch((e) => {
     console.error("Dashboard data fetch error:", e);
     return {
       kpis: { totalItems: 0, stockValue: 0, lowStockCount: 0, outOfStockCount: 0, vendorsCount: 0 },
@@ -173,7 +184,7 @@ export default async function DashboardPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h1 className="heading-xl tracking-tight">Summary</h1>
-          <p className="text-muted-foreground mt-2 text-lg font-medium">See what is happening with your stock now.</p>
+          <p className="text-muted-foreground mt-2 text-lg font-medium">See what is happening with your inventory now.</p>
         </div>
         <DashboardActions />
       </header>
@@ -202,14 +213,14 @@ export default async function DashboardPage() {
             <div className="p-3 bg-success/10 text-success rounded-xl transition-transform group-hover:scale-110">
               <IndianRupee className="w-5 h-5" />
             </div>
-            <div className="badge bg-blue-50 text-blue-600 border-blue-100 italic lowercase font-medium">
-              Live
+            <div className="badge bg-blue-50 text-blue-600 border-blue-100 italic lowercase font-medium opacity-0">
+              {/* Live label removed */}
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Stock Value</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Value</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">₹{Number(data.kpis.stockValue).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
-            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Money in stock</p>
+            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Money in inventory</p>
           </div>
         </div>
 
@@ -223,7 +234,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Stock Alerts</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Alerts</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
             <div className="flex items-center gap-2 mt-2">
                <Link href="/inventory?status=outofstock" className="text-[10px] text-error font-black tracking-tight hover:underline bg-error/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-error/10">
@@ -339,7 +350,7 @@ export default async function DashboardPage() {
             )) : (
               <div className="flex flex-col items-center justify-center h-48 text-muted-foreground font-medium text-center">
                 <Activity className="w-8 h-8 opacity-10 mb-2" />
-                <p className="text-[10px] uppercase font-black tracking-widest">Stock is Good</p>
+                <p className="text-[10px] uppercase font-black tracking-widest">Inventory is Good</p>
               </div>
             )}
           </div>

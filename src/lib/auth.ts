@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { UserRole } from "./types";
 
 const secretKey = "secret";
 if (!process.env.JWT_SECRET && process.env.NODE_ENV === "production") {
@@ -23,22 +24,32 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
-export async function login(id: string, username: string, role: string, roleId?: string) {
+export async function login(id: string, username: string, role: UserRole, companyId: string) {
   const expires = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
-  const session = await encrypt({ id, username, role, roleId, expires });
+  const session = await encrypt({ id, username, role, companyId, expires });
 
   // Save the session in a cookie
-  (await cookies()).set("session", session, { expires, httpOnly: true });
+  (await cookies()).set("session", session, { 
+    expires, 
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/"
+  });
 }
 
 export async function logout() {
-  (await cookies()).set("session", "", { expires: new Date(0) });
+  (await cookies()).set("session", "", { expires: new Date(0), path: "/" });
 }
 
 export async function getSession() {
   const session = (await cookies()).get("session")?.value;
   if (!session) return null;
-  return await decrypt(session);
+  try {
+    return await decrypt(session);
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function updateSession(request: NextRequest) {
@@ -46,14 +57,21 @@ export async function updateSession(request: NextRequest) {
   if (!session) return;
 
   // Refresh the session so it doesn't expire
-  const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 2 * 60 * 60 * 1000);
-  const res = NextResponse.next();
-  res.cookies.set({
-    name: "session",
-    value: await encrypt(parsed),
-    httpOnly: true,
-    expires: parsed.expires,
-  });
-  return res;
+  try {
+    const parsed = await decrypt(session);
+    parsed.expires = new Date(Date.now() + 2 * 60 * 60 * 1000);
+    const res = NextResponse.next();
+    res.cookies.set({
+      name: "session",
+      value: await encrypt(parsed),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      expires: parsed.expires,
+      path: "/"
+    });
+    return res;
+  } catch (e) {
+    return;
+  }
 }

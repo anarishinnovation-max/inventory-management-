@@ -4,13 +4,19 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
 
+import { getSession } from "@/lib/auth";
+
 export async function GET(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
 
     if (minimal) {
       const orders = await prisma.dispatchOrder.findMany({
+        where: { companyId: session.companyId },
         select: {
           id: true,
           status: true,
@@ -26,6 +32,7 @@ export async function GET(request: Request) {
     }
 
     const orders = await prisma.dispatchOrder.findMany({
+      where: { companyId: session.companyId },
       include: {
         customer: true,
         items: {
@@ -42,6 +49,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { customerId, items, paymentMode, status, expectedDelivery } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
 
     if (!customerId || !items || !items.length) {
@@ -50,6 +62,7 @@ export async function POST(request: Request) {
 
     const order = await InventoryService.createDispatchOrder({
       customerId,
+      companyId: session.companyId,
       paymentMode: paymentMode || "Cash",
       status: status || "pending",
       expectedDelivery: expectedDelivery,

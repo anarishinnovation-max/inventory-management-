@@ -2,7 +2,10 @@
 
 import prisma from "./prisma";
 import { revalidatePath } from "next/cache";
-import { getSession } from "./auth";
+import { getSession, logout } from "./auth";
+import { UserRole } from "./types";
+import { isOwner } from "./rbac-utils";
+import { redirect } from "next/navigation";
 
 export async function updateUserSettings(data: { emailAlerts?: boolean, twoFactorEnabled?: boolean }) {
   const session = await getSession();
@@ -16,6 +19,20 @@ export async function updateUserSettings(data: { emailAlerts?: boolean, twoFacto
   });
 
   revalidatePath("/settings");
+}
+
+export async function updateUserRole(userId: string, newRole: UserRole) {
+  // Only an OWNER can change roles
+  if (!(await isOwner())) {
+    throw new Error("Unauthorized: Only an OWNER can change roles.");
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { role: newRole },
+  });
+
+  revalidatePath("/admin");
 }
 
 export async function createCustomer(data: { name: string, contact?: string, email?: string, address?: string }) {
@@ -34,4 +51,38 @@ export async function createVendor(data: { name: string, contact?: string, email
 
   revalidatePath("/vendors");
   return vendor;
+}
+
+import bcrypt from "bcryptjs";
+import { login } from "./auth";
+
+export async function handleLogout() {
+  await logout();
+  redirect("/login");
+}
+
+export async function handleLoginAction(formData: FormData) {
+  const username = formData.get("username") as string;
+  const password = formData.get("password") as string;
+
+  if (!username || !password) {
+    return { error: "Missing fields" };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { username }
+  });
+
+  if (!user) {
+    return { error: "Invalid credentials" };
+  }
+
+  const passwordMatch = await bcrypt.compare(password, user.password);
+
+  if (!passwordMatch) {
+    return { error: "Invalid credentials" };
+  }
+
+  await login(user.id, user.username, user.role as UserRole, user.companyId);
+  redirect("/");
 }

@@ -37,6 +37,8 @@ function formatTime(value: string | Date) {
 }
 
 import { cacheQuery } from "@/lib/cache";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 async function getPurchaseOrdersRaw(filters: {
   q?: string;
@@ -47,10 +49,12 @@ async function getPurchaseOrdersRaw(filters: {
   endDate?: string;
   minAmount?: string;
   maxAmount?: string;
-}) {
+}, companyId?: string) {
+  if (!companyId) return [];
   const { q, status, vendorId, itemId, startDate, endDate, minAmount, maxAmount } = filters;
 
   const where: any = {
+    companyId,
     AND: []
   };
 
@@ -133,10 +137,10 @@ async function getPurchaseOrdersRaw(filters: {
   return filteredOrders;
 }
 
-const getPurchaseOrders = (filters: any) => 
+const getPurchaseOrders = (filters: any, companyId?: string) => 
   cacheQuery(
-    () => getPurchaseOrdersRaw(filters),
-    ["purchase-orders", JSON.stringify(filters)],
+    () => getPurchaseOrdersRaw(filters, companyId),
+    ["purchase-orders", JSON.stringify(filters), companyId || "none"],
     60
   )();
 
@@ -145,6 +149,9 @@ export default async function PurchaseOrdersPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
   const sParams = await searchParams;
   const filters = {
     q: typeof sParams.q === 'string' ? sParams.q : '',
@@ -158,16 +165,16 @@ export default async function PurchaseOrdersPage({
     maxAmount: typeof sParams.maxAmount === 'string' ? sParams.maxAmount : undefined,
   };
 
-  const pos = await getPurchaseOrders(filters).catch(() => []);
+  const pos = await getPurchaseOrders(filters, session.companyId).catch(() => []);
 
   // Fetch data for filters
   const [vendors, items] = await Promise.all([
-    prisma.vendor.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
-    prisma.item.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+    prisma.vendor.findMany({ where: { companyId: session.companyId }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+    prisma.item.findMany({ where: { companyId: session.companyId }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
   ]);
 
   // Calculate stats for the KPI grid
-  const allPos = await prisma.purchaseOrder.findMany({ select: { status: true, paymentStatus: true } });
+  const allPos = await prisma.purchaseOrder.findMany({ where: { companyId: session.companyId }, select: { status: true } });
   const pendingCount = allPos.filter(o => o.status.toUpperCase() === "PENDING").length;
   const orderedCount = allPos.filter(o => o.status.toUpperCase() === "ORDERED").length;
   const unpaidCount = 0; // Removed payment tracking
@@ -184,10 +191,12 @@ export default async function PurchaseOrdersPage({
           <h1 className="heading-xl tracking-tight">Purchase Bills</h1>
           <p className="text-muted-foreground mt-2 font-medium">Manage procurement, payments, and vendor tracking.</p>
         </div>
-        <Link href="/orders/purchase/new" className="btn-primary shadow-glow">
-          <Plus className="w-4 h-4" />
-          <span>New Purchase Order</span>
-        </Link>
+        {(session.role === 'OWNER' || session.role === 'MANAGER') && (
+          <Link href="/orders/purchase/new" className="btn-primary shadow-glow">
+            <Plus className="w-4 h-4" />
+            <span>New Purchase Order</span>
+          </Link>
+        )}
       </header>
 
       {/* KPI Bento Grid */}

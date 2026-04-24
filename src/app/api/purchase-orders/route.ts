@@ -3,13 +3,19 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+import { getSession } from "@/lib/auth";
+
 export async function GET(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
 
     if (minimal) {
       const orders = await prisma.purchaseOrder.findMany({
+        where: { companyId: session.companyId },
         select: {
           id: true,
           status: true,
@@ -25,6 +31,7 @@ export async function GET(request: Request) {
     }
 
     const orders = await prisma.purchaseOrder.findMany({
+      where: { companyId: session.companyId },
       include: {
         vendor: true,
         items: {
@@ -42,6 +49,9 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const body = (await request.json()) as {
       vendorId?: string;
       items?: Array<{ itemId: string; quantityOrdered: number | string; costPrice: number | string }>;
@@ -54,13 +64,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const order = await (prisma as any).$transaction(async (tx: any) => {
+    const order = await prisma.$transaction(async (tx) => {
       const po = await tx.purchaseOrder.create({
         data: {
           vendorId,
           paymentMode: paymentMode || "Cash",
           expectedDelivery: expectedDelivery ? new Date(expectedDelivery) : null,
           status: "ORDERED",
+          companyId: session.companyId,
           items: {
             create: items.map((item) => ({
               itemId: item.itemId,
@@ -73,11 +84,15 @@ export async function POST(request: Request) {
 
       for (const item of items) {
         const qty = Number(item.quantityOrdered);
-        const existingInv = await tx.inventory.findFirst({
+        const existingInv = await tx.inventory.findUnique({
           where: { itemId: item.itemId }
         });
 
         if (existingInv) {
+          // Verify companyId matches
+          if (existingInv.companyId !== session.companyId) {
+             throw new Error("Unauthorized inventory access");
+          }
           await tx.inventory.update({
             where: { id: existingInv.id },
             data: {
@@ -88,11 +103,12 @@ export async function POST(request: Request) {
         } else {
           await tx.inventory.create({
             data: {
-              item: { connect: { id: item.itemId } },
+              itemId: item.itemId,
               quantityAvailable: 0,
               incomingQty: qty,
               quantityInTransit: qty,
               quantityReserved: 0,
+              companyId: session.companyId
             },
           });
         }

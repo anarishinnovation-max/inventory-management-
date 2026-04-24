@@ -53,7 +53,7 @@ export default function PremiumSelect({
   const displayValue = value === "all" || !value ? placeholder : value;
 
   return (
-    <div className="relative w-full" ref={containerRef}>
+    <div className={cn("relative w-full", isOpen && "z-50")} ref={containerRef}>
       <button
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}

@@ -6,11 +6,15 @@ import { getSession } from "@/lib/auth";
 
 export async function GET(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
 
     if (minimal) {
-      const racks = await (prisma as any).rack.findMany({
+      const racks = await prisma.rack.findMany({
+        where: { companyId: session.companyId },
         select: {
           id: true,
           rackNumber: true,
@@ -21,7 +25,8 @@ export async function GET(request: Request) {
       return NextResponse.json(racks);
     }
 
-    const racks = await (prisma as any).rack.findMany({
+    const racks = await prisma.rack.findMany({
+      where: { companyId: session.companyId },
       orderBy: { rackNumber: "asc" },
       include: {
         _count: {
@@ -48,8 +53,12 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Missing rack number" }, { status: 400 });
     }
 
-    const rack = await (prisma as any).rack.create({
-      data: { rackNumber, zone },
+    const rack = await prisma.rack.create({
+      data: { 
+        rackNumber, 
+        zone,
+        companyId: session.companyId
+      },
     });
     return NextResponse.json(rack, { status: 201 });
   } catch (error: any) {

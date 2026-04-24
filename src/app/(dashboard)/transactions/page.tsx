@@ -19,8 +19,13 @@ function cn(...inputs: ClassValue[]) {
 
 import { cacheQuery } from "@/lib/cache";
 
-async function getTransactionsRaw() {
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+async function getTransactionsRaw(companyId?: string) {
+  if (!companyId) return [];
   const transactions = await (prisma as any).inventoryTransaction.findMany({
+    where: { companyId },
     include: {
       item: true,
       rack: true,
@@ -36,14 +41,17 @@ async function getTransactionsRaw() {
   return transactions;
 }
 
-const getTransactions = cacheQuery(
-  () => getTransactionsRaw(),
-  ["transactions-log"],
+const getTransactions = (companyId?: string) => cacheQuery(
+  () => getTransactionsRaw(companyId),
+  ["transactions-log", companyId || "none"],
   60
-);
+)();
 
 export default async function TransactionsPage() {
-  const transactions = await getTransactions().catch((e) => {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
+  const transactions = await getTransactions(session.companyId).catch((e) => {
       console.error("Audit log fetch error:", e);
       return [];
   });

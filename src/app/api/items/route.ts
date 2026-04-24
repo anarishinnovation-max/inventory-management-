@@ -3,14 +3,25 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
+import { getSession } from "@/lib/auth";
+import { requirePermission } from "@/lib/rbac-utils";
 
 export async function GET(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    await requirePermission("items:view");
+
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
 
     if (minimal) {
-      const items = await (prisma as any).item.findMany({
+      const items = await prisma.item.findMany({
+        where: {
+          companyId: session.companyId
+        },
         select: {
           id: true,
           sku: true,
@@ -28,7 +39,10 @@ export async function GET(request: Request) {
       return NextResponse.json(items);
     }
 
-    const items = await (prisma as any).item.findMany({
+    const items = await prisma.item.findMany({
+      where: {
+        companyId: session.companyId
+      },
       include: {
         category: true,
         inventory: {
@@ -57,6 +71,12 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    await requirePermission("items:create");
+
     const data = await request.json();
     const { name, sku, categoryId, unit, minStockLevel, isCritical } = data;
     
@@ -69,6 +89,7 @@ export async function POST(request: Request) {
       sku,
       categoryId,
       unit,
+      companyId: session.companyId,
       minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
       isCritical: !!isCritical
     });

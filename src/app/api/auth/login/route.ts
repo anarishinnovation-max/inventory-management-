@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { login } from "@/lib/auth";
+import { UserRole } from "@/lib/types";
 
 export async function POST(request: Request) {
   try {
@@ -13,12 +14,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // Simplified user lookup: Ignore tenantId
-    const user = await (prisma as any).user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
         username
-      },
-      include: { roleObj: true }
+      }
     });
 
     if (!user) {
@@ -31,8 +30,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Login without tenant context
-    await login(user.id, user.username, user.role, user.roleId || undefined);
+    // Login with company context and Role enum
+    await login(user.id, user.username, user.role as UserRole, user.companyId);
 
     return NextResponse.json({
       success: true,
@@ -40,8 +39,7 @@ export async function POST(request: Request) {
         id: user.id,
         username: user.username,
         role: user.role,
-        roleId: user.roleId,
-        roleName: user.roleObj?.name || user.role
+        companyId: user.companyId
       }
     });
   } catch (error: any) {

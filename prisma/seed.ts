@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
+import { UserRole } from "../src/lib/types";
 
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });
@@ -10,48 +11,70 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("Seeding database (Single Tenant)...");
+  console.log("Seeding database (Multi-Tenant: SS Cuttings Tool & Aniket Industries)...");
 
-  // 1. Create Categories
+  // 1. Create Companies
+  const ssCuttings = await prisma.company.upsert({
+    where: { id: "ss-cuttings-id" },
+    update: { name: "SS Cuttings Tool" },
+    create: {
+      id: "ss-cuttings-id",
+      name: "SS Cuttings Tool",
+    },
+  });
+
+  const aniketIndustries = await prisma.company.upsert({
+    where: { id: "aniket-industries-id" },
+    update: { name: "Aniket Industries" },
+    create: {
+      id: "aniket-industries-id",
+      name: "Aniket Industries",
+    },
+  });
+
+  const ssCompanyId = ssCuttings.id;
+  const aniketCompanyId = aniketIndustries.id;
+
+  // 2. Create Categories for SS Cuttings
   const categories = ["Inserts", "Tool Holders", "Drills", "Milling", "Spare Parts"];
   const categoryMap: Record<string, string> = {};
 
   for (const name of categories) {
     const cat = await prisma.category.upsert({
-      where: { name },
+      where: { name_companyId: { name, companyId: ssCompanyId } },
       update: {},
-      create: { name },
+      create: { name, companyId: ssCompanyId },
     });
     categoryMap[name] = cat.id;
   }
 
-  // 2. Create Racks
+  // 3. Create Racks for SS Cuttings
   const racks = ["A1", "A2", "B1", "B2", "C1"];
   const rackMap: Record<string, string> = {};
 
   for (const rackNumber of racks) {
     const r = await prisma.rack.upsert({
-      where: { rackNumber },
+      where: { rackNumber_companyId: { rackNumber, companyId: ssCompanyId } },
       update: {},
-      create: { rackNumber },
+      create: { rackNumber, companyId: ssCompanyId },
     });
     rackMap[rackNumber] = r.id;
   }
 
-  // 3. Create Vendors
+  // 4. Create Vendors for SS Cuttings
   const vendorsData = ["SANDVIK", "KENNAMETAL", "WIDIA", "LOCAL_SUPPLIER"];
   const vendorMap: Record<string, string> = {};
 
   for (const name of vendorsData) {
     const v = await prisma.vendor.upsert({
-      where: { name },
+      where: { name_companyId: { name, companyId: ssCompanyId } },
       update: {},
-      create: { name },
+      create: { name, companyId: ssCompanyId },
     });
     vendorMap[name] = v.id;
   }
 
-  // 4. Create Items
+  // 5. Create Items for SS Cuttings
   const itemsData = [
     { name: "ETJNL 2525 M16", sku: "ETJNL-2525", category: "Tool Holders" },
     { name: "ECLNL 2525 M12", sku: "ECLNL-2525", category: "Tool Holders" },
@@ -60,54 +83,76 @@ async function main() {
 
   for (const item of itemsData) {
     const createdItem = await prisma.item.upsert({
-      where: { sku: item.sku },
+      where: { sku_companyId: { sku: item.sku, companyId: ssCompanyId } },
       update: { name: item.name },
       create: {
         name: item.name,
         sku: item.sku,
         unit: "PCS",
         categoryId: categoryMap[item.category],
+        companyId: ssCompanyId,
       },
     });
 
     // Initialize Inventory for each item
     await prisma.inventory.upsert({
       where: { itemId: createdItem.id },
-      update: {},
+      update: { companyId: ssCompanyId },
       create: {
         itemId: createdItem.id,
         quantityAvailable: 100,
+        companyId: ssCompanyId,
       }
     });
   }
 
-  // 5. Create Roles and Users
-  const roles = ["ADMIN", "MANAGER", "STAFF"];
+  // 6. Create Users
   const hashedPassword = await bcrypt.hash("admin123", 10);
 
-  for (const roleName of roles) {
-    const role = await prisma.role.upsert({
-      where: { name: roleName },
-      update: {},
-      create: { name: roleName },
-    });
+  // SS Cuttings Users
+  const ssUsers = [
+    { username: "ss_admin", name: "SS Admin", role: UserRole.OWNER },
+    { username: "ss_manager", name: "SS Manager", role: UserRole.MANAGER },
+    { username: "ss_employee", name: "SS Employee", role: UserRole.EMPLOYEE },
+    { username: "admin", name: "System Admin", role: UserRole.OWNER },
+  ];
 
-    if (roleName === "ADMIN") {
-      await prisma.user.upsert({
-          where: { username: "admin" },
-          update: { password: hashedPassword },
-          create: {
-              username: "admin",
-              password: hashedPassword,
-              name: "System Admin",
-              roleId: role.id,
-              role: "admin"
-          }
-      });
-    }
+  for (const u of ssUsers) {
+    await prisma.user.upsert({
+      where: { username: u.username },
+      update: { password: hashedPassword, role: u.role, companyId: ssCompanyId },
+      create: {
+        username: u.username,
+        password: hashedPassword,
+        name: u.name,
+        role: u.role,
+        companyId: ssCompanyId
+      }
+    });
   }
 
-  console.log("✅ Seed database completed successfully!");
+  // Aniket Industries Users
+  const aniketUsers = [
+    { username: "aniket", name: "Aniket Gupta", role: UserRole.OWNER },
+    { username: "aniket_manager", name: "Aniket Manager", role: UserRole.MANAGER },
+    { username: "aniket_employee", name: "Aniket Employee", role: UserRole.EMPLOYEE },
+  ];
+
+  for (const u of aniketUsers) {
+    await prisma.user.upsert({
+      where: { username: u.username },
+      update: { password: hashedPassword, role: u.role, companyId: aniketCompanyId },
+      create: {
+        username: u.username,
+        password: hashedPassword,
+        name: u.name,
+        role: u.role,
+        companyId: aniketCompanyId
+      }
+    });
+  }
+
+  console.log("✅ Seed database (Two Companies) completed successfully!");
 }
 
 main()

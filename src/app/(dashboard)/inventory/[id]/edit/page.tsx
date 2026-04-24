@@ -35,23 +35,27 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [isCritical, setIsCritical] = useState(false);
   const [itemData, setItemData] = useState<any>(null);
+  const [userRole, setUserRole] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [itemRes, catRes] = await Promise.all([
+        const [itemRes, catRes, sessionRes] = await Promise.all([
             fetch(`/api/items/${id}`),
-            fetch("/api/categories")
+            fetch("/api/categories"),
+            fetch("/api/auth/session")
         ]);
 
         if (itemRes.ok && catRes.ok) {
           const item = await itemRes.json();
           const cats = await catRes.json();
+          const session = sessionRes.ok ? await sessionRes.json() : null;
           
           setItemData(item);
           setCategories(cats);
           setSelectedCategoryId(item.categoryId);
           setIsCritical(item.isCritical);
+          setUserRole(session?.role || "");
         } else {
           setError("Failed to fetch necessary data.");
         }
@@ -64,6 +68,8 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
 
     fetchData();
   }, [id]);
+
+  const isEmployee = userRole === "EMPLOYEE";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -139,15 +145,17 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           <h2 className="text-4xl font-black tracking-tight text-foreground">Edit Item</h2>
           <p className="text-muted-foreground font-medium">Update item details</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
-            Cancel
-          </Link>
-          <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
-            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
+        {!isEmployee && (
+          <div className="flex items-center gap-3">
+            <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
+              Cancel
+            </Link>
+            <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        )}
       </div>
 
       {error && (
@@ -170,7 +178,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             <div className="space-y-6">
               <div>
                 <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Item Name</label>
-                <input required name="name" defaultValue={itemData?.name} className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-[15px] font-bold placeholder:text-muted-foreground/50 text-foreground" placeholder="e.g. Motor, Bolt, Wire" type="text" />
+                <input required name="name" defaultValue={itemData?.name} readOnly={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-[15px] font-bold placeholder:text-muted-foreground/50 text-foreground", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="e.g. Motor, Bolt, Wire" type="text" />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -178,13 +186,13 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">SKU / Part Number</label>
                   <div className="relative">
                     <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                    <input required name="sku" defaultValue={itemData?.sku} className="w-full pl-12 pr-4 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold font-mono text-foreground placeholder:text-muted-foreground/50" placeholder="LXT-9982-A" type="text" />
+                    <input required name="sku" defaultValue={itemData?.sku} readOnly={isEmployee} className={cn("w-full pl-12 pr-4 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold font-mono text-foreground placeholder:text-muted-foreground/50", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="LXT-9982-A" type="text" />
                   </div>
                 </div>
                 
                 <div>
                   <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
-                  <select name="unit" defaultValue={itemData?.unit} required className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold appearance-none cursor-pointer text-foreground">
+                  <select name="unit" defaultValue={itemData?.unit} disabled={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold appearance-none cursor-pointer text-foreground", isEmployee && "opacity-60 cursor-not-allowed")}>
                     <option value="Pieces">Pieces (pcs)</option>
                     <option value="Kilograms">Kilograms (kg)</option>
                     <option value="Boxes">Boxes (box)</option>
@@ -199,12 +207,13 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                       <button 
                         key={cat.id} 
                         type="button"
-                        onClick={() => setSelectedCategoryId(cat.id)}
+                        onClick={() => !isEmployee && setSelectedCategoryId(cat.id)}
                         className={cn(
                            "px-5 py-2.5 rounded-xl text-xs font-black transition-colors border",
                            selectedCategoryId === cat.id 
                                ? "border-primary bg-primary/10 text-primary" 
-                               : "border-border-ghost text-muted-foreground hover:bg-surface-low"
+                               : "border-border-ghost text-muted-foreground hover:bg-surface-low",
+                           isEmployee && "cursor-not-allowed opacity-80"
                         )}
                       >
                          {cat.name}
@@ -213,14 +222,6 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="bg-surface-low/50 p-8 rounded-4xl border-2 border-dashed border-border-ghost flex flex-col items-center justify-center min-h-50 text-center group cursor-pointer hover:border-primary/50 transition-all hover:bg-primary/5">
-            <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors group-hover:scale-110 duration-300 mb-4">
-                <Camera className="w-6 h-6 " />
-            </div>
-            <p className="text-[15px] font-black text-foreground">Update Imagery</p>
-            <p className="text-sm font-medium text-muted-foreground mt-1">Refresh high-res product photos</p>
           </div>
         </div>
 
@@ -240,7 +241,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Alert Threshold</span>
                 </div>
                 <div className="relative">
-                  <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right pr-16 text-foreground" type="number" min="0" />
+                  <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} readOnly={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right pr-16 text-foreground", isEmployee && "opacity-60 cursor-not-allowed")} type="number" min="0" />
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-black text-muted-foreground">PCS</span>
                 </div>
               </div>
@@ -252,10 +253,11 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                 </div>
                 <button 
                   type="button" 
-                  onClick={() => setIsCritical(!isCritical)}
+                  onClick={() => !isEmployee && setIsCritical(!isCritical)}
                   className={cn(
                      "w-14 h-7 rounded-full relative transition-colors duration-300",
-                     isCritical ? "bg-primary" : "bg-muted-foreground/30"
+                     isCritical ? "bg-primary" : "bg-muted-foreground/30",
+                     isEmployee && "cursor-not-allowed opacity-60"
                   )}
                 >
                   <div className={cn(
@@ -323,9 +325,11 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             <p className="text-xs font-bold text-muted-foreground mt-0.5">Specifications will be updated across all warehouse modules instantly.</p>
           </div>
         </div>
-        <button type="submit" disabled={loading} className="w-full md:w-auto px-10 py-4 text-[15px] font-black text-white bg-foreground rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2">
-           {loading ? "Syncing..." : "Apply Global Changes"}
-        </button>
+        {!isEmployee && (
+          <button type="submit" disabled={loading} className="w-full md:w-auto px-10 py-4 text-[15px] font-black text-white bg-foreground rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2">
+             {loading ? "Syncing..." : "Apply Global Changes"}
+          </button>
+        )}
       </div>
     </form>
   );

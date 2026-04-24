@@ -3,13 +3,19 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+import { getSession } from "@/lib/auth";
+
 export async function GET(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
 
     if (minimal) {
       const vendors = await prisma.vendor.findMany({
+        where: { companyId: session.companyId },
         select: {
           id: true,
           name: true,
@@ -21,6 +27,7 @@ export async function GET(request: Request) {
     }
 
     const vendors = await prisma.vendor.findMany({
+      where: { companyId: session.companyId },
       orderBy: { name: "asc" },
     });
     return NextResponse.json(vendors);
@@ -31,9 +38,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const data = await request.json();
     const vendor = await prisma.vendor.create({ 
-      data: data
+      data: {
+        ...data,
+        companyId: session.companyId
+      }
     });
     return NextResponse.json(vendor, { status: 201 });
   } catch (error: any) {

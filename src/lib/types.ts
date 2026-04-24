@@ -1,6 +1,13 @@
-export enum Role {
+export enum UserRole {
   OWNER = 'OWNER',
+  MANAGER = 'MANAGER',
   EMPLOYEE = 'EMPLOYEE'
+}
+
+export interface Company {
+  id: string;
+  name: string;
+  settings?: any;
 }
 
 export enum TransactionType {
@@ -21,7 +28,8 @@ export interface User {
   id: string;
   username: string;
   name: string;
-  role: Role;
+  role: UserRole;
+  companyId: string;
 }
 
 export interface Item {
