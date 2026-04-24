@@ -18,6 +18,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import ResetPasswordModal from "./components/ResetPasswordModal";
 import AddUserModal from "./components/AddUserModal";
+import EditUserModal from "./components/EditUserModal";
 import { UserRole } from "@/lib/types";
 
 interface TeamMember {
@@ -32,6 +33,7 @@ export default function UsersPage() {
   const [users, setUsers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [resetUser, setResetUser] = useState<TeamMember | null>(null);
+  const [editUser, setEditUser] = useState<TeamMember | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
@@ -171,9 +173,15 @@ export default function UsersPage() {
                               <Key className="w-4 h-4 text-primary" />
                               Reset Password
                             </button>
-                            <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-surface-muted rounded-xl transition-colors">
+                            <button 
+                              onClick={() => {
+                                setEditUser(user);
+                                setActiveMenu(null);
+                              }}
+                              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-surface-muted rounded-xl transition-colors"
+                            >
                               <Settings2 className="w-4 h-4 text-amber-500" />
-                              Change Role
+                              Edit Member Info
                             </button>
                             <div className="h-px bg-border-ghost my-1" />
                             <button 
@@ -198,6 +206,15 @@ export default function UsersPage() {
       <ResetPasswordModal 
         user={resetUser} 
         onClose={() => setResetUser(null)} 
+      />
+
+      <EditUserModal 
+        user={editUser} 
+        onClose={() => setEditUser(null)} 
+        onSuccess={() => {
+          setEditUser(null);
+          fetchUsers();
+        }}
       />
 
       <AddUserModal 

@@ -32,8 +32,18 @@ async function main() {
     },
   });
 
+  const charuIndustries = await prisma.company.upsert({
+    where: { id: "charu-industries-id" },
+    update: { name: "Charu Industries" },
+    create: {
+      id: "charu-industries-id",
+      name: "Charu Industries",
+    },
+  });
+
   const ssCompanyId = ssCuttings.id;
   const aniketCompanyId = aniketIndustries.id;
+  const charuCompanyId = charuIndustries.id;
 
   // 2. Create Categories for SS Cuttings
   const categories = ["Inserts", "Tool Holders", "Drills", "Milling", "Spare Parts"];
@@ -152,7 +162,26 @@ async function main() {
     });
   }
 
-  console.log("✅ Seed database (Two Companies) completed successfully!");
+  // Charu Industries Users
+  const charuUsers = [
+    { username: "charu_admin", name: "Charu Admin", role: UserRole.OWNER },
+  ];
+
+  for (const u of charuUsers) {
+    await prisma.user.upsert({
+      where: { username: u.username },
+      update: { password: hashedPassword, role: u.role, companyId: charuCompanyId },
+      create: {
+        username: u.username,
+        password: hashedPassword,
+        name: u.name,
+        role: u.role,
+        companyId: charuCompanyId
+      }
+    });
+  }
+
+  console.log("✅ Seed database (Multi-Company) completed successfully!");
 }
 
 main()

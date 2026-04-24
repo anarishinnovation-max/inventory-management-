@@ -19,7 +19,7 @@ export async function PATCH(
     }
 
     const data = await request.json();
-    const { name, role } = data;
+    const { name, role, username } = data;
 
     // Fetch the target user to ensure they belong to the same company
     const targetUser = await prisma.user.findUnique({
@@ -30,11 +30,18 @@ export async function PATCH(
       return NextResponse.json({ error: "User not found or access denied" }, { status: 404 });
     }
 
+    // Check if new username is taken
+    if (username && username !== targetUser.username) {
+      const existing = await prisma.user.findUnique({ where: { username } });
+      if (existing) return NextResponse.json({ error: "Username already taken" }, { status: 409 });
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id },
       data: {
         name: name !== undefined ? name : undefined,
         role: role !== undefined ? (role as UserRole) : undefined,
+        username: username !== undefined ? username : undefined,
       },
       select: {
         id: true,
