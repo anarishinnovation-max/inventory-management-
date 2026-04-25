@@ -155,43 +155,43 @@ export default async function SupplyOutwardsPage({
 
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
-                <Package className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
+                <Package className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-primary uppercase tracking-widest">Booked Items</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{pendingItems.length}</h2>
+              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Booked Items</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
-                <Clock className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+                <Clock className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-warning uppercase tracking-widest">Units to Send</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{totalPendingUnits}</h2>
+              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Units to Send</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{totalPendingUnits}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
-                <CheckCircle2 className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+                <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-success uppercase tracking-widest">Recent Dispatches</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{transactions.length}</h2>
+              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Recent Dispatches</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{transactions.length}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-indigo-500/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-indigo-500/5 text-indigo-500 transition-transform group-hover:scale-110 border border-indigo-500/10">
-                <Users className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-indigo-500/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 transition-transform group-hover:scale-110 border border-indigo-500/10">
+                <Users className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Active Customers</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">
+              <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.15em]">Active Customers</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">
                 {new Set([...pendingItems.map(i => i.customer.id), ...transactions.map(t => t.customerId)]).size}
               </h2>
             </div>

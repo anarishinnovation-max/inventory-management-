@@ -92,39 +92,39 @@ export default async function DispatchPage({
       {/* Stats row */}
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
-                <Clock className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+                <Clock className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-warning uppercase tracking-widest">Waiting to Send</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{pendingCount}</h2>
+              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Waiting to Send</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingCount}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
-                <CheckCircle2 className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+                <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-success uppercase tracking-widest">Items Sent</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{dispatchedCount}</h2>
+              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Items Sent</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{dispatchedCount}</h2>
             </div>
         </div>
 
         {/* Empty Bento Slots for Balance */}
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient opacity-50 border-dashed">
-            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary">
-                <Plus className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient opacity-50 border-dashed">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary">
+                <Plus className="w-5 h-5" />
             </div>
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Growth Track</p>
+            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em]">Growth Track</p>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient opacity-50 border-dashed">
-            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary">
-                <Plus className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient opacity-50 border-dashed">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary">
+                <Plus className="w-5 h-5" />
             </div>
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Revenue Flow</p>
+            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em]">Revenue Flow</p>
         </div>
       </div>
 

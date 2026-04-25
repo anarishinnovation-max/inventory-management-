@@ -202,43 +202,43 @@ export default async function InventoryPage({
 
       {/* Stats row matched with Purchase Bills */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
-                <Package className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
+                <Package className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-primary uppercase tracking-widest">Total SKU's</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{totalItems}</h2>
+              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{totalItems}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-error/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-error/5 text-error transition-transform group-hover:scale-110 border border-error/10">
-                <TrendingUp className="w-6 h-6 rotate-180" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-error/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-error/5 text-error transition-transform group-hover:scale-110 border border-error/10">
+                <TrendingUp className="w-5 h-5 rotate-180" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-error uppercase tracking-widest">Urgent Stock</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{allUrgentItems.length}</h2>
+              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Urgent Stock</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{allUrgentItems.length}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
-                <TrendingUp className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+                <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-warning uppercase tracking-widest">Low Stock</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{allLowItems.length}</h2>
+              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{allLowItems.length}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[200px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-3 w-fit rounded-2xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
-                <PlusCircle className="w-6 h-6" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+                <PlusCircle className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-success uppercase tracking-widest">Out of Stock</p>
-              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{allOutOfStockItems.length}</h2>
+              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Out of Stock</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{allOutOfStockItems.length}</h2>
             </div>
         </div>
       </div>
