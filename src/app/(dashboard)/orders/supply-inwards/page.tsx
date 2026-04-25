@@ -4,19 +4,18 @@ import { clsx, type ClassValue } from "clsx";
 import {
   CheckCircle2,
   Clock,
-  Eye,
   Package,
   Truck,
   ArrowDownLeft,
-  Search,
-  ChevronRight,
   AlertCircle,
-  Calendar
+  Calendar,
+  ChevronRight
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
-
 import SearchInput from "@/components/SearchInput";
+import { SupplyInwardsFilters } from "./SupplyInwardsFilters";
+import SupplyInwardsList from "./SupplyInwardsList";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -33,13 +32,35 @@ function formatDate(value: string | Date) {
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-async function getInwardData(query?: string, companyId?: string) {
+async function getInwardData(options: { 
+  query?: string, 
+  vendorId?: string, 
+  poNumber?: string, 
+  startDate?: string, 
+  endDate?: string,
+  companyId?: string 
+}) {
+  const { query, vendorId, poNumber, startDate, endDate, companyId } = options;
   if (!companyId) return { pendingPOs: [], pendingItems: [], recentTransactions: [] };
 
   const wherePO: Prisma.PurchaseOrderWhereInput = {
     companyId,
     status: { in: ["PENDING", "ORDERED", "PARTIAL"] }
   };
+
+  if (vendorId && vendorId !== 'all') {
+    wherePO.vendorId = vendorId;
+  }
+
+  if (poNumber) {
+    wherePO.id = { contains: poNumber, mode: 'insensitive' };
+  }
+
+  if (startDate || endDate) {
+    wherePO.orderDate = {};
+    if (startDate) wherePO.orderDate.gte = new Date(startDate);
+    if (endDate) wherePO.orderDate.lte = new Date(endDate);
+  }
 
   if (query) {
     wherePO.OR = [
@@ -113,8 +134,25 @@ export default async function SupplyInwardsPage({
 
   const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
+  const vendorId = typeof sParams.vendorId === 'string' ? sParams.vendorId : 'all';
+  const poNumber = typeof sParams.poNumber === 'string' ? sParams.poNumber : '';
+  const startDate = typeof sParams.startDate === 'string' ? sParams.startDate : '';
+  const endDate = typeof sParams.endDate === 'string' ? sParams.endDate : '';
   
-  const { pendingPOs, pendingItems, recentTransactions } = await getInwardData(q, session.companyId).catch(() => ({ pendingPOs: [], pendingItems: [], recentTransactions: [] }));
+  const { pendingPOs, pendingItems, recentTransactions } = await getInwardData({
+    query: q,
+    vendorId,
+    poNumber,
+    startDate,
+    endDate,
+    companyId: session.companyId
+  }).catch(() => ({ pendingPOs: [], pendingItems: [], recentTransactions: [] }));
+
+  const vendors = await prisma.vendor.findMany({
+    where: { companyId: session.companyId },
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' }
+  });
 
   const totalPendingQty = pendingItems.reduce((acc, item) => acc + (item.quantityOrdered - item.quantityReceived), 0);
 
@@ -171,11 +209,20 @@ export default async function SupplyInwardsPage({
         </div>
       </div>
 
-      <div className="flex-1 max-w-2xl">
-         <SearchInput 
-           defaultValue={q} 
-           placeholder="Search Item, Vendor or PO..." 
-         />
+      <div className="flex flex-col md:flex-row gap-6 items-start">
+        <div className="flex-1 w-full max-w-2xl">
+           <SearchInput 
+             defaultValue={q} 
+             placeholder="Search Item, Vendor or PO..." 
+           />
+        </div>
+        <SupplyInwardsFilters 
+            vendors={vendors}
+            currentVendorId={vendorId}
+            currentPONumber={poNumber}
+            currentStartDate={startDate}
+            currentEndDate={endDate}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -189,82 +236,7 @@ export default async function SupplyInwardsPage({
             <Link href="/orders/purchase" className="text-[10px] font-black text-primary hover:underline uppercase">Full Purchase List</Link>
           </div>
 
-          <div className="card-premium !p-0 overflow-hidden border-warning/10 shadow-lg shadow-warning/5">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="table-header bg-warning/[0.02]">
-                    <th className="table-cell-header">Item Details</th>
-                    <th className="table-cell-header">Source</th>
-                    <th className="table-cell-header">Placed On</th>
-                    <th className="table-cell-header text-right">Quantity</th>
-                    <th className="table-cell-header text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-ghost">
-                  {pendingItems.length > 0 ? pendingItems.map((item: any) => {
-                    const remaining = item.quantityOrdered - item.quantityReceived;
-
-                    return (
-                      <tr key={item.id} className="group hover:bg-surface-low/30 transition-all border-b border-border-ghost last:border-0">
-                        <td className="px-8 py-5">
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-bold text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-all">
-                              {item.item.sku[0]}
-                            </div>
-                            <div className="flex flex-col min-w-0">
-                              <span className="font-bold text-foreground text-sm truncate">{item.item.name}</span>
-                              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {item.item.sku}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-8 py-5">
-                          <div className="flex flex-col gap-1">
-                            <span className="text-xs font-bold text-foreground truncate">{item.vendor.name}</span>
-                            <div className="flex items-center gap-1.5">
-                               <span className="text-[9px] font-black text-primary uppercase">PO #{item.poId.split('-')[0]}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-8 py-5">
-                          <div className="flex items-center gap-2">
-                             <Calendar className="w-4 h-4 text-muted-foreground" />
-                             <span className="text-xs font-bold text-foreground">{formatDate(item.orderDate)}</span>
-                          </div>
-                        </td>
-                        <td className="px-8 py-5 text-right">
-                          <div className="flex flex-col items-end">
-                             <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">PENDING:</span>
-                                <span className="text-sm font-black text-warning">{remaining}</span>
-                             </div>
-                             <div className="text-[9px] font-bold text-muted-foreground uppercase mt-1">
-                                Ordered: {item.quantityOrdered}
-                             </div>
-                          </div>
-                        </td>
-                        <td className="px-8 py-5 text-right">
-                          <Link href={`/orders/purchase/${item.poId}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-black text-[9px] uppercase tracking-widest hover:bg-primary/90 transition-all shadow-sm">
-                            <ArrowDownLeft className="w-3.5 h-3.5" />
-                            Receive
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  }) : (
-                    <tr>
-                      <td colSpan={4} className="px-8 py-20 text-center">
-                        <div className="flex flex-col items-center gap-4 opacity-40">
-                           <AlertCircle className="w-10 h-10" />
-                           <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">All items have been received!</p>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <SupplyInwardsList items={pendingItems} />
         </div>
 
         {/* Sidebar: Recent Audit Log */}

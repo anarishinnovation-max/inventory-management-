@@ -210,7 +210,7 @@ function NewPurchaseOrderForm() {
         <div className="space-y-4">
           <Link href="/orders/purchase" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Order List</span>
+            <span>Back to Purchase Orders</span>
           </Link>
           <h1 className="text-5xl font-black tracking-tight text-foreground">Buy New Items</h1>
           <p className="text-muted-foreground text-lg font-medium">Set up a new order from vendors.</p>
