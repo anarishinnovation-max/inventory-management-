@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic';
-
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-
+import { revalidateTag, revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
 
 export async function GET(request: Request) {
@@ -117,6 +116,8 @@ export async function POST(request: Request) {
       return po;
     });
 
+    revalidatePath("/orders/purchase", "page");
+    revalidatePath("/inventory", "page");
     return NextResponse.json(order, { status: 201 });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);

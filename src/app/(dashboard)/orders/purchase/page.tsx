@@ -1,5 +1,6 @@
 import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
+export const dynamic = "force-dynamic";
 import { clsx, type ClassValue } from "clsx";
 import {
   CheckCircle2,
@@ -137,12 +138,7 @@ async function getPurchaseOrdersRaw(filters: {
   return filteredOrders;
 }
 
-const getPurchaseOrders = (filters: any, companyId?: string) => 
-  cacheQuery(
-    () => getPurchaseOrdersRaw(filters, companyId),
-    ["purchase-orders", JSON.stringify(filters), companyId || "none"],
-    60
-  )();
+const getPurchaseOrders = (filters: any, companyId?: string) => getPurchaseOrdersRaw(filters, companyId);
 
 export default async function PurchaseOrdersPage({
   searchParams,
