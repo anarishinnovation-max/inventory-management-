@@ -8,14 +8,24 @@ import {
     Square, 
     Trash2, 
     X,
-    Package
+    Package,
+    ShoppingCart
 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MappedItem } from "./page";
 import InventoryTableActions from "./InventoryTableActions";
+import SearchInput from "@/components/SearchInput";
+import { MappedItem } from "./page";
 
-export default function InventoryList({ items, userRole }: { items: MappedItem[], userRole: string }) {
+export default function InventoryList({ 
+  items, 
+  userRole,
+  searchQuery 
+}: { 
+  items: MappedItem[], 
+  userRole: string,
+  searchQuery: string
+}) {
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
@@ -36,6 +46,18 @@ export default function InventoryList({ items, userRole }: { items: MappedItem[]
       next.add(id);
     }
     setSelectedIds(next);
+  };
+
+  const handleBulkCreatePO = () => {
+    const selectedItems = items.filter(i => selectedIds.has(i.id));
+    const bulkData = selectedItems.map(item => ({
+      id: item.id,
+      // Suggested quantity: refill to twice the min stock level, or at least 10 units if not low stock
+      q: Math.max(10, (item.minStockLevel || 0) * 2 - Math.max(0, item.totalStock || 0)),
+    }));
+
+    const bulkParam = encodeURIComponent(JSON.stringify(bulkData));
+    router.push(`/orders/purchase/new?bulk=${bulkParam}`);
   };
 
   const handleBulkDelete = async () => {
@@ -89,7 +111,70 @@ export default function InventoryList({ items, userRole }: { items: MappedItem[]
   };
 
   return (
-    <div className="relative">
+    <div className="space-y-6 relative">
+      <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="flex-1 w-full max-w-2xl">
+            <SearchInput 
+                defaultValue={searchQuery}
+                placeholder="Search items, SKU, or Rack..."
+            />
+        </div>
+
+        {/* Bulk Action Bar - Now placed next to Search Bar */}
+        {selectedIds.size > 0 && userRole !== 'EMPLOYEE' && (
+          <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+            <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1.5 pr-4 pl-5">
+              <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
+              </div>
+              
+              <div className="flex items-center gap-1">
+                  <button 
+                    onClick={handleBulkCreatePO}
+                    disabled={isProcessing}
+                    className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group"
+                    title="Create Bulk PO"
+                    suppressHydrationWarning
+                  >
+                    <ShoppingCart className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  </button>
+
+                  <button 
+                    onClick={handleBulkScrap}
+                    disabled={isProcessing}
+                    className="p-2.5 rounded-xl hover:bg-error/5 text-error transition-all group"
+                    title="Scrap All"
+                    suppressHydrationWarning
+                  >
+                    <Flame className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  </button>
+                  
+                  <button 
+                    onClick={handleBulkDelete}
+                    disabled={isProcessing}
+                    className="p-2.5 rounded-xl hover:bg-error/5 text-error transition-all group"
+                    title="Delete Selected"
+                    suppressHydrationWarning
+                  >
+                    {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />}
+                  </button>
+
+                  <div className="w-px h-4 bg-border-ghost mx-1" />
+
+                  <button 
+                    onClick={() => setSelectedIds(new Set())}
+                    className="p-2 rounded-xl hover:bg-surface-low text-muted-foreground hover:text-foreground transition-all"
+                    suppressHydrationWarning
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="relative">
       <div className="card-premium !p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -128,7 +213,7 @@ export default function InventoryList({ items, userRole }: { items: MappedItem[]
                 const isSelected = selectedIds.has(item.id);
                 
                 const rackLocations = (item.stocks || []).length > 0
-                  ? Array.from(new Set(item.stocks.map((s) => s.rack.rackNumber))).join(", ")
+                  ? Array.from(new Set(item.stocks.map((s: any) => s.rack.rackNumber))).join(", ")
                   : (item.totalStock > 0 ? "General" : "N/A");
 
                 return (
@@ -224,49 +309,7 @@ export default function InventoryList({ items, userRole }: { items: MappedItem[]
         </div>
       </div>
 
-      {/* Floating Bulk Action Bar */}
-      {selectedIds.size > 0 && userRole !== 'EMPLOYEE' && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500">
-          <div className="bg-foreground text-white rounded-[2rem] shadow-2xl shadow-black/30 flex items-center gap-2 p-2 pl-6 border border-white/10 backdrop-blur-xl bg-opacity-90">
-            <div className="flex flex-col pr-6 border-r border-white/10">
-                <span className="text-xs font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
-                <span className="text-[10px] font-bold text-white/40">Multi-item Actions</span>
-            </div>
-            
-            <div className="flex items-center gap-1 p-1">
-                <button 
-                  onClick={handleBulkScrap}
-                  disabled={isProcessing}
-                  className="flex items-center gap-2 px-6 py-3 rounded-2xl hover:bg-white/10 text-white transition-all font-black text-[10px] uppercase tracking-widest disabled:opacity-50"
-                  suppressHydrationWarning
-                >
-                  <Flame className="w-4 h-4 text-error" />
-                  Scrap All
-                </button>
-                
-                <button 
-                  onClick={handleBulkDelete}
-                  disabled={isProcessing}
-                  className="flex items-center gap-2 px-6 py-3 rounded-2xl hover:bg-error text-white transition-all font-black text-[10px] uppercase tracking-widest disabled:opacity-50"
-                  suppressHydrationWarning
-                >
-                  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                  Delete
-                </button>
-
-                <div className="w-2" />
-
-                <button 
-                  onClick={() => setSelectedIds(new Set())}
-                  className="p-3 rounded-2xl hover:bg-white/10 text-white/60 hover:text-white transition-all"
-                  suppressHydrationWarning
-                >
-                  <X className="w-5 h-5" />
-                </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

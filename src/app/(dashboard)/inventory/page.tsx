@@ -36,7 +36,7 @@ export interface MappedItem {
   stocks: MappedStock[];
 }
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -215,14 +215,7 @@ export default async function InventoryPage({
         </div>
       </div>
 
-      <div className="flex-1 max-w-2xl">
-          <SearchInput 
-              defaultValue={q}
-              placeholder="Search items, SKU, or Rack..."
-          />
-      </div>
-
-      <InventoryList items={items ?? []} userRole={session.role} />
+      <InventoryList items={items ?? []} userRole={session.role} searchQuery={q} />
 
       <InventoryPagination
         totalItems={totalItems ?? 0}
