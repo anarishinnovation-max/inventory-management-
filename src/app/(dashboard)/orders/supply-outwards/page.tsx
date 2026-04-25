@@ -225,6 +225,7 @@ export default async function SupplyOutwardsPage({
                   <tr className="table-header bg-warning/[0.02]">
                     <th className="table-cell-header">Item Details</th>
                     <th className="table-cell-header">Recipient</th>
+                    <th className="table-cell-header">Booked On</th>
                     <th className="table-cell-header text-right">Quantity</th>
                     <th className="table-cell-header text-right">Actions</th>
                   </tr>
@@ -251,6 +252,12 @@ export default async function SupplyOutwardsPage({
                           </div>
                         </div>
                       </td>
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-2">
+                           <Calendar className="w-4 h-4 text-muted-foreground" />
+                           <span className="text-xs font-bold text-foreground">{formatDate(item.createdAt)}</span>
+                        </div>
+                      </td>
                       <td className="px-8 py-5 text-right">
                         <div className="flex flex-col items-end">
                            <span className="text-sm font-black text-warning">{item.quantity}</span>
@@ -266,7 +273,7 @@ export default async function SupplyOutwardsPage({
                     </tr>
                   )) : (
                     <tr>
-                      <td colSpan={4} className="px-8 py-20 text-center">
+                      <td colSpan={5} className="px-8 py-20 text-center">
                         <div className="flex flex-col items-center gap-4 opacity-40">
                            <AlertCircle className="w-10 h-10" />
                            <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">No pending bookings to dispatch.</p>
