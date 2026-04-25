@@ -63,6 +63,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    if (items.some(item => Number(item.costPrice) <= 0)) {
+      return NextResponse.json({ error: "Cost price must be greater than zero for all items." }, { status: 400 });
+    }
+
     const order = await prisma.$transaction(async (tx) => {
       const po = await tx.purchaseOrder.create({
         data: {

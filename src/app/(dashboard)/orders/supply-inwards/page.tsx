@@ -10,7 +10,8 @@ import {
   ArrowDownLeft,
   Search,
   ChevronRight,
-  AlertCircle
+  AlertCircle,
+  Calendar
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
@@ -94,7 +95,8 @@ async function getInwardData(query?: string, companyId?: string) {
         ...item,
         vendor: po.vendor,
         poId: po.id,
-        expectedDelivery: po.expectedDelivery
+        expectedDelivery: po.expectedDelivery,
+        orderDate: po.orderDate
       }))
   );
 
@@ -194,6 +196,7 @@ export default async function SupplyInwardsPage({
                   <tr className="table-header bg-warning/[0.02]">
                     <th className="table-cell-header">Item Details</th>
                     <th className="table-cell-header">Source</th>
+                    <th className="table-cell-header">Placed On</th>
                     <th className="table-cell-header text-right">Quantity</th>
                     <th className="table-cell-header text-right">Actions</th>
                   </tr>
@@ -221,6 +224,12 @@ export default async function SupplyInwardsPage({
                             <div className="flex items-center gap-1.5">
                                <span className="text-[9px] font-black text-primary uppercase">PO #{item.poId.split('-')[0]}</span>
                             </div>
+                          </div>
+                        </td>
+                        <td className="px-8 py-5">
+                          <div className="flex items-center gap-2">
+                             <Calendar className="w-4 h-4 text-muted-foreground" />
+                             <span className="text-xs font-bold text-foreground">{formatDate(item.orderDate)}</span>
                           </div>
                         </td>
                         <td className="px-8 py-5 text-right">

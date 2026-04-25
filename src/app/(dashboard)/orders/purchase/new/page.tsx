@@ -150,8 +150,8 @@ function NewPurchaseOrderForm() {
       setError("Please select a vendor source.");
       return;
     }
-    if (lineItems.some(i => !i.itemId || i.quantityOrdered <= 0)) {
-      setError("Please ensure all line items have valid specifications.");
+    if (lineItems.some(i => !i.itemId || i.quantityOrdered <= 0 || i.costPrice <= 0)) {
+      setError("Please ensure all line items have a valid quantity and a cost price greater than zero.");
       return;
     }
 
@@ -324,7 +324,8 @@ function NewPurchaseOrderForm() {
                     <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Unit Cost (₹)</label>
                     <input 
                       type="number" 
-                      min="0"
+                      min="0.01"
+                      step="0.01"
                       value={item.costPrice}
                       onChange={(e) => updateLineItem(index, "costPrice", e.target.value)}
                       className="input-field font-mono font-bold text-sm"
