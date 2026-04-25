@@ -42,9 +42,7 @@ const PAGE_SIZE = 20;
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-async function getInventoryRaw(q?: string, status?: string, category?: string, page: number = 1, limit?: number, companyId?: string) {
-  if (!companyId) return { items: [], totalItems: 0 };
-  
+async function getInventoryDataRaw(companyId: string, q: string, status: string, category: string, page: number, pageSize: number) {
   const where: any = {
     companyId,
     AND: [
@@ -60,79 +58,112 @@ async function getInventoryRaw(q?: string, status?: string, category?: string, p
     ]
   };
 
-  const allItems = await prisma.item.findMany({
+  const allItemsSummary = await prisma.item.findMany({
     where,
     include: {
       category: true,
       inventory: true,
-      stocks: {
-        include: {
-          rack: true
-        }
-      }
     },
     orderBy: {
-      inventory: {
-        updatedAt: 'desc'
-      }
+      inventory: { updatedAt: 'desc' }
     }
   });
 
-  let mappedItems = allItems.map((item: any) => ({
-    id: item.id,
-    name: item.name,
-    sku: item.sku,
-    category: item.category?.name || "Uncategorized",
-    unit: item.unit,
-    minStockLevel: item.minStockLevel ?? 0,
-    isCritical: item.isCritical,
-    totalStock: (item.stocks || []).length > 0
-      ? (item.stocks || []).reduce((acc: number, s: any) => acc + s.quantity, 0)
-      : (item.inventory?.quantityAvailable ?? 0),
-    incomingQty: item.inventory?.incomingQty ?? 0,
-    quantityReserved: item.inventory?.quantityReserved ?? 0,
-    quantityInTransit: item.inventory?.quantityInTransit ?? 0,
-    stocks: (item.stocks || []).map((s: any) => ({
-      id: s.id,
-      quantity: s.quantity,
-      rack: {
-        id: s.rack?.id || "unknown",
-        rackNumber: s.rack?.rackNumber || "N/A"
-      }
-    })),
-    updatedAt: item.inventory?.updatedAt || item.createdAt
-  }));
+  const mappedAll = allItemsSummary.map((item: any) => {
+    const total = item.inventory?.quantityAvailable ?? 0;
+    const incoming = (item.inventory?.incomingQty ?? 0) + (item.inventory?.quantityInTransit ?? 0);
+    const reserved = item.inventory?.quantityReserved ?? 0;
+    const netAvailable = (total + incoming) - reserved;
+    
+    return {
+      id: item.id,
+      name: item.name,
+      sku: item.sku,
+      unit: item.unit,
+      isCritical: item.isCritical,
+      minStockLevel: item.minStockLevel ?? 0,
+      totalStock: total,
+      netAvailable,
+      incomingQty: item.inventory?.incomingQty ?? 0,
+      quantityReserved: reserved,
+      quantityInTransit: item.inventory?.quantityInTransit ?? 0,
+      isUrgent: netAvailable < 0,
+      isLow: total > 0 && total <= (item.minStockLevel ?? 0) && netAvailable >= 0,
+      isOutOfStock: total <= 0,
+      isPartial: total > 0 && total < reserved,
+      isOrdered: incoming > 0 && netAvailable >= 0,
+      isInStock: total > (item.minStockLevel ?? 0) && total >= reserved,
+      category: item.category?.name || "Uncategorized",
+      updatedAt: item.inventory?.updatedAt || item.createdAt
+    };
+  });
 
+  // Filter for the main table
+  let filteredItems = mappedAll;
   if (status && status !== 'all') {
-    mappedItems = mappedItems.filter((item: MappedItem) => {
-      const total = item.totalStock;
-      const incoming = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
-      const reserved = item.quantityReserved;
-      const netAvailable = (total + incoming) - reserved;
-
-      if (status === 'urgent') return netAvailable < 0;
-      if (status === 'partial') return total > 0 && total < reserved;
-      if (status === 'low') return total > 0 && total <= item.minStockLevel && netAvailable >= 0;
-      if (status === 'instock') return total > item.minStockLevel && total >= reserved;
-      if (status === 'outofstock') return total <= 0;
-      if (status === 'ordered') return incoming > 0 && netAvailable >= 0;
+    filteredItems = mappedAll.filter(item => {
+      if (status === 'urgent') return item.isUrgent;
+      if (status === 'partial') return item.isPartial;
+      if (status === 'low') return item.isLow;
+      if (status === 'instock') return item.isInStock;
+      if (status === 'outofstock') return item.isOutOfStock;
+      if (status === 'ordered') return item.isOrdered;
       return true;
     });
   }
 
-  const totalItems = mappedItems.length;
-  const paginatedItems = limit 
-    ? mappedItems.slice((page - 1) * limit, page * limit)
-    : mappedItems;
+  const totalItemsCount = filteredItems.length;
+  const pageItemsSlice = filteredItems.slice((page - 1) * pageSize, page * pageSize);
 
-  return { items: paginatedItems, totalItems };
+  // Fetch rack details ONLY for current page
+  const pageWithStocks = await Promise.all(pageItemsSlice.map(async (item) => {
+    const stocks = await prisma.stock.findMany({
+      where: { itemId: item.id },
+      include: { rack: true }
+    });
+    return {
+      ...item,
+      category: item.category,
+      stocks: stocks.map(s => ({
+        id: s.id,
+        quantity: s.quantity,
+        rack: {
+          id: s.rack?.id || "unknown",
+          rackNumber: s.rack?.rackNumber || "N/A"
+        }
+      }))
+    };
+  }));
+
+  // Simplified stats for cards and reorder
+  const urgentCount = mappedAll.filter(i => i.isUrgent).length;
+  const lowCount = mappedAll.filter(i => i.isLow).length;
+  const outOfStockCount = mappedAll.filter(i => i.isOutOfStock).length;
+
+  const reorderPool = mappedAll
+    .filter(i => i.isLow || i.isUrgent || i.isOutOfStock)
+    .map(i => ({
+      id: i.id,
+      name: i.name,
+      totalStock: i.totalStock,
+      minStockLevel: i.minStockLevel
+    }));
+
+  return {
+    items: pageWithStocks,
+    totalItems: totalItemsCount,
+    urgentCount,
+    lowCount,
+    outOfStockCount,
+    reorderPool
+  };
 }
 
-const getInventory = (q?: string, status?: string, category?: string, page: number = 1, limit?: number, companyId?: string) => 
+const getInventoryData = (companyId: string, q: string, status: string, category: string, page: number, pageSize: number) =>
   cacheQuery(
-    () => getInventoryRaw(q, status, category, page, limit, companyId),
-    ["inventory", q || "none", status || "all", category || "all", page.toString(), (limit || 0).toString(), companyId || "none"],
-    60
+    () => getInventoryDataRaw(companyId, q, status, category, page, pageSize),
+    ["inv-data-v2", companyId, q, status, category, page.toString()],
+    30
   )();
 
 export default async function InventoryPage({
@@ -151,20 +182,9 @@ export default async function InventoryPage({
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const [
-    { items, totalItems },
-    { items: allLowItems },
-    { items: allUrgentItems },
-    { items: allOutOfStockItems }
-  ] = await Promise.all([
-    getInventory(q, status, category, page, PAGE_SIZE, session.companyId),
-    getInventory("", "low", "all", 1, 0, session.companyId),
-    getInventory("", "urgent", "all", 1, 0, session.companyId),
-    getInventory("", "outofstock", "all", 1, 0, session.companyId)
-  ]).catch((e) => {
-    console.error("Inventory fetch error:", e);
-    return [{ items: [], totalItems: 0 }, { items: [] }, { items: [] }, { items: [] }];
-  });
+  const { items, totalItems, urgentCount, lowCount, outOfStockCount, reorderPool } = 
+    await getInventoryDataRaw(session.companyId, q, status, category, page, PAGE_SIZE);
+  
   
   const allCategories = await prisma.category.findMany({ 
     where: { companyId: session.companyId },
@@ -173,9 +193,7 @@ export default async function InventoryPage({
   });
   const categoryNames = allCategories.map((c: { name: string }) => c.name);
 
-  // Combine and deduplicate
-  const reorderPool = [...(allLowItems || []), ...(allUrgentItems || []), ...(allOutOfStockItems || [])];
-  const uniqueReorderPool = Array.from(new Map(reorderPool.map(item => [item.id, item])).values());
+  // Reorder pool is already calculated in getInventoryData
 
   return (
     <div className="space-y-8 pb-10">
@@ -190,7 +208,7 @@ export default async function InventoryPage({
           <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
         <div className="flex items-center gap-3">
-            <QuickPOButton items={uniqueReorderPool} />
+            <QuickPOButton items={reorderPool} />
             {(session.role === 'OWNER' || session.role === 'MANAGER') && (
               <Link href="/inventory/new" className="btn-primary shadow-glow h-14">
                 <PlusCircle className="w-4 h-4" />
@@ -218,7 +236,7 @@ export default async function InventoryPage({
             </div>
             <div>
               <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Urgent Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{allUrgentItems.length}</h2>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{urgentCount}</h2>
             </div>
         </div>
 
@@ -228,7 +246,7 @@ export default async function InventoryPage({
             </div>
             <div>
               <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{allLowItems.length}</h2>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{lowCount}</h2>
             </div>
         </div>
 
@@ -238,7 +256,7 @@ export default async function InventoryPage({
             </div>
             <div>
               <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Out of Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{allOutOfStockItems.length}</h2>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{outOfStockCount}</h2>
             </div>
         </div>
       </div>

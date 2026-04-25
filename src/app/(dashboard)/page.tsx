@@ -35,16 +35,7 @@ import { DashboardActions } from "./components/DashboardActions";
 
 const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
   async () => {
-    const [
-      stockStats,
-      stockValueResult,
-      vendorsCount,
-      flowResult,
-      recentActivity,
-      velocityResult,
-      replenishItems,
-      oldestItems
-    ] = await Promise.all([
+    const results = await Promise.all([
       // 1. Consolidated Stock Stats (Total, Low, Out of Stock)
       prisma.$queryRaw<any[]>`
         SELECT 
@@ -56,12 +47,12 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         WHERE i."companyId" = ${companyId}
       `,
 
-      // 2. Stock Value (Optimized)
+      // 2. Stock Value (Optimized - Left Join to include all stock)
       prisma.$queryRaw<any[]>`
-        SELECT SUM(t.avg_cost * inv."quantityAvailable")::numeric(15,2) as total
+        SELECT SUM(COALESCE(t.avg_cost, 0) * inv."quantityAvailable")::numeric(15,2) as total
         FROM "Inventory" inv
         INNER JOIN "Item" i ON inv."itemId" = i.id
-        INNER JOIN (
+        LEFT JOIN (
           SELECT "itemId", AVG("costPrice") as avg_cost 
           FROM "POLineItem" 
           GROUP BY "itemId"
@@ -128,11 +119,34 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         orderBy: { createdAt: 'asc' },
         take: 5,
         include: { inventory: true }
-      })
+      }),
+
+      // 9. Monthly Revenue
+      prisma.$queryRaw<any[]>`
+        SELECT SUM(di.quantity * di."sellingPrice")::numeric(15,2) as total
+        FROM "DispatchItem" di
+        INNER JOIN "DispatchOrder" dord ON di."dispatchOrderId" = dord.id
+        WHERE dord.status = 'dispatched' 
+          AND dord."createdAt" > date_trunc('month', NOW())
+          AND dord."companyId" = ${companyId}
+      `
     ]);
 
-    const stats = stockStats[0] || { total: 0, out_of_stock: 0, low_stock: 0 };
-    const stockValue = stockValueResult[0]?.total || 0;
+    const [
+      stockStatsResult,
+      stockValueResult,
+      vendorsCount,
+      flowResult,
+      recentActivity,
+      velocityResult,
+      replenishItems,
+      oldestItems,
+      monthlyRevenueResult
+    ] = results;
+
+    const stats = (stockStatsResult as any)[0] || { total: 0, out_of_stock: 0, low_stock: 0 };
+    const stockValue = Number((stockValueResult as any)[0]?.total || 0);
+    const monthlyRevenue = Number((monthlyRevenueResult as any)[0]?.total || 0);
 
     return {
       kpis: {
@@ -141,9 +155,10 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         lowStockCount: stats.low_stock,
         outOfStockCount: stats.out_of_stock,
         vendorsCount: vendorsCount,
+        monthlyRevenue: monthlyRevenue,
       },
-      flow: (flowResult || []).reverse(),
-      recentActivity: (recentActivity || []).map((tx: any) => ({
+      flow: (flowResult as any[] || []).reverse(),
+      recentActivity: (recentActivity as any[] || []).map((tx: any) => ({
         id: tx.id,
         type: tx.type,
         quantity: Math.abs(tx.quantity),
@@ -151,13 +166,13 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         item_name: tx.item.name,
         sku: tx.item.sku
       })),
-      velocity: velocityResult || [],
-      replenish: replenishItems || [],
-      oldestItems: oldestItems || []
+      velocity: velocityResult as any[] || [],
+      replenish: replenishItems as any[] || [],
+      oldestItems: oldestItems as any[] || []
     };
   },
-  ["dashboard-analytics", companyId],
-  30 // Cache for 30 seconds
+  ["dashboard-analytics-v5", companyId],
+  30
 )();
 
 export default async function DashboardPage() {
@@ -169,7 +184,7 @@ export default async function DashboardPage() {
   const data = await getCachedDashboardAnalytics(session.companyId).catch((e) => {
     console.error("Dashboard data fetch error:", e);
     return {
-      kpis: { totalItems: 0, stockValue: 0, lowStockCount: 0, outOfStockCount: 0, vendorsCount: 0 },
+      kpis: { totalItems: 0, stockValue: 0, lowStockCount: 0, outOfStockCount: 0, vendorsCount: 0, monthlyRevenue: 0 },
       flow: [],
       recentActivity: [],
       velocity: [],
@@ -251,13 +266,16 @@ export default async function DashboardPage() {
         <div className="card-premium group">
           <div className="flex justify-between items-start">
             <div className="p-3 bg-indigo-500/10 text-indigo-500 rounded-xl transition-transform group-hover:scale-110">
-              <Truck className="w-5 h-5" />
+              <IndianRupee className="w-5 h-5" />
+            </div>
+            <div className="badge bg-indigo-50/50 text-indigo-600 border-indigo-100">
+              MTD
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Vendors</p>
-            <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.vendorsCount}</h2>
-            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Across all areas</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Monthly Sales</p>
+            <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">₹{Number(data.kpis.monthlyRevenue).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
+            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Revenue this month</p>
           </div>
         </div>
       </div>

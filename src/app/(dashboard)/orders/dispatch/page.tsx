@@ -178,6 +178,7 @@ export default async function DispatchPage({
                 <th className="table-cell-header">Order ID</th>
                 <th className="table-cell-header">Customer Details</th>
                 <th className="table-cell-header">Items</th>
+                <th className="table-cell-header">Total Value</th>
                 <th className="table-cell-header">Paid By</th>
                 <th className="table-cell-header">Status</th>
                 <th className="table-cell-header text-right">Actions</th>
@@ -192,13 +193,13 @@ export default async function DispatchPage({
                                 <div className="flex flex-col">
                                     <span className="font-mono font-black text-foreground text-sm tracking-tight">#{order.id.split('-')[0].toUpperCase()}</span>
                                     <div className="flex items-center gap-2 mt-0.5">
-                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString()}</span>
+                                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString('en-IN')}</span>
                                         {order.expectedDelivery && (
                                             <>
                                                 <div className="w-1 h-1 rounded-full bg-border-ghost" />
                                                 <span className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1">
                                                     <Clock className="w-2.5 h-2.5" />
-                                                    ETA: {new Date(order.expectedDelivery).toLocaleDateString()}
+                                                    ETA: {new Date(order.expectedDelivery).toLocaleDateString('en-IN')}
                                                 </span>
                                             </>
                                         )}
@@ -214,6 +215,11 @@ export default async function DispatchPage({
                         </td>
                         <td className="px-8 py-5">
                            <span className="text-[10px] font-black text-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost">{order.items.length} units</span>
+                        </td>
+                        <td className="px-8 py-5">
+                           <span className="text-sm font-black text-foreground tracking-tighter">
+                             ₹{order.items.reduce((acc: number, curr: any) => acc + (Number(curr.sellingPrice) * curr.quantity), 0).toLocaleString('en-IN')}
+                           </span>
                         </td>
                         <td className="px-8 py-5">
                            <span className="text-xs font-bold text-muted-foreground">{order.paymentMode || "Cash"}</span>

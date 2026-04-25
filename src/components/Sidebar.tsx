@@ -2,17 +2,20 @@
 
 import { clsx, type ClassValue } from "clsx";
 import {
-  BarChart3,
+  Box,
   ChevronDown,
   ChevronRight,
+  CreditCard,
+  Database,
   History,
-  LayoutDashboard,
+  Inbox,
+  LayoutGrid,
   LogOut,
-  Package,
+  ReceiptIndianRupee,
+  IndianRupee,
   Settings,
   ShieldCheck,
-  ShoppingCart,
-  SquareStack,
+  Store,
   Truck,
   Users
 } from "lucide-react";
@@ -43,17 +46,17 @@ const menuSections: MenuSection[] = [
   {
     title: "Main",
     items: [
-      { name: "Home", icon: LayoutDashboard, href: "/" },
-      { name: "Inventory", icon: Package, href: "/inventory" },
-      { name: "Rack List", icon: SquareStack, href: "/racks" },
+      { name: "Home", icon: LayoutGrid, href: "/" },
+      { name: "Inventory", icon: Box, href: "/inventory" },
+      { name: "Rack List", icon: Database, href: "/racks" },
     ]
   },
   {
     title: "Orders",
     items: [
-      { name: "Purchase Bills", icon: ShoppingCart, href: "/orders/purchase" },
-      { name: "Supply Inwards", icon: Truck, href: "/orders/supply-inwards" },
-      { name: "Sell Bills", icon: Truck, href: "/orders/dispatch" },
+      { name: "Purchase Bills", icon: ReceiptIndianRupee, href: "/orders/purchase" },
+      { name: "Supply Inwards", icon: Inbox, href: "/orders/supply-inwards" },
+      { name: "Sell Bills", icon: IndianRupee, href: "/orders/dispatch" },
       { name: "Supply Outwards", icon: Truck, href: "/orders/supply-outwards", roles: ["OWNER", "MANAGER", "EMPLOYEE"] },
     ]
   },
@@ -61,7 +64,7 @@ const menuSections: MenuSection[] = [
     title: "People",
     items: [
       { name: "Customers", icon: Users, href: "/customers" },
-      { name: "Vendors", icon: BarChart3, href: "/vendors" },
+      { name: "Vendors", icon: Store, href: "/vendors" },
     ]
   },
   {
@@ -102,7 +105,7 @@ export default function Sidebar() {
       {/* Brand Logo */}
       <div className="p-6 flex items-center gap-3 overflow-hidden whitespace-nowrap">
         <div className="min-w-[40px] h-10 rounded-xl primary-gradient flex items-center justify-center shadow-glow">
-          <Package className="text-white w-5 h-5" />
+          <Box className="text-white w-5 h-5" />
         </div>
         {!collapsed && (
           <div className="flex flex-col">
