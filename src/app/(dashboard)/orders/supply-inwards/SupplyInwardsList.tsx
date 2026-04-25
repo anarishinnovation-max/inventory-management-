@@ -299,7 +299,7 @@ export default function SupplyInwardsList({
                         </div>
                       </td>
                       <td className="px-8 py-5 text-right">
-                        <Link href={`/orders/purchase/${item.poId}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group/btn">
+                        <Link href={`/orders/purchase/${item.poId}?itemId=${item.itemId}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group/btn">
                           <CheckCircle2 className="w-3.5 h-3.5 transition-transform group-hover/btn:rotate-12" />
                           Receive
                         </Link>

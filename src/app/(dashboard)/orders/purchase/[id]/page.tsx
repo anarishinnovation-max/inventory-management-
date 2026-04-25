@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition, useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { 
   ArrowLeft, 
   Truck, 
@@ -40,6 +40,8 @@ function formatDateTime(value: string | Date | null | undefined) {
 export default function PODetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
+  const searchParams = useSearchParams();
+  const filterItemId = searchParams.get("itemId");
   
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -212,7 +214,17 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-foreground">Inbound Line Items</h3>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mt-0.5">{order.items.length} items to verify</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mt-0.5">
+                      {filterItemId ? "Showing selected item" : `${order.items.length} items to verify`}
+                      {filterItemId && (
+                        <button 
+                          onClick={() => router.push(`/orders/purchase/${id}`)}
+                          className="ml-3 text-primary hover:underline lowercase tracking-normal"
+                        >
+                          (show all)
+                        </button>
+                      )}
+                    </p>
                   </div>
                 </div>
 
@@ -229,7 +241,9 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
               </header>
 
               <div className="divide-y divide-border-ghost">
-                {order.items.map((item: any) => {
+                {order.items
+                  .filter((item: any) => !filterItemId || item.itemId === filterItemId)
+                  .map((item: any) => {
                   const percent = Math.min(100, (item.quantityReceived / item.quantityOrdered) * 100);
                   return (
                     <div key={item.id} className="p-8 hover:bg-surface-low/20 transition-all group">
