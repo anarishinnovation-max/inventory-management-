@@ -34,6 +34,7 @@ export interface MappedItem {
   quantityReserved: number;
   quantityInTransit: number;
   stocks: MappedStock[];
+  updatedAt: Date;
 }
 
 const PAGE_SIZE = 20;
@@ -71,7 +72,9 @@ async function getInventoryRaw(q?: string, status?: string, category?: string, p
       }
     },
     orderBy: {
-      createdAt: 'desc'
+      inventory: {
+        updatedAt: 'desc'
+      }
     }
   });
 
@@ -96,7 +99,8 @@ async function getInventoryRaw(q?: string, status?: string, category?: string, p
         id: s.rack?.id || "unknown",
         rackNumber: s.rack?.rackNumber || "N/A"
       }
-    }))
+    })),
+    updatedAt: item.inventory?.updatedAt || item.createdAt
   }));
 
   if (status && status !== 'all') {

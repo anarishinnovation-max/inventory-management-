@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Calendar, User, Hash } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 
 interface SupplyInwardsFiltersProps {
   vendors: { id: string; name: string }[];
@@ -26,6 +26,7 @@ export function SupplyInwardsFilters({
   const [poNumber, setPoNumber] = useState(currentPONumber);
   const [startDate, setStartDate] = useState(currentStartDate);
   const [endDate, setEndDate] = useState(currentEndDate);
+  const [isPending, startTransition] = useTransition();
 
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -41,7 +42,9 @@ export function SupplyInwardsFilters({
     if (endDate) params.set("endDate", endDate);
     else params.delete("endDate");
 
-    router.push(`?${params.toString()}`);
+    startTransition(() => {
+      router.push(`?${params.toString()}`);
+    });
   };
 
   const clearFilters = () => {
@@ -49,7 +52,9 @@ export function SupplyInwardsFilters({
     setPoNumber("");
     setStartDate("");
     setEndDate("");
-    router.push("/orders/supply-inwards");
+    startTransition(() => {
+      router.push("/orders/supply-inwards");
+    });
   };
 
   return (

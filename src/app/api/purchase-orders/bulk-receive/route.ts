@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { InventoryService } from "@/lib/inventory-service";
 import { getSession } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function POST(request: Request) {
   try {
@@ -27,11 +27,13 @@ export async function POST(request: Request) {
     for (const [poId, items] of Object.entries(grouped)) {
       const updatedPo = await InventoryService.receiveGoods(poId, items, session.id);
       results.push(updatedPo);
+      revalidatePath(`/orders/purchase/${poId}`, "page");
     }
 
     revalidatePath("/orders/supply-inwards", "page");
     revalidatePath("/orders/purchase", "page");
     revalidatePath("/inventory", "page");
+    revalidateTag("inventory", "default");
 
     return NextResponse.json({ success: true, count: selections.length });
   } catch (error: any) {

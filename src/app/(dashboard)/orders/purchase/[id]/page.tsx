@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useTransition, useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, 
@@ -84,19 +84,21 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
     setReceiveForm(allForm);
   };
 
-  const handleReceive = async () => {
-    setSubmitting(true);
-    setError("");
-    
+  const [isPending, startTransition] = useTransition();
+
+  const handleReceive = async (e: React.FormEvent) => {
+    e.preventDefault();
     const itemsToReceive = Object.entries(receiveForm)
       .filter(([_, qty]) => qty > 0)
       .map(([itemId, receivedQty]) => ({ itemId, receivedQty }));
 
     if (itemsToReceive.length === 0) {
       setError("Please specify quantities to receive.");
-      setSubmitting(false);
       return;
     }
+
+    setSubmitting(true);
+    setError("");
 
     try {
       const res = await fetch(`/api/purchase-orders/${id}/receive`, {
@@ -106,8 +108,9 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
       });
 
       if (res.ok) {
-        // Refresh correctly
-        window.location.reload();
+        startTransition(() => {
+          router.push("/inventory");
+        });
       } else {
         const data = await res.json();
         setError(data.error || "Failed to receive goods.");
@@ -123,7 +126,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-bold animate-pulse">Retrieving Procurement Audit...</p>
+        <p className="text-muted-foreground font-bold animate-pulse">Retrieving Purchase Order Details...</p>
       </div>
     );
   }
@@ -154,7 +157,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
               <div className="p-2 bg-surface-low rounded-lg group-hover:bg-primary/10 group-hover:text-primary transition-all">
                 <ArrowLeft className="w-3 h-3" />
               </div>
-              <span>Back to Procurement List</span>
+              <span>Back to Purchase Orders</span>
             </Link>
             
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">

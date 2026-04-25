@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Package, 
@@ -33,6 +33,7 @@ export default function SupplyInwardsList({ items }: { items: any[] }) {
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const toggleAll = () => {
     if (selectedIds.size === items.length) {
@@ -78,8 +79,9 @@ export default function SupplyInwardsList({ items }: { items: any[] }) {
       });
 
       if (res.ok) {
-        setSelectedIds(new Set());
-        router.refresh();
+        startTransition(() => {
+          router.push("/inventory");
+        });
       } else {
         const data = await res.json();
         alert(data.error || "Failed to receive items.");

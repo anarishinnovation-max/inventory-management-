@@ -2,19 +2,31 @@
 
 import { 
     CheckSquare, 
+    Calendar,
     Flame, 
     Loader2, 
     Square, 
     Trash2, 
     X,
     Package,
-    ShoppingCart
+    ShoppingCart,
+    ArrowUpDown,
+    ChevronUp,
+    ChevronDown
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import InventoryTableActions from "./InventoryTableActions";
 import SearchInput from "@/components/SearchInput";
 import { MappedItem } from "./page";
+
+function formatDate(date: Date) {
+  return new Date(date).toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+}
 
 export default function InventoryList({ 
   items, 
@@ -28,6 +40,83 @@ export default function InventoryList({
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | null }>({
+    key: 'name',
+    direction: null
+  });
+
+  const sortedItems = useMemo(() => {
+    if (!sortConfig.direction || !sortConfig.key) return items;
+
+    return [...items].sort((a, b) => {
+      let aVal: any;
+      let bVal: any;
+
+      switch (sortConfig.key) {
+        case 'name':
+          aVal = a.name.toLowerCase();
+          bVal = b.name.toLowerCase();
+          break;
+        case 'sku':
+          aVal = a.sku.toLowerCase();
+          bVal = b.sku.toLowerCase();
+          break;
+        case 'category':
+          aVal = a.category.toLowerCase();
+          bVal = b.category.toLowerCase();
+          break;
+        case 'units':
+          aVal = a.totalStock;
+          bVal = b.totalStock;
+          break;
+        case 'updatedAt':
+          aVal = new Date(a.updatedAt).getTime();
+          bVal = new Date(b.updatedAt).getTime();
+          break;
+        case 'status':
+          const getStatusWeight = (item: MappedItem) => {
+            const incoming = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
+            const net = (item.totalStock + incoming) - (item.quantityReserved || 0);
+            if (net < 0) return 4; // Urgent
+            if (item.totalStock <= 0) return 3; // Out of stock
+            if (!incoming && item.totalStock <= item.minStockLevel) return 2; // Low stock
+            if (incoming > 0) return 1; // Ordered
+            return 0; // In stock
+          };
+          aVal = getStatusWeight(a);
+          bVal = getStatusWeight(b);
+          break;
+        default:
+          return 0;
+      }
+
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [items, sortConfig]);
+
+  const requestSort = (key: string) => {
+    let direction: 'asc' | 'desc' | null = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    } else if (sortConfig.key === key && sortConfig.direction === 'desc') {
+      direction = null;
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const SortIcon = ({ column }: { column: string }) => {
+    const isActive = sortConfig.key === column && sortConfig.direction;
+    
+    if (!isActive) {
+      return <ArrowUpDown className="w-3.5 h-3.5 ml-2 opacity-40 group-hover:opacity-100 transition-opacity" />;
+    }
+    
+    return sortConfig.direction === 'asc' 
+      ? <ChevronUp className="w-3.5 h-3.5 ml-2 text-primary stroke-[3px]" /> 
+      : <ChevronDown className="w-3.5 h-3.5 ml-2 text-primary stroke-[3px]" />;
+  };
 
   const toggleAll = () => {
     if (selectedIds.size === items.length) {
@@ -47,6 +136,8 @@ export default function InventoryList({
     setSelectedIds(next);
   };
 
+  const [isPending, startTransition] = useTransition();
+
   const handleBulkCreatePO = () => {
     const selectedItems = items.filter(i => selectedIds.has(i.id));
     const bulkData = selectedItems.map(item => ({
@@ -56,7 +147,9 @@ export default function InventoryList({
     }));
 
     const bulkParam = encodeURIComponent(JSON.stringify(bulkData));
-    router.push(`/orders/purchase/new?bulk=${bulkParam}`);
+    startTransition(() => {
+      router.push(`/orders/purchase/new?bulk=${bulkParam}`);
+    });
   };
 
   const handleBulkDelete = async () => {
@@ -192,16 +285,57 @@ export default function InventoryList({
                     )}
                   </button>
                 </th>
-                <th className="table-cell-header">Item Name & SKU</th>
-                <th className="table-cell-header">Category</th>
-                <th className="table-cell-header text-right">Units</th>
+                <th className="table-cell-header">
+                  <button 
+                    onClick={() => requestSort('name')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Item Name & SKU
+                    <SortIcon column="name" />
+                  </button>
+                </th>
+                <th className="table-cell-header">
+                  <button 
+                    onClick={() => requestSort('category')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Category
+                    <SortIcon column="category" />
+                  </button>
+                </th>
+                <th className="table-cell-header text-right">
+                  <button 
+                    onClick={() => requestSort('units')}
+                    className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Units
+                    <SortIcon column="units" />
+                  </button>
+                </th>
                 <th className="table-cell-header">Rack</th>
-                <th className="table-cell-header">Status</th>
+                <th className="table-cell-header">
+                  <button 
+                    onClick={() => requestSort('status')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Status
+                    <SortIcon column="status" />
+                  </button>
+                </th>
+                <th className="table-cell-header">
+                  <button 
+                    onClick={() => requestSort('updatedAt')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Last Updated
+                    <SortIcon column="updatedAt" />
+                  </button>
+                </th>
                 <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-ghost">
-              {items.length > 0 ? items.map((item) => {
+              {sortedItems.length > 0 ? sortedItems.map((item) => {
                 const totalStock = item.totalStock;
                 const incomingQty = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
                 const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
@@ -275,6 +409,14 @@ export default function InventoryList({
                       ) : (
                         <span className="badge bg-success/10 text-success border-success/20">In Stock</span>
                       )}
+                    </td>
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar className="w-3.5 h-3.5 opacity-40" />
+                        <span className="text-[11px] font-bold">
+                          {formatDate(item.updatedAt)}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-6 py-5 text-right">
                       <InventoryTableActions

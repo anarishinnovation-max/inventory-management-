@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useTransition, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, 
@@ -46,6 +46,7 @@ function NewPurchaseOrderForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState("");
   
@@ -159,16 +160,8 @@ function NewPurchaseOrderForm() {
     setError("");
 
     try {
-      const normalizedExpectedDelivery = expectedDelivery
-        ? new Date(expectedDelivery).toISOString()
-        : null;
-
-      if (expectedDelivery && Number.isNaN(new Date(expectedDelivery).getTime())) {
-        setError("Please provide a valid expected delivery date and time.");
-        setLoading(false);
-        return;
-      }
-
+      const normalizedExpectedDelivery = expectedDelivery ? new Date(expectedDelivery).toISOString() : null;
+      
       const res = await fetch("/api/purchase-orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -181,8 +174,9 @@ function NewPurchaseOrderForm() {
       });
 
       if (res.ok) {
-        router.push("/orders/purchase");
-        router.refresh();
+        startTransition(() => {
+          router.push("/orders/purchase");
+        });
       } else {
         const data = await res.json();
         setError(data.error || "Buying items failed.");

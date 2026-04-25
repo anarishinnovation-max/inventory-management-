@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { InventoryService } from "@/lib/inventory-service";
 import { getSession } from "@/lib/auth";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function POST(
   request: Request,
@@ -16,6 +17,12 @@ export async function POST(
     }
 
     const updatedPo = await InventoryService.receiveGoods(poId, items, session?.id);
+    
+    revalidatePath("/inventory", "page");
+    revalidatePath("/orders/purchase", "page");
+    revalidatePath("/orders/supply-inwards", "page");
+    revalidatePath(`/orders/purchase/${poId}`, "page");
+    revalidateTag("inventory", "default");
 
     return NextResponse.json(updatedPo);
   } catch (error: any) {
