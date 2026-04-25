@@ -18,10 +18,8 @@ export async function GET(request: Request) {
     const endDate = searchParams.get("endDate");
 
     const where: any = {
-      dispatchOrder: {
-        companyId: session.companyId,
-        status: "dispatched",
-      },
+      companyId: session.companyId,
+      type: "SALE",
     };
 
     if (itemId) {
@@ -29,46 +27,40 @@ export async function GET(request: Request) {
     }
 
     if (customerId) {
-      where.dispatchOrder.customerId = customerId;
+      where.customerId = customerId;
     }
 
     if (startDate || endDate) {
-      where.dispatchOrder.createdAt = {};
+      where.createdAt = {};
       if (startDate) {
-        where.dispatchOrder.createdAt.gte = new Date(startDate);
+        where.createdAt.gte = new Date(startDate);
       }
       if (endDate) {
-        where.dispatchOrder.createdAt.lte = new Date(endDate);
+        where.createdAt.lte = new Date(endDate);
       }
     }
 
-    const items = await prisma.dispatchItem.findMany({
+    const transactions = await prisma.inventoryTransaction.findMany({
       where,
       include: {
         item: true,
-        dispatchOrder: {
-          include: {
-            customer: true,
-          },
-        },
+        customer: true,
       },
       orderBy: {
-        dispatchOrder: {
-          createdAt: "desc",
-        },
+        createdAt: "desc",
       },
     });
 
     // Transform data for UI
-    const result = items.map((di) => ({
-      id: di.id,
-      date: di.dispatchOrder.createdAt,
-      itemName: di.item.name,
-      itemSku: di.item.sku,
-      quantity: di.quantity,
-      customerName: di.dispatchOrder.customer.name,
-      invoiceId: di.dispatchOrder.id,
-      sellingPrice: di.sellingPrice,
+    const result = transactions.map((tx) => ({
+      id: tx.id,
+      date: tx.createdAt,
+      itemName: tx.item.name,
+      itemSku: tx.item.sku,
+      quantity: Math.abs(tx.quantity),
+      customerName: tx.customer?.name || "Unknown",
+      invoiceId: tx.referenceId || "N/A",
+      type: tx.type,
     }));
 
     return NextResponse.json(result);
