@@ -1,133 +1,146 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+import { Filter, ChevronDown, X, Tag } from "lucide-react";
+import { useState, useTransition } from "react";
 import { clsx, type ClassValue } from "clsx";
-import { Filter, Search } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";
-import PremiumSelect from "@/components/PremiumSelect";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+interface InventoryFiltersProps {
+  currentStatus: string;
+  currentCategory: string;
+  categories: string[];
+}
+
 export default function InventoryFilters({
   currentStatus,
   currentCategory,
-  categories = []
-}: {
-  currentStatus: string;
-  currentCategory: string;
-  categories?: string[];
-}) {
+  categories,
+}: InventoryFiltersProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const setFilter = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (value && value !== 'all' && value !== 'All Categories') {
+  const statuses = [
+    { label: "All Items", value: "all" },
+    { label: "In Stock", value: "instock" },
+    { label: "Low Stock", value: "low" },
+    { label: "Out of Stock", value: "outofstock" },
+    { label: "Urgent", value: "urgent" },
+    { label: "Ordered", value: "ordered" },
+  ];
+
+  const updateFilter = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value && value !== 'all') {
       params.set(key, value);
     } else {
       params.delete(key);
     }
-
+    params.delete('page'); // Reset to first page on filter change
+    
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`?${params.toString()}`);
     });
   };
 
+  const clearFilters = () => {
+    startTransition(() => {
+      router.push("/inventory");
+    });
+  };
+
+  const hasActiveFilters = currentStatus !== "all" || currentCategory !== "all";
+
   return (
-    <>
-      <div className="md:col-span-2 card-premium flex flex-col justify-center gap-4 border-primary/5">
-        <div className="flex items-center justify-between">
-          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Filter by Status</label>
-          {isPending && <span className="text-[10px] font-bold text-primary animate-pulse">Updating...</span>}
+    <div className="w-full space-y-6">
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Status Pills */}
+        <div className="flex bg-surface-low p-1.5 rounded-full border border-border-ghost overflow-x-auto no-scrollbar max-w-full">
+          {statuses.map((s) => (
+            <button
+              key={s.value}
+              onClick={() => updateFilter("status", s.value)}
+              className={cn(
+                "px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                currentStatus === s.value
+                  ? "bg-white text-primary shadow-premium"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {s.label}
+            </button>
+          ))}
         </div>
-        <div className="flex flex-wrap gap-2">
+
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={cn(
+            "ml-auto flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border shadow-sm",
+            isExpanded || currentCategory !== "all"
+              ? "bg-primary/10 text-primary border-primary/20"
+              : "bg-primary/[0.03] text-primary border-primary/10 hover:bg-primary/10"
+          )}
+        >
+          <Filter className="w-3.5 h-3.5" />
+          <span>{isExpanded ? "Hide Filters" : "More Filters"}</span>
+          <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", isExpanded && "rotate-180")} />
+        </button>
+
+        {hasActiveFilters && (
           <button
-            onClick={() => setFilter("status", "all")}
-            className={cn(
-              "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'all' ? "bg-primary text-white border-primary shadow-glow" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
-            )}
-            suppressHydrationWarning
+            onClick={clearFilters}
+            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-error/[0.03] text-error border border-error/10 font-black text-[10px] uppercase tracking-widest hover:bg-error/10 transition-all shadow-sm"
           >
-            <span>All items</span>
+            <X className="w-3.5 h-3.5" />
+            Reset
           </button>
-          <button
-            onClick={() => setFilter("status", "instock")}
-            className={cn(
-              "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'instock' ? "bg-success text-white border-success shadow-[0_0_12px_oklch(0.65_0.2_150_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
-            )}
-            suppressHydrationWarning
-          >
-            <span>In Stock</span>
-          </button>
-          <button
-            onClick={() => setFilter("status", "low")}
-            className={cn(
-              "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'low' ? "bg-warning text-white border-warning shadow-[0_0_12px_oklch(0.8_0.15_80_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
-            )}
-            suppressHydrationWarning
-          >
-            <span>Low Stock</span>
-          </button>
-          <button
-            onClick={() => setFilter("status", "outofstock")}
-            className={cn(
-              "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'outofstock' ? "bg-error/10 text-error border-error/20 ring-4 ring-error/5" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
-            )}
-            suppressHydrationWarning
-          >
-            <span>Out of Stock</span>
-          </button>
-          <button
-            onClick={() => setFilter("status", "ordered")}
-            className={cn(
-              "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'ordered' ? "bg-indigo-600 text-white border-indigo-600 shadow-[0_0_12px_rgba(79,70,229,0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
-            )}
-            suppressHydrationWarning
-          >
-            <span>Ordered</span>
-          </button>
-          <button
-            onClick={() => setFilter("status", "urgent")}
-            className={cn(
-              "badge py-2 px-4 transition-all active:scale-95",
-              currentStatus === 'urgent' ? "bg-error text-white border-error shadow-[0_0_12px_oklch(0.55_0.2_25_/_0.2)]" : "bg-surface-low text-muted-foreground border-transparent hover:border-border-ghost"
-            )}
-            suppressHydrationWarning
-          >
-            <span>Urgent</span>
-          </button>
-        </div>
+        )}
       </div>
 
-      <div className="md:col-span-1 card-premium flex items-center justify-between !p-6">
-        <div className="space-y-4 flex-1">
-          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground block text-left">Filter by Category</label>
-          <div className="flex flex-col gap-3">
-            <PremiumSelect
-              options={categories}
-              value={currentCategory}
-              onChange={(val) => setFilter("category", val)}
-              disabled={isPending}
-              placeholder="All Categories"
-            />
-          </div>
+      {isExpanded && (
+        <div className="card-premium animate-in fade-in slide-in-from-top-4 duration-300">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                  <Tag className="w-3 h-3" /> Category
+                </label>
+                <div className="flex flex-wrap gap-2">
+                   <button 
+                     onClick={() => updateFilter("category", "all")}
+                     className={cn(
+                        "px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border",
+                        currentCategory === 'all' 
+                          ? "bg-primary text-white border-primary shadow-md shadow-primary/20" 
+                          : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/30"
+                     )}
+                   >
+                     All Categories
+                   </button>
+                   {categories.map(cat => (
+                      <button 
+                        key={cat}
+                        onClick={() => updateFilter("category", cat)}
+                        className={cn(
+                           "px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border",
+                           currentCategory === cat 
+                             ? "bg-primary text-white border-primary shadow-md shadow-primary/20" 
+                             : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/30"
+                        )}
+                      >
+                        {cat}
+                      </button>
+                   ))}
+                </div>
+              </div>
+           </div>
         </div>
-        <div className="h-10 w-px bg-border-ghost mx-5"></div>
-        <div className="p-3 text-primary bg-primary/5 rounded-xl">
-          <Search className={cn("w-4 h-4", isPending && "animate-pulse")} />
-        </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }
-

@@ -179,14 +179,14 @@ export default async function InventoryPage({
 
   return (
     <div className="space-y-8 pb-10">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Home</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Inventory</span>
           </nav>
-          <h2 className="heading-xl tracking-tight">Inventory List</h2>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Inventory List</h1>
           <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -200,24 +200,55 @@ export default async function InventoryPage({
         </div>
       </header>
 
-      {/* Bento Stats & Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <InventoryFilters
-          currentStatus={status}
-          currentCategory={category}
-          categories={categoryNames}
-        />
+      {/* Stats row matched with Purchase Bills */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
+                <Package className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-primary uppercase tracking-widest">Total SKU's</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{totalItems}</h2>
+            </div>
+        </div>
 
-        <div className="md:col-span-1 card-premium flex items-center gap-5 !p-6">
-          <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center text-success transition-transform hover:rotate-12">
-            <TrendingUp className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-2xl font-black text-foreground tracking-tight">{items.length}</p>
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Items Found</p>
-          </div>
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-error/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-error/5 text-error transition-transform group-hover:scale-110 border border-error/10">
+                <TrendingUp className="w-6 h-6 rotate-180" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-error uppercase tracking-widest">Urgent Stock</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{allUrgentItems.length}</h2>
+            </div>
+        </div>
+
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+                <TrendingUp className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-warning uppercase tracking-widest">Low Stock</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{allLowItems.length}</h2>
+            </div>
+        </div>
+
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+                <PlusCircle className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-success uppercase tracking-widest">Out of Stock</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{allOutOfStockItems.length}</h2>
+            </div>
         </div>
       </div>
+
+      {/* Filters Row */}
+      <InventoryFilters
+        currentStatus={status}
+        currentCategory={category}
+        categories={categoryNames}
+      />
 
       <InventoryList items={items ?? []} userRole={session.role} searchQuery={q} />
 

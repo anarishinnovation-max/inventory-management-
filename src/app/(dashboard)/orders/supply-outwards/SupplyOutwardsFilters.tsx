@@ -1,14 +1,22 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useTransition, useState } from "react";
-import { SearchableSelect } from "@/components/SearchableSelect";
-import { Calendar, User, Package, X, Filter } from "lucide-react";
+import { Search, Calendar, User, Package, Filter, ChevronDown, X } from "lucide-react";
+import { useState, useTransition } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+interface SupplyOutwardsFiltersProps {
+  customers: { id: string; name: string }[];
+  items: { id: string; name: string }[];
+  currentCustomerId: string;
+  currentItemId: string;
+  currentStartDate?: string;
+  currentEndDate?: string;
 }
 
 export function SupplyOutwardsFilters({
@@ -18,135 +26,151 @@ export function SupplyOutwardsFilters({
   currentItemId,
   currentStartDate,
   currentEndDate
-}: {
-  customers: { id: string, name: string }[];
-  items: { id: string, name: string, sku: string }[];
-  currentCustomerId: string;
-  currentItemId: string;
-  currentStartDate?: string;
-  currentEndDate?: string;
-}) {
+}: SupplyOutwardsFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
 
+  const [customerId, setCustomerId] = useState(currentCustomerId);
+  const [itemId, setItemId] = useState(currentItemId);
   const [startDate, setStartDate] = useState(currentStartDate || "");
   const [endDate, setEndDate] = useState(currentEndDate || "");
+  const [isPending, startTransition] = useTransition();
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const updateFilters = (updates: Record<string, string>) => {
-    const params = new URLSearchParams(searchParams);
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value && value !== 'all') {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-    });
+  const applyFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (customerId && customerId !== 'all') params.set("customerId", customerId);
+    else params.delete("customerId");
+    
+    if (itemId && itemId !== 'all') params.set("itemId", itemId);
+    else params.delete("itemId");
+    
+    if (startDate) params.set("startDate", startDate);
+    else params.delete("startDate");
+    
+    if (endDate) params.set("endDate", endDate);
+    else params.delete("endDate");
 
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`?${params.toString()}`);
     });
   };
 
   const clearFilters = () => {
-    setStartDate("");
-    setEndDate("");
     startTransition(() => {
       router.push(pathname);
     });
   };
 
-  const hasFilters = currentCustomerId !== 'all' || currentItemId !== 'all' || currentStartDate || currentEndDate;
+  const hasActiveFilters = customerId !== "all" || itemId !== "all" || startDate || endDate;
 
   return (
-    <div className="card-premium w-full md:w-auto flex-1 flex flex-col gap-6 !p-6 border-primary/5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-          <Filter className="w-3 h-3" />
-          Advanced Filters
+    <div className="space-y-6 w-full">
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Quick Tabs */}
+        <div className="flex bg-surface-low p-1.5 rounded-full border border-border-ghost">
+           <button
+              className={cn(
+                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                !hasActiveFilters ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
+              )}
+              onClick={clearFilters}
+            >
+              All Bookings
+            </button>
+            <button
+              className={cn(
+                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                hasActiveFilters ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
+              )}
+              onClick={() => setIsExpanded(true)}
+            >
+              Filtered
+            </button>
         </div>
-        {hasFilters && (
-          <button 
+
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={cn(
+            "ml-auto flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border shadow-sm",
+            isExpanded || hasActiveFilters
+              ? "bg-primary/10 text-primary border-primary/20"
+              : "bg-primary/[0.03] text-primary border-primary/10 hover:bg-primary/10"
+          )}
+        >
+          <Filter className="w-3.5 h-3.5" />
+          <span>{isExpanded ? "Hide Filters" : "More Filters"}</span>
+          <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", isExpanded && "rotate-180")} />
+        </button>
+
+        {hasActiveFilters && (
+          <button
             onClick={clearFilters}
-            className="text-[10px] font-black text-error hover:underline uppercase flex items-center gap-1"
+            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-error/[0.03] text-error border border-error/10 font-black text-[10px] uppercase tracking-widest hover:bg-error/10 transition-all shadow-sm"
           >
-            <X className="w-3 h-3" />
-            Clear
+            <X className="w-3.5 h-3.5" />
+            Reset
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Customer Filter */}
-        <div className="space-y-2">
-          <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-            <User className="w-3 h-3" />
-            Customer
-          </label>
-          <SearchableSelect
-            items={[{ id: 'all', name: 'All Customers' }, ...customers]}
-            value={currentCustomerId}
-            onChange={(val) => updateFilters({ customerId: val })}
-            placeholder="All Customers"
-            className="!rounded-xl"
-          />
-        </div>
+      {isExpanded && (
+        <div className="card-premium grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="space-y-3">
+            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+              <User className="w-3 h-3" /> Customer
+            </label>
+            <select 
+              value={customerId}
+              onChange={(e) => setCustomerId(e.target.value)}
+              className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none transition-all appearance-none"
+            >
+              <option value="all">All Customers</option>
+              {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
 
-        {/* Item Filter */}
-        <div className="space-y-2">
-          <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-            <Package className="w-3 h-3" />
-            Item
-          </label>
-          <SearchableSelect
-            items={[{ id: 'all', name: 'All Items', sku: '' }, ...items]}
-            value={currentItemId}
-            onChange={(val) => updateFilters({ itemId: val })}
-            placeholder="All Items"
-            className="!rounded-xl"
-          />
-        </div>
+          <div className="space-y-3">
+            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+              <Package className="w-3 h-3" /> Item
+            </label>
+            <select 
+              value={itemId}
+              onChange={(e) => setItemId(e.target.value)}
+              className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none transition-all appearance-none"
+            >
+              <option value="all">All Items</option>
+              {items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+            </select>
+          </div>
 
-        {/* Start Date */}
-        <div className="space-y-2">
-          <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-            <Calendar className="w-3 h-3" />
-            From Date
-          </label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => {
-              setStartDate(e.target.value);
-              updateFilters({ startDate: e.target.value });
-            }}
-            className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3.5 text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all hover:border-primary/20"
-          />
-        </div>
-
-        {/* End Date */}
-        <div className="space-y-2">
-          <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-            <Calendar className="w-3 h-3" />
-            To Date
-          </label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => {
-              setEndDate(e.target.value);
-              updateFilters({ endDate: e.target.value });
-            }}
-            className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3.5 text-sm font-bold focus:ring-2 focus:ring-primary outline-none transition-all hover:border-primary/20"
-          />
-        </div>
-      </div>
-      
-      {isPending && (
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-primary animate-ping"></div>
-          <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Applying filters...</span>
+          <div className="space-y-3 lg:col-span-2">
+            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+              <Calendar className="w-3 h-3" /> Date Range
+            </label>
+            <div className="flex items-center gap-2">
+              <input 
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none"
+              />
+              <span className="text-[10px] font-black text-muted-foreground">TO</span>
+              <input 
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none"
+              />
+              <button 
+                onClick={applyFilters}
+                className="ml-2 p-2.5 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

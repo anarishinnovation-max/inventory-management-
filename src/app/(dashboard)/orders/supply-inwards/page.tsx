@@ -158,142 +158,134 @@ export default async function SupplyInwardsPage({
 
   return (
     <div className="space-y-10 pb-10">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Orders</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Supply Inwards</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Supply Inwards</h1>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Supply Inwards</h1>
           <p className="text-muted-foreground mt-2 font-medium">Focusing on items that are yet to be received.</p>
         </div>
       </header>
 
       {/* Stats Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="card-premium group border-primary/5 bg-primary/[0.01]">
-            <div className="p-3 w-fit rounded-xl bg-primary/10 text-primary mb-4 transition-transform group-hover:scale-110">
-                <Package className="w-5 h-5" />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
+                <Package className="w-6 h-6" />
             </div>
-            <p className="text-[9px] font-black text-primary uppercase tracking-widest">Ordered Items</p>
-            <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
+            <div>
+              <p className="text-[10px] font-black text-primary uppercase tracking-widest">Ordered Items</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{pendingItems.length}</h2>
+            </div>
         </div>
 
-        <div className="card-premium group border-warning/5 bg-warning/[0.01]">
-            <div className="p-3 w-fit rounded-xl bg-warning/10 text-warning mb-4 transition-transform group-hover:scale-110">
-                <Clock className="w-5 h-5" />
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+                <Clock className="w-6 h-6" />
             </div>
-            <p className="text-[9px] font-black text-warning uppercase tracking-widest">Remaining Units</p>
-            <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{totalPendingQty}</h2>
+            <div>
+              <p className="text-[10px] font-black text-warning uppercase tracking-widest">Remaining Units</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{totalPendingQty}</h2>
+            </div>
         </div>
 
-        <div className="card-premium group border-success/5 bg-success/[0.01]">
-            <div className="p-3 w-fit rounded-xl bg-success/10 text-success mb-4 transition-transform group-hover:scale-110">
-                <CheckCircle2 className="w-5 h-5" />
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+                <CheckCircle2 className="w-6 h-6" />
             </div>
-            <p className="text-[9px] font-black text-success uppercase tracking-widest">Last 24h Inward</p>
-            <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">
-              {recentTransactions.filter(t => new Date(t.createdAt).getTime() > Date.now() - 86400000).length}
-            </h2>
+            <div>
+              <p className="text-[10px] font-black text-success uppercase tracking-widest">Last 24h Inward</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">
+                {recentTransactions.filter(t => new Date(t.createdAt).getTime() > Date.now() - 86400000).length}
+              </h2>
+            </div>
         </div>
 
-        <div className="card-premium group border-indigo-500/5 bg-indigo-500/[0.01]">
-            <div className="p-3 w-fit rounded-xl bg-indigo-500/10 text-indigo-500 mb-4 transition-transform group-hover:scale-110">
-                <Truck className="w-5 h-5" />
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-indigo-500/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-indigo-500/5 text-indigo-500 transition-transform group-hover:scale-110 border border-indigo-500/10">
+                <Truck className="w-6 h-6" />
             </div>
-            <p className="text-[9px] font-black text-indigo-500 uppercase tracking-widest">Active Vendors</p>
-            <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">
-              {new Set(pendingItems.map(i => i.vendor.id)).size}
-            </h2>
+            <div>
+              <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Active Vendors</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">
+                {new Set(pendingItems.map(i => i.vendor.id)).size}
+              </h2>
+            </div>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 items-start">
-        <div className="flex-1 w-full max-w-2xl">
-           <SearchInput 
-             defaultValue={q} 
-             placeholder="Search Item, Vendor or PO..." 
-           />
-        </div>
-        <SupplyInwardsFilters 
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Main List & Filters */}
+        <div className="lg:col-span-12">
+          <SupplyInwardsList 
+            items={pendingItems}
+            searchQuery={q}
             vendors={vendors}
             currentVendorId={vendorId}
             currentPONumber={poNumber}
             currentStartDate={startDate}
             currentEndDate={endDate}
-        />
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main List: Items to Receive */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="flex items-center justify-between px-2">
-            <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2">
-              <Clock className="w-4 h-4 text-warning" />
-              Pending Item Arrivals
-            </h3>
-            <Link href="/orders/purchase" className="text-[10px] font-black text-primary hover:underline uppercase">Full Purchase List</Link>
-          </div>
-
-          <SupplyInwardsList items={pendingItems} />
-        </div>
-
-        {/* Sidebar: Recent Audit Log */}
-        <div className="lg:col-span-4 space-y-6">
-          <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2 px-2">
+      {/* Audit: Recently Received Section (Moved Below) */}
+      <div className="space-y-6 pt-10 border-t border-border-ghost">
+        <div className="flex items-center justify-between px-2">
+          <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-success" />
             Audit: Recently Received
           </h3>
+          <Link href="/transactions" className="text-[10px] font-black text-primary hover:underline uppercase tracking-widest">
+             Full History
+          </Link>
+        </div>
 
-          <div className="space-y-4">
-            {recentTransactions.length > 0 ? recentTransactions.map((tx: any) => (
-              <div key={tx.id} className="card-premium p-4 hover:shadow-md transition-all group">
-                <div className="flex items-start gap-4">
-                   <div className="w-10 h-10 rounded-xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 group-hover:scale-110 transition-transform">
-                      <ArrowDownLeft className="w-5 h-5" />
-                   </div>
-                   <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start">
-                         <p className="text-xs font-black text-foreground truncate">{tx.item.name}</p>
-                         <span className="text-xs font-black text-success">+{tx.quantity}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {recentTransactions.length > 0 ? recentTransactions.slice(0, 6).map((tx: any) => (
+            <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group">
+              <div className="flex items-start gap-4">
+                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 group-hover:scale-110 transition-transform">
+                    <ArrowDownLeft className="w-6 h-6" />
+                 </div>
+                 <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                       <p className="text-sm font-black text-foreground truncate">{tx.item.name}</p>
+                       <span className="text-sm font-black text-success">+{tx.quantity}</span>
+                    </div>
+                    <div className="flex items-center gap-3 mt-2">
+                      <div className="flex items-center gap-1.5">
+                        <Truck className="w-3.5 h-3.5 text-muted-foreground" />
+                        <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.vendor?.name || 'Unknown Vendor'}</p>
                       </div>
-                      <div className="flex items-center gap-3 mt-1">
-                        <div className="flex items-center gap-1">
-                          <Truck className="w-3 h-3 text-muted-foreground" />
-                          <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.vendor?.name || 'Unknown Vendor'}</p>
-                        </div>
-                        {tx.referenceType === "PO" && (
-                           <div className="flex items-center gap-1 px-1.5 py-0.5 bg-primary/5 rounded border border-primary/10">
-                              <span className="text-[8px] font-black text-primary uppercase">PO #{tx.referenceId.split('-')[0]}</span>
-                           </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-ghost">
-                         <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full bg-surface-low border border-border-ghost flex items-center justify-center text-[8px] font-bold">
-                               {tx.user?.name?.[0] || 'S'}
-                            </div>
-                            <span className="text-[9px] font-black text-muted-foreground uppercase">{tx.user?.name || 'System'}</span>
+                      {tx.referenceType === "PO" && (
+                         <div className="flex items-center gap-1.5 px-2 py-0.5 bg-primary/5 rounded-lg border border-primary/10">
+                            <span className="text-[9px] font-black text-primary uppercase">PO #{tx.referenceId.split('-')[0]}</span>
                          </div>
-                         <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter opacity-60">
-                           {formatDate(tx.createdAt)}
-                         </span>
-                      </div>
-                   </div>
-                </div>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border-ghost">
+                       <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 rounded-full bg-surface-low border border-border-ghost flex items-center justify-center text-[9px] font-bold">
+                             {tx.user?.name?.[0] || 'S'}
+                          </div>
+                          <span className="text-[10px] font-black text-muted-foreground uppercase">{tx.user?.name || 'System'}</span>
+                       </div>
+                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-tighter opacity-60">
+                         {formatDate(tx.createdAt)}
+                       </span>
+                    </div>
+                 </div>
               </div>
-            )) : (
-              <div className="card-premium p-10 text-center">
-                 <p className="text-xs text-muted-foreground font-medium">No recent inward activity.</p>
-              </div>
-            )}
-            
-            <Link href="/transactions" className="flex items-center justify-center gap-2 py-4 text-[10px] font-black text-muted-foreground hover:text-primary transition-colors uppercase tracking-[0.2em]">
-               View Full Audit Log
-               <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
+            </div>
+          )) : (
+            <div className="col-span-full card-premium p-10 text-center">
+               <p className="text-xs text-muted-foreground font-medium">No recent inward activity.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

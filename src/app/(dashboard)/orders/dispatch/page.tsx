@@ -18,7 +18,7 @@ function cn(...inputs: ClassValue[]) {
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-async function getDispatchOrders(query?: string, companyId?: string) {
+async function getDispatchOrders(query?: string, companyId?: string, searchParams?: any) {
   if (!companyId) return [];
   const where: Prisma.DispatchOrderWhereInput = { companyId };
   
@@ -27,6 +27,11 @@ async function getDispatchOrders(query?: string, companyId?: string) {
       { id: { contains: query, mode: 'insensitive' } },
       { customer: { name: { contains: query, mode: 'insensitive' } } },
     ];
+  }
+
+  const sParams: any = await searchParams;
+  if (sParams.status && sParams.status !== 'all') {
+    where.status = sParams.status;
   }
 
   const orders = await prisma.dispatchOrder.findMany({
@@ -52,13 +57,13 @@ export default async function DispatchPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const sParams = await searchParams;
   const session = await getSession();
   if (!session) redirect("/login");
 
-  const sParams = await searchParams;
   const q = typeof sParams.q === 'string' ? sParams.q : '';
   
-  const orders = await getDispatchOrders(q, session.companyId).catch(() => []);
+  const orders = await getDispatchOrders(q, session.companyId, sParams).catch(() => []);
 
   // Calculate stats
   const pendingCount = orders.filter((o: any) => o.status === "pending").length;
@@ -66,14 +71,14 @@ export default async function DispatchPage({
 
   return (
     <div className="space-y-10 pb-10">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Selling</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Outgoing items</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Selling Bills</h1>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Selling Bills</h1>
           <p className="text-muted-foreground mt-2 font-medium">Manage selling and sending items to customers.</p>
         </div>
         {(session.role === 'OWNER' || session.role === 'MANAGER') && (
@@ -85,37 +90,82 @@ export default async function DispatchPage({
       </header>
 
       {/* Stats row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="card-premium group border-warning/5 bg-warning/[0.01]">
-           <div className="flex justify-between items-start">
-              <div className="p-3 rounded-xl bg-warning/10 text-warning transition-transform group-hover:scale-110">
-                 <Clock className="w-5 h-5" />
-              </div>
-           </div>
-           <div className="mt-8">
-              <h2 className="text-3xl font-black text-foreground tracking-tighter">{pendingCount}</h2>
-              <p className="text-[9px] font-black text-warning uppercase tracking-widest mt-1">Waiting to Send</p>
-           </div>
+      {/* Stats Bento Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+                <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-warning uppercase tracking-widest">Waiting to Send</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{pendingCount}</h2>
+            </div>
         </div>
 
-        <div className="card-premium group border-emerald-500/5 bg-emerald-500/[0.01]">
-           <div className="flex justify-between items-start">
-              <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500 transition-transform group-hover:scale-110">
-                 <CheckCircle2 className="w-5 h-5" />
-              </div>
-           </div>
-           <div className="mt-8">
-              <h2 className="text-3xl font-black text-foreground tracking-tighter">{dispatchedCount}</h2>
-              <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mt-1">Items Sent</p>
-           </div>
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
+            <div className="p-3 w-fit rounded-2xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+                <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-success uppercase tracking-widest">Items Sent</p>
+              <h2 className="text-4xl font-black text-foreground mt-2 tracking-tighter">{dispatchedCount}</h2>
+            </div>
+        </div>
+
+        {/* Empty Bento Slots for Balance */}
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient opacity-50 border-dashed">
+            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary">
+                <Plus className="w-6 h-6" />
+            </div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Growth Track</p>
+        </div>
+
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient opacity-50 border-dashed">
+            <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary">
+                <Plus className="w-6 h-6" />
+            </div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Revenue Flow</p>
         </div>
       </div>
 
-      <div className="flex-1 max-w-2xl">
-          <SearchInput 
-              defaultValue={q}
-              placeholder="Search Customer or Order ID..."
-          />
+      <div className="flex flex-wrap items-center gap-6">
+        <div className="w-full max-w-3xl">
+            <SearchInput 
+                defaultValue={q}
+                placeholder="Search Customer or Order ID..."
+            />
+        </div>
+
+        {/* Quick Tabs - Locally handled via search params */}
+        <div className="flex bg-surface-low p-1.5 rounded-full border border-border-ghost">
+           <Link
+              href="/orders/dispatch"
+              className={cn(
+                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                !sParams.status || sParams.status === 'all' ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              All Bills
+            </Link>
+            <Link
+              href="/orders/dispatch?status=pending"
+              className={cn(
+                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                sParams.status === 'pending' ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Pending
+            </Link>
+            <Link
+              href="/orders/dispatch?status=dispatched"
+              className={cn(
+                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                sParams.status === 'dispatched' ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Sent
+            </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">

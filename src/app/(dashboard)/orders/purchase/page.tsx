@@ -177,18 +177,18 @@ export default async function PurchaseOrdersPage({
 
   return (
     <div className="space-y-10 pb-10">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Purchase Bills</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Financial & Ops</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Purchase Bills</h1>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Purchase Bills</h1>
           <p className="text-muted-foreground mt-2 font-medium">Manage procurement, payments, and vendor tracking.</p>
         </div>
         {(session.role === 'OWNER' || session.role === 'MANAGER') && (
-          <Link href="/orders/purchase/new" className="btn-primary shadow-glow">
+          <Link href="/orders/purchase/new" className="px-6 py-3 bg-primary text-white rounded-2xl font-black text-xs shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center gap-2">
             <Plus className="w-4 h-4" />
             <span>New Purchase Order</span>
           </Link>
@@ -196,36 +196,30 @@ export default async function PurchaseOrdersPage({
       </header>
 
       {/* KPI Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="card-premium group border-warning/5 bg-warning/[0.01]">
-           <div className="flex justify-between items-start">
-              <div className="p-3 rounded-xl bg-warning/10 text-warning transition-transform group-hover:scale-110">
-                 <Clock className="w-5 h-5" />
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
+           <div className="p-3 w-fit rounded-2xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+              <Clock className="w-6 h-6" />
            </div>
-           <div className="mt-6">
-              <p className="text-[9px] font-black text-warning uppercase tracking-widest">Stock Pending</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingCount}</h2>
+           <div>
+              <p className="text-[10px] font-black text-warning uppercase tracking-widest">Stock Pending</p>
+              <h2 className="text-5xl font-black text-foreground mt-2 tracking-tighter">{pendingCount}</h2>
            </div>
         </div>
         
-        <div className="card-premium group border-primary/5 bg-primary/[0.01]">
-           <div className="flex justify-between items-start">
-              <div className="p-3 rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
-                 <Truck className="w-5 h-5" />
-              </div>
+        <div className="card-premium h-[200px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
+           <div className="p-3 w-fit rounded-2xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
+              <Truck className="w-6 h-6" />
            </div>
-           <div className="mt-6">
-              <p className="text-[9px] font-black text-primary uppercase tracking-widest">In Transit</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{orderedCount}</h2>
+           <div>
+              <p className="text-[10px] font-black text-primary uppercase tracking-widest">In Transit</p>
+              <h2 className="text-5xl font-black text-foreground mt-2 tracking-tighter">{orderedCount}</h2>
            </div>
         </div>
-
-
       </div>
 
-      <div className="space-y-6">
-        <div className="flex-1 max-w-2xl">
+      <div className="flex flex-col gap-6 pt-4">
+        <div className="w-full max-w-3xl">
           <SearchInput 
             defaultValue={filters.q} 
             placeholder="Search by Order ID or Vendor Name..."

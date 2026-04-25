@@ -58,14 +58,14 @@ export default async function TransactionsPage() {
 
   return (
     <div className="space-y-10 pb-10">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Records</span>
-            <span className="opacity-30">/</span>
-            <span className="text-primary">Activity Log</span>
+             <span>Records</span>
+             <span className="opacity-30">/</span>
+             <span className="text-primary">Activity Log</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Activity Log</h1>
+          <h1 className="text-4xl font-black text-foreground tracking-tight">Activity Log</h1>
           <p className="text-muted-foreground mt-2 font-medium">A list of every time items were moved or changed.</p>
         </div>
         <ExportButton data={transactions} />
