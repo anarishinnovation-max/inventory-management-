@@ -3,8 +3,8 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { Package, Truck, User, Calendar, Receipt, Search, AlertCircle, TrendingDown, Clock, Users, ArrowUpRight, ChevronRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import SearchInput from "@/components/SearchInput";
 import { SupplyOutwardsFilters } from "./SupplyOutwardsFilters";
+import SupplyOutwardsList from "./SupplyOutwardsList";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -198,157 +198,70 @@ export default async function SupplyOutwardsPage({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 pt-4">
-        <div className="flex-1 max-w-4xl">
-           <SearchInput 
-             defaultValue={q} 
-             placeholder="Search Item, Customer or Order..." 
-           />
-        </div>
+      <SupplyOutwardsList 
+        items={pendingItems}
+        searchQuery={q}
+        customers={customers}
+        allItems={items}
+        currentCustomerId={customerId}
+        currentItemId={itemId}
+        currentStartDate={startDate}
+        currentEndDate={endDate}
+      />
 
-        <div className="ml-auto">
-          <SupplyOutwardsFilters 
-              customers={customers}
-              items={items}
-              currentCustomerId={customerId}
-              currentItemId={itemId}
-              currentStartDate={startDate}
-              currentEndDate={endDate}
-          />
-        </div>
-      </div>
+      {/* Recent Audit Log - Moved to Bottom */}
+      <div className="space-y-6 pt-10 border-t border-border-ghost">
+        <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2 px-2">
+          <CheckCircle2 className="w-4 h-4 text-success" />
+          Audit: Recently Dispatched
+        </h3>
 
-      <div className="space-y-6">
-        <div className="flex items-center justify-between px-2">
-          <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2">
-            <Clock className="w-4 h-4 text-warning" />
-            Pending Dispatch Items
-          </h3>
-          <Link href="/orders/dispatch" className="text-[10px] font-black text-primary hover:underline uppercase">Full Sale List</Link>
-        </div>
-
-        <div className="card-premium !p-0 overflow-hidden border-warning/10 shadow-lg shadow-warning/5">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="table-header bg-warning/[0.02]">
-                  <th className="table-cell-header">Item Details</th>
-                  <th className="table-cell-header">Recipient</th>
-                  <th className="table-cell-header">Booked On</th>
-                  <th className="table-cell-header text-right">Quantity</th>
-                  <th className="table-cell-header text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border-ghost">
-                {pendingItems.length > 0 ? pendingItems.map((item: any) => (
-                  <tr key={item.id} className="group hover:bg-surface-low/30 transition-all border-b border-border-ghost last:border-0">
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-bold text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-all">
-                          {item.item.sku[0]}
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                          <span className="font-bold text-foreground text-sm truncate">{item.item.name}</span>
-                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {item.item.sku}</span>
-                        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {transactions.length > 0 ? transactions.map((tx: any) => (
+            <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group">
+              <div className="flex items-start gap-4">
+                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 group-hover:scale-110 transition-transform">
+                    <ArrowUpRight className="w-6 h-6" />
+                 </div>
+                 <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                       <p className="text-sm font-black text-foreground truncate">{tx.item.name}</p>
+                       <span className="text-sm font-black text-error">-{Math.abs(tx.quantity)}</span>
+                    </div>
+                    <div className="flex items-center gap-3 mt-2">
+                      <div className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5 text-muted-foreground" />
+                        <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.customer?.name || 'Guest'}</p>
                       </div>
-                    </td>
-                    <td className="px-8 py-5">
-                      <div className="flex flex-col gap-1">
-                        <span className="text-xs font-bold text-foreground truncate">{item.customer.name}</span>
-                        <div className="flex items-center gap-1.5">
-                           <span className="text-[9px] font-black text-primary uppercase">DO #{item.orderId.split('-')[0]}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-2">
-                         <Calendar className="w-4 h-4 text-muted-foreground" />
-                         <span className="text-xs font-bold text-foreground">{formatDate(item.createdAt)}</span>
-                      </div>
-                    </td>
-                    <td className="px-8 py-5 text-right">
-                      <div className="flex flex-col items-end">
-                         <span className="text-sm font-black text-warning">{item.quantity}</span>
-                         <span className="text-[9px] font-bold text-muted-foreground uppercase mt-1">Units Booked</span>
-                      </div>
-                    </td>
-                    <td className="px-8 py-5 text-right">
-                      <Link href={`/orders/dispatch/${item.orderId}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-black text-[9px] uppercase tracking-widest hover:bg-primary/90 transition-all shadow-sm">
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                        Send
-                      </Link>
-                    </td>
-                  </tr>
-                )) : (
-                  <tr>
-                    <td colSpan={5} className="px-8 py-20 text-center">
-                      <div className="flex flex-col items-center gap-4 opacity-40">
-                         <AlertCircle className="w-10 h-10" />
-                         <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">No pending bookings to dispatch.</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Recent Audit Log - Moved to Bottom */}
-        <div className="space-y-6 pt-10 border-t border-border-ghost">
-          <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2 px-2">
-            <CheckCircle2 className="w-4 h-4 text-success" />
-            Audit: Recently Dispatched
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {transactions.length > 0 ? transactions.map((tx: any) => (
-              <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group">
-                <div className="flex items-start gap-4">
-                   <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 group-hover:scale-110 transition-transform">
-                      <ArrowUpRight className="w-6 h-6" />
-                   </div>
-                   <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start">
-                         <p className="text-sm font-black text-foreground truncate">{tx.item.name}</p>
-                         <span className="text-sm font-black text-error">-{Math.abs(tx.quantity)}</span>
-                      </div>
-                      <div className="flex items-center gap-3 mt-2">
-                        <div className="flex items-center gap-1.5">
-                          <User className="w-3.5 h-3.5 text-muted-foreground" />
-                          <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.customer?.name || 'Guest'}</p>
-                        </div>
-                        {tx.referenceType === "DISPATCH" && (
-                           <div className="flex items-center gap-1.5 px-2 py-0.5 bg-primary/5 rounded-lg border border-primary/10">
-                              <span className="text-[9px] font-black text-primary uppercase">DO #{tx.referenceId.split('-')[0]}</span>
-                           </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-border-ghost">
-                         <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60">
-                           {formatDate(tx.createdAt)}
-                         </span>
-                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-tighter opacity-60">
-                           {new Date(tx.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                         </span>
-                      </div>
-                   </div>
-                </div>
+                      {tx.referenceType === "DISPATCH" && (
+                         <div className="flex items-center gap-1.5 px-2 py-0.5 bg-primary/5 rounded-lg border border-primary/10">
+                            <span className="text-[9px] font-black text-primary uppercase">DO #{tx.referenceId.split('-')[0]}</span>
+                         </div>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border-ghost">
+                       <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60">
+                         {formatDate(tx.createdAt)}
+                       </span>
+                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-tighter opacity-60">
+                         {new Date(tx.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                       </span>
+                    </div>
+                 </div>
               </div>
-            )) : (
-              <div className="col-span-full card-premium p-10 text-center">
-                 <p className="text-xs text-muted-foreground font-medium">No recent dispatch activity.</p>
-              </div>
-            )}
-          </div>
-          
-          <div className="flex justify-center">
-            <Link href="/transactions" className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-muted-foreground hover:text-primary transition-colors uppercase tracking-[0.2em] border border-border-ghost rounded-2xl hover:bg-surface-low">
-               View Full Audit Log
-               <ChevronRight className="w-3 h-3" />
-            </Link>
-          </div>
+            </div>
+          )) : (
+            <div className="col-span-full card-premium p-10 text-center">
+               <p className="text-xs text-muted-foreground font-medium">No recent dispatch activity.</p>
+            </div>
+          )}
+        </div>
+        
+        <div className="flex justify-center">
+          <Link href="/transactions" className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-muted-foreground hover:text-primary transition-colors uppercase tracking-[0.2em] border border-border-ghost rounded-2xl hover:bg-surface-low">
+             View Full Audit Log
+             <ChevronRight className="w-3 h-3" />
+          </Link>
         </div>
       </div>
     </div>
