@@ -208,7 +208,6 @@ export default async function InventoryPage({
           <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
         <div className="flex items-center gap-3">
-            <QuickPOButton items={reorderPool} />
             {(session.role === 'OWNER' || session.role === 'MANAGER') && (
               <Link href="/inventory/new" className="btn-primary shadow-glow h-14">
                 <PlusCircle className="w-4 h-4" />
