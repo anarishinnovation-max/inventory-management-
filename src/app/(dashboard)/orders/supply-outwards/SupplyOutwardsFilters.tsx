@@ -58,6 +58,10 @@ export function SupplyOutwardsFilters({
   };
 
   const clearFilters = () => {
+    setCustomerId("all");
+    setItemId("all");
+    setStartDate("");
+    setEndDate("");
     startTransition(() => {
       router.push(pathname);
     });
@@ -66,111 +70,98 @@ export function SupplyOutwardsFilters({
   const hasActiveFilters = customerId !== "all" || itemId !== "all" || startDate || endDate;
 
   return (
-    <div className="space-y-6 w-full">
-      <div className="flex flex-wrap items-center gap-4">
-        {/* Quick Tabs */}
-        <div className="flex bg-surface-low p-1.5 rounded-full border border-border-ghost">
-           <button
-              className={cn(
-                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
-                !hasActiveFilters ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
-              )}
-              onClick={clearFilters}
-            >
-              All Bookings
-            </button>
-            <button
-              className={cn(
-                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
-                hasActiveFilters ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
-              )}
-              onClick={() => setIsExpanded(true)}
-            >
-              Filtered
-            </button>
-        </div>
-
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className={cn(
-            "ml-auto flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border shadow-sm",
+            "ml-auto flex items-center gap-2.5 px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border shadow-ambient relative group",
             isExpanded || hasActiveFilters
-              ? "bg-primary/10 text-primary border-primary/20"
-              : "bg-primary/[0.03] text-primary border-primary/10 hover:bg-primary/10"
+              ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
+              : "bg-white text-primary border-border-ghost hover:border-primary/30 hover:bg-surface-low"
           )}
         >
-          <Filter className="w-3.5 h-3.5" />
+          <Filter className={cn("w-3.5 h-3.5 transition-transform group-hover:rotate-12", isExpanded && "scale-110")} />
           <span>{isExpanded ? "Hide Filters" : "More Filters"}</span>
-          <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", isExpanded && "rotate-180")} />
+          <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-300", isExpanded && "rotate-180")} />
+          
+          {!isExpanded && hasActiveFilters && (
+            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-primary border-2 border-white"></span>
+            </span>
+          )}
         </button>
 
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-error/[0.03] text-error border border-error/10 font-black text-[10px] uppercase tracking-widest hover:bg-error/10 transition-all shadow-sm"
+            className="flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-error/[0.03] text-error border border-error/10 font-black text-[10px] uppercase tracking-widest hover:bg-error hover:text-white transition-all shadow-sm group"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform" />
             Reset
           </button>
         )}
       </div>
 
       {isExpanded && (
-        <div className="card-premium grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <User className="w-3 h-3" /> Customer
-            </label>
-            <select 
-              value={customerId}
-              onChange={(e) => setCustomerId(e.target.value)}
-              className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none transition-all appearance-none"
-            >
-              <option value="all">All Customers</option>
-              {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </div>
+        <div className="card-premium animate-in fade-in slide-in-from-top-4 duration-300">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                  <User className="w-3 h-3" /> Customer
+                </label>
+                <select 
+                  value={customerId}
+                  onChange={(e) => setCustomerId(e.target.value)}
+                  className="w-full px-4 py-3 bg-surface-low border border-border-ghost rounded-2xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none transition-all appearance-none"
+                >
+                  <option value="all">All Customers</option>
+                  {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
 
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Package className="w-3 h-3" /> Item
-            </label>
-            <select 
-              value={itemId}
-              onChange={(e) => setItemId(e.target.value)}
-              className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none transition-all appearance-none"
-            >
-              <option value="all">All Items</option>
-              {items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
-            </select>
-          </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                  <Package className="w-3 h-3" /> Item
+                </label>
+                <select 
+                  value={itemId}
+                  onChange={(e) => setItemId(e.target.value)}
+                  className="w-full px-4 py-3 bg-surface-low border border-border-ghost rounded-2xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none transition-all appearance-none"
+                >
+                  <option value="all">All Items</option>
+                  {items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+                </select>
+              </div>
 
-          <div className="space-y-3 lg:col-span-2">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <Calendar className="w-3 h-3" /> Date Range
-            </label>
-            <div className="flex items-center gap-2">
-              <input 
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none"
-              />
-              <span className="text-[10px] font-black text-muted-foreground">TO</span>
-              <input 
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full px-4 py-2.5 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none"
-              />
-              <button 
-                onClick={applyFilters}
-                className="ml-2 p-2.5 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
-              >
-                <Search className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+              <div className="space-y-3 lg:col-span-2">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                  <Calendar className="w-3 h-3" /> Date Range
+                </label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface-low border border-border-ghost rounded-2xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none"
+                  />
+                  <span className="text-[10px] font-black text-muted-foreground px-2">TO</span>
+                  <input 
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface-low border border-border-ghost rounded-2xl text-xs font-bold focus:ring-2 focus:ring-primary outline-none"
+                  />
+                  <button 
+                    onClick={applyFilters}
+                    className="ml-2 p-3.5 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center min-w-[50px]"
+                  >
+                    <Search className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+           </div>
         </div>
       )}
     </div>

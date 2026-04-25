@@ -198,21 +198,24 @@ export default async function SupplyOutwardsPage({
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 pt-4">
-        <div className="w-full max-w-3xl">
+      <div className="flex flex-wrap items-center gap-4 pt-4">
+        <div className="flex-1 max-w-4xl">
            <SearchInput 
              defaultValue={q} 
              placeholder="Search Item, Customer or Order..." 
            />
         </div>
-        <SupplyOutwardsFilters 
-            customers={customers}
-            items={items}
-            currentCustomerId={customerId}
-            currentItemId={itemId}
-            currentStartDate={startDate}
-            currentEndDate={endDate}
-        />
+
+        <div className="ml-auto">
+          <SupplyOutwardsFilters 
+              customers={customers}
+              items={items}
+              currentCustomerId={customerId}
+              currentItemId={itemId}
+              currentStartDate={startDate}
+              currentEndDate={endDate}
+          />
+        </div>
       </div>
 
       <div className="space-y-6">
