@@ -3,7 +3,6 @@
 import { clsx, type ClassValue } from "clsx";
 import {
   ArrowLeft,
-  Camera,
   Loader2,
   Package,
   QrCode,
@@ -201,14 +200,6 @@ export default function NewItemPage() {
             </div>
           </div>
 
-          {/* Secondary visual contextual area */}
-          <div className="bg-surface-low/50 p-8 rounded-4xl border-2 border-dashed border-border-ghost flex flex-col items-center justify-center min-h-50 text-center group cursor-pointer hover:border-primary/50 transition-all hover:bg-primary/5">
-            <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors group-hover:scale-110 duration-300 mb-4">
-                <Camera className="w-6 h-6 " />
-            </div>
-            <p className="text-[15px] font-black text-foreground">Upload Item Imagery</p>
-            <p className="text-sm font-medium text-muted-foreground mt-1">Drag and drop high-res product photos</p>
-          </div>
         </div>
 
         {/* Right Column: Operational Controls */}

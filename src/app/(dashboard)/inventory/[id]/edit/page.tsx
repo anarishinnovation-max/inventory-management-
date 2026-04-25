@@ -5,7 +5,6 @@ import { clsx, type ClassValue } from "clsx";
 import {
   AlertCircle,
   ArrowLeft,
-  Camera,
   History,
   Loader2,
   Package,

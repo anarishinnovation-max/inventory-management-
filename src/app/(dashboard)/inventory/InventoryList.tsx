@@ -3,7 +3,6 @@
 import { 
     CheckSquare, 
     Flame, 
-    ImageIcon, 
     Loader2, 
     Square, 
     Trash2, 
@@ -236,9 +235,6 @@ export default function InventoryList({
                     </td>
                     <td className="px-6 py-5 cursor-pointer" onClick={() => toggleOne(item.id)}>
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-surface-low flex items-center justify-center text-muted-foreground border border-border-ghost transition-colors group-hover:bg-primary/5 group-hover:border-primary/20">
-                          <ImageIcon className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:text-primary" />
-                        </div>
                         <div className="flex flex-col min-w-0">
                           <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
                           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{item.sku}</span>

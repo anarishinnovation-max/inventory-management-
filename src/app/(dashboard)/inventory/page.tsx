@@ -5,7 +5,7 @@ import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableAct
 import InventoryList from "./InventoryList";
 import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
-import { ImageIcon, Package, PlusCircle, TrendingUp } from "lucide-react";
+import { Package, PlusCircle, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import QuickPOButton from "./QuickPOButton";
 import { cacheQuery } from "@/lib/cache";
