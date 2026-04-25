@@ -196,16 +196,6 @@ export default function SupplyInwardsList({
                 >
                   <ArrowDownToLine className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 </button>
-
-                <div className="w-px h-4 bg-border-ghost mx-1"></div>
-
-                <button
-                  onClick={() => setSelectedIds(new Set())}
-                  className="p-2.5 rounded-xl hover:bg-surface-low text-muted-foreground transition-all group"
-                  title="Clear Selection"
-                >
-                  <X className="w-4 h-4 group-hover:rotate-90 transition-transform" />
-                </button>
               </div>
             </div>
           </div>
@@ -287,8 +277,8 @@ export default function SupplyInwardsList({
                         <div className="flex flex-col gap-1">
                           <span className="text-xs font-bold text-foreground truncate">{item.vendor.name}</span>
                           <div className="flex items-center gap-1.5 mt-1">
-                           <span className="px-2 py-0.5 rounded-md bg-primary/[0.05] text-[9px] font-black text-primary uppercase border border-primary/10 tracking-wider">PO #{item.poId.split('-')[0]}</span>
-                        </div>
+                            <span className="px-2 py-0.5 rounded-md bg-primary/[0.05] text-[9px] font-black text-primary uppercase border border-primary/10 tracking-wider">PO #{item.poId.split('-')[0]}</span>
+                          </div>
                         </div>
                       </td>
                       <td className="px-8 py-5">
@@ -309,11 +299,11 @@ export default function SupplyInwardsList({
                         </div>
                       </td>
                       <td className="px-8 py-5 text-right">
-                      <Link href={`/orders/purchase/${item.poId}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group/btn">
-                        <CheckCircle2 className="w-3.5 h-3.5 transition-transform group-hover/btn:rotate-12" />
-                        Receive
-                      </Link>
-                    </td>
+                        <Link href={`/orders/purchase/${item.poId}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group/btn">
+                          <CheckCircle2 className="w-3.5 h-3.5 transition-transform group-hover/btn:rotate-12" />
+                          Receive
+                        </Link>
+                      </td>
                     </tr>
                   );
                 }) : (
