@@ -36,6 +36,7 @@ model User {
   companyId        String
   role             UserRole               @default(EMPLOYEE)
   transactions     InventoryTransaction[]
+  batches          InventoryBatch[]
   company          Company                @relation(fields: [companyId], references: [id])
 }
 
@@ -158,10 +159,12 @@ model InventoryBatch {
   costPerUnit     Float
   purchaseDate    DateTime
   purchaseOrderId String?
+  receivedById    String?
   createdAt       DateTime       @default(now())
   inventory       Inventory      @relation(fields: [inventoryId], references: [id])
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
   vendor          Vendor         @relation(fields: [vendorId], references: [id])
+  receivedBy      User?          @relation(fields: [receivedById], references: [id])
 
   @@index([purchaseOrderId, inventoryId])
   @@index([inventoryId, purchaseDate])

@@ -28,7 +28,12 @@ export async function GET(
         inventory: {
           include: {
             batches: {
-              include: { vendor: true },
+              include: { 
+                vendor: true,
+                receivedBy: {
+                  select: { name: true }
+                }
+              },
               orderBy: { purchaseDate: "desc" },
             },
           },

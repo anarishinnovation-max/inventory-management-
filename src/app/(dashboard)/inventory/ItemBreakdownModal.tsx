@@ -18,6 +18,7 @@ interface BreakdownEntry {
   quantity: number;
   costPerUnit: number;
   purchaseDate: string;
+  receivedBy: string;
 }
 
 interface IncomingPOEntry {
@@ -85,6 +86,7 @@ export function ItemBreakdownModal({
                 quantity: Number(batch.quantity || 0),
                 costPerUnit: Number(batch.costPerUnit || 0),
                 purchaseDate: batch.purchaseDate,
+                receivedBy: batch.receivedBy?.name || "System",
               }))
             );
             setIncomingPOs(
@@ -180,6 +182,7 @@ export function ItemBreakdownModal({
                           <thead>
                             <tr className="bg-surface-low/50 border-b border-border-ghost text-muted-foreground">
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Vendor</th>
+                              <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Received By</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em]">Quantity</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Price</th>
                               <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.15em] text-right">Date</th>
@@ -195,6 +198,9 @@ export function ItemBreakdownModal({
                                     </div>
                                     <span className="font-bold text-foreground text-[14px]">{entry.vendor}</span>
                                   </div>
+                                </td>
+                                <td className="px-8 py-6">
+                                  <span className="text-[12px] font-bold text-muted-foreground">{entry.receivedBy}</span>
                                 </td>
                                 <td className="px-8 py-6">
                                   <span className="px-3 py-1 bg-surface-lowest rounded-lg border border-border-ghost font-black text-xs text-foreground">

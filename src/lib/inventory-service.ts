@@ -128,6 +128,7 @@ export const InventoryService = {
               costPerUnit: poItem.costPrice,
               purchaseDate: po.orderDate,
               purchaseOrderId: poId,
+              receivedById: userId,
             },
           });
         }
@@ -422,6 +423,7 @@ export const InventoryService = {
               remainingQty: adjustmentQty,
               costPerUnit: 0,
               purchaseDate: new Date(),
+              receivedById: userId,
             },
           });
         }
