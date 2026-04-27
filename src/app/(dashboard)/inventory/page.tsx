@@ -71,7 +71,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
 
   const mappedAll = allItemsSummary.map((item: any) => {
     const total = item.inventory?.quantityAvailable ?? 0;
-    const incoming = (item.inventory?.incomingQty ?? 0) + (item.inventory?.quantityInTransit ?? 0);
+    const incoming = item.inventory?.incomingQty ?? 0;
     const reserved = item.inventory?.quantityReserved ?? 0;
     const netAvailable = (total + incoming) - reserved;
     

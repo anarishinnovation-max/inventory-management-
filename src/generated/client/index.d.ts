@@ -21284,7 +21284,6 @@ export namespace Prisma {
 
   export type InventoryBatchWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    purchaseOrderId_inventoryId?: InventoryBatchPurchaseOrderIdInventoryIdCompoundUniqueInput
     AND?: InventoryBatchWhereInput | InventoryBatchWhereInput[]
     OR?: InventoryBatchWhereInput[]
     NOT?: InventoryBatchWhereInput | InventoryBatchWhereInput[]
@@ -21299,7 +21298,7 @@ export namespace Prisma {
     inventory?: XOR<InventoryScalarRelationFilter, InventoryWhereInput>
     purchaseOrder?: XOR<PurchaseOrderNullableScalarRelationFilter, PurchaseOrderWhereInput> | null
     vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
-  }, "id" | "purchaseOrderId_inventoryId">
+  }, "id">
 
   export type InventoryBatchOrderByWithAggregationInput = {
     id?: SortOrder
@@ -23546,11 +23545,6 @@ export namespace Prisma {
   export type PurchaseOrderNullableScalarRelationFilter = {
     is?: PurchaseOrderWhereInput | null
     isNot?: PurchaseOrderWhereInput | null
-  }
-
-  export type InventoryBatchPurchaseOrderIdInventoryIdCompoundUniqueInput = {
-    purchaseOrderId: string
-    inventoryId: string
   }
 
   export type InventoryBatchCountOrderByAggregateInput = {

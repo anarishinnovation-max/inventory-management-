@@ -22,6 +22,7 @@ export async function POST(
         rackId, 
         parseFloat(quantity), 
         userId,
+        session?.companyId || "",
         remarks
     );
 

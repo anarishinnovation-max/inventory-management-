@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid IDs" }, { status: 400 });
     }
 
-    await InventoryService.bulkScrapInventory(ids, reason);
+    await InventoryService.bulkScrapInventory(ids, session.companyId, reason);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

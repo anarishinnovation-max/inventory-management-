@@ -163,7 +163,7 @@ model InventoryBatch {
   purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id])
   vendor          Vendor         @relation(fields: [vendorId], references: [id])
 
-  @@unique([purchaseOrderId, inventoryId])
+  @@index([purchaseOrderId, inventoryId])
   @@index([inventoryId, purchaseDate])
   @@index([vendorId])
 }

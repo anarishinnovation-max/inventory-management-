@@ -21,10 +21,13 @@ import InventoryTableActions from "./InventoryTableActions";
 import { MappedItem } from "./page";
 
 function formatDate(date: Date) {
-  return new Date(date).toLocaleDateString('en-IN', {
+  return new Date(date).toLocaleString('en-IN', {
     day: '2-digit',
     month: 'short',
-    year: 'numeric'
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
   });
 }
 
@@ -75,7 +78,7 @@ export default function InventoryList({
           break;
         case 'status':
           const getStatusWeight = (item: MappedItem) => {
-            const incoming = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
+            const incoming = item.incomingQty ?? 0;
             const net = (item.totalStock + incoming) - (item.quantityReserved || 0);
             if (net < 0) return 4; // Urgent
             if (item.totalStock <= 0) return 3; // Out of stock
@@ -327,7 +330,7 @@ export default function InventoryList({
               <tbody className="divide-y divide-border-ghost">
                 {sortedItems.length > 0 ? sortedItems.map((item) => {
                   const totalStock = item.totalStock;
-                  const incomingQty = (item.incomingQty ?? 0) + (item.quantityInTransit ?? 0);
+                  const incomingQty = item.incomingQty ?? 0;
                   const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
                   const isUrgent = netAvailable < 0;
                   const isShortage = totalStock <= 0;

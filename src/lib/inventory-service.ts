@@ -79,7 +79,7 @@ export const InventoryService = {
         const poItem = po.items.find((i: { itemId: string; }) => i.itemId === update.itemId);
         if (!poItem) continue;
 
-        // 1. Update PO Item received quantity
+        // 1. Update PO Line Item received quantity
         await tx.pOLineItem.update({
           where: { id: poItem.id },
           data: {
@@ -117,12 +117,27 @@ export const InventoryService = {
               quantityInTransit: { decrement: Math.min(currentInv.quantityInTransit || 0, update.receivedQty) },
             },
           });
+
+          // 3a. Create Inventory Batch for this specific receipt (FIFO)
+          await tx.inventoryBatch.create({
+            data: {
+              inventoryId: currentInv.id,
+              vendorId: po.vendorId,
+              quantity: update.receivedQty,
+              remainingQty: update.receivedQty,
+              costPerUnit: poItem.costPrice,
+              purchaseDate: po.orderDate,
+              purchaseOrderId: poId,
+            },
+          });
         }
 
-        // 3b. Update Stock table (per-rack)
+        // 3b. Update Stock table (per-rack) - Fixed scoping to company
         const defaultRack = await tx.rack.findFirst({
+          where: { companyId: po.companyId },
           orderBy: { rackNumber: "asc" }
         });
+        
         if (defaultRack) {
           const existingStock = await tx.stock.findFirst({
             where: { itemId: update.itemId, rackId: defaultRack.id },
@@ -158,40 +173,6 @@ export const InventoryService = {
         where: { id: poId },
         data: { status: newStatus }
       });
-
-      // Handle Batching
-      if (allReceived && String(po.status || "").toUpperCase() !== "DELIVERED") {
-        const inventories = await tx.inventory.findMany({
-          where: { itemId: { in: finalItems.map((entry: any) => entry.itemId) } },
-          select: { id: true, itemId: true },
-        });
-        const inventoryIdByItemId = new Map<string, string>(
-          inventories.map((inv: any) => [inv.itemId, inv.id])
-        );
-
-        const batchRows = finalItems
-          .map((line: any) => {
-            const inventoryId = inventoryIdByItemId.get(line.itemId);
-            if (!inventoryId) return null;
-
-            return {
-              inventoryId,
-              vendorId: po.vendorId,
-              quantity: line.quantityReceived,
-              remainingQty: line.quantityReceived,
-              costPerUnit: line.costPrice,
-              purchaseDate: po.orderDate,
-              purchaseOrderId: poId,
-            };
-          })
-          .filter(Boolean);
-
-        if (batchRows.length > 0) {
-            for (const row of batchRows) {
-               if (row) await tx.inventoryBatch.create({ data: row });
-            }
-        }
-      }
 
       return await tx.purchaseOrder.findFirst({
         where: { id: poId },
@@ -269,7 +250,27 @@ export const InventoryService = {
           usedRackId = stock.rackId;
         }
 
-        // 3. Create Inventory Transaction
+        // 3. Deduct from Batches (FIFO)
+        let batchRemaining = line.quantity;
+        const batches = await tx.inventoryBatch.findMany({
+          where: { 
+            inventory: { itemId: line.itemId },
+            remainingQty: { gt: 0 }
+          },
+          orderBy: { purchaseDate: "asc" }
+        });
+
+        for (const batch of batches) {
+          if (batchRemaining <= 0) break;
+          const deduction = Math.min(batch.remainingQty, batchRemaining);
+          await tx.inventoryBatch.update({
+            where: { id: batch.id },
+            data: { remainingQty: { decrement: deduction } }
+          });
+          batchRemaining -= deduction;
+        }
+
+        // 4. Create Inventory Transaction
         await tx.inventoryTransaction.create({
           data: {
             item: { connect: { id: line.itemId } },
@@ -306,6 +307,26 @@ export const InventoryService = {
           referenceId: reason,
         },
       });
+
+      // Deduct from Batches (FIFO)
+      let scrapRemaining = qty;
+      const batches = await tx.inventoryBatch.findMany({
+        where: { 
+          inventory: { itemId },
+          remainingQty: { gt: 0 }
+        },
+        orderBy: { purchaseDate: "asc" }
+      });
+
+      for (const batch of batches) {
+        if (scrapRemaining <= 0) break;
+        const deduction = Math.min(batch.remainingQty, scrapRemaining);
+        await tx.inventoryBatch.update({
+          where: { id: batch.id },
+          data: { remainingQty: { decrement: deduction } }
+        });
+        scrapRemaining -= deduction;
+      }
 
       return await tx.inventory.update({
         where: { itemId },
@@ -368,6 +389,43 @@ export const InventoryService = {
           referenceId: remarks || "Manual Adjustment",
         },
       });
+
+      // Handle Batches for Manual Adjustment
+      if (adjustmentQty < 0) {
+        let adjRemaining = Math.abs(adjustmentQty);
+        const batches = await tx.inventoryBatch.findMany({
+          where: { 
+            inventory: { itemId },
+            remainingQty: { gt: 0 }
+          },
+          orderBy: { purchaseDate: "asc" }
+        });
+
+        for (const batch of batches) {
+          if (adjRemaining <= 0) break;
+          const deduction = Math.min(batch.remainingQty, adjRemaining);
+          await tx.inventoryBatch.update({
+            where: { id: batch.id },
+            data: { remainingQty: { decrement: deduction } }
+          });
+          adjRemaining -= deduction;
+        }
+      } else if (adjustmentQty > 0) {
+        const inventory = await tx.inventory.findUnique({ where: { itemId } });
+        const firstVendor = await tx.vendor.findFirst({ where: { companyId } });
+        if (inventory && firstVendor) {
+          await tx.inventoryBatch.create({
+            data: {
+              inventoryId: inventory.id,
+              vendorId: firstVendor.id,
+              quantity: adjustmentQty,
+              remainingQty: adjustmentQty,
+              costPerUnit: 0,
+              purchaseDate: new Date(),
+            },
+          });
+        }
+      }
 
       return { success: true, newQuantity: quantity };
     });
