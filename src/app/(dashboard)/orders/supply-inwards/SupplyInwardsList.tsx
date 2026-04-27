@@ -341,14 +341,14 @@ export default function SupplyInwardsList({
                   <SlidersHorizontal className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-black text-foreground">Review Bulk Receipt</h2>
+                  <h2 className="text-xl font-black text-foreground">Review Receipt</h2>
                   <div className="flex items-center gap-4 mt-1">
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Adjust delivered quantities for {selectedIds.size} items</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Adjust delivered quantities for {Object.keys(reviewValues).length} items</p>
                     <span className="w-1 h-1 rounded-full bg-border-ghost"></span>
                     <button
                       onClick={() => {
-                        const initial: Record<string, number> = {};
-                        selectedIds.forEach(id => {
+                        const initial: Record<string, number> = { ...reviewValues };
+                        Object.keys(reviewValues).forEach(id => {
                           const [poId, itemId] = id.split('|');
                           const item = items.find(i => i.poId === poId && i.itemId === itemId);
                           initial[id] = item ? (item.quantityOrdered - item.quantityReceived) : 0;
@@ -372,7 +372,7 @@ export default function SupplyInwardsList({
 
             {/* Modal Body */}
             <div className="flex-1 overflow-y-auto p-8 space-y-4 no-scrollbar">
-              {Array.from(selectedIds).map(id => {
+              {Object.keys(reviewValues).map(id => {
                 const [poId, itemId] = id.split('|');
                 const item = items.find(i => i.poId === poId && i.itemId === itemId);
                 if (!item) return null;
