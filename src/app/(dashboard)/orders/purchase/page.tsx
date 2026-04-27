@@ -56,11 +56,12 @@ async function getPurchaseOrdersRaw(filters: {
 
   const where: any = {
     companyId,
-    AND: []
   };
 
+  const andConditions: any[] = [];
+
   if (q) {
-    where.AND.push({
+    andConditions.push({
       OR: [
         { id: { contains: q, mode: 'insensitive' } },
         { vendor: { name: { contains: q, mode: 'insensitive' } } }
@@ -70,24 +71,24 @@ async function getPurchaseOrdersRaw(filters: {
 
   if (status && status !== 'all') {
     if (status === 'received') {
-      where.AND.push({
+      andConditions.push({
         status: { in: ['RECEIVED', 'DELIVERED'] }
       });
     } else {
-      where.AND.push({
+      andConditions.push({
         status: { equals: status.toUpperCase() }
       });
     }
   }
 
   if (vendorId && vendorId !== 'all') {
-    where.AND.push({
+    andConditions.push({
       vendorId: { equals: vendorId }
     });
   }
 
   if (itemId && itemId !== 'all') {
-    where.AND.push({
+    andConditions.push({
       items: {
         some: {
           itemId: itemId
@@ -98,15 +99,26 @@ async function getPurchaseOrdersRaw(filters: {
 
   if (startDate || endDate) {
     const dateFilter: any = {};
-    if (startDate) dateFilter.gte = new Date(startDate);
+    if (startDate) {
+      const start = new Date(startDate);
+      if (!isNaN(start.getTime())) dateFilter.gte = start;
+    }
     if (endDate) {
       const end = new Date(endDate);
-      end.setHours(23, 59, 59, 999);
-      dateFilter.lte = end;
+      if (!isNaN(end.getTime())) {
+        end.setHours(23, 59, 59, 999);
+        dateFilter.lte = end;
+      }
     }
-    where.AND.push({
-      createdAt: dateFilter
-    });
+    if (Object.keys(dateFilter).length > 0) {
+      andConditions.push({
+        createdAt: dateFilter
+      });
+    }
+  }
+
+  if (andConditions.length > 0) {
+    where.AND = andConditions;
   }
 
   const orders = await prisma.purchaseOrder.findMany({
@@ -161,7 +173,10 @@ export default async function PurchaseOrdersPage({
     maxAmount: typeof sParams.maxAmount === 'string' ? sParams.maxAmount : undefined,
   };
 
-  const pos = await getPurchaseOrders(filters, session.companyId).catch(() => []);
+  const pos = await getPurchaseOrders(filters, session.companyId).catch((err) => {
+    console.error("Error fetching purchase orders:", err);
+    return [];
+  });
 
   // Fetch data for filters
   const [vendors, items] = await Promise.all([
