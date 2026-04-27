@@ -96,7 +96,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
       category: item.category?.name || "Uncategorized",
       updatedAt: item.inventory?.updatedAt || item.createdAt
     };
-  });
+  }).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
   // Filter for the main table
   let filteredItems = mappedAll;
