@@ -12,7 +12,8 @@ import {
   Search,
   Send,
   Trash2,
-  ChevronDown
+  ChevronDown,
+  X
 } from "lucide-react";
 import { SearchableSelect } from "@/components/SearchableSelect";
 import { PremiumDateTimePicker } from "@/components/DateTimePicker";
@@ -159,9 +160,9 @@ function StockBreakdownPopup({
             </div>
             <button 
               onClick={onClose}
-              className="p-3 rounded-2xl bg-surface-low text-muted-foreground hover:bg-error hover:text-white transition-all active:scale-90"
+              className="p-3 rounded-2xl bg-surface-low text-muted-foreground hover:bg-surface-high hover:text-foreground transition-all active:scale-90"
             >
-              <Trash2 className="w-5 h-5" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -247,6 +248,9 @@ export default function NewDispatchOrderPage() {
   const [paymentMode, setPaymentMode] = useState("Cash");
   const [orderDate, setOrderDate] = useState(new Date().toISOString());
   const [expectedDelivery, setExpectedDelivery] = useState("");
+  const [collectedBy, setCollectedBy] = useState("");
+  const [dispatchedBy, setDispatchedBy] = useState("");
+  const [transportMode, setTransportMode] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantity: 1, sellingPrice: 0 }
   ]);
@@ -259,16 +263,22 @@ export default function NewDispatchOrderPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [cRes, iRes, invRes] = await Promise.all([
+        const [cRes, iRes, invRes, userRes] = await Promise.all([
           fetch("/api/customers?minimal=true"),
           fetch("/api/items?minimal=true"),
-          fetch("/api/inventory?minimal=true")
+          fetch("/api/inventory?minimal=true"),
+          fetch("/api/auth/me")
         ]);
 
         if (cRes.ok && iRes.ok && invRes.ok) {
           setCustomers(await cRes.json());
           setItems(await iRes.json());
           
+          if (userRes.ok) {
+            const userData = await userRes.json();
+            setDispatchedBy(userData.name);
+          }
+
           // Build inventory map for quick lookup
           const inventoryData = await invRes.json();
           const map = new Map<string, InventoryItem>();
@@ -430,6 +440,9 @@ export default function NewDispatchOrderPage() {
           paymentMode: paymentMode,
           orderDate: orderDate,
           expectedDelivery: expectedDelivery || null,
+          collectedBy: collectedBy,
+          dispatchedBy: dispatchedBy,
+          transportMode: transportMode,
           items: lineItems,
           status: customStatus || "pending"
         }),
@@ -695,6 +708,38 @@ export default function NewDispatchOrderPage() {
                    value={paymentMode}
                    onChange={(val) => setPaymentMode(val)}
                    placeholder="Select Payment Method"
+                 />
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Collected By (Customer Side)</label>
+                 <input 
+                   type="text"
+                   value={collectedBy}
+                   onChange={(e) => setCollectedBy(e.target.value)}
+                   placeholder="Who is picking it up?"
+                   className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
+                 />
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Dispatched By (Our Staff)</label>
+                 <input 
+                   type="text"
+                   value={dispatchedBy}
+                   readOnly
+                   placeholder="Who is sending it?"
+                   className="w-full bg-surface-low border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm outline-none cursor-not-allowed opacity-70"
+                 />
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Transport Mode</label>
+                 <SearchableSelect 
+                   items={["Self Pickup", "Delivery Truck", "Courier", "Rickshaw", "Bike", "Other"].map(m => ({ id: m, name: m }))}
+                   value={transportMode}
+                   onChange={(val) => setTransportMode(val)}
+                   placeholder="Select Transport"
                  />
               </div>
 

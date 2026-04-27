@@ -54,18 +54,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { customerId, items, paymentMode, status, expectedDelivery } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
+    const { customerId, items, paymentMode, status, expectedDelivery, orderDate, collectedBy, dispatchedBy, transportMode } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
 
     if (!customerId || !items || !items.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     if (expectedDelivery) {
       const deliveryDate = new Date(expectedDelivery);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
       if (deliveryDate < today) {
         return NextResponse.json({ error: "Delivery date cannot be in the past" }, { status: 400 });
+      }
+    }
+
+    if (orderDate) {
+      const oDate = new Date(orderDate);
+      if (oDate < today) {
+        return NextResponse.json({ error: "Order date cannot be in the past" }, { status: 400 });
       }
     }
 
@@ -75,6 +83,10 @@ export async function POST(request: Request) {
       paymentMode: paymentMode || "Cash",
       status: status || "pending",
       expectedDelivery: expectedDelivery,
+      orderDate: orderDate,
+      collectedBy: collectedBy,
+      dispatchedBy: dispatchedBy,
+      transportMode: transportMode,
       items: items.map((item: any) => ({
         itemId: item.itemId,
         quantity: parseFloat(item.quantity),

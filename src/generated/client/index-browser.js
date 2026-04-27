@@ -244,7 +244,10 @@ exports.Prisma.DispatchOrderScalarFieldEnum = {
   expectedDelivery: 'expectedDelivery',
   orderDate: 'orderDate',
   createdAt: 'createdAt',
-  companyId: 'companyId'
+  companyId: 'companyId',
+  collectedBy: 'collectedBy',
+  dispatchedBy: 'dispatchedBy',
+  transportMode: 'transportMode'
 };
 
 exports.Prisma.DispatchItemScalarFieldEnum = {

@@ -108,7 +108,10 @@ async function getSupplyOutwardsData(companyId: string, q?: string, customerId?:
       customer: order.customer,
       orderId: order.id,
       createdAt: order.createdAt,
-      expectedDelivery: order.expectedDelivery
+      expectedDelivery: order.expectedDelivery,
+      collectedBy: order.collectedBy,
+      dispatchedBy: order.dispatchedBy,
+      transportMode: order.transportMode
     }))
   );
 

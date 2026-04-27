@@ -205,6 +205,9 @@ model DispatchOrder {
   orderDate        DateTime       @default(now())
   createdAt        DateTime       @default(now())
   companyId        String
+  collectedBy      String?
+  dispatchedBy     String?
+  transportMode    String?
   items            DispatchItem[]
   company          Company        @relation(fields: [companyId], references: [id])
   customer         Customer       @relation(fields: [customerId], references: [id])

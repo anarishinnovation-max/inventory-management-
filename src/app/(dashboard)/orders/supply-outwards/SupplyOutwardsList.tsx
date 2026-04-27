@@ -232,6 +232,15 @@ export default function SupplyOutwardsList({
                           <span className="text-xs font-bold text-foreground truncate">{item.customer.name}</span>
                           <div className="flex items-center gap-1.5 mt-1">
                             <span className="px-2 py-0.5 rounded-md bg-primary/[0.05] text-[9px] font-black text-primary uppercase border border-primary/10 tracking-wider">DO #{item.orderId.split('-')[0]}</span>
+                            {item.collectedBy && (
+                               <span className="px-2 py-0.5 rounded-md bg-indigo-500/[0.05] text-[9px] font-black text-indigo-600 uppercase border border-indigo-500/10 tracking-wider">Col: {item.collectedBy}</span>
+                            )}
+                            {item.dispatchedBy && (
+                               <span className="px-2 py-0.5 rounded-md bg-slate-500/[0.05] text-[9px] font-black text-slate-600 uppercase border border-slate-500/10 tracking-wider">Staff: {item.dispatchedBy}</span>
+                            )}
+                            {item.transportMode && (
+                               <span className="px-2 py-0.5 rounded-md bg-amber-500/[0.05] text-[9px] font-black text-amber-600 uppercase border border-amber-500/10 tracking-wider">{item.transportMode}</span>
+                            )}
                           </div>
                         </div>
                       </td>

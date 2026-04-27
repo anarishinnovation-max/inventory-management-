@@ -171,6 +171,27 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                     <p className="text-lg font-black text-blue-900">{order.paymentMode || "Cash"}</p>
                  </div>
 
+                 {order.collectedBy && (
+                   <div className="p-6 rounded-2xl bg-purple-50 border border-purple-100">
+                      <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-2">Collected By (Customer)</p>
+                      <p className="text-lg font-black text-purple-900">{order.collectedBy}</p>
+                   </div>
+                 )}
+
+                 {order.dispatchedBy && (
+                   <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+                      <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-2">Dispatched By (Our Staff)</p>
+                      <p className="text-lg font-black text-slate-900">{order.dispatchedBy}</p>
+                   </div>
+                 )}
+
+                 {order.transportMode && (
+                   <div className="p-6 rounded-2xl bg-amber-50 border border-amber-100">
+                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2">Transport Mode</p>
+                      <p className="text-lg font-black text-amber-900">{order.transportMode}</p>
+                   </div>
+                 )}
+
                  {isDispatched ? (
                     <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center gap-4">
                        <CheckCircle2 className="w-6 h-6 text-emerald-600" />

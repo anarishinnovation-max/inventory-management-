@@ -16784,6 +16784,9 @@ export namespace Prisma {
     orderDate: Date | null
     createdAt: Date | null
     companyId: string | null
+    collectedBy: string | null
+    dispatchedBy: string | null
+    transportMode: string | null
   }
 
   export type DispatchOrderMaxAggregateOutputType = {
@@ -16795,6 +16798,9 @@ export namespace Prisma {
     orderDate: Date | null
     createdAt: Date | null
     companyId: string | null
+    collectedBy: string | null
+    dispatchedBy: string | null
+    transportMode: string | null
   }
 
   export type DispatchOrderCountAggregateOutputType = {
@@ -16806,6 +16812,9 @@ export namespace Prisma {
     orderDate: number
     createdAt: number
     companyId: number
+    collectedBy: number
+    dispatchedBy: number
+    transportMode: number
     _all: number
   }
 
@@ -16819,6 +16828,9 @@ export namespace Prisma {
     orderDate?: true
     createdAt?: true
     companyId?: true
+    collectedBy?: true
+    dispatchedBy?: true
+    transportMode?: true
   }
 
   export type DispatchOrderMaxAggregateInputType = {
@@ -16830,6 +16842,9 @@ export namespace Prisma {
     orderDate?: true
     createdAt?: true
     companyId?: true
+    collectedBy?: true
+    dispatchedBy?: true
+    transportMode?: true
   }
 
   export type DispatchOrderCountAggregateInputType = {
@@ -16841,6 +16856,9 @@ export namespace Prisma {
     orderDate?: true
     createdAt?: true
     companyId?: true
+    collectedBy?: true
+    dispatchedBy?: true
+    transportMode?: true
     _all?: true
   }
 
@@ -16925,6 +16943,9 @@ export namespace Prisma {
     orderDate: Date
     createdAt: Date
     companyId: string
+    collectedBy: string | null
+    dispatchedBy: string | null
+    transportMode: string | null
     _count: DispatchOrderCountAggregateOutputType | null
     _min: DispatchOrderMinAggregateOutputType | null
     _max: DispatchOrderMaxAggregateOutputType | null
@@ -16953,6 +16974,9 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     companyId?: boolean
+    collectedBy?: boolean
+    dispatchedBy?: boolean
+    transportMode?: boolean
     items?: boolean | DispatchOrder$itemsArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -16968,6 +16992,9 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     companyId?: boolean
+    collectedBy?: boolean
+    dispatchedBy?: boolean
+    transportMode?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchOrder"]>
@@ -16981,6 +17008,9 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     companyId?: boolean
+    collectedBy?: boolean
+    dispatchedBy?: boolean
+    transportMode?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dispatchOrder"]>
@@ -16994,9 +17024,12 @@ export namespace Prisma {
     orderDate?: boolean
     createdAt?: boolean
     companyId?: boolean
+    collectedBy?: boolean
+    dispatchedBy?: boolean
+    transportMode?: boolean
   }
 
-  export type DispatchOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "status" | "paymentMode" | "expectedDelivery" | "orderDate" | "createdAt" | "companyId", ExtArgs["result"]["dispatchOrder"]>
+  export type DispatchOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "status" | "paymentMode" | "expectedDelivery" | "orderDate" | "createdAt" | "companyId" | "collectedBy" | "dispatchedBy" | "transportMode", ExtArgs["result"]["dispatchOrder"]>
   export type DispatchOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | DispatchOrder$itemsArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -17028,6 +17061,9 @@ export namespace Prisma {
       orderDate: Date
       createdAt: Date
       companyId: string
+      collectedBy: string | null
+      dispatchedBy: string | null
+      transportMode: string | null
     }, ExtArgs["result"]["dispatchOrder"]>
     composites: {}
   }
@@ -17462,6 +17498,9 @@ export namespace Prisma {
     readonly orderDate: FieldRef<"DispatchOrder", 'DateTime'>
     readonly createdAt: FieldRef<"DispatchOrder", 'DateTime'>
     readonly companyId: FieldRef<"DispatchOrder", 'String'>
+    readonly collectedBy: FieldRef<"DispatchOrder", 'String'>
+    readonly dispatchedBy: FieldRef<"DispatchOrder", 'String'>
+    readonly transportMode: FieldRef<"DispatchOrder", 'String'>
   }
     
 
@@ -20492,7 +20531,10 @@ export namespace Prisma {
     expectedDelivery: 'expectedDelivery',
     orderDate: 'orderDate',
     createdAt: 'createdAt',
-    companyId: 'companyId'
+    companyId: 'companyId',
+    collectedBy: 'collectedBy',
+    dispatchedBy: 'dispatchedBy',
+    transportMode: 'transportMode'
   };
 
   export type DispatchOrderScalarFieldEnum = (typeof DispatchOrderScalarFieldEnum)[keyof typeof DispatchOrderScalarFieldEnum]
@@ -21565,6 +21607,9 @@ export namespace Prisma {
     orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
     companyId?: StringFilter<"DispatchOrder"> | string
+    collectedBy?: StringNullableFilter<"DispatchOrder"> | string | null
+    dispatchedBy?: StringNullableFilter<"DispatchOrder"> | string | null
+    transportMode?: StringNullableFilter<"DispatchOrder"> | string | null
     items?: DispatchItemListRelationFilter
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
@@ -21579,6 +21624,9 @@ export namespace Prisma {
     orderDate?: SortOrder
     createdAt?: SortOrder
     companyId?: SortOrder
+    collectedBy?: SortOrderInput | SortOrder
+    dispatchedBy?: SortOrderInput | SortOrder
+    transportMode?: SortOrderInput | SortOrder
     items?: DispatchItemOrderByRelationAggregateInput
     company?: CompanyOrderByWithRelationInput
     customer?: CustomerOrderByWithRelationInput
@@ -21596,6 +21644,9 @@ export namespace Prisma {
     orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
     companyId?: StringFilter<"DispatchOrder"> | string
+    collectedBy?: StringNullableFilter<"DispatchOrder"> | string | null
+    dispatchedBy?: StringNullableFilter<"DispatchOrder"> | string | null
+    transportMode?: StringNullableFilter<"DispatchOrder"> | string | null
     items?: DispatchItemListRelationFilter
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
@@ -21610,6 +21661,9 @@ export namespace Prisma {
     orderDate?: SortOrder
     createdAt?: SortOrder
     companyId?: SortOrder
+    collectedBy?: SortOrderInput | SortOrder
+    dispatchedBy?: SortOrderInput | SortOrder
+    transportMode?: SortOrderInput | SortOrder
     _count?: DispatchOrderCountOrderByAggregateInput
     _max?: DispatchOrderMaxOrderByAggregateInput
     _min?: DispatchOrderMinOrderByAggregateInput
@@ -21627,6 +21681,9 @@ export namespace Prisma {
     orderDate?: DateTimeWithAggregatesFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"DispatchOrder"> | Date | string
     companyId?: StringWithAggregatesFilter<"DispatchOrder"> | string
+    collectedBy?: StringNullableWithAggregatesFilter<"DispatchOrder"> | string | null
+    dispatchedBy?: StringNullableWithAggregatesFilter<"DispatchOrder"> | string | null
+    transportMode?: StringNullableWithAggregatesFilter<"DispatchOrder"> | string | null
   }
 
   export type DispatchItemWhereInput = {
@@ -22711,6 +22768,9 @@ export namespace Prisma {
     expectedDelivery?: Date | string | null
     orderDate?: Date | string
     createdAt?: Date | string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
     items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
     company: CompanyCreateNestedOneWithoutDispatchesInput
     customer: CustomerCreateNestedOneWithoutDispatchOrdersInput
@@ -22725,6 +22785,9 @@ export namespace Prisma {
     orderDate?: Date | string
     createdAt?: Date | string
     companyId: string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
     items?: DispatchItemUncheckedCreateNestedManyWithoutDispatchOrderInput
   }
 
@@ -22735,6 +22798,9 @@ export namespace Prisma {
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
     company?: CompanyUpdateOneRequiredWithoutDispatchesNestedInput
     customer?: CustomerUpdateOneRequiredWithoutDispatchOrdersNestedInput
@@ -22749,6 +22815,9 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DispatchItemUncheckedUpdateManyWithoutDispatchOrderNestedInput
   }
 
@@ -22761,6 +22830,9 @@ export namespace Prisma {
     orderDate?: Date | string
     createdAt?: Date | string
     companyId: string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
   }
 
   export type DispatchOrderUpdateManyMutationInput = {
@@ -22770,6 +22842,9 @@ export namespace Prisma {
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DispatchOrderUncheckedUpdateManyInput = {
@@ -22781,6 +22856,9 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DispatchItemCreateInput = {
@@ -23792,6 +23870,9 @@ export namespace Prisma {
     orderDate?: SortOrder
     createdAt?: SortOrder
     companyId?: SortOrder
+    collectedBy?: SortOrder
+    dispatchedBy?: SortOrder
+    transportMode?: SortOrder
   }
 
   export type DispatchOrderMaxOrderByAggregateInput = {
@@ -23803,6 +23884,9 @@ export namespace Prisma {
     orderDate?: SortOrder
     createdAt?: SortOrder
     companyId?: SortOrder
+    collectedBy?: SortOrder
+    dispatchedBy?: SortOrder
+    transportMode?: SortOrder
   }
 
   export type DispatchOrderMinOrderByAggregateInput = {
@@ -23814,6 +23898,9 @@ export namespace Prisma {
     orderDate?: SortOrder
     createdAt?: SortOrder
     companyId?: SortOrder
+    collectedBy?: SortOrder
+    dispatchedBy?: SortOrder
+    transportMode?: SortOrder
   }
 
   export type DispatchOrderScalarRelationFilter = {
@@ -25910,6 +25997,9 @@ export namespace Prisma {
     expectedDelivery?: Date | string | null
     orderDate?: Date | string
     createdAt?: Date | string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
     items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
     customer: CustomerCreateNestedOneWithoutDispatchOrdersInput
   }
@@ -25922,6 +26012,9 @@ export namespace Prisma {
     expectedDelivery?: Date | string | null
     orderDate?: Date | string
     createdAt?: Date | string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
     items?: DispatchItemUncheckedCreateNestedManyWithoutDispatchOrderInput
   }
 
@@ -26284,6 +26377,9 @@ export namespace Prisma {
     orderDate?: DateTimeFilter<"DispatchOrder"> | Date | string
     createdAt?: DateTimeFilter<"DispatchOrder"> | Date | string
     companyId?: StringFilter<"DispatchOrder"> | string
+    collectedBy?: StringNullableFilter<"DispatchOrder"> | string | null
+    dispatchedBy?: StringNullableFilter<"DispatchOrder"> | string | null
+    transportMode?: StringNullableFilter<"DispatchOrder"> | string | null
   }
 
   export type InventoryTransactionUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -28788,6 +28884,9 @@ export namespace Prisma {
     expectedDelivery?: Date | string | null
     orderDate?: Date | string
     createdAt?: Date | string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
     items?: DispatchItemCreateNestedManyWithoutDispatchOrderInput
     company: CompanyCreateNestedOneWithoutDispatchesInput
   }
@@ -28800,6 +28899,9 @@ export namespace Prisma {
     orderDate?: Date | string
     createdAt?: Date | string
     companyId: string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
     items?: DispatchItemUncheckedCreateNestedManyWithoutDispatchOrderInput
   }
 
@@ -29115,6 +29217,9 @@ export namespace Prisma {
     expectedDelivery?: Date | string | null
     orderDate?: Date | string
     createdAt?: Date | string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
     company: CompanyCreateNestedOneWithoutDispatchesInput
     customer: CustomerCreateNestedOneWithoutDispatchOrdersInput
   }
@@ -29128,6 +29233,9 @@ export namespace Prisma {
     orderDate?: Date | string
     createdAt?: Date | string
     companyId: string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
   }
 
   export type DispatchOrderCreateOrConnectWithoutItemsInput = {
@@ -29190,6 +29298,9 @@ export namespace Prisma {
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
     company?: CompanyUpdateOneRequiredWithoutDispatchesNestedInput
     customer?: CustomerUpdateOneRequiredWithoutDispatchOrdersNestedInput
   }
@@ -29203,6 +29314,9 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ItemUpsertWithoutDispatchItemsInput = {
@@ -29665,6 +29779,9 @@ export namespace Prisma {
     expectedDelivery?: Date | string | null
     orderDate?: Date | string
     createdAt?: Date | string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
   }
 
   export type InventoryTransactionCreateManyCompanyInput = {
@@ -29798,6 +29915,9 @@ export namespace Prisma {
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
     customer?: CustomerUpdateOneRequiredWithoutDispatchOrdersNestedInput
   }
@@ -29810,6 +29930,9 @@ export namespace Prisma {
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DispatchItemUncheckedUpdateManyWithoutDispatchOrderNestedInput
   }
 
@@ -29821,6 +29944,9 @@ export namespace Prisma {
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryTransactionUpdateWithoutCompanyInput = {
@@ -30772,6 +30898,9 @@ export namespace Prisma {
     orderDate?: Date | string
     createdAt?: Date | string
     companyId: string
+    collectedBy?: string | null
+    dispatchedBy?: string | null
+    transportMode?: string | null
   }
 
   export type InventoryTransactionCreateManyCustomerInput = {
@@ -30795,6 +30924,9 @@ export namespace Prisma {
     expectedDelivery?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DispatchItemUpdateManyWithoutDispatchOrderNestedInput
     company?: CompanyUpdateOneRequiredWithoutDispatchesNestedInput
   }
@@ -30807,6 +30939,9 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
     items?: DispatchItemUncheckedUpdateManyWithoutDispatchOrderNestedInput
   }
 
@@ -30818,6 +30953,9 @@ export namespace Prisma {
     orderDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
+    collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    transportMode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryTransactionUpdateWithoutCustomerInput = {

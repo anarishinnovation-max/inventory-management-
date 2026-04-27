@@ -185,7 +185,7 @@ export const InventoryService = {
   /**
    * Creates a new Dispatch Order.
    */
-  async createDispatchOrder(data: { customerId: string; companyId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date }) {
+  async createDispatchOrder(data: { customerId: string; companyId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date, orderDate?: string | Date, collectedBy?: string, dispatchedBy?: string, transportMode?: string }) {
     const status = data.status || "pending";
 
     return await (prisma as any).$transaction(async (tx: any) => {
@@ -197,6 +197,10 @@ export const InventoryService = {
           status: status,
           paymentMode: data.paymentMode || "Cash",
           expectedDelivery: data.expectedDelivery ? new Date(data.expectedDelivery) : null,
+          orderDate: data.orderDate ? new Date(data.orderDate) : new Date(),
+          collectedBy: data.collectedBy,
+          dispatchedBy: data.dispatchedBy,
+          transportMode: data.transportMode,
           items: {
             create: data.items.map((item: any) => ({
               itemId: item.itemId,
