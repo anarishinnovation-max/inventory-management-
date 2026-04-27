@@ -109,7 +109,7 @@ export function ScrapModal({
               <div className="space-y-2">
                  <div className="flex justify-between items-end px-1">
                     <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Quantity to Scrap</label>
-                    <span className="text-[10px] font-black text-error uppercase tracking-tighter">Available: {totalStock} PCS</span>
+                    <span className="text-[10px] font-black text-error uppercase tracking-tighter">Available: {totalStock}</span>
                  </div>
                  <div className="relative">
                     <input 
@@ -121,7 +121,7 @@ export function ScrapModal({
                       className="w-full px-6 py-4 bg-surface-low border border-border-ghost rounded-2xl text-xl font-black text-foreground outline-none focus:ring-4 focus:ring-error/10 focus:border-error/30 transition-all pr-16"
                       required
                     />
-                    <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xs font-black text-muted-foreground uppercase">PCS</span>
+
                  </div>
               </div>
 

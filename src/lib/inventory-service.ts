@@ -13,6 +13,7 @@ export const InventoryService = {
     companyId: string;
     minStockLevel?: number;
     isCritical?: boolean;
+    rackId?: string | null;
   }) {
     // 0. Check SKU uniqueness within company
     const existing = await prisma.item.findFirst({
@@ -58,6 +59,17 @@ export const InventoryService = {
           referenceId: "System Initialization",
         },
       });
+
+      if (data.rackId && data.rackId !== "null" && data.rackId !== "") {
+        await tx.stock.create({
+          data: {
+            item: { connect: { id: item.id } },
+            rack: { connect: { id: data.rackId } },
+            quantity: 0,
+            company: { connect: { id: data.companyId } }
+          }
+        });
+      }
 
       return item;
     });
@@ -355,11 +367,18 @@ export const InventoryService = {
       const adjustmentQty = quantity - oldQuantity;
 
       if (currentStock) {
-        await tx.stock.update({
-          where: { id: currentStock.id },
-          data: { quantity, updatedAt: new Date() },
-        });
+        if (quantity === 0) {
+          await tx.stock.delete({
+            where: { id: currentStock.id },
+          });
+        } else {
+          await tx.stock.update({
+            where: { id: currentStock.id },
+            data: { quantity, updatedAt: new Date() },
+          });
+        }
       } else {
+        // Create stock record even if quantity is 0 to designate a rack location
         await tx.stock.create({
           data: { itemId, rackId, quantity, companyId },
         });

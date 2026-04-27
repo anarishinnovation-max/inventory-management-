@@ -301,7 +301,7 @@ export default function InventoryList({
                       onClick={() => requestSort('units')}
                       className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
                     >
-                      Units
+                      Available
                       <SortIcon column="units" />
                     </button>
                   </th>
@@ -363,7 +363,15 @@ export default function InventoryList({
                       <td className="px-6 py-5 cursor-pointer" onClick={() => toggleOne(item.id)}>
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col min-w-0">
-                            <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
+                              {item.isCritical && (
+                                <span className="px-1.5 py-0.5 rounded-md bg-error/10 text-error text-[8px] font-black uppercase tracking-widest border border-error/20 flex items-center gap-1 shrink-0">
+                                  <div className="w-1 h-1 rounded-full bg-error animate-pulse" />
+                                  Critical
+                                </span>
+                              )}
+                            </div>
                             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{item.sku}</span>
                           </div>
                         </div>

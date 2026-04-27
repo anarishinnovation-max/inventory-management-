@@ -74,6 +74,7 @@ export default function NewItemPage() {
       unit: formData.get("unit"),
       minStockLevel: parseFloat(formData.get("minStockLevel") as string),
       isCritical: isCritical,
+      rackId: formData.get("rackId"),
     };
 
     try {
@@ -156,6 +157,7 @@ export default function NewItemPage() {
                   </div>
                 </div>
                 
+                <div>
                   <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
                   <SearchableSelect 
                     items={[
@@ -168,6 +170,7 @@ export default function NewItemPage() {
                     placeholder="Select Unit"
                   />
                   <input type="hidden" name="unit" value={unit} />
+                </div>
               </div>
               
               <div>
@@ -220,8 +223,7 @@ export default function NewItemPage() {
                   <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Warning level</span>
                 </div>
                 <div className="relative">
-                  <input required name="minStockLevel" className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right pr-16 text-foreground" type="number" defaultValue="25" min="0" />
-                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-black text-muted-foreground">PCS</span>
+                  <input required name="minStockLevel" className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right text-foreground" type="number" defaultValue="25" min="0" />
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-3 font-bold">We will tell you when items go below this level.</p>
               </div>
@@ -229,8 +231,8 @@ export default function NewItemPage() {
               {/* Toggle Component */}
               <div className="flex items-center justify-between p-5 bg-surface-low rounded-2xl border border-border-ghost">
                 <div>
-                  <p className="text-[15px] font-black text-foreground">Important Item</p>
-                  <p className="text-xs font-bold text-muted-foreground mt-0.5">Buy this first when low</p>
+                  <p className="text-[15px] font-black text-foreground">Critical Item</p>
+                  <p className="text-xs font-bold text-muted-foreground mt-0.5">Flag for priority replenishment</p>
                 </div>
                 <button 
                   type="button" 
@@ -263,20 +265,6 @@ export default function NewItemPage() {
             </div>
           </div>
 
-          {/* Real-time Insights Card */}
-          <div className="primary-gradient p-8 rounded-4xl text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
-            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
-            <div className="flex items-start justify-between mb-6 relative z-10">
-              <TrendingUp className="w-8 h-8 opacity-80" />
-              <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">Tip</span>
-            </div>
-            <p className="text-[15px] font-medium leading-relaxed relative z-10">
-               Based on similar items, we suggest using <span className="font-black">Rack A-01</span> and keeping a <span className="font-black drop-shadow-md">Safe amount of 40 units</span> to not run out.
-            </p>
-            <button type="button" className="mt-8 text-xs font-black py-3 px-5 bg-white text-primary rounded-xl transition-transform hover:scale-105 active:scale-95 flex items-center gap-2 relative z-10 shadow-lg">
-                Use these settings 
-            </button>
-          </div>
 
         </div>
       </div>
@@ -288,13 +276,10 @@ export default function NewItemPage() {
              <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-[15px] font-black text-foreground">Checking form...</p>
+            <p className="text-[15px] font-black text-foreground">Ready to Register</p>
             <p className="text-xs font-bold text-muted-foreground mt-0.5">Please fill all boxes. SKU must be new.</p>
           </div>
         </div>
-        <button type="submit" disabled={loading} className="w-full md:w-auto px-10 py-4 text-[15px] font-black text-white bg-foreground rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2">
-           {loading ? "Saving..." : "Add Item"}
-        </button>
       </div>
 
     </form>

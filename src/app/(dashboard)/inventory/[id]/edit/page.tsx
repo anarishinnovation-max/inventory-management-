@@ -110,7 +110,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-bold animate-pulse">Retrieving Item Specification...</p>
+        <p className="text-muted-foreground font-black animate-pulse uppercase tracking-widest text-[10px]">Retrieving Item Specification...</p>
       </div>
     );
   }
@@ -139,7 +139,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         <div className="space-y-2">
           <Link href="/inventory" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Inventory</span>
+            <span>Back to Stock</span>
           </Link>
           <h2 className="text-4xl font-black tracking-tight text-foreground">Edit Item</h2>
           <p className="text-muted-foreground font-medium">Update item details</p>
@@ -171,7 +171,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                  <Package className="w-5 h-5" />
               </div>
-              Item Details
+              Item Info
             </h3>
             
             <div className="space-y-6">
@@ -182,7 +182,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">SKU / Part Number</label>
+                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">SKU</label>
                   <div className="relative">
                     <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                     <input required name="sku" defaultValue={itemData?.sku} readOnly={isEmployee} className={cn("w-full pl-12 pr-4 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold font-mono text-foreground placeholder:text-muted-foreground/50", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="LXT-9982-A" type="text" />
@@ -191,11 +191,10 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                 
                 <div>
                   <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
-                  <select name="unit" defaultValue={itemData?.unit} disabled={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold appearance-none cursor-pointer text-foreground", isEmployee && "opacity-60 cursor-not-allowed")}>
-                    <option value="Pieces">Pieces (pcs)</option>
-                    <option value="Kilograms">Kilograms (kg)</option>
-                    <option value="Boxes">Boxes (box)</option>
-                  </select>
+                  <div className="px-5 py-4 bg-surface-low border border-border-ghost rounded-xl text-[15px] font-bold text-foreground opacity-80">
+                    {itemData?.unit}
+                  </div>
+                  <input type="hidden" name="unit" value={itemData?.unit} />
                 </div>
               </div>
               
@@ -230,19 +229,19 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                  <Settings className="w-5 h-5" />
               </div>
-              Operational Rules
+              Rules
             </h3>
             
             <div className="space-y-8">
               <div>
                 <div className="flex justify-between items-end mb-3">
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest">Minimum Stock Level</label>
-                  <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Alert Threshold</span>
+                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest">Low Stock Warning</label>
+                  <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Warning level</span>
                 </div>
                 <div className="relative">
-                  <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} readOnly={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right pr-16 text-foreground", isEmployee && "opacity-60 cursor-not-allowed")} type="number" min="0" />
-                  <span className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-black text-muted-foreground">PCS</span>
+                  <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} readOnly={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right text-foreground", isEmployee && "opacity-60 cursor-not-allowed")} type="number" min="0" />
                 </div>
+                <p className="text-[10px] text-muted-foreground mt-3 font-bold">We will tell you when items go below this level.</p>
               </div>
 
               <div className="flex items-center justify-between p-5 bg-surface-low rounded-2xl border border-border-ghost">
@@ -294,8 +293,8 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   <span className="text-sm font-black font-mono text-primary">₹{itemData.inventory.batches[0].costPerUnit}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Units Bought</span>
-                  <span className="text-sm font-bold text-foreground">{itemData.inventory.batches[0].quantity} {itemData.unit}</span>
+                  <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Quantity Bought</span>
+                  <span className="text-sm font-bold text-foreground">{itemData.inventory.batches[0].quantity}</span>
                 </div>
               </div>
             </div>
@@ -312,14 +311,9 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           </div>
           <div>
             <p className="text-[15px] font-black text-foreground">Integrity Sync Active</p>
-            <p className="text-xs font-bold text-muted-foreground mt-0.5">Specifications will be updated across all warehouse modules instantly.</p>
+            <p className="text-xs font-bold text-muted-foreground mt-0.5">Specifications will be updated across all modules instantly.</p>
           </div>
         </div>
-        {!isEmployee && (
-          <button type="submit" disabled={loading} className="w-full md:w-auto px-10 py-4 text-[15px] font-black text-white bg-foreground rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2">
-             {loading ? "Syncing..." : "Apply Global Changes"}
-          </button>
-        )}
       </div>
     </form>
   );

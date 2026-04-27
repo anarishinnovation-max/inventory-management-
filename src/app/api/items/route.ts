@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     await requirePermission("items:create");
 
     const data = await request.json();
-    const { name, sku, categoryId, unit, minStockLevel, isCritical } = data;
+    const { name, sku, categoryId, unit, minStockLevel, isCritical, rackId } = data;
     
     if (!name || !sku || !categoryId || !unit) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -91,7 +91,8 @@ export async function POST(request: Request) {
       unit,
       companyId: session.companyId,
       minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
-      isCritical: !!isCritical
+      isCritical: !!isCritical,
+      rackId
     });
 
     return NextResponse.json(item, { status: 201 });

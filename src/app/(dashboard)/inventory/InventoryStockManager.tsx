@@ -35,7 +35,6 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newRackId, setNewRackId] = useState("");
-  const [newQuantity, setNewQuantity] = useState(0);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -154,7 +153,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
              <button 
                 type="button"
                 disabled={!newRackId || updatingId === "new"}
-                onClick={() => handleUpdateStock(newRackId, newQuantity)}
+                onClick={() => handleUpdateStock(newRackId, 0)}
                 className="w-full py-3 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
              >
                 {updatingId === "new" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
@@ -179,10 +178,6 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                 </div>
 
                 <div className="flex items-center gap-6 w-full md:w-auto">
-                   <div className="flex items-center gap-3 bg-surface-low px-4 py-2 rounded-xl border border-border-ghost">
-                      <span className="text-sm font-black text-foreground">{stock.quantity}</span>
-                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">PCS</span>
-                   </div>
                    <div className="h-8 w-px bg-border-ghost hidden md:block"></div>
                    <button 
                       type="button"
