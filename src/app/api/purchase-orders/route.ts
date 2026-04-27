@@ -55,12 +55,24 @@ export async function POST(request: Request) {
       vendorId?: string;
       items?: Array<{ itemId: string; quantityOrdered: number | string; costPrice: number | string }>;
       paymentMode?: string;
+      orderDate?: string;
       expectedDelivery?: string | null;
     };
-    const { vendorId, items, paymentMode, expectedDelivery } = body;
+    const { vendorId, items, paymentMode, orderDate, expectedDelivery } = body;
 
     if (!vendorId || !items || !items.length) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Start of today
+
+    if (orderDate && new Date(orderDate) < now) {
+      return NextResponse.json({ error: "Order date cannot be in the past." }, { status: 400 });
+    }
+
+    if (expectedDelivery && new Date(expectedDelivery) < now) {
+      return NextResponse.json({ error: "Expected delivery date cannot be in the past." }, { status: 400 });
     }
 
     if (items.some(item => Number(item.costPrice) <= 0)) {
@@ -72,6 +84,7 @@ export async function POST(request: Request) {
         data: {
           vendorId,
           paymentMode: paymentMode || "Cash",
+          orderDate: orderDate ? new Date(orderDate) : new Date(),
           expectedDelivery: expectedDelivery ? new Date(expectedDelivery) : null,
           status: "ORDERED",
           companyId: session.companyId,

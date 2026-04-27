@@ -55,6 +55,7 @@ function NewPurchaseOrderForm() {
   
   const [selectedVendor, setSelectedVendor] = useState("");
   const [paymentMode, setPaymentMode] = useState("Cash");
+  const [orderDate, setOrderDate] = useState(new Date().toISOString().slice(0, 16));
   const [expectedDelivery, setExpectedDelivery] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantityOrdered: 1, costPrice: 0 }
@@ -169,6 +170,7 @@ function NewPurchaseOrderForm() {
           vendorId: selectedVendor,
           items: lineItems,
           paymentMode,
+          orderDate,
           expectedDelivery: normalizedExpectedDelivery
         }),
       });
@@ -381,11 +383,26 @@ function NewPurchaseOrderForm() {
                 <div className="group">
                    <div className="flex items-center gap-2 mb-3">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                      <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Order Date</label>
+                   </div>
+                   <input
+                     type="datetime-local"
+                     value={orderDate}
+                     min={new Date().toISOString().slice(0, 16)}
+                     onChange={(e) => setOrderDate(e.target.value)}
+                     className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none transition-all hover:bg-surface-lowest hover:border-primary/20"
+                   />
+                </div>
+
+                <div className="group">
+                   <div className="flex items-center gap-2 mb-3">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                       <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Expected Delivery</label>
                    </div>
                    <input
                      type="datetime-local"
                      value={expectedDelivery}
+                     min={orderDate || new Date().toISOString().slice(0, 16)}
                      onChange={(e) => setExpectedDelivery(e.target.value)}
                      className="w-full bg-surface-low border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none transition-all hover:bg-surface-lowest hover:border-primary/20"
                    />
