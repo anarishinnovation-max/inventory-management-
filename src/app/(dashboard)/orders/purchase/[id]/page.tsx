@@ -11,7 +11,8 @@ import {
   Loader2,
   ChevronRight,
   PlusCircle,
-  AlertCircle
+  AlertCircle,
+  X
 } from "lucide-react";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
@@ -227,17 +228,6 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                     </p>
                   </div>
                 </div>
-
-                {!isFullyReceived && !isDelivered && order.status.toUpperCase() !== "RECEIVED" && (
-                  <button 
-                    onClick={handleMarkAllReceived}
-                    disabled={submitting}
-                    className="group px-5 py-2.5 bg-white hover:bg-primary hover:text-white rounded-xl border border-border-ghost hover:border-primary shadow-sm transition-all duration-300 flex items-center gap-2"
-                  >
-                    <span className="text-[11px] font-black uppercase tracking-widest">Mark All Received</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                )}
               </header>
 
               <div className="divide-y divide-border-ghost">
@@ -289,18 +279,6 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                               "text-lg font-black",
                               item.quantityReceived >= item.quantityOrdered ? "text-emerald-600" : "text-amber-500"
                             )}>{item.quantityReceived}</p>
-                          </div>
-                          <div className="pl-8 border-l border-border-ghost">
-                            <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-2">Receive Now</p>
-                            <div className="relative group/input">
-                              <input 
-                                type="number"
-                                disabled={item.quantityReceived >= item.quantityOrdered || isDelivered || order.status.toUpperCase() === "RECEIVED"}
-                                value={receiveForm[item.itemId] || 0}
-                                onChange={(e) => setReceiveForm({...receiveForm, [item.itemId]: parseFloat(e.target.value)})}
-                                className="w-24 bg-surface-low/50 border-2 border-transparent group-hover/input:border-primary/20 rounded-xl px-3 py-2 text-center font-black text-base focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all disabled:opacity-30 disabled:border-transparent"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -370,28 +348,17 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                   </div>
                 </div>
 
-                {isFullyReceived ? (
-                  <div className="p-8 rounded-[2rem] bg-emerald-500 text-white shadow-xl shadow-emerald-200 flex flex-col items-center text-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
-                      <CheckCircle2 className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-lg font-black uppercase tracking-tight">Order Received</p>
-                      <p className="text-xs font-bold text-white/80 mt-1 uppercase tracking-widest">Inventory Fully Synced</p>
-                    </div>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={handleReceive}
-                    disabled={submitting}
-                    className="w-full py-5 bg-foreground text-white rounded-[2rem] font-black text-base shadow-2xl hover:bg-primary transition-all duration-500 disabled:opacity-50 flex items-center justify-center gap-3 relative overflow-hidden group/btn active:scale-95"
+                {!isFullyReceived && !isDelivered && (
+                  <Link 
+                    href="/orders/supply-inwards"
+                    className="w-full py-5 bg-foreground text-white rounded-[2rem] font-black text-base shadow-2xl hover:bg-primary transition-all duration-500 flex items-center justify-center gap-3 relative overflow-hidden group/btn active:scale-95"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-primary to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
                     <span className="relative z-10 flex items-center gap-3">
-                      {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <PlusCircle className="w-5 h-5" />}
-                      {submitting ? "Verifying..." : "Confirm Receipt"}
+                      <Truck className="w-5 h-5" />
+                      Go to Supply Inwards to Receive
                     </span>
-                  </button>
+                  </Link>
                 )}
               </div>
             </div>
@@ -402,10 +369,12 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                   <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
                     <AlertCircle className="w-4 h-4" />
                   </div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Audit System Note</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Order Status Note</p>
                </div>
                <p className="text-sm font-medium leading-relaxed opacity-90 italic">
-                 Confirming this receipt will automatically update the inventory levels and log a transaction audit record for <strong>{order.vendor.name}</strong>.
+                 {isFullyReceived 
+                   ? "This order has been completely fulfilled and inventory has been updated." 
+                   : "Items for this order are pending arrival. Please visit Supply Inwards to record delivery receipts."}
                </p>
             </div>
           </div>
@@ -423,13 +392,5 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
         </div>
       )}
     </div>
-  );
-}
-
-function X({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-    </svg>
   );
 }
