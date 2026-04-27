@@ -5,15 +5,17 @@ import {
   ArrowLeft,
   Loader2,
   Package,
+  Plus,
   QrCode,
   Settings,
   ShieldCheck,
+  Tag,
   ChevronDown
 } from "lucide-react";
 import { SearchableSelect } from "@/components/SearchableSelect";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -32,6 +34,27 @@ export default function NewItemPage() {
   const [unit, setUnit] = useState("Pieces");
   const [selectedRackId, setSelectedRackId] = useState("");
   const [isCritical, setIsCritical] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [showCategoryInput, setShowCategoryInput] = useState(false);
+  const [addingCategory, startCategoryTransition] = useTransition();
+
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    startCategoryTransition(async () => {
+      const res = await fetch("/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newCategoryName.trim() }),
+      });
+      if (res.ok) {
+        const created = await res.json();
+        setCategories(prev => [...prev, created].sort((a, b) => a.name.localeCompare(b.name)));
+        setSelectedCategoryId(created.id);
+        setNewCategoryName("");
+        setShowCategoryInput(false);
+      }
+    });
+  };
 
   useEffect(() => {
     async function loadInitialData() {
@@ -152,16 +175,57 @@ export default function NewItemPage() {
 
               {/* Category */}
               <div className="group">
-                <div className="flex items-center gap-2 mb-3">
-                  <Settings className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                  <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Category</label>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Settings className="w-3.5 h-3.5 text-muted-foreground" />
+                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest transition-colors">Category</label>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowCategoryInput(!showCategoryInput)}
+                    className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+                  >
+                    <Plus className="w-3 h-3" />
+                    New Category
+                  </button>
                 </div>
-                <SearchableSelect 
-                  items={categories}
-                  value={selectedCategoryId}
-                  onChange={(val) => setSelectedCategoryId(val)}
-                  placeholder="Select Category"
-                />
+
+                {showCategoryInput ? (
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <input
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCategory())}
+                        placeholder="Category name..."
+                        autoFocus
+                        className="input-field h-12 pl-11 w-full"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleAddCategory}
+                      disabled={addingCategory || !newCategoryName.trim()}
+                      className="btn btn-primary h-12 px-4 shrink-0"
+                    >
+                      {addingCategory ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setShowCategoryInput(false); setNewCategoryName(""); }}
+                      className="h-12 px-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-low transition-all text-[10px] font-black uppercase tracking-widest"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <SearchableSelect
+                    items={categories}
+                    value={selectedCategoryId}
+                    onChange={(val) => setSelectedCategoryId(val)}
+                    placeholder="Select Category"
+                  />
+                )}
               </div>
 
               {/* Unit of Measurement */}
