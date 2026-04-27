@@ -72,6 +72,10 @@ export default function InventoryList({
           aVal = a.totalStock;
           bVal = b.totalStock;
           break;
+        case 'avgPrice':
+          aVal = a.avgPrice;
+          bVal = b.avgPrice;
+          break;
         case 'updatedAt':
           aVal = new Date(a.updatedAt).getTime();
           bVal = new Date(b.updatedAt).getTime();
@@ -298,6 +302,15 @@ export default function InventoryList({
                   </th>
                   <th className="table-cell-header text-right">
                     <button
+                      onClick={() => requestSort('avgPrice')}
+                      className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                    >
+                      Avg Price
+                      <SortIcon column="avgPrice" />
+                    </button>
+                  </th>
+                  <th className="table-cell-header text-right">
+                    <button
                       onClick={() => requestSort('units')}
                       className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
                     >
@@ -379,6 +392,11 @@ export default function InventoryList({
                       <td className="px-6 py-5">
                         <span className="badge bg-indigo-50/50 text-indigo-600 border-indigo-100">
                           {item.category}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-right font-mono">
+                        <span className="text-sm font-black text-primary">
+                          ₹{item.avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </span>
                       </td>
                       <td className="px-6 py-5 text-right font-mono">

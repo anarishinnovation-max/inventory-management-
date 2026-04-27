@@ -30,6 +30,7 @@ export interface MappedItem {
   minStockLevel: number;
   isCritical: boolean;
   totalStock: number;
+  avgPrice: number;
   incomingQty: number;
   quantityReserved: number;
   quantityInTransit: number;
@@ -62,7 +63,11 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     where,
     include: {
       category: true,
-      inventory: true,
+      inventory: {
+        include: {
+          batches: true
+        }
+      },
     },
     orderBy: {
       inventory: { updatedAt: 'desc' }
@@ -75,6 +80,12 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     const reserved = item.inventory?.quantityReserved ?? 0;
     const netAvailable = (total + incoming) - reserved;
     
+    // Calculate Weighted Average Price
+    const batches = item.inventory?.batches || [];
+    const totalRemainingInBatches = batches.reduce((acc: number, b: any) => acc + b.quantity, 0);
+    const weightedSum = batches.reduce((acc: number, b: any) => acc + (b.quantity * b.costPerUnit), 0);
+    const avgPrice = totalRemainingInBatches > 0 ? (weightedSum / totalRemainingInBatches) : 0;
+
     return {
       id: item.id,
       name: item.name,
@@ -83,6 +94,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
       isCritical: item.isCritical,
       minStockLevel: item.minStockLevel ?? 0,
       totalStock: total,
+      avgPrice,
       netAvailable,
       incomingQty: item.inventory?.incomingQty ?? 0,
       quantityReserved: reserved,

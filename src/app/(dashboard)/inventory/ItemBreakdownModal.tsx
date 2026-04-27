@@ -173,7 +173,7 @@ export function ItemBreakdownModal({
                     <span className="text-[12px] font-black">{totalStock} Units On Hand</span>
                   </div>
                   <div className="flex items-center gap-2.5 px-4 py-2 bg-primary/5 border border-primary/10 text-primary rounded-2xl shadow-sm">
-                    <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Valuation</span>
+                    <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Avg Purchase Price</span>
                     <span className="text-[12px] font-black">
                       ₹{(() => {
                         const totalRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
