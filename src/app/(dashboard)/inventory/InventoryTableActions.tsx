@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { showToast } from "@/lib/toast";
+import { useConfirm } from "@/hooks/use-confirm";
 import { ItemBreakdownModal } from "./ItemBreakdownModal";
 import { ScrapModal } from "./ScrapModal";
 
@@ -33,10 +35,11 @@ export default function InventoryTableActions({
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [showScrap, setShowScrap] = useState(false);
 
+  const confirm = useConfirm();
   const neededAmount = Math.max(1, minStockLevel - totalStock);
 
   const handleDelete = async () => {
-    if (!confirm("Delete this item? This cannot be undone and only works if there is no stock.")) {
+    if (!(await confirm("Delete Item", "Are you sure you want to delete this item? This action cannot be undone and only works if there is no remaining stock."))) {
       return;
     }
 
@@ -47,13 +50,14 @@ export default function InventoryTableActions({
       });
 
       if (res.ok) {
+        showToast("Item deleted successfully", "success");
         router.refresh();
       } else {
         const error = await res.json();
-        alert(error.error || "Could not delete item");
+        showToast(error.error || "Could not delete item", "error");
       }
     } catch {
-      alert("An unexpected error occurred.");
+      showToast("An unexpected error occurred.", "error");
     } finally {
       setIsDeleting(false);
     }
@@ -112,14 +116,17 @@ export default function InventoryTableActions({
           <Flame className="w-4 h-4" />
         </button>
       )}
-      {/* <button
-        onClick={handleDelete}
-        disabled={isDeleting}
-        className="p-2 hover:bg-error/10 rounded-xl text-error transition-colors disabled:opacity-50"
-        suppressHydrationWarning
-      >
-        {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-      </button> */}
+      {userRole !== 'EMPLOYEE' && (
+        <button
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="p-2 hover:bg-error/10 rounded-xl text-error transition-all border border-transparent hover:border-error/20 disabled:opacity-50"
+          title="Delete Item"
+          suppressHydrationWarning
+        >
+          {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+        </button>
+      )}
     </div>
   );
 }

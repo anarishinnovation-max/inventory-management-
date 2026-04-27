@@ -56,7 +56,7 @@ export default function PurchaseFilters({
               key={opt.value}
               onClick={() => setFilter("status", opt.value)}
               className={cn(
-                "flex items-center gap-2.5 py-2.5 px-5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 border",
+                "flex items-center gap-2.5 py-2.5 px-5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all  border",
                 isActive 
                   ? opt.color === "primary" ? "bg-primary text-white border-primary shadow-glow" :
                     opt.color === "warning" ? "bg-warning text-white border-warning shadow-md shadow-warning/20" :
@@ -74,3 +74,4 @@ export default function PurchaseFilters({
     </div>
   );
 }
+

@@ -164,7 +164,7 @@ export function ScrapModal({
               <button 
                 type="submit"
                 disabled={loading || totalStock <= 0}
-                className="flex-[2] px-6 py-4 bg-error text-white rounded-2xl font-black text-xs uppercase tracking-[0.15em] shadow-xl shadow-error/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                className="flex-[2] px-6 py-4 bg-error text-white rounded-2xl font-black text-xs uppercase tracking-[0.15em] shadow-xl shadow-error/20   transition-all flex items-center justify-center gap-3 disabled:opacity-50"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Flame className="w-4 h-4" />}
                 Confirm Scrap
@@ -176,3 +176,4 @@ export function ScrapModal({
     document.body
   );
 }
+

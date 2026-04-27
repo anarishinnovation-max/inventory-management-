@@ -156,7 +156,7 @@ export function PremiumDateTimePicker({
         <button 
           type="button"
           onClick={() => setIsOpen(false)}
-          className="px-4 py-2 bg-foreground text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all"
+          className="px-4 py-2 bg-foreground text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg   transition-all"
         >
           Set
         </button>
@@ -190,3 +190,4 @@ export function PremiumDateTimePicker({
     </div>
   );
 }
+

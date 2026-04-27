@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
+import { showToast } from "@/lib/toast";
+import { useConfirm } from "@/hooks/use-confirm";
 import InventoryTableActions from "./InventoryTableActions";
 import { MappedItem } from "./page";
 
@@ -41,6 +43,7 @@ export default function InventoryList({
   searchQuery: string
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | null }>({
@@ -160,7 +163,7 @@ export default function InventoryList({
   };
 
   const handleBulkDelete = async () => {
-    if (!confirm(`Are you sure you want to delete ${selectedIds.size} items? This only works for items with zero stock.`)) return;
+    if (!(await confirm("Bulk Delete Items", `Are you sure you want to delete ${selectedIds.size} selected items? This action cannot be undone and only works for items with zero remaining stock.`))) return;
 
     setIsProcessing(true);
     try {
@@ -171,21 +174,22 @@ export default function InventoryList({
       });
 
       if (res.ok) {
+        showToast(`Successfully deleted ${selectedIds.size} items`, "success");
         setSelectedIds(new Set());
         router.refresh();
       } else {
         const err = await res.json();
-        alert(err.error || "Failed to delete items.");
+        showToast(err.error || "Failed to delete items.", "error");
       }
     } catch {
-      alert("Network error.");
+      showToast("Network error.", "error");
     } finally {
       setIsProcessing(false);
     }
   };
 
   const handleBulkScrap = async () => {
-    if (!confirm(`Permanently scrap all remaining inventory for ${selectedIds.size} selected items?`)) return;
+    if (!(await confirm("Bulk Scrap Items", `Are you sure you want to permanently scrap all remaining inventory for ${selectedIds.size} selected items? This action is irreversible.`))) return;
 
     setIsProcessing(true);
     try {
@@ -196,14 +200,15 @@ export default function InventoryList({
       });
 
       if (res.ok) {
+        showToast(`Successfully scrapped ${selectedIds.size} items`, "success");
         setSelectedIds(new Set());
         router.refresh();
       } else {
         const err = await res.json();
-        alert(err.error || "Failed to scrap items.");
+        showToast(err.error || "Failed to scrap items.", "error");
       }
     } catch {
-      alert("Network error.");
+      showToast("Network error.", "error");
     } finally {
       setIsProcessing(false);
     }
@@ -235,7 +240,7 @@ export default function InventoryList({
                   title="Create Bulk PO"
                   suppressHydrationWarning
                 >
-                  <ShoppingCart className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <ShoppingCart className="w-4 h-4  transition-transform" />
                 </button>
 
                 <button
@@ -245,7 +250,7 @@ export default function InventoryList({
                   title="Scrap All"
                   suppressHydrationWarning
                 >
-                  <Flame className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <Flame className="w-4 h-4  transition-transform" />
                 </button>
 
                 <button
@@ -255,7 +260,7 @@ export default function InventoryList({
                   title="Delete Selected"
                   suppressHydrationWarning
                 >
-                  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />}
+                  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4  transition-transform" />}
                 </button>
               </div>
             </div>
@@ -470,3 +475,4 @@ export default function InventoryList({
     </div>
   );
 }
+

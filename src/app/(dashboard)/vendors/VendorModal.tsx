@@ -160,7 +160,7 @@ export function VendorModal() {
                     <button 
                         disabled={isPending}
                         type="submit"
-                        className="flex-[2] py-4 rounded-2xl bg-foreground text-surface-lowest font-black text-sm shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
+                        className="flex-[2] py-4 rounded-2xl bg-foreground text-surface-lowest font-black text-sm shadow-xl   transition-all disabled:opacity-50"
                     >
                         {isPending ? "Connecting to Ledger..." : "Authorize Fulfillment Contract"}
                     </button>
@@ -172,3 +172,4 @@ export function VendorModal() {
     </>
   );
 }
+

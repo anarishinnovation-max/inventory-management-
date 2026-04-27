@@ -208,7 +208,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                        <button 
                          onClick={handleDispatch}
                          disabled={submitting}
-                         className="w-full py-4 bg-primary text-white rounded-2xl font-black text-[15px] shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                         className="w-full py-4 bg-primary text-white rounded-2xl font-black text-[15px] shadow-xl   transition-all disabled:opacity-50 flex items-center justify-center gap-3"
                        >
                          {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                          {submitting ? "Processing..." : "Confirm Outward Dispatch"}

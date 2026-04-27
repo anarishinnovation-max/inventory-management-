@@ -107,7 +107,7 @@ function ShortagePopup({
           <div className="space-y-3">
              <button 
                onClick={() => onAction("PO")}
-               className="w-full py-4 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+               className="w-full py-4 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl   transition-all flex items-center justify-center gap-3"
              >
                <Package className="w-4 h-4" />
                Buy Items Now
@@ -160,7 +160,7 @@ function StockBreakdownPopup({
             </div>
             <button 
               onClick={onClose}
-              className="p-3 rounded-2xl bg-surface-low text-muted-foreground hover:bg-surface-high hover:text-foreground transition-all active:scale-90"
+              className="p-3 rounded-2xl bg-surface-low text-muted-foreground hover:bg-surface-high hover:text-foreground transition-all "
             >
               <X className="w-5 h-5" />
             </button>
@@ -224,7 +224,7 @@ function StockBreakdownPopup({
            </p>
            <button 
              onClick={onClose} 
-             className="px-8 py-3 bg-foreground text-white rounded-xl font-black text-xs shadow-lg hover:scale-105 active:scale-95 transition-all"
+             className="px-8 py-3 bg-foreground text-white rounded-xl font-black text-xs shadow-lg   transition-all"
            >
              Close Details
            </button>
@@ -521,7 +521,7 @@ export default function NewDispatchOrderPage() {
            <button 
              onClick={handleSubmit}
              disabled={loading}
-             className="px-8 py-3.5 text-sm font-black text-white bg-foreground rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
+             className="px-8 py-3.5 text-sm font-black text-white bg-foreground rounded-2xl shadow-xl   transition-all disabled:opacity-50 flex items-center gap-2"
            >
              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
              {loading ? "Saving..." : "Confirm Sale"}
@@ -783,7 +783,7 @@ export default function NewDispatchOrderPage() {
            </div>
 
            <div className="bg-indigo-600 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-600/20 relative overflow-hidden group">
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
+              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl  transition-all duration-700"></div>
               <div className="flex items-center gap-3 mb-4 relative z-10">
                  <CheckCircle2 className="w-5 h-5 opacity-80" />
                  <p className="text-[10px] font-black uppercase tracking-widest">Selling Flow</p>
@@ -797,3 +797,4 @@ export default function NewDispatchOrderPage() {
     </div>
   );
 }
+

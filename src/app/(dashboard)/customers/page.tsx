@@ -194,7 +194,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="card-premium flex items-center gap-5 group border-primary/5">
-                 <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner">
+                 <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center transition-transform  shadow-inner">
                     <Users className="w-5 h-5" />
                  </div>
                  <div>
@@ -203,7 +203,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                  </div>
               </div>
               <div className="card-premium flex items-center gap-5 group border-success/5">
-                 <div className="w-12 h-12 rounded-xl bg-success/10 text-success flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner">
+                 <div className="w-12 h-12 rounded-xl bg-success/10 text-success flex items-center justify-center transition-transform  shadow-inner">
                     <Calendar className="w-5 h-5" />
                  </div>
                  <div>
@@ -236,3 +236,4 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
     </div>
   );
 }
+

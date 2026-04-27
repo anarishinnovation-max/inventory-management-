@@ -20,6 +20,7 @@ import ResetPasswordModal from "./components/ResetPasswordModal";
 import AddUserModal from "./components/AddUserModal";
 import EditUserModal from "./components/EditUserModal";
 import { UserRole } from "@/lib/types";
+import { useConfirm } from "@/hooks/use-confirm";
 
 interface TeamMember {
   id: string;
@@ -36,6 +37,7 @@ export default function UsersPage() {
   const [editUser, setEditUser] = useState<TeamMember | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const confirm = useConfirm();
 
   const fetchUsers = async () => {
     try {
@@ -63,7 +65,7 @@ export default function UsersPage() {
   };
 
   const deleteUser = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to remove ${name} from the company?`)) return;
+    if (!(await confirm("Remove Member", `Are you sure you want to remove ${name} from the company? This action is irreversible.`))) return;
 
     try {
       const response = await fetch(`/api/users/${id}`, { method: "DELETE" });

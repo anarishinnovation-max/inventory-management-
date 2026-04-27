@@ -20,6 +20,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { twMerge } from "tailwind-merge";
+import { showToast } from "@/lib/toast";
+import { useConfirm } from "@/hooks/use-confirm";
 import { SupplyOutwardsFilters } from "./SupplyOutwardsFilters";
 
 interface SupplyOutwardsListProps {
@@ -56,6 +58,7 @@ export default function SupplyOutwardsList({
   currentEndDate
 }: SupplyOutwardsListProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -88,7 +91,7 @@ export default function SupplyOutwardsList({
       if (item) selectedOrders.add(item.orderId);
     });
 
-    if (!confirm(`Are you sure you want to dispatch ${selectedOrders.size} orders containing ${selectedIds.size} selected items?`)) {
+    if (!(await confirm("Bulk Dispatch", `Are you sure you want to dispatch ${selectedOrders.size} orders containing ${selectedIds.size} selected items?`))) {
       return;
     }
 
@@ -101,16 +104,17 @@ export default function SupplyOutwardsList({
       });
 
       if (res.ok) {
+        showToast(`Successfully dispatched ${selectedOrders.size} orders`, "success");
         setSelectedIds(new Set());
         startTransition(() => {
           router.refresh();
         });
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to dispatch items.");
+        showToast(data.error || "Failed to dispatch items.", "error");
       }
     } catch (err) {
-      alert("Network error.");
+      showToast("Network error.", "error");
     } finally {
       setIsProcessing(false);
     }
@@ -145,7 +149,7 @@ export default function SupplyOutwardsList({
                   {isProcessing ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <Truck className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                    <Truck className="w-4 h-4  transition-transform" />
                   )}
                   <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">Dispatch Selected</span>
                 </button>
@@ -257,7 +261,7 @@ export default function SupplyOutwardsList({
                         </div>
                       </td>
                       <td className="px-8 py-5 text-right">
-                        <Link href={`/orders/dispatch/${item.orderId}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group/btn">
+                        <Link href={`/orders/dispatch/${item.orderId}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md   group/btn">
                           <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/btn:rotate-12" />
                           Send
                         </Link>
@@ -282,3 +286,4 @@ export default function SupplyOutwardsList({
     </div>
   );
 }
+

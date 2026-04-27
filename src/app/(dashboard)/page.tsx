@@ -208,7 +208,7 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="card-premium group">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-primary/10 text-primary rounded-xl transition-transform group-hover:scale-110">
+            <div className="p-3 bg-primary/10 text-primary rounded-xl transition-transform ">
               <Package className="w-5 h-5" />
             </div>
             <div className="badge bg-success/10 text-success border-success/20">
@@ -225,7 +225,7 @@ export default async function DashboardPage() {
 
         <div className="card-premium group">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-success/10 text-success rounded-xl transition-transform group-hover:scale-110">
+            <div className="p-3 bg-success/10 text-success rounded-xl transition-transform ">
               <IndianRupee className="w-5 h-5" />
             </div>
             <div className="badge bg-blue-50 text-blue-600 border-blue-100 italic lowercase font-medium opacity-0">
@@ -241,7 +241,7 @@ export default async function DashboardPage() {
 
         <div className="card-premium group border-error/5 hover:border-error/20 bg-error/[0.01]">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-error/10 text-error rounded-xl transition-transform group-hover:scale-110">
+            <div className="p-3 bg-error/10 text-error rounded-xl transition-transform ">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <Link href="/inventory?status=low" className="badge bg-error/10 text-error border-error/20 hover:bg-error hover:text-white transition-colors cursor-pointer">
@@ -265,7 +265,7 @@ export default async function DashboardPage() {
 
         <div className="card-premium group">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-indigo-500/10 text-indigo-500 rounded-xl transition-transform group-hover:scale-110">
+            <div className="p-3 bg-indigo-500/10 text-indigo-500 rounded-xl transition-transform ">
               <IndianRupee className="w-5 h-5" />
             </div>
             <div className="badge bg-indigo-50/50 text-indigo-600 border-indigo-100">
@@ -358,7 +358,7 @@ export default async function DashboardPage() {
                   </div>
                   <Link 
                     href={`/orders/purchase/new?itemId=${item.id}&quantity=${Math.max(1, item.minStockLevel - item.current_qty)}`}
-                    className="flex items-center gap-2 px-4 py-2 bg-error/5 text-error hover:bg-error hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm hover:shadow-md border border-error/10 active:scale-95"
+                    className="flex items-center gap-2 px-4 py-2 bg-error/5 text-error hover:bg-error hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm hover:shadow-md border border-error/10 "
                   >
                     <ShoppingCart className="w-3.5 h-3.5" />
                     Buy
@@ -373,7 +373,7 @@ export default async function DashboardPage() {
             )}
           </div>
           <Link href="/orders/purchase/new" className="block w-full">
-            <button className="w-full mt-8 py-3.5 bg-error text-white rounded-xl text-[11px] font-black shadow-lg shadow-error/10 hover:opacity-90 transition-all active:scale-95 uppercase tracking-widest">Buy More</button>
+            <button className="w-full mt-8 py-3.5 bg-error text-white rounded-xl text-[11px] font-black shadow-lg shadow-error/10 hover:opacity-90 transition-all  uppercase tracking-widest">Buy More</button>
           </Link>
         </div>
       </div>
@@ -466,7 +466,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="mt-8 p-5 rounded-2xl bg-primary/[0.03] border border-primary/10 relative overflow-hidden group shadow-sm transition-all hover:bg-primary/[0.05]">
-            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700" />
+            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl  transition-all duration-700" />
             <div className="flex items-start gap-4 relative z-10">
               <div className="w-9 h-9 shrink-0 rounded-xl bg-white shadow-premium flex items-center justify-center border border-primary/10">
                 <TrendingUp className="w-4 h-4 text-primary" />
@@ -518,3 +518,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
+

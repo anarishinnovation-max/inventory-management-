@@ -155,7 +155,7 @@ export function SupplyOutwardsFilters({
                   />
                   <button 
                     onClick={applyFilters}
-                    className="ml-2 p-3.5 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center min-w-[50px]"
+                    className="ml-2 p-3.5 bg-primary text-white rounded-2xl shadow-xl shadow-primary/20   transition-all flex items-center justify-center min-w-[50px]"
                   >
                     <Search className="w-5 h-5" />
                   </button>
@@ -167,3 +167,4 @@ export function SupplyOutwardsFilters({
     </div>
   );
 }
+

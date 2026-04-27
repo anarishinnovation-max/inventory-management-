@@ -152,7 +152,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
               Cancel
             </Link>
-            <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
+            <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all   disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? "Saving..." : "Save Changes"}
             </button>

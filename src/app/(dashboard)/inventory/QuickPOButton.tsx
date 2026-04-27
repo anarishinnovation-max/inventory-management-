@@ -2,6 +2,7 @@
 
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { showToast } from "@/lib/toast";
 
 interface Item {
   id: string;
@@ -19,7 +20,7 @@ export default function QuickPOButton({ items }: { items: Item[] }) {
 
   const handleCreatePO = () => {
     if (lowStockItems.length === 0) {
-      alert("All items are well stocked! No need for a quick PO right now.");
+      showToast("All items are well stocked! No need for a quick PO right now.", "info");
       return;
     }
 

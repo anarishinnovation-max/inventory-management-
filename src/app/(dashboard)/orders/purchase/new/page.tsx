@@ -218,7 +218,7 @@ function NewPurchaseOrderForm() {
            <button 
              onClick={handleSubmit}
              disabled={loading}
-             className="px-8 py-3.5 text-sm font-black text-white bg-primary rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
+             className="px-8 py-3.5 text-sm font-black text-white bg-primary rounded-2xl shadow-xl shadow-primary/20   transition-all disabled:opacity-50 flex items-center gap-2"
            >
              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShoppingCart className="w-4 h-4" />}
              {loading ? "Saving..." : "Confirm Order"}
@@ -431,7 +431,7 @@ function NewPurchaseOrderForm() {
            </div>
 
            <div className="primary-gradient p-8 rounded-[2.5rem] text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
+              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl  transition-all duration-700"></div>
               <div className="flex items-center gap-3 mb-4 relative z-10">
                  <CheckCircle2 className="w-5 h-5 opacity-80" />
                  <p className="text-[10px] font-black uppercase tracking-widest">Order Quality</p>
@@ -466,3 +466,4 @@ export default function NewPurchaseOrderPage() {
     </Suspense>
   );
 }
+

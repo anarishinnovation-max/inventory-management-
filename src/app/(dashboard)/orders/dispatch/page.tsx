@@ -93,7 +93,7 @@ export default async function DispatchPage({
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform  border border-warning/10">
                 <Clock className="w-5 h-5" />
             </div>
             <div>
@@ -103,7 +103,7 @@ export default async function DispatchPage({
         </div>
 
         <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform  border border-success/10">
                 <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
@@ -254,3 +254,4 @@ export default async function DispatchPage({
     </div>
   );
 }
+

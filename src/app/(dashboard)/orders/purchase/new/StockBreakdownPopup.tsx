@@ -101,7 +101,7 @@ export function StockBreakdownPopup({
                     className="flex flex-col md:flex-row md:items-center justify-between p-7 bg-surface-low/30 rounded-[2rem] border border-border-ghost hover:border-indigo-600/20 hover:bg-white transition-all group gap-6"
                   >
                     <div className="flex items-center gap-5">
-                      <div className="w-12 h-12 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-black text-indigo-600 shadow-sm group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-black text-indigo-600 shadow-sm  transition-transform">
                         {batch.vendor.name[0] || "V"}
                       </div>
                       <div>
@@ -152,7 +152,7 @@ export function StockBreakdownPopup({
         <footer className="px-10 py-8 bg-surface-low/30 border-t border-border-ghost shrink-0">
           <button 
             onClick={onClose}
-            className="w-full py-4.5 bg-foreground text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all"
+            className="w-full py-4.5 bg-foreground text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl   transition-all"
           >
             Go Back
           </button>
@@ -162,3 +162,4 @@ export function StockBreakdownPopup({
     document.body
   );
 }
+

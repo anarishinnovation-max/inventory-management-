@@ -262,7 +262,7 @@ export function ItemBreakdownModal({
 
                         <div className="grid grid-cols-1 gap-4">
                           {purchaseHistory.length > 0 ? purchaseHistory.map((entry, idx) => (
-                            <div key={idx} className="group bg-white p-6 rounded-[2rem] border border-border-ghost shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-500">
+                            <div key={idx} className="group bg-white p-6 rounded-[2rem] border border-border-ghost shadow-sm hover:shadow-xl  transition-all duration-500">
                               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div className="flex items-center gap-5">
                                   <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center font-black text-primary text-lg border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all duration-500">
@@ -370,7 +370,7 @@ export function ItemBreakdownModal({
 
                         <div className="grid grid-cols-1 gap-4">
                           {sellingHistory.length > 0 ? sellingHistory.map((entry, idx) => (
-                            <div key={idx} className="group bg-white p-6 rounded-[2rem] border border-border-ghost shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-500">
+                            <div key={idx} className="group bg-white p-6 rounded-[2rem] border border-border-ghost shadow-sm hover:shadow-xl  transition-all duration-500">
                               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div className="flex items-center gap-5">
                                   <div className="w-14 h-14 rounded-2xl bg-error/5 flex items-center justify-center font-black text-error text-lg border border-error/10 group-hover:bg-error group-hover:text-white transition-all duration-500">
@@ -455,7 +455,7 @@ export function ItemBreakdownModal({
              </div>
            ) : (
               <div className="py-32 flex flex-col items-center justify-center text-center gap-8 group">
-                <div className="w-24 h-24 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-700">
+                <div className="w-24 h-24 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center  group-hover:rotate-6 transition-all duration-700">
                   <Layers className="w-12 h-12 opacity-20" />
                 </div>
                 <div>
@@ -478,7 +478,7 @@ export function ItemBreakdownModal({
            </div>
            <button 
              onClick={onClose}
-             className="w-full sm:w-auto px-12 py-4 bg-foreground text-white rounded-[1.25rem] font-black shadow-2xl hover:scale-[1.02] active:scale-95 transition-all text-[11px] uppercase tracking-[0.25em]"
+             className="w-full sm:w-auto px-12 py-4 bg-foreground text-white rounded-[1.25rem] font-black shadow-2xl   transition-all text-[11px] uppercase tracking-[0.25em]"
            >
               Dismiss Breakdown
            </button>
@@ -488,3 +488,4 @@ export function ItemBreakdownModal({
     document.body
   );
 }
+

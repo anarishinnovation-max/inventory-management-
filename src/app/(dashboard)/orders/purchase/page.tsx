@@ -203,7 +203,7 @@ export default async function PurchaseOrdersPage({
           <p className="text-muted-foreground mt-2 font-medium">Manage procurement, payments, and vendor tracking.</p>
         </div>
         {(session.role === 'OWNER' || session.role === 'MANAGER') && (
-          <Link href="/orders/purchase/new" className="px-6 py-3 bg-primary text-white rounded-2xl font-black text-xs shadow-lg shadow-primary/20 hover:scale-105 transition-all flex items-center gap-2">
+          <Link href="/orders/purchase/new" className="px-6 py-3 bg-primary text-white rounded-2xl font-black text-xs shadow-lg shadow-primary/20  transition-all flex items-center gap-2">
             <Plus className="w-4 h-4" />
             <span>New Purchase Order</span>
           </Link>
@@ -213,7 +213,7 @@ export default async function PurchaseOrdersPage({
       {/* KPI Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-           <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+           <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform  border border-warning/10">
               <Clock className="w-5 h-5" />
            </div>
            <div>
@@ -223,7 +223,7 @@ export default async function PurchaseOrdersPage({
         </div>
         
         <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
-           <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
+           <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform  border border-primary/10">
               <Truck className="w-5 h-5" />
            </div>
            <div>
@@ -335,7 +335,7 @@ export default async function PurchaseOrdersPage({
                         </div>
                         <Link 
                           href="/orders/purchase"
-                          className="px-8 py-3.5 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl hover:scale-105 transition-transform"
+                          className="px-8 py-3.5 bg-foreground text-white rounded-2xl font-black text-sm shadow-xl  transition-transform"
                         >
                           Clear All Filters
                         </Link>
@@ -350,3 +350,4 @@ export default async function PurchaseOrdersPage({
     </div>
   );
 }
+

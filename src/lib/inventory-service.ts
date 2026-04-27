@@ -597,6 +597,7 @@ export const InventoryService = {
       }
 
       // Delete dependencies first
+      await tx.inventoryBatch.deleteMany({ where: { inventory: { itemId: { in: itemIds } } } });
       await tx.inventory.deleteMany({ where: { itemId: { in: itemIds } } });
       await tx.inventoryTransaction.deleteMany({ where: { itemId: { in: itemIds } } });
       await tx.stock.deleteMany({ where: { itemId: { in: itemIds } } });

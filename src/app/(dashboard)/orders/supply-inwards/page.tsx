@@ -175,7 +175,7 @@ export default async function SupplyInwardsPage({
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform group-hover:scale-110 border border-primary/10">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform  border border-primary/10">
                 <Package className="w-5 h-5" />
             </div>
             <div>
@@ -185,7 +185,7 @@ export default async function SupplyInwardsPage({
         </div>
 
         <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform group-hover:scale-110 border border-warning/10">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform  border border-warning/10">
                 <Clock className="w-5 h-5" />
             </div>
             <div>
@@ -195,7 +195,7 @@ export default async function SupplyInwardsPage({
         </div>
 
         <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform group-hover:scale-110 border border-success/10">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform  border border-success/10">
                 <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
@@ -205,7 +205,7 @@ export default async function SupplyInwardsPage({
         </div>
 
         <div className="card-premium h-[140px] flex flex-col justify-between group border-indigo-500/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 transition-transform group-hover:scale-110 border border-indigo-500/10">
+            <div className="p-2.5 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 transition-transform  border border-indigo-500/10">
                 <Users className="w-5 h-5" />
             </div>
             <div>
@@ -248,7 +248,7 @@ export default async function SupplyInwardsPage({
           {recentTransactions.length > 0 ? recentTransactions.slice(0, 6).map((tx: any) => (
             <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group">
               <div className="flex items-start gap-4">
-                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 group-hover:scale-110 transition-transform">
+                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0  transition-transform">
                     <ArrowDownLeft className="w-6 h-6" />
                  </div>
                  <div className="flex-1 min-w-0">
@@ -291,3 +291,4 @@ export default async function SupplyInwardsPage({
     </div>
   );
 }
+

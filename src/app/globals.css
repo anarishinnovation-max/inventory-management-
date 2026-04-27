@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* stylelint-disable at-rule-no-unknown */
 @theme inline {
   /* HSL Neutrals */
   --color-background: oklch(0.98 0.01 247);
@@ -52,7 +53,9 @@ body {
 /* Premium Layout Utilities */
 
 .glass {
-  @apply bg-white/80 backdrop-blur-xl border border-white/30;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .shadow-premium {
@@ -78,7 +81,11 @@ body {
 /* Premium Component Classes */
 
 .card-premium {
-  @apply bg-surface-lowest p-6 rounded-3xl border border-border-ghost transition-all duration-300;
+  background: var(--color-surface-lowest);
+  padding: 1.5rem;
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--color-border-ghost);
+  transition: all 300ms;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.03);
   position: relative;
 }
@@ -88,51 +95,121 @@ body {
 }
 
 .card-premium:hover {
-  @apply border-primary/20 scale-[1.01];
+  border-color: oklch(0.55 0.18 250 / 0.2);
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary {
-  @apply px-5 py-2.5 rounded-xl text-white font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-xl);
+  color: white;
+  font-weight: 600;
+  transition: all 150ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background: linear-gradient(135deg, oklch(0.55 0.18 250) 0%, oklch(0.65 0.2 250) 100%);
   box-shadow: 0px 2px 8px oklch(0.55 0.18 250 / 0.2);
 }
 
+.btn-primary:disabled {
+    opacity: 0.5;
+}
+
 .btn-secondary {
-  @apply px-5 py-2.5 rounded-xl bg-surface-lowest text-foreground font-semibold hover:bg-surface-low transition-all border border-border-ghost flex items-center justify-center gap-2 active:scale-95;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-lowest);
+  color: var(--color-foreground);
+  font-weight: 600;
+  transition: all 150ms;
+  border: 1px solid var(--color-border-ghost);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background: var(--color-surface-low);
 }
 
 .btn-ghost {
-  @apply p-2.5 rounded-xl text-muted-foreground hover:bg-surface-low hover:text-foreground transition-all active:scale-95;
+  padding: 0.625rem;
+  border-radius: var(--radius-xl);
+  color: var(--color-muted-foreground);
+  transition: all 150ms;
+}
+
+.btn-ghost:hover {
+    background: var(--color-surface-low);
+    color: var(--color-foreground);
 }
 
 .input-field {
-  @apply w-full px-4 py-3.5 bg-surface-lowest border border-border-ghost rounded-2xl focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all outline-none font-medium placeholder:text-muted-foreground/30;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--color-surface-lowest);
+  border: 1px solid var(--color-border-ghost);
+  border-radius: var(--radius-2xl);
+  transition: all 150ms;
+  outline: none;
+  font-weight: 500;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.01);
 }
 
+.input-field::placeholder {
+    color: oklch(0.5 0.03 247 / 0.3);
+}
+
+.input-field:focus {
+    border-color: oklch(0.55 0.18 250 / 0.5);
+    box-shadow: 0 0 0 4px oklch(0.55 0.18 250 / 0.05);
+}
+
 .input-with-icon {
-  @apply pl-12;
+  padding-left: 3rem;
 }
 
 .badge {
-  @apply inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider border;
+  display: inline-flex;
+  initial-letter: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
 }
 
 .heading-xl {
-  @apply text-4xl font-black tracking-tight text-foreground;
+  font-size: 2.25rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--color-foreground);
 }
 
 .heading-lg {
-  @apply text-2xl font-bold tracking-tight text-foreground;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-foreground);
 }
 
 .table-header {
-  @apply bg-surface-low/30 border-b border-border-ghost;
+  background: oklch(0.96 0.01 247 / 0.3);
+  border-bottom: 1px solid var(--color-border-ghost);
 }
 
 .table-cell-header {
-  @apply px-6 py-4 text-[10px] font-black  text-muted-foreground uppercase tracking-widest;
+  padding: 1rem 1.5rem;
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--color-muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 /* Animations */

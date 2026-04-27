@@ -351,7 +351,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                 {!isFullyReceived && !isDelivered && (
                   <Link 
                     href="/orders/supply-inwards"
-                    className="w-full py-5 bg-foreground text-white rounded-[2rem] font-black text-base shadow-2xl hover:bg-primary transition-all duration-500 flex items-center justify-center gap-3 relative overflow-hidden group/btn active:scale-95"
+                    className="w-full py-5 bg-foreground text-white rounded-[2rem] font-black text-base shadow-2xl hover:bg-primary transition-all duration-500 flex items-center justify-center gap-3 relative overflow-hidden group/btn "
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-primary to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
                     <span className="relative z-10 flex items-center gap-3">

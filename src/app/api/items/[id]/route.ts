@@ -150,9 +150,12 @@ export async function DELETE(
     }
 
     await (prisma as any).$transaction([
+        (prisma as any).inventoryBatch.deleteMany({ where: { inventory: { itemId: id } } }),
         (prisma as any).inventory.deleteMany({ where: { itemId: id } }),
         (prisma as any).stock.deleteMany({ where: { itemId: id } }),
         (prisma as any).inventoryTransaction.deleteMany({ where: { itemId: id } }),
+        (prisma as any).pOLineItem.deleteMany({ where: { itemId: id } }),
+        (prisma as any).dispatchItem.deleteMany({ where: { itemId: id } }),
         (prisma as any).item.delete({ where: { id } })
     ]);
 

@@ -12,6 +12,7 @@ import {
   Trash2
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useConfirm } from "@/hooks/use-confirm";
 
 interface Stock {
   id: string;
@@ -28,6 +29,7 @@ interface Rack {
 export default function InventoryStockManager({ itemId }: { itemId: string }) {
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [allRacks, setAllRacks] = useState<Rack[]>([]);
+  const confirm = useConfirm();
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -154,7 +156,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                 type="button"
                 disabled={!newRackId || updatingId === "new"}
                 onClick={() => handleUpdateStock(newRackId, 0)}
-                className="w-full py-3 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20   transition-all disabled:opacity-50 flex items-center justify-center gap-2"
              >
                 {updatingId === "new" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 Finish Adding
@@ -182,8 +184,8 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                    <button 
                       type="button"
                       title="Remove from this rack"
-                      onClick={() => {
-                        if(confirm("Are you sure you want to remove this item from this rack? This will NOT delete the actual stock, just the location mapping.")) {
+                      onClick={async () => {
+                        if (await confirm("Remove from Rack", "Are you sure you want to remove this item from this rack? This will NOT delete the actual stock, just the location mapping.")) {
                            handleUpdateStock(stock.rackId, 0, stock.id);
                         }
                       }}
@@ -208,3 +210,4 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
     </div>
   );
 }
+

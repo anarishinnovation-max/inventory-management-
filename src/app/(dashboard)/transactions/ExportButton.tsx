@@ -44,10 +44,11 @@ export function ExportButton({ data }: ExportButtonProps) {
   return (
     <button 
       onClick={handleExport}
-      className="flex items-center gap-2 px-6 py-3 bg-surface-lowest text-foreground text-sm font-bold rounded-2xl shadow-ambient border border-border-ghost hover:bg-surface-low transition-all active:scale-[0.98]"
+      className="flex items-center gap-2 px-6 py-3 bg-surface-lowest text-foreground text-sm font-bold rounded-2xl shadow-ambient border border-border-ghost hover:bg-surface-low transition-all "
     >
       <History className="w-5 h-5 text-primary" />
       Export Audit Trail
     </button>
   );
 }
+

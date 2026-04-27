@@ -18,6 +18,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { twMerge } from "tailwind-merge";
+import { showToast } from "@/lib/toast";
+import { useConfirm } from "@/hooks/use-confirm";
 import { SupplyInwardsFilters } from "./SupplyInwardsFilters";
 
 interface SupplyInwardsListProps {
@@ -52,6 +54,7 @@ export default function SupplyInwardsList({
   currentEndDate
 }: SupplyInwardsListProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -79,7 +82,7 @@ export default function SupplyInwardsList({
   const handleBulkReceive = async () => {
     if (selectedIds.size === 0) return;
 
-    if (!confirm(`Are you sure you want to receive ${selectedIds.size} selected items? This will update your inventory immediately.`)) {
+    if (!(await confirm("Bulk Receipt", `Are you sure you want to receive ${selectedIds.size} selected items? This will update your inventory immediately.`))) {
       return;
     }
 
@@ -102,15 +105,16 @@ export default function SupplyInwardsList({
       });
 
       if (res.ok) {
+        showToast(`Successfully received ${selectedIds.size} items`, "success");
         startTransition(() => {
           router.push("/inventory");
         });
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to receive items.");
+        showToast(data.error || "Failed to receive items.", "error");
       }
     } catch (err) {
-      alert("Network error.");
+      showToast("Network error.", "error");
     } finally {
       setIsProcessing(false);
     }
@@ -137,16 +141,17 @@ export default function SupplyInwardsList({
       });
 
       if (res.ok) {
+        showToast(`Partial receipt recorded successfully`, "success");
         setShowReview(false);
         startTransition(() => {
           router.push("/inventory");
         });
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to receive items.");
+        showToast(data.error || "Failed to receive items.", "error");
       }
     } catch (err) {
-      alert("Network error.");
+      showToast("Network error.", "error");
     } finally {
       setIsProcessing(false);
     }
@@ -185,7 +190,7 @@ export default function SupplyInwardsList({
                   className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group"
                   title="Review & Partial Receipt"
                 >
-                  <SlidersHorizontal className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <SlidersHorizontal className="w-4 h-4  transition-transform" />
                 </button>
 
                 <button
@@ -194,7 +199,7 @@ export default function SupplyInwardsList({
                   className="p-2.5 rounded-xl hover:bg-success/5 text-success transition-all group"
                   title="Confirm Full Receipt"
                 >
-                  <ArrowDownToLine className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <ArrowDownToLine className="w-4 h-4  transition-transform" />
                 </button>
               </div>
             </div>
@@ -306,7 +311,7 @@ export default function SupplyInwardsList({
                             setReviewValues(initial);
                             setShowReview(true);
                           }}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md hover:scale-105 active:scale-95 group/btn"
+                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md   group/btn"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5 transition-transform group-hover/btn:rotate-12" />
                           Receive
@@ -435,7 +440,7 @@ export default function SupplyInwardsList({
                 <button
                   onClick={handlePartialReceive}
                   disabled={isProcessing}
-                  className="px-8 py-3 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="px-8 py-3 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20   transition-all flex items-center gap-2 disabled:opacity-50"
                 >
                   {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                   Confirm Bulk Receipt
@@ -448,3 +453,4 @@ export default function SupplyInwardsList({
     </div>
   );
 }
+
