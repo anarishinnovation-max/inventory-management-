@@ -245,6 +245,7 @@ export default function NewDispatchOrderPage() {
   
   const [selectedCustomer, setSelectedCustomer] = useState("");
   const [paymentMode, setPaymentMode] = useState("Cash");
+  const [orderDate, setOrderDate] = useState(new Date().toISOString());
   const [expectedDelivery, setExpectedDelivery] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantity: 1, sellingPrice: 0 }
@@ -427,6 +428,7 @@ export default function NewDispatchOrderPage() {
         body: JSON.stringify({
           customerId: selectedCustomer,
           paymentMode: paymentMode,
+          orderDate: orderDate,
           expectedDelivery: expectedDelivery || null,
           items: lineItems,
           status: customStatus || "pending"
@@ -693,6 +695,16 @@ export default function NewDispatchOrderPage() {
                    value={paymentMode}
                    onChange={(val) => setPaymentMode(val)}
                    placeholder="Select Payment Method"
+                 />
+              </div>
+
+              <div>
+                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Order Date</label>
+                 <PremiumDateTimePicker 
+                   value={orderDate}
+                   onChange={(val) => setOrderDate(val)}
+                   placeholder="Select Order Date"
+                   minDate={new Date()}
                  />
               </div>
 
