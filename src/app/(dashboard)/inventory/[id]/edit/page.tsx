@@ -4,17 +4,11 @@ import InventoryStockManager from "@/app/(dashboard)/inventory/InventoryStockMan
 import { clsx, type ClassValue } from "clsx";
 import {
   AlertCircle,
-  ArrowLeft,
-  ArrowDownLeft,
-  ArrowUpRight,
-  History,
   Loader2,
   Package,
   QrCode,
   Settings,
-  ShieldCheck,
-  TrendingUp,
-  ShoppingCart
+  ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,12 +22,12 @@ function cn(...inputs: ClassValue[]) {
 export default function EditItemPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
-  
+
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState("");
-  
-  const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
+
+  const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [isCritical, setIsCritical] = useState(false);
   const [itemData, setItemData] = useState<any>(null);
@@ -43,16 +37,16 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     const fetchData = async () => {
       try {
         const [itemRes, catRes, sessionRes] = await Promise.all([
-            fetch(`/api/items/${id}`),
-            fetch("/api/categories"),
-            fetch("/api/auth/session")
+          fetch(`/api/items/${id}`),
+          fetch("/api/categories"),
+          fetch("/api/auth/session")
         ]);
 
         if (itemRes.ok && catRes.ok) {
           const item = await itemRes.json();
           const cats = await catRes.json();
           const session = sessionRes.ok ? await sessionRes.json() : null;
-          
+
           setItemData(item);
           setCategories(cats);
           setSelectedCategoryId(item.categoryId);
@@ -139,12 +133,12 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     <form onSubmit={handleSubmit} className="max-w-7xl mx-auto space-y-12 pb-20 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-border-ghost pb-10">
         <div>
-           <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">
-              <Link href="/inventory" className="hover:text-primary transition-colors">Inventory</Link>
-              <div className="w-1 h-1 rounded-full bg-primary/40" />
-              <span className="text-primary/80">Refining Record</span>
-           </nav>
-           <h1 className="heading-xl">Modify Asset Record</h1>
+          <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">
+            <Link href="/inventory" className="hover:text-primary transition-colors">Inventory</Link>
+            <div className="w-1 h-1 rounded-full bg-primary/40" />
+            <span className="text-primary/80">Refining Record</span>
+          </nav>
+          <h1 className="heading-xl">Edit Item</h1>
         </div>
 
         {!isEmployee && (
@@ -154,17 +148,17 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             </Link>
             <button type="submit" disabled={loading} className="btn btn-primary h-12 px-8">
               {loading && <Loader2 className="w-5 h-5 animate-spin" />}
-              {loading ? "Saving..." : "Commit Changes"}
+              {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         )}
       </div>
 
       {error && (
-         <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
-            <ShieldCheck className="w-5 h-5 shrink-0" />
-            {error}
-         </div>
+        <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
+          <ShieldCheck className="w-5 h-5 shrink-0" />
+          {error}
+        </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -172,26 +166,25 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
             <h3 className="heading-md flex items-center gap-3 border-b border-border-ghost pb-6">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
-                 <Package className="w-5 h-5" />
+                <Package className="w-5 h-5" />
               </div>
               Core Specifications
             </h3>
-            
+
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Asset Nomenclature</label>
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Item Name</label>
                 <input required name="name" defaultValue={itemData?.name} readOnly={isEmployee} className={cn("input-field h-14", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="e.g. Industrial Motor, Copper Wire" type="text" />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Unique SKU Identifier</label>
                   <div className="relative">
-                    <QrCode className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                     <input required name="sku" defaultValue={itemData?.sku} readOnly={isEmployee} className={cn("input-field pl-14 h-14 font-mono", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="LXT-9982-A" type="text" />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Measurement Unit</label>
                   <div className="input-field h-14 flex items-center bg-surface-low/30 border-dashed">
@@ -200,26 +193,26 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   <input type="hidden" name="unit" value={itemData?.unit} />
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Operational Category</label>
                 <div className="flex flex-wrap gap-2">
-                   {categories.map(cat => (
-                      <button 
-                        key={cat.id} 
-                        type="button"
-                        onClick={() => !isEmployee && setSelectedCategoryId(cat.id)}
-                        className={cn(
-                           "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
-                           selectedCategoryId === cat.id 
-                               ? "border-primary bg-primary/10 text-primary shadow-sm" 
-                               : "border-border-ghost text-muted-foreground hover:bg-surface-low",
-                           isEmployee && "cursor-not-allowed opacity-80"
-                        )}
-                      >
-                         {cat.name}
-                      </button>
-                   ))}
+                  {categories.map(cat => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => !isEmployee && setSelectedCategoryId(cat.id)}
+                      className={cn(
+                        "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                        selectedCategoryId === cat.id
+                          ? "border-primary bg-primary/10 text-primary shadow-sm"
+                          : "border-border-ghost text-muted-foreground hover:bg-surface-low",
+                        isEmployee && "cursor-not-allowed opacity-80"
+                      )}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -230,11 +223,11 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
             <h3 className="heading-md flex items-center gap-3 border-b border-border-ghost pb-6">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
-                 <Settings className="w-5 h-5" />
+                <Settings className="w-5 h-5" />
               </div>
-              Replenishment Logic
+              Reordering Rules
             </h3>
-            
+
             <div className="space-y-8">
               <div className="space-y-2">
                 <div className="flex justify-between items-end px-1">
@@ -255,18 +248,18 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   </div>
                   <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Priority Flagging</p>
                 </div>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => !isEmployee && setIsCritical(!isCritical)}
                   className={cn(
-                     "w-12 h-6 rounded-full relative transition-colors duration-300",
-                     isCritical ? "bg-primary" : "bg-muted-foreground/30",
-                     isEmployee && "cursor-not-allowed opacity-60"
+                    "w-12 h-6 rounded-full relative transition-colors duration-300",
+                    isCritical ? "bg-primary" : "bg-muted-foreground/30",
+                    isEmployee && "cursor-not-allowed opacity-60"
                   )}
                 >
                   <div className={cn(
-                     "absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300",
-                     isCritical ? "right-1" : "left-1"
+                    "absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300",
+                    isCritical ? "right-1" : "left-1"
                   )}></div>
                 </button>
               </div>
@@ -280,7 +273,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
       <div className="mt-12 flex flex-col md:flex-row items-center justify-between p-8 bg-surface-low/30 rounded-[2.5rem] border border-border-ghost shadow-ambient gap-6">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center text-success border border-success/10">
-             <ShieldCheck className="w-6 h-6" />
+            <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
             <p className="text-sm font-black text-foreground">Real-time Synchronization Active</p>

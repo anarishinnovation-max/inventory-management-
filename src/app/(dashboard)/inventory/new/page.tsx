@@ -8,7 +8,6 @@ import {
   QrCode,
   Settings,
   ShieldCheck,
-  TrendingUp,
   ChevronDown
 } from "lucide-react";
 import { SearchableSelect } from "@/components/SearchableSelect";
@@ -164,19 +163,8 @@ export default function NewItemPage() {
                   placeholder="Select Category"
                 />
               </div>
-            </div>
-          </div>
 
-          <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost">
-            <div className="flex items-center gap-4 border-b border-border-ghost pb-6 mb-8">
-              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary border border-secondary/10">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <h3 className="heading-md">Stock Control</h3>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Unit */}
+              {/* Unit of Measurement */}
               <div className="group">
                 <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Unit of Measurement</label>
                 <select 
@@ -192,21 +180,10 @@ export default function NewItemPage() {
                   <option value="Liters">Liters (L)</option>
                 </select>
               </div>
-
-              {/* Min Stock Level */}
-              <div className="group">
-                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Low Stock Alert Level</label>
-                <input
-                  name="minStockLevel"
-                  type="number"
-                  min="0"
-                  required
-                  placeholder="e.g. 10"
-                  className="input-field h-14 font-mono"
-                />
-              </div>
             </div>
           </div>
+
+
         </div>
 
         {/* Sidebar: Metadata & Actions */}
