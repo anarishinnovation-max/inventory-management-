@@ -116,11 +116,22 @@ export const InventoryService = {
         });
 
         // 3. Update Cached Inventory summary
-        const currentInv = await tx.inventory.findFirst({
+        let currentInv = await tx.inventory.findFirst({
           where: { itemId: update.itemId },
         });
 
-        if (currentInv) {
+        if (!currentInv) {
+          currentInv = await tx.inventory.create({
+            data: {
+              itemId: update.itemId,
+              quantityAvailable: update.receivedQty,
+              incomingQty: 0,
+              quantityReserved: 0,
+              quantityInTransit: 0,
+              companyId: po.companyId
+            }
+          });
+        } else {
           await tx.inventory.update({
             where: { id: currentInv.id },
             data: {
@@ -129,21 +140,21 @@ export const InventoryService = {
               quantityInTransit: { decrement: Math.min(currentInv.quantityInTransit || 0, update.receivedQty) },
             },
           });
-
-          // 3a. Create Inventory Batch for this specific receipt (FIFO)
-          await tx.inventoryBatch.create({
-            data: {
-              inventoryId: currentInv.id,
-              vendorId: po.vendorId,
-              quantity: update.receivedQty,
-              remainingQty: update.receivedQty,
-              costPerUnit: poItem.costPrice,
-              purchaseDate: po.orderDate,
-              purchaseOrderId: poId,
-              receivedById: userId,
-            },
-          });
         }
+
+        // 3a. Create Inventory Batch for this specific receipt (FIFO)
+        await tx.inventoryBatch.create({
+          data: {
+            inventoryId: currentInv.id,
+            vendorId: po.vendorId,
+            quantity: update.receivedQty,
+            remainingQty: update.receivedQty,
+            costPerUnit: poItem.costPrice,
+            purchaseDate: po.orderDate,
+            purchaseOrderId: poId,
+            receivedById: userId,
+          },
+        });
 
         // 3b. Update Stock table (per-rack) - Fixed scoping to company
         const defaultRack = await tx.rack.findFirst({
@@ -312,12 +323,13 @@ export const InventoryService = {
   /**
    * Records scrapped inventory.
    */
-  async scrapInventory(itemId: string, companyId: string, qty: number, reason?: string) {
+  async scrapInventory(itemId: string, companyId: string, qty: number, reason?: string, userId?: string) {
     return await (prisma as any).$transaction(async (tx: any) => {
       await tx.inventoryTransaction.create({
         data: {
           item: { connect: { id: itemId } },
           company: { connect: { id: companyId } },
+          user: userId ? { connect: { id: userId } } : undefined,
           type: "SCRAP",
           quantity: -qty,
           referenceType: "MANUAL",
@@ -329,7 +341,7 @@ export const InventoryService = {
       let scrapRemaining = qty;
       const batches = await tx.inventoryBatch.findMany({
         where: { 
-          inventory: { itemId },
+          inventory: { itemId, companyId },
           remainingQty: { gt: 0 }
         },
         orderBy: { purchaseDate: "asc" }
@@ -343,6 +355,27 @@ export const InventoryService = {
           data: { remainingQty: { decrement: deduction } }
         });
         scrapRemaining -= deduction;
+      }
+
+      // Deduct from Racks (FIFO/Arbitrary)
+      let rRemaining = qty;
+      const stocks = await tx.stock.findMany({
+        where: { itemId, companyId, quantity: { gt: 0 } },
+        orderBy: { updatedAt: "asc" }
+      });
+
+      for (const s of stocks) {
+        if (rRemaining <= 0) break;
+        const deduction = Math.min(s.quantity, rRemaining);
+        if (s.quantity === deduction) {
+            await tx.stock.delete({ where: { id: s.id } });
+        } else {
+            await tx.stock.update({
+                where: { id: s.id },
+                data: { quantity: { decrement: deduction } }
+            });
+        }
+        rRemaining -= deduction;
       }
 
       return await tx.inventory.update({
@@ -504,10 +537,10 @@ export const InventoryService = {
   /**
    * Records scrapped inventory for multiple items.
    */
-  async bulkScrapInventory(itemIds: string[], companyId: string, reason?: string) {
+  async bulkScrapInventory(itemIds: string[], companyId: string, reason?: string, userId?: string) {
     return await (prisma as any).$transaction(async (tx: any) => {
       for (const itemId of itemIds) {
-        const inventory = await tx.inventory.findFirst({ where: { itemId } });
+        const inventory = await tx.inventory.findFirst({ where: { itemId, companyId } });
         if (!inventory || inventory.quantityAvailable <= 0) continue;
 
         const qty = inventory.quantityAvailable;
@@ -516,6 +549,7 @@ export const InventoryService = {
           data: {
             item: { connect: { id: itemId } },
             company: { connect: { id: companyId } },
+            user: userId ? { connect: { id: userId } } : undefined,
             type: "SCRAP",
             quantity: -qty,
             referenceType: "MANUAL_BULK",
@@ -532,12 +566,13 @@ export const InventoryService = {
 
         // Clear per-rack stock as well
         await tx.stock.deleteMany({
-          where: { itemId }
+          where: { itemId, companyId }
         });
 
-        // Clear batches
-        await tx.inventoryBatch.deleteMany({
-          where: { inventoryId: inventory.id }
+        // Deplete batches (preserve history instead of deleting)
+        await tx.inventoryBatch.updateMany({
+          where: { inventoryId: inventory.id },
+          data: { remainingQty: 0 }
         });
       }
       return { success: true };
