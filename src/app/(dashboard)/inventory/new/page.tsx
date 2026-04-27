@@ -231,7 +231,10 @@ export default function NewItemPage() {
               {/* Toggle Component */}
               <div className="flex items-center justify-between p-5 bg-surface-low rounded-2xl border border-border-ghost">
                 <div>
-                  <p className="text-[15px] font-black text-foreground">Critical Item</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-[15px] font-black text-foreground">Critical Item</p>
+                    <span className="px-2 py-0.5 rounded-full border border-success/50 text-[10px] font-black text-success uppercase tracking-wider">New</span>
+                  </div>
                   <p className="text-xs font-bold text-muted-foreground mt-0.5">Flag for priority replenishment</p>
                 </div>
                 <button 
