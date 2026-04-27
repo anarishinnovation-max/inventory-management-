@@ -23,9 +23,20 @@ export async function GET(
             batches: {
               include: { vendor: true },
               orderBy: { purchaseDate: 'desc' },
-              take: 1
+              take: 5
             }
           }
+        },
+        dispatchItems: {
+          include: {
+            dispatchOrder: {
+              include: { customer: true }
+            }
+          },
+          orderBy: {
+            dispatchOrder: { createdAt: 'desc' }
+          },
+          take: 5
         },
         stocks: {
           include: {

@@ -99,6 +99,31 @@ export async function GET(
       orderDate: item.dispatchOrder.orderDate
     }));
 
+    // Fetch full selling history (dispatched orders)
+    const sellingHistoryRaw = await prisma.dispatchItem.findMany({
+      where: {
+        itemId,
+        dispatchOrder: {
+          status: "dispatched"
+        }
+      },
+      include: {
+        dispatchOrder: {
+          include: { customer: true }
+        }
+      },
+      orderBy: { dispatchOrder: { createdAt: "desc" } },
+      take: 20
+    });
+
+    const sellingHistory = sellingHistoryRaw.map(di => ({
+      id: di.id,
+      customer: di.dispatchOrder.customer.name,
+      quantity: di.quantity,
+      price: di.sellingPrice,
+      date: di.dispatchOrder.createdAt
+    }));
+
     const totalQty = Number(item.inventory?.quantityAvailable || 0);
     const incomingQty = Number(item.inventory?.incomingQty || 0);
     const reservedQty = Number(item.inventory?.quantityReserved || 0);
@@ -124,7 +149,16 @@ export async function GET(
       totalVisibility: totalQty + incomingQty,
       status,
       incomingPurchaseOrders,
-      linkedCustomerOrders
+      linkedCustomerOrders,
+      sellingHistory,
+      purchaseHistory: (item.inventory as any)?.batches.map((b: any) => ({
+        vendor: b.vendor?.name || "Unknown",
+        quantity: b.quantity,
+        remainingQty: b.remainingQty,
+        costPerUnit: b.costPerUnit,
+        date: b.purchaseDate,
+        receivedBy: b.receivedBy?.name || "System"
+      })) || []
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
