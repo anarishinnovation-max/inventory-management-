@@ -134,9 +134,9 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
         {/* Add New Location Form */}
         {showAddForm && (
           <div className="p-6 bg-primary/5 rounded-2xl border border-primary/20 space-y-4 animate-in fade-in slide-in-from-top-2">
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-1.5">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Rack Number</label>
+                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Select Rack Number</label>
                    <select 
                       value={newRackId}
                       onChange={(e) => setNewRackId(e.target.value)}
@@ -149,16 +149,6 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                           <option key={r.id} value={r.id}>Rack {r.rackNumber}</option>
                         ))}
                    </select>
-                </div>
-                <div className="space-y-1.5">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Units</label>
-                   <input 
-                      type="number"
-                      value={newQuantity}
-                      min="0"
-                      onChange={(e) => setNewQuantity(parseInt(e.target.value))}
-                      className="w-full px-4 py-3 bg-white border border-border-ghost rounded-xl text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-primary transition-all"
-                   />
                 </div>
              </div>
              <button 
@@ -189,33 +179,19 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                 </div>
 
                 <div className="flex items-center gap-6 w-full md:w-auto">
-                   <div className="flex items-center gap-3">
-                      <div className="relative">
-                         <input 
-                            type="number"
-                            defaultValue={stock.quantity}
-                            id={`qty-${stock.id}`}
-                            className="w-32 px-4 py-2 bg-white border border-border-ghost rounded-xl text-right font-black text-foreground outline-none focus:ring-2 focus:ring-primary transition-all pr-12"
-                         />
-                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-muted-foreground uppercase">PCS</span>
-                      </div>
-                      <button 
-                         type="button"
-                         title="Update quantity"
-                         disabled={updatingId === stock.id}
-                         onClick={() => {
-                            const input = document.getElementById(`qty-${stock.id}`) as HTMLInputElement;
-                            handleUpdateStock(stock.rackId, parseInt(input.value), stock.id);
-                         }}
-                         className="p-2.5 bg-foreground text-surface-lowest rounded-xl hover:scale-110 active:scale-90 transition-all shadow-sm disabled:opacity-50"
-                      >
-                         {updatingId === stock.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCcw className="w-4 h-4" />}
-                      </button>
+                   <div className="flex items-center gap-3 bg-surface-low px-4 py-2 rounded-xl border border-border-ghost">
+                      <span className="text-sm font-black text-foreground">{stock.quantity}</span>
+                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">PCS</span>
                    </div>
                    <div className="h-8 w-px bg-border-ghost hidden md:block"></div>
                    <button 
                       type="button"
-                      onClick={() => handleUpdateStock(stock.rackId, 0, stock.id)}
+                      title="Remove from this rack"
+                      onClick={() => {
+                        if(confirm("Are you sure you want to remove this item from this rack? This will NOT delete the actual stock, just the location mapping.")) {
+                           handleUpdateStock(stock.rackId, 0, stock.id);
+                        }
+                      }}
                       className="p-2.5 hover:bg-error/10 text-muted-foreground hover:text-error rounded-xl transition-all"
                    >
                       <Trash2 className="w-4 h-4" />

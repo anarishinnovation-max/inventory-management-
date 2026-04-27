@@ -268,16 +268,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             </div>
           </div>
 
-          <div className="primary-gradient p-8 rounded-4xl text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
-            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
-            <div className="flex items-start justify-between mb-6 relative z-10">
-              <TrendingUp className="w-8 h-8 opacity-80" />
-              <span className="text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">Optimization Info</span>
-            </div>
-            <p className="text-[15px] font-medium leading-relaxed relative z-10">
-               Stock analytics show that items in this category have increased turnover recently. Consider increasing safety thresholds.
-            </p>
-          </div>
+
 
           {/* Last Purchase Info */}
           {itemData?.inventory?.batches?.[0] && (
