@@ -89,7 +89,7 @@ export default function UsersPage() {
             <ChevronLeft className="w-4 h-4" />
             Back to Admin Center
           </Link>
-          <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-3">
+          <h1 className="heading-xl tracking-tight flex items-center gap-3">
             <Users className="w-10 h-10 text-primary" />
             User Management
           </h1>
@@ -100,7 +100,7 @@ export default function UsersPage() {
         
         <button 
           onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-2xl font-bold hover:opacity-90 shadow-ambient-primary transition-all self-start"
+          className="btn btn-primary self-start"
         >
           <UserPlus className="w-5 h-5" />
           Add Team Member
@@ -108,7 +108,7 @@ export default function UsersPage() {
       </div>
 
       {/* Users Table */}
-      <div className="bg-surface-lowest border border-border-ghost rounded-[3rem] shadow-ambient overflow-hidden">
+      <div className="table-container animate-in delay-100">
         {loading ? (
           <div className="p-20 flex flex-col items-center justify-center gap-4">
             <Loader2 className="w-10 h-10 text-primary animate-spin" />
@@ -116,19 +116,19 @@ export default function UsersPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-border-ghost">
-                  <th className="px-8 py-6 text-sm font-bold text-muted-foreground uppercase tracking-wider">Member</th>
-                  <th className="px-8 py-6 text-sm font-bold text-muted-foreground uppercase tracking-wider">Role</th>
-                  <th className="px-8 py-6 text-sm font-bold text-muted-foreground uppercase tracking-wider">Joined</th>
-                  <th className="px-8 py-6 text-sm font-bold text-muted-foreground uppercase tracking-wider text-right">Actions</th>
+            <table className="w-full text-left border-collapse">
+              <thead className="table-header">
+                <tr>
+                  <th className="table-cell-header">Member</th>
+                  <th className="table-cell-header">Role</th>
+                  <th className="table-cell-header">Joined</th>
+                  <th className="table-cell-header text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-ghost">
                 {users.map((user) => (
-                  <tr key={user.id} className="group hover:bg-surface-muted/50 transition-colors">
-                    <td className="px-8 py-6">
+                  <tr key={user.id} className="table-row">
+                    <td className="table-cell">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-surface-muted flex items-center justify-center font-black text-primary text-xl border border-border-ghost">
                           {user.name.charAt(0)}
@@ -139,13 +139,17 @@ export default function UsersPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-muted border border-border-ghost w-fit">
+                    <td className="table-cell">
+                      <div className={`badge gap-2 ${
+                        user.role === UserRole.OWNER ? 'badge-primary' : 
+                        user.role === UserRole.MANAGER ? 'badge-warning' : 
+                        'badge-neutral'
+                      }`}>
                         {getRoleIcon(user.role)}
-                        <span className="text-sm font-bold uppercase tracking-wider">{user.role}</span>
+                        {user.role}
                       </div>
                     </td>
-                    <td className="px-8 py-6">
+                    <td className="table-cell">
                       <span className="text-sm text-muted-foreground font-medium">
                         {new Date(user.createdAt).toLocaleDateString(undefined, { 
                           year: 'numeric', 
@@ -154,7 +158,7 @@ export default function UsersPage() {
                         })}
                       </span>
                     </td>
-                    <td className="px-8 py-6 text-right">
+                    <td className="table-cell text-right">
                       <div className="relative inline-block text-left">
                         <button 
                           onClick={() => setActiveMenu(activeMenu === user.id ? null : user.id)}

@@ -150,66 +150,66 @@ function StockBreakdownPopup({
   const totalQty = batches.reduce((acc, b) => acc + b.remainingQty, 0);
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-foreground/30 backdrop-blur-md animate-in fade-in duration-300">
       <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-10">
-          <div className="flex justify-between items-start mb-8">
-            <div className="space-y-1">
-               <h2 className="text-3xl font-black text-foreground tracking-tighter leading-none">Stock Breakdown</h2>
-               <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest">{itemName}</p>
+          <div className="flex justify-between items-start mb-10">
+            <div className="space-y-2">
+               <h2 className="heading-lg tracking-tighter leading-none">Stock Breakdown</h2>
+               <p className="text-muted-foreground font-black uppercase text-[10px] tracking-[0.2em]">{itemName}</p>
             </div>
             <button 
               onClick={onClose}
-              className="p-3 rounded-2xl bg-surface-low text-muted-foreground hover:bg-surface-high hover:text-foreground transition-all "
+              className="w-12 h-12 rounded-2xl bg-surface-low text-muted-foreground hover:bg-surface-high hover:text-foreground transition-all flex items-center justify-center"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
-             <div className="card-premium !p-6 bg-primary/5 border-primary/10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary/70">Total Available</p>
-                <p className="text-3xl font-black text-primary mt-1">{totalQty} <span className="text-sm font-medium opacity-60">Units</span></p>
+          <div className="grid grid-cols-2 gap-8 mb-10">
+             <div className="card-premium !p-8 bg-primary/5 border-primary/10 shadow-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70 mb-2">Total Available</p>
+                <p className="text-4xl font-black text-primary tracking-tighter tabular-nums">{totalQty} <span className="text-sm font-bold opacity-40 uppercase tracking-widest ml-1">Units</span></p>
              </div>
-             <div className="card-premium !p-6 bg-surface-low border-border-ghost">
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Active Batches</p>
-                <p className="text-3xl font-black text-foreground mt-1">{batches.length} <span className="text-sm font-medium opacity-60">Sources</span></p>
+             <div className="card-premium !p-8 bg-surface-low border-border-ghost shadow-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-2">Active Batches</p>
+                <p className="text-4xl font-black text-foreground tracking-tighter tabular-nums">{batches.length} <span className="text-sm font-bold opacity-40 uppercase tracking-widest ml-1">Sources</span></p>
              </div>
           </div>
 
-          <div className="bg-surface-low/50 rounded-3xl border border-border-ghost overflow-hidden">
+          <div className="table-container">
             <div className="max-h-[350px] overflow-y-auto no-scrollbar">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-surface-low border-b border-border-ghost">
-                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Vendor & Source</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Purchase Date</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Rate</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Remaining</th>
+                  <tr className="table-header">
+                    <th className="table-cell-header">Vendor & Source</th>
+                    <th className="table-cell-header">Purchase Date</th>
+                    <th className="table-cell-header">Rate</th>
+                    <th className="table-cell-header text-right">Remaining</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border-ghost/50">
                   {batches.map((batch) => (
-                    <tr key={batch.id} className="hover:bg-white transition-colors group">
-                      <td className="px-6 py-4">
+                    <tr key={batch.id} className="table-row">
+                      <td className="table-cell">
                          <div className="flex flex-col">
-                            <span className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">{batch.vendor?.name || 'Stock Adjustment'}</span>
-                            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">#{batch.id.split('-')[0].toUpperCase()}</span>
+                            <span className="font-black text-foreground text-sm group-hover:text-primary transition-colors">{batch.vendor?.name || 'Stock Adjustment'}</span>
+                            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">#{batch.id.split('-')[0].toUpperCase()}</span>
                          </div>
                       </td>
-                      <td className="px-6 py-4">
-                         <span className="text-xs font-bold text-muted-foreground">
+                      <td className="table-cell">
+                         <span className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
                             {new Date(batch.purchaseDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                          </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="table-cell">
                          <div className="flex flex-col">
-                            <span className="font-mono font-black text-primary text-sm">₹{batch.costPerUnit}</span>
+                            <span className="font-mono font-black text-primary text-sm tabular-nums">₹{batch.costPerUnit}</span>
                             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight mt-0.5">Per Unit</span>
                          </div>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                         <span className="text-sm font-black text-foreground">{batch.remainingQty}</span>
+                      <td className="table-cell text-right">
+                         <span className="text-sm font-black text-foreground tabular-nums">{batch.remainingQty}</span>
                       </td>
                     </tr>
                   ))}
@@ -218,13 +218,13 @@ function StockBreakdownPopup({
             </div>
           </div>
         </div>
-        <footer className="px-10 py-6 bg-surface-low border-t border-border-ghost flex justify-between items-center">
-           <p className="text-[10px] font-bold text-muted-foreground italic max-w-[250px]">
+        <footer className="px-10 py-8 bg-surface-low border-t border-border-ghost flex justify-between items-center">
+           <p className="text-[10px] font-bold text-muted-foreground italic max-w-[280px] leading-relaxed">
              * Batches are processed on a First-In-First-Out (FIFO) basis during dispatch.
            </p>
            <button 
              onClick={onClose} 
-             className="px-8 py-3 bg-foreground text-white rounded-xl font-black text-xs shadow-lg   transition-all"
+             className="btn btn-neutral h-12 px-10 rounded-xl"
            >
              Close Details
            </button>
@@ -234,11 +234,12 @@ function StockBreakdownPopup({
   );
 }
 
+import { showToast } from "@/lib/toast";
+
 export default function NewDispatchOrderPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [error, setError] = useState("");
   
   const [customers, setCustomers] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
@@ -294,10 +295,10 @@ export default function NewDispatchOrderPage() {
           });
           setInventoryMap(map);
         } else {
-          setError("Failed to load labels.");
+          showToast("Failed to load reference labels.", "error");
         }
       } catch (err) {
-        setError("Network failure while fetching master data.");
+        showToast("Network failure while fetching master data.", "error");
       } finally {
         setFetching(false);
       }
@@ -376,21 +377,9 @@ export default function NewDispatchOrderPage() {
             incoming: incoming
           }
         };
-      } else if (item.quantity > available) {
-        // Technically has enough (current + incoming), but might still want to warn?
-        // Let's stick to the prompt: shortage if exceeds (current + incoming)
       }
     }
     return { isValid: true, needsPopup: false };
-  };
-
-  const getFilteredItems = (searchQuery: string) => {
-    if (!searchQuery.trim()) return items;
-    const query = searchQuery.toLowerCase();
-    return items.filter(item => 
-      item.sku.toLowerCase().includes(query) || 
-      item.name.toLowerCase().includes(query)
-    );
   };
 
   const handleItemSelect = (index: number, itemId: string, itemName: string) => {
@@ -399,19 +388,14 @@ export default function NewDispatchOrderPage() {
     setOpenDropdowns({ ...openDropdowns, [index]: false });
   };
 
-  const handleSearchChange = (index: number, query: string) => {
-    setItemSearches({ ...itemSearches, [index]: query });
-    setOpenDropdowns({ ...openDropdowns, [index]: true });
-  };
-
   const handleSubmit = async (e?: React.FormEvent, customStatus?: string) => {
     if (e) e.preventDefault();
     if (!selectedCustomer) {
-      setError("Please select a customer recipient.");
+      showToast("Please select a customer recipient.", "info");
       return;
     }
     if (lineItems.some(i => !i.itemId || i.quantity <= 0)) {
-      setError("Please ensure all line items have valid specifications.");
+      showToast("Please ensure all line items have valid specifications.", "info");
       return;
     }
 
@@ -423,13 +407,12 @@ export default function NewDispatchOrderPage() {
             setShortageInfo(stockCheck.shortageInfo as ShortageInfo);
             return;
         }
-        setError("Fulfillment logic error.");
+        showToast("Fulfillment logic error.", "error");
         return;
       }
     }
 
     setLoading(true);
-    setError("");
 
     try {
       const res = await fetch("/api/dispatch-orders", {
@@ -449,14 +432,15 @@ export default function NewDispatchOrderPage() {
       });
 
       if (res.ok) {
+        showToast("Sale order confirmed successfully.", "success");
         router.push("/orders/dispatch");
         router.refresh();
       } else {
         const data = await res.json();
-        setError(data.error || "Fulfillment creation failed.");
+        showToast(data.error || "Fulfillment creation failed.", "error");
       }
     } catch (err) {
-      setError("Internal server link failure.");
+      showToast("Internal server link failure.", "error");
     } finally {
       setLoading(false);
     }
@@ -481,9 +465,9 @@ export default function NewDispatchOrderPage() {
 
   if (fetching) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-bold animate-pulse">Loading items...</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-xs animate-pulse">Synchronizing items...</p>
       </div>
     );
   }
@@ -505,66 +489,59 @@ export default function NewDispatchOrderPage() {
         />
       )}
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div className="space-y-4">
-          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+        <div className="space-y-6">
+          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit">
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Sales List</span>
           </Link>
-          <h1 className="text-5xl font-black tracking-tight text-foreground">Sell & Send Items</h1>
+          <h1 className="heading-xl tracking-tight">Sell & Send Items</h1>
           <p className="text-muted-foreground text-lg font-medium">Set up a new order for a customer.</p>
         </div>
-        <div className="flex items-center gap-4">
-           <Link href="/orders/dispatch" className="px-6 py-3.5 text-sm font-bold text-muted-foreground hover:bg-surface-low rounded-2xl border border-transparent transition-all">
+        <div className="flex items-center gap-6">
+           <Link href="/orders/dispatch" className="btn btn-ghost h-14 px-8 text-xs font-black uppercase tracking-widest">
              Cancel
            </Link>
            <button 
              onClick={handleSubmit}
              disabled={loading}
-             className="px-8 py-3.5 text-sm font-black text-white bg-foreground rounded-2xl shadow-xl   transition-all disabled:opacity-50 flex items-center gap-2"
+             className="btn btn-primary h-14 px-10 shadow-glow-primary min-w-[180px]"
            >
-             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
              {loading ? "Saving..." : "Confirm Sale"}
            </button>
         </div>
       </div>
 
-      {error && (
-        <div className="p-5 mb-8 rounded-3xl bg-error/10 border border-error/20 text-error font-bold flex items-center gap-4 animate-in fade-in slide-in-from-top-4">
-          <AlertCircle className="w-6 h-6 shrink-0" />
-          <p>{error}</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Main Content: Line Items */}
-        <div className="lg:col-span-8 space-y-8">
-          <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost">
-            <div className="flex items-center justify-between mb-8 border-b border-border-ghost pb-6">
-               <h3 className="text-xl font-black flex items-center gap-3 text-foreground">
-                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                    <Package className="w-5 h-5" />
-                 </div>
-                 Items to Sell
+        <div className="lg:col-span-8 space-y-10">
+          <div className="bg-white p-10 rounded-[3rem] shadow-ambient border border-border-ghost">
+            <div className="flex items-center justify-between mb-10 border-b border-border-ghost pb-8">
+               <h3 className="heading-md flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
+                     <Package className="w-6 h-6" />
+                  </div>
+                  Items to Sell
                </h3>
                <button 
                  onClick={addLineItem}
                  type="button" 
-                 className="flex items-center gap-2 text-xs font-black text-primary hover:underline bg-primary/5 px-4 py-2 rounded-xl transition-colors"
+                 className="btn btn-primary h-10 px-6 !text-[10px] !rounded-xl"
                >
                  <Plus className="w-4 h-4" /> Add Item
                </button>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               {lineItems.map((item, index) => {
                 const available = getAvailableStock(item.itemId);
                 const isExceeding = item.itemId && item.quantity > available;
                 
                 return (
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end" key={index}>
-                    <div className="md:col-span-5 relative">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Item Details</label>
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end" key={index}>
+                    <div className="md:col-span-6 relative">
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Item Details</label>
                       <SearchableSelect 
                         items={items}
                         value={item.itemId}
@@ -577,25 +554,25 @@ export default function NewDispatchOrderPage() {
                           <div className="flex justify-between items-center w-full">
                             <div className="flex flex-col min-w-0">
                                <span className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-0.5 truncate">{i.sku}</span>
-                               <span className="text-sm font-bold truncate">{i.name}</span>
+                               <span className="text-sm font-black truncate">{i.name}</span>
                             </div>
-                            <div className={`text-[10px] font-black px-2 py-1 rounded-lg ml-3 shrink-0 ${
+                            <div className={`badge !text-[9px] !px-2.5 !py-1 ml-4 shrink-0 ${
                               getAvailableStock(i.id) > 0 
-                                ? 'bg-emerald-500/10 text-emerald-700' 
-                                : 'bg-error/10 text-error'
+                                ? 'badge-success' 
+                                : 'badge-error'
                             }`}>
-                              {getAvailableStock(i.id)} units
+                              {getAvailableStock(i.id)} U
                             </div>
                           </div>
                         )}
                       />
                       
                       {item.itemId && (
-                        <div className="mt-3 space-y-3">
-                          <div className="grid grid-cols-2 gap-2">
-                             <div className="flex flex-col gap-1 px-3 py-2 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
-                                <span className="text-[9px] font-black text-emerald-600/60 uppercase tracking-tighter">Total Available</span>
-                                <span className="text-xs font-black text-emerald-700">{available} units</span>
+                        <div className="mt-4 space-y-4">
+                          <div className="grid grid-cols-3 gap-3">
+                             <div className="flex flex-col gap-1 px-4 py-3 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
+                                <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-widest">Available</span>
+                                <span className="text-xs font-black text-emerald-700 tabular-nums">{available} Units</span>
                              </div>
                              {(() => {
                                 const data = getInventoryData(item.itemId);
@@ -608,20 +585,20 @@ export default function NewDispatchOrderPage() {
 
                                 return (
                                   <>
-                                    <div className="flex flex-col gap-1 px-3 py-2 bg-primary/5 border border-primary/10 rounded-xl">
-                                       <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter">Avg Rate</span>
-                                       <span className="text-xs font-black text-primary">₹{avgPrice.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
+                                    <div className="flex flex-col gap-1 px-4 py-3 bg-primary/5 border border-primary/10 rounded-2xl">
+                                       <span className="text-[8px] font-black text-primary/60 uppercase tracking-widest">Avg Rate</span>
+                                       <span className="text-xs font-black text-primary tabular-nums">₹{avgPrice.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
                                     </div>
-                                    <div className="flex flex-col gap-1 px-3 py-2 bg-indigo-500/5 border border-indigo-500/10 rounded-xl">
-                                       <span className="text-[9px] font-black text-indigo-600/60 uppercase tracking-tighter">Latest Rate</span>
-                                       <span className="text-xs font-black text-indigo-700">₹{latestPrice.toLocaleString()}</span>
+                                    <div className="flex flex-col gap-1 px-4 py-3 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
+                                       <span className="text-[8px] font-black text-indigo-600/60 uppercase tracking-widest">Latest</span>
+                                       <span className="text-xs font-black text-indigo-700 tabular-nums">₹{latestPrice.toLocaleString()}</span>
                                     </div>
                                   </>
                                 );
                              })()}
                           </div>
                           
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-3">
                              {item.itemId && (
                                <button
                                  type="button"
@@ -634,9 +611,9 @@ export default function NewDispatchOrderPage() {
                                       });
                                    }
                                  }}
-                                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all text-[10px] font-black uppercase tracking-widest border border-border-ghost"
+                                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all text-[9px] font-black uppercase tracking-widest border border-border-ghost"
                                >
-                                 <Eye className="w-3 h-3" />
+                                 <Eye className="w-3.5 h-3.5" />
                                  View Breakdown
                                </button>
                              )}
@@ -644,39 +621,38 @@ export default function NewDispatchOrderPage() {
                         </div>
                       )}
                     </div>
-                    <div className="md:col-span-3">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Quantity</label>
+                    <div className="md:col-span-2">
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Quantity</label>
                       <input 
                         type="number" 
                         min="1"
                         value={item.quantity}
                         onChange={(e) => updateLineItem(index, "quantity", e.target.value)}
-                        className={`w-full bg-surface-lowest border rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 outline-none ${
-                          isExceeding 
-                            ? 'border-error/50 focus:ring-error/50' 
-                            : 'border-border-ghost focus:ring-primary'
-                        }`}
+                        className={cn(
+                          "input-field !h-12 !font-mono !text-sm",
+                          isExceeding && "!border-error !text-error focus:!ring-error/20"
+                        )}
                       />
                       {isExceeding && (
-                        <p className="text-[10px] text-error font-bold mt-1">⚠️ Exceeds available stock</p>
+                        <p className="text-[9px] text-error font-black uppercase tracking-widest mt-2">⚠️ Over-Stock</p>
                       )}
                     </div>
                     <div className="md:col-span-3">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Selling Price (₹)</label>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Selling Rate (₹)</label>
                       <input 
                         type="number" 
                         min="0"
                         value={item.sellingPrice}
                         onChange={(e) => updateLineItem(index, "sellingPrice", e.target.value)}
-                        className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-mono font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
+                        className="input-field !h-12 !font-mono !text-sm"
                       />
                     </div>
                     <div className="md:col-span-1 flex items-end justify-center pb-1">
                       <button 
                         onClick={() => removeLineItem(index)}
-                        className="w-10 h-10 rounded-xl bg-error/5 text-error flex items-center justify-center hover:bg-error/10 transition-colors"
+                        className="w-12 h-12 rounded-2xl bg-error/5 text-error flex items-center justify-center hover:bg-error/10 transition-colors border border-transparent hover:border-error/20"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </div>
                   </div>
@@ -687,109 +663,112 @@ export default function NewDispatchOrderPage() {
         </div>
 
         {/* Sidebar: Customer & Summary */}
-        <div className="lg:col-span-4 space-y-8">
-           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
-              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Sale Details</h3>
+        <div className="lg:col-span-4 space-y-10">
+           <div className="bg-white p-10 rounded-[3rem] shadow-ambient border border-border-ghost space-y-8">
+              <h3 className="heading-md border-b border-border-ghost pb-6">Sale Logistics</h3>
               
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Customer Name</label>
-                 <SearchableSelect 
-                   items={customers}
-                   value={selectedCustomer}
-                   onChange={(val) => setSelectedCustomer(val)}
-                   placeholder="Select Customer"
-                 />
+              <div className="space-y-6">
+                <div>
+                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Customer Name</label>
+                   <SearchableSelect 
+                     items={customers}
+                     value={selectedCustomer}
+                     onChange={(val) => setSelectedCustomer(val)}
+                     placeholder="Select Recipient"
+                   />
+                </div>
+
+                <div>
+                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Payment Method</label>
+                   <SearchableSelect 
+                     items={["Cash", "Credit Card", "Debit Card", "Bank Transfer", "Check", "Digital Wallet", "UPI"].map(m => ({ id: m, name: m }))}
+                     value={paymentMode}
+                     onChange={(val) => setPaymentMode(val)}
+                     placeholder="Select Method"
+                   />
+                </div>
+
+                <div>
+                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Collected By</label>
+                   <input 
+                     type="text"
+                     value={collectedBy}
+                     onChange={(e) => setCollectedBy(e.target.value)}
+                     placeholder="Pick-up person name"
+                     className="input-field !h-12"
+                   />
+                </div>
+
+                <div>
+                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Dispatched By</label>
+                   <input 
+                     type="text"
+                     value={dispatchedBy}
+                     readOnly
+                     className="input-field !h-12 bg-surface-low opacity-60 cursor-not-allowed"
+                   />
+                </div>
+
+                <div>
+                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Transport Mode</label>
+                   <SearchableSelect 
+                     items={["Self Pickup", "Delivery Truck", "Courier", "Rickshaw", "Bike", "Other"].map(m => ({ id: m, name: m }))}
+                     value={transportMode}
+                     onChange={(val) => setTransportMode(val)}
+                     placeholder="Select Transport"
+                   />
+                </div>
+
+                <div>
+                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Order Date</label>
+                   <PremiumDateTimePicker 
+                     value={orderDate}
+                     onChange={(val) => setOrderDate(val)}
+                     placeholder="Select Order Date"
+                     minDate={new Date()}
+                   />
+                </div>
+
+                <div>
+                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Expected Delivery</label>
+                   <PremiumDateTimePicker 
+                     value={expectedDelivery}
+                     onChange={(val) => setExpectedDelivery(val)}
+                     placeholder="Select Delivery Date"
+                     minDate={new Date()}
+                   />
+                </div>
               </div>
 
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">How they paid</label>
-                 <SearchableSelect 
-                   items={["Cash", "Credit Card", "Debit Card", "Bank Transfer", "Check", "Digital Wallet", "UPI"].map(m => ({ id: m, name: m }))}
-                   value={paymentMode}
-                   onChange={(val) => setPaymentMode(val)}
-                   placeholder="Select Payment Method"
-                 />
-              </div>
-
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Collected By (Customer Side)</label>
-                 <input 
-                   type="text"
-                   value={collectedBy}
-                   onChange={(e) => setCollectedBy(e.target.value)}
-                   placeholder="Who is picking it up?"
-                   className="w-full bg-surface-lowest border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm focus:ring-2 focus:ring-primary outline-none"
-                 />
-              </div>
-
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Dispatched By (Our Staff)</label>
-                 <input 
-                   type="text"
-                   value={dispatchedBy}
-                   readOnly
-                   placeholder="Who is sending it?"
-                   className="w-full bg-surface-low border border-border-ghost rounded-xl px-4 py-3 font-bold text-sm outline-none cursor-not-allowed opacity-70"
-                 />
-              </div>
-
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Transport Mode</label>
-                 <SearchableSelect 
-                   items={["Self Pickup", "Delivery Truck", "Courier", "Rickshaw", "Bike", "Other"].map(m => ({ id: m, name: m }))}
-                   value={transportMode}
-                   onChange={(val) => setTransportMode(val)}
-                   placeholder="Select Transport"
-                 />
-              </div>
-
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Order Date</label>
-                 <PremiumDateTimePicker 
-                   value={orderDate}
-                   onChange={(val) => setOrderDate(val)}
-                   placeholder="Select Order Date"
-                   minDate={new Date()}
-                 />
-              </div>
-
-              <div>
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2 block">Expected Delivery</label>
-                 <PremiumDateTimePicker 
-                   value={expectedDelivery}
-                   onChange={(val) => setExpectedDelivery(val)}
-                   placeholder="Select Delivery Date & Time"
-                   minDate={new Date()}
-                 />
-              </div>
-
-              <div className="pt-6 border-t border-border-ghost space-y-5">
-                 <div className="flex justify-between items-center text-sm font-bold text-muted-foreground">
-                    <span>Items in Order</span>
-                    <span className="text-foreground">{lineItems.length}</span>
+              <div className="pt-8 border-t border-border-ghost space-y-6">
+                 <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                    <span>Line Items</span>
+                    <span className="text-foreground tabular-nums">{lineItems.length}</span>
                  </div>
-                 <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-muted-foreground">Total Units</span>
-                    <span className="text-[15px] font-black text-foreground">{lineItems.reduce((acc, curr) => acc + curr.quantity, 0)} Units</span>
+                 <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                    <span>Total Units</span>
+                    <span className="text-foreground tabular-nums">{lineItems.reduce((acc, curr) => acc + curr.quantity, 0)} Units</span>
                  </div>
-                 <div className="pt-6 border-t border-border-ghost flex justify-between items-baseline">
-                    <span className="text-xs font-black text-foreground uppercase tracking-widest">Total Bill</span>
+                 <div className="pt-8 border-t border-border-ghost flex justify-between items-end">
+                    <span className="text-[11px] font-black text-foreground uppercase tracking-[0.3em]">Total Bill</span>
                     <div className="text-right">
-                       <span className="text-3xl font-black text-foreground tracking-tighter">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                       <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Excluding GST</p>
+                       <span className="text-4xl font-black text-foreground tracking-tighter tabular-nums">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                       <p className="text-[9px] font-black text-muted-foreground mt-2 uppercase tracking-widest opacity-60">Excluding Taxes</p>
                     </div>
                  </div>
               </div>
            </div>
 
-           <div className="bg-indigo-600 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-600/20 relative overflow-hidden group">
-              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl  transition-all duration-700"></div>
-              <div className="flex items-center gap-3 mb-4 relative z-10">
-                 <CheckCircle2 className="w-5 h-5 opacity-80" />
-                 <p className="text-[10px] font-black uppercase tracking-widest">Selling Flow</p>
+           <div className="card-premium bg-indigo-600 p-10 text-white shadow-xl shadow-indigo-600/20 relative overflow-hidden group">
+              <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+              <div className="flex items-center gap-4 mb-6 relative z-10">
+                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
+                    <CheckCircle2 className="w-5 h-5" />
+                 </div>
+                 <p className="text-[10px] font-black uppercase tracking-[0.3em]">Selling Flow</p>
               </div>
-              <p className="text-sm font-medium leading-relaxed relative z-10">
-                Confirming this order will set aside items. We remove items from stock only after you confirm they are sent.
+              <p className="text-sm font-medium leading-relaxed relative z-10 opacity-90">
+                Confirming this order will set aside items. Stock levels are only finalized once the order is marked as dispatched.
               </p>
            </div>
         </div>

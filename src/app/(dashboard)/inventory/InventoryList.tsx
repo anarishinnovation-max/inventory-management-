@@ -240,7 +240,7 @@ export default function InventoryList({
                   title="Create Bulk PO"
                   suppressHydrationWarning
                 >
-                  <ShoppingCart className="w-4 h-4  transition-transform" />
+                  <ShoppingCart className="w-4 h-4" />
                 </button>
 
                 <button
@@ -250,7 +250,7 @@ export default function InventoryList({
                   title="Scrap All"
                   suppressHydrationWarning
                 >
-                  <Flame className="w-4 h-4  transition-transform" />
+                  <Flame className="w-4 h-4" />
                 </button>
 
                 <button
@@ -260,7 +260,7 @@ export default function InventoryList({
                   title="Delete Selected"
                   suppressHydrationWarning
                 >
-                  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4  transition-transform" />}
+                  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 </button>
               </div>
             </div>
@@ -268,195 +268,193 @@ export default function InventoryList({
         )}
       </div>
 
-      <div className="relative">
-        <div className="card-premium !p-0 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="table-header">
-                  <th className="px-6 py-4 w-10">
-                    <button
-                      onClick={toggleAll}
-                      className="p-2 rounded-lg hover:bg-surface-low transition-colors"
-                      suppressHydrationWarning
-                    >
-                      {selectedIds.size === items.length && items.length > 0 ? (
-                        <CheckSquare className="w-4 h-4 text-primary" />
-                      ) : (
-                        <Square className="w-4 h-4 text-muted-foreground" />
-                      )}
-                    </button>
-                  </th>
-                  <th className="table-cell-header">
-                    <button
-                      onClick={() => requestSort('name')}
-                      className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
-                    >
-                      Item Name & SKU
-                      <SortIcon column="name" />
-                    </button>
-                  </th>
-                  <th className="table-cell-header">
-                    <button
-                      onClick={() => requestSort('category')}
-                      className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
-                    >
-                      Category
-                      <SortIcon column="category" />
-                    </button>
-                  </th>
-                  <th className="table-cell-header text-right">
-                    <button
-                      onClick={() => requestSort('avgPrice')}
-                      className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
-                    >
-                      Avg Price
-                      <SortIcon column="avgPrice" />
-                    </button>
-                  </th>
-                  <th className="table-cell-header text-right">
-                    <button
-                      onClick={() => requestSort('units')}
-                      className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
-                    >
-                      Available
-                      <SortIcon column="units" />
-                    </button>
-                  </th>
-                  <th className="table-cell-header">Rack</th>
-                  <th className="table-cell-header">
-                    <button
-                      onClick={() => requestSort('status')}
-                      className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
-                    >
-                      Status
-                      <SortIcon column="status" />
-                    </button>
-                  </th>
-                  <th className="table-cell-header">
-                    <button
-                      onClick={() => requestSort('updatedAt')}
-                      className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
-                    >
-                      Last Updated
-                      <SortIcon column="updatedAt" />
-                    </button>
-                  </th>
-                  <th className="table-cell-header text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border-ghost">
-                {sortedItems.length > 0 ? sortedItems.map((item) => {
-                  const totalStock = item.totalStock;
-                  const incomingQty = item.incomingQty ?? 0;
-                  const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
-                  const isUrgent = netAvailable < 0;
-                  const isShortage = totalStock <= 0;
-                  const isOrdered = incomingQty > 0;
-                  const isLowStock = !isOrdered && totalStock > 0 && totalStock <= item.minStockLevel;
-                  const isSelected = selectedIds.has(item.id);
+      <div className="table-container">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead className="table-header">
+              <tr>
+                <th className="table-cell-header w-12 text-center">
+                  <button
+                    onClick={toggleAll}
+                    className="p-2 rounded-lg hover:bg-surface-low transition-colors"
+                    suppressHydrationWarning
+                  >
+                    {selectedIds.size === items.length && items.length > 0 ? (
+                      <CheckSquare className="w-4 h-4 text-primary" />
+                    ) : (
+                      <Square className="w-4 h-4 text-muted-foreground opacity-30" />
+                    )}
+                  </button>
+                </th>
+                <th className="table-cell-header">
+                  <button
+                    onClick={() => requestSort('name')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Item Name & SKU
+                    <SortIcon column="name" />
+                  </button>
+                </th>
+                <th className="table-cell-header">
+                  <button
+                    onClick={() => requestSort('category')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Category
+                    <SortIcon column="category" />
+                  </button>
+                </th>
+                <th className="table-cell-header text-right">
+                  <button
+                    onClick={() => requestSort('avgPrice')}
+                    className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Avg Price
+                    <SortIcon column="avgPrice" />
+                  </button>
+                </th>
+                <th className="table-cell-header text-right">
+                  <button
+                    onClick={() => requestSort('units')}
+                    className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Available
+                    <SortIcon column="units" />
+                  </button>
+                </th>
+                <th className="table-cell-header">Rack</th>
+                <th className="table-cell-header">
+                  <button
+                    onClick={() => requestSort('status')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Status
+                    <SortIcon column="status" />
+                  </button>
+                </th>
+                <th className="table-cell-header">
+                  <button
+                    onClick={() => requestSort('updatedAt')}
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                  >
+                    Last Updated
+                    <SortIcon column="updatedAt" />
+                  </button>
+                </th>
+                <th className="table-cell-header text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border-ghost">
+              {sortedItems.length > 0 ? sortedItems.map((item) => {
+                const totalStock = item.totalStock;
+                const incomingQty = item.incomingQty ?? 0;
+                const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
+                const isUrgent = netAvailable < 0;
+                const isShortage = totalStock <= 0;
+                const isOrdered = incomingQty > 0;
+                const isLowStock = !isOrdered && totalStock > 0 && totalStock <= item.minStockLevel;
+                const isSelected = selectedIds.has(item.id);
 
-                  const rackLocations = (item.stocks || []).length > 0
-                    ? Array.from(new Set(item.stocks.map((s: any) => s.rack.rackNumber))).join(", ")
-                    : (item.totalStock > 0 ? "General" : "N/A");
+                const rackLocations = (item.stocks || []).length > 0
+                  ? Array.from(new Set(item.stocks.map((s: any) => s.rack.rackNumber))).join(", ")
+                  : (item.totalStock > 0 ? "General" : "N/A");
 
-                  return (
-                    <tr
-                      key={item.id}
-                      className={`group transition-colors border-b border-border-ghost last:border-0 ${isSelected ? "bg-primary/[0.03]" : "hover:bg-surface-low/30"}`}
-                    >
-                      <td className="px-6 py-5">
-                        <button
-                          onClick={() => toggleOne(item.id)}
-                          className="p-2 rounded-lg hover:bg-surface-low transition-colors"
-                          suppressHydrationWarning
-                        >
-                          {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-primary" />
-                          ) : (
-                            <Square className="w-4 h-4 text-muted-foreground opacity-30 group-hover:opacity-100" />
-                          )}
-                        </button>
-                      </td>
-                      <td className="px-6 py-5 cursor-pointer" onClick={() => toggleOne(item.id)}>
-                        <div className="flex items-center gap-3">
-                          <div className="flex flex-col min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
-                              {item.isCritical && (
-                                <span className="px-1.5 py-0.5 rounded-md bg-error/10 text-error text-[8px] font-black uppercase tracking-widest border border-error/20 flex items-center gap-1 shrink-0">
-                                  <div className="w-1 h-1 rounded-full bg-error animate-pulse" />
-                                  Critical
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{item.sku}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <span className="badge bg-indigo-50/50 text-indigo-600 border-indigo-100">
-                          {item.category}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5 text-right font-mono">
-                        <span className="text-sm font-black text-primary">
-                          ₹{item.avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5 text-right font-mono">
-                        <div className="flex flex-col items-end">
-                          <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
-                            {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
-                          </span>
-                          {incomingQty > 0 && (
-                            <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
-                              +{incomingQty} Ordered
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <span className="text-xs font-bold text-muted-foreground bg-surface-low px-2 py-1 rounded-md">
-                          {rackLocations || "N/A"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5">
-                        {isUrgent ? (
-                          <span className="badge bg-error text-white border-error shadow-lg shadow-error/20">Urgent</span>
-                        ) : isShortage ? (
-                          <span className="badge bg-error/10 text-error border-error/20">Out of Stock</span>
-                        ) : isOrdered ? (
-                          <span className="badge bg-primary/5 text-primary border-primary/10">Ordered</span>
-                        ) : isLowStock ? (
-                          <span className="badge bg-warning/10 text-warning border-warning/20">Low Stock</span>
+                return (
+                  <tr
+                    key={item.id}
+                    className={`table-row ${isSelected ? "bg-primary/[0.03]" : ""}`}
+                  >
+                    <td className="table-cell text-center">
+                      <button
+                        onClick={() => toggleOne(item.id)}
+                        className="p-2 rounded-lg hover:bg-surface-low transition-colors"
+                        suppressHydrationWarning
+                      >
+                        {isSelected ? (
+                          <CheckSquare className="w-4 h-4 text-primary" />
                         ) : (
-                          <span className="badge bg-success/10 text-success border-success/20">In Stock</span>
+                          <Square className="w-4 h-4 text-muted-foreground opacity-30 group-hover:opacity-100" />
                         )}
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <Calendar className="w-3.5 h-3.5 opacity-40" />
-                          <span className="text-[11px] font-bold">
-                            {formatDate(item.updatedAt)}
-                          </span>
+                      </button>
+                    </td>
+                    <td className="table-cell cursor-pointer" onClick={() => toggleOne(item.id)}>
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
+                            {item.isCritical && (
+                              <span className="badge badge-error py-0.5 px-1.5 text-[8px]">
+                                Critical
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{item.sku}</span>
                         </div>
-                      </td>
-                      <td className="px-6 py-5 text-right">
-                        <InventoryTableActions
-                          itemId={item.id}
-                          itemName={item.name}
-                          totalStock={totalStock}
-                          incomingQty={incomingQty}
-                          minStockLevel={item.minStockLevel || 0}
-                          userRole={userRole}
-                        />
-                      </td>
-                    </tr>
+                      </div>
+                    </td>
+                    <td className="table-cell">
+                      <span className="badge badge-primary">
+                        {item.category}
+                      </span>
+                    </td>
+                    <td className="table-cell text-right font-mono">
+                      <span className="text-sm font-black text-primary">
+                        ₹{item.avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      </span>
+                    </td>
+                    <td className="table-cell text-right font-mono">
+                      <div className="flex flex-col items-end">
+                        <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
+                          {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
+                        </span>
+                        {incomingQty > 0 && (
+                          <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
+                            +{incomingQty} Ordered
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="table-cell">
+                      <span className="text-[10px] font-black text-muted-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost uppercase tracking-widest">
+                        {rackLocations || "N/A"}
+                      </span>
+                    </td>
+                    <td className="table-cell">
+                      {isUrgent ? (
+                        <span className="badge badge-error">Urgent</span>
+                      ) : isShortage ? (
+                        <span className="badge badge-error">Out of Stock</span>
+                      ) : isOrdered ? (
+                        <span className="badge badge-primary">Ordered</span>
+                      ) : isLowStock ? (
+                        <span className="badge badge-warning">Low Stock</span>
+                      ) : (
+                        <span className="badge badge-success">In Stock</span>
+                      )}
+                    </td>
+                    <td className="table-cell">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar className="w-3.5 h-3.5 opacity-40" />
+                        <span className="text-[11px] font-bold">
+                          {formatDate(item.updatedAt)}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="table-cell text-right">
+                      <InventoryTableActions
+                        itemId={item.id}
+                        itemName={item.name}
+                        totalStock={totalStock}
+                        incomingQty={incomingQty}
+                        minStockLevel={item.minStockLevel || 0}
+                        userRole={userRole}
+                      />
+                    </td>
+                  </tr>
                   );
                 }) : (
                   <tr>
-                    <td colSpan={7} className="px-8 py-32 text-center text-muted-foreground">
+                    <td colSpan={9} className="px-8 py-32 text-center text-muted-foreground">
                       <div className="flex flex-col items-center gap-6">
                         <div className="p-6 rounded-3xl bg-surface-low border border-border-ghost">
                           <Package className="w-16 h-16 opacity-20" />
@@ -472,7 +470,6 @@ export default function InventoryList({
         </div>
 
       </div>
-    </div>
-  );
+    );
 }
 

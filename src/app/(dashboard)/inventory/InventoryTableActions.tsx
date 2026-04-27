@@ -67,29 +67,48 @@ export default function InventoryTableActions({
     <div className="flex justify-end gap-1">
       <Link 
         href={`/orders/purchase/new?itemId=${itemId}&quantity=${neededAmount}`}
-        className="p-2 hover:bg-white rounded-xl text-success transition-all border border-transparent hover:border-border-ghost shadow-sm hover:shadow-md"
+        className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-success hover:bg-success/5 border-success/10"
         title={`Shop ${neededAmount} more`}
       >
-        <ShoppingCart className="w-5 h-5" />
+        <ShoppingCart className="w-4 h-4" />
       </Link>
       <button
         onClick={() => setShowBreakdown(true)}
-        className="p-2 hover:bg-white rounded-xl text-primary transition-all border border-transparent hover:border-border-ghost shadow-sm hover:shadow-md"
+        className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-primary hover:bg-primary/5 border-primary/10"
         suppressHydrationWarning
       >
-        <Eye className="w-5 h-5" />
+        <Eye className="w-4 h-4" />
       </button>
 
       <button
         onClick={() => router.push(`/inventory/${itemId}/edit`)}
         className={cn(
-          "p-2 rounded-xl transition-all",
-          userRole === 'EMPLOYEE' ? "hover:bg-primary/10 text-primary" : "hover:bg-surface-low text-muted-foreground"
+          "btn h-9 w-9 !p-0 rounded-xl",
+          userRole === 'EMPLOYEE' ? "btn-primary bg-primary/5 text-primary border-primary/10" : "btn-neutral"
         )}
         title={userRole === 'EMPLOYEE' ? "Manage Stock & Rack" : "Edit Item"}
       >
         {userRole === 'EMPLOYEE' ? <MapPin className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
       </button>
+
+      <button
+        onClick={() => setShowScrap(true)}
+        className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
+        title="Scrap Item"
+      >
+        <Flame className="w-4 h-4" />
+      </button>
+
+      {userRole !== 'EMPLOYEE' && (
+        <button
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
+          title="Delete Item"
+        >
+          {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+        </button>
+      )}
 
       <ItemBreakdownModal
         isOpen={showBreakdown}
@@ -98,35 +117,16 @@ export default function InventoryTableActions({
         itemName={itemName}
         totalStock={totalStock}
         incomingQty={incomingQty}
+        minStockLevel={minStockLevel}
       />
-      <ScrapModal
+
+      <ScrapModal 
         isOpen={showScrap}
         onClose={() => setShowScrap(false)}
         itemId={itemId}
         itemName={itemName}
-        totalStock={totalStock}
+        currentStock={totalStock}
       />
-      {userRole !== 'EMPLOYEE' && (
-        <button
-          onClick={() => setShowScrap(true)}
-          className="p-2 hover:bg-error/10 rounded-xl text-error transition-all border border-transparent hover:border-error/20"
-          title="Scrap Inventory"
-          suppressHydrationWarning
-        >
-          <Flame className="w-4 h-4" />
-        </button>
-      )}
-      {userRole !== 'EMPLOYEE' && (
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className="p-2 hover:bg-error/10 rounded-xl text-error transition-all border border-transparent hover:border-error/20 disabled:opacity-50"
-          title="Delete Item"
-          suppressHydrationWarning
-        >
-          {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-        </button>
-      )}
     </div>
   );
 }

@@ -168,14 +168,19 @@ export default function SupplyInwardsList({
         </div>
 
         {selectedIds.size > 0 && (
-          <div className="animate-in fade-in slide-in-from-left-4 duration-300">
-            <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1.5 pr-4 pl-5 h-[60px]">
-              <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary whitespace-nowrap">{selectedIds.size} Selected</span>
+          <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-10">
+            <div className="bg-foreground text-white px-8 py-4 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center gap-8 border border-white/10 backdrop-blur-md">
+              <div className="flex items-center gap-3 pr-8 border-r border-white/10">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+                   <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                   <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Logistics Protocol</p>
+                   <p className="text-sm font-black">{selectedIds.size} Lines Selected</p>
+                </div>
               </div>
-
-              <div className="flex items-center gap-1">
-                <button
+              <div className="flex items-center gap-4">
+                <button 
                   onClick={() => {
                     const initial: Record<string, number> = {};
                     selectedIds.forEach(id => {
@@ -187,19 +192,22 @@ export default function SupplyInwardsList({
                     setShowReview(true);
                   }}
                   disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group"
-                  title="Review & Partial Receipt"
+                  className="btn btn-neutral text-white hover:bg-white/10 px-5 h-12"
                 >
-                  <SlidersHorizontal className="w-4 h-4  transition-transform" />
+                  <SlidersHorizontal className="w-4 h-4" />
+                  Review & Partial
                 </button>
-
-                <button
+                <button 
                   onClick={handleBulkReceive}
                   disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-success/5 text-success transition-all group"
-                  title="Confirm Full Receipt"
+                  className="btn btn-primary px-8 h-12 rounded-2xl"
                 >
-                  <ArrowDownToLine className="w-4 h-4  transition-transform" />
+                  {isProcessing ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <ArrowDownToLine className="w-4 h-4" />
+                  )}
+                  <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">Confirm Full Receipt</span>
                 </button>
               </div>
             </div>
@@ -217,26 +225,28 @@ export default function SupplyInwardsList({
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <div className="flex items-center justify-between px-2">
-          <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2">
-            <Clock className="w-4 h-4 text-warning" />
+          <h3 className="heading-md flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
+               <Clock className="w-5 h-5" />
+            </div>
             Pending Item Arrivals
           </h3>
-          <Link href="/orders/purchase" className="text-[10px] font-black text-primary hover:underline uppercase">Full Purchase List</Link>
+          <Link href="/orders/purchase" className="btn btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest">Full Purchase List</Link>
         </div>
-
-        <div className="card-premium !p-0 overflow-hidden border-warning/10 shadow-lg shadow-warning/5">
+ 
+        <div className="table-container">
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="table-header bg-warning/[0.02]">
-                  <th className="px-6 py-4 w-10">
+            <table className="w-full text-left border-collapse">
+              <thead className="table-header">
+                <tr>
+                  <th className="table-cell-header w-12 text-center">
                     <button onClick={toggleAll} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
                       {selectedIds.size === items.length && items.length > 0 ? (
-                        <CheckSquare className="w-4 h-4 text-primary" />
+                        <CheckSquare className="w-5 h-5 text-primary" />
                       ) : (
-                        <Square className="w-4 h-4 text-muted-foreground opacity-50" />
+                        <Square className="w-5 h-5 text-muted-foreground opacity-20" />
                       )}
                     </button>
                   </th>
@@ -254,56 +264,53 @@ export default function SupplyInwardsList({
                   const isSelected = selectedIds.has(compositeId);
 
                   return (
-                    <tr key={compositeId} className={cn(
-                      "group transition-all border-b border-border-ghost last:border-0",
-                      isSelected ? "bg-primary/[0.03]" : "hover:bg-surface-low/30"
-                    )}>
-                      <td className="px-6 py-5">
+                    <tr key={compositeId} className={cn("table-row", isSelected && "bg-primary/[0.03]")}>
+                      <td className="table-cell text-center">
                         <button onClick={() => toggleOne(compositeId)} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-primary" />
+                            <CheckSquare className="w-5 h-5 text-primary" />
                           ) : (
-                            <Square className="w-4 h-4 text-muted-foreground opacity-20 group-hover:opacity-100 transition-opacity" />
+                            <Square className="w-5 h-5 text-muted-foreground opacity-10 group-hover:opacity-40 transition-opacity" />
                           )}
                         </button>
                       </td>
-                      <td className="px-8 py-5">
+                      <td className="table-cell">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-bold text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-all">
+                          <div className="w-12 h-12 rounded-xl bg-surface-low border border-border-ghost flex items-center justify-center font-black text-primary shrink-0 group-hover:border-primary/20 transition-all">
                             {item.item.sku[0]}
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="font-bold text-foreground text-sm truncate">{item.item.name}</span>
-                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {item.item.sku}</span>
+                            <span className="font-black text-foreground text-sm truncate">{item.item.name}</span>
+                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1 font-mono">SKU: {item.item.sku}</span>
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-5">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-xs font-bold text-foreground truncate">{item.vendor.name}</span>
+                      <td className="table-cell">
+                        <div className="flex flex-col gap-2">
+                          <span className="text-xs font-black text-foreground truncate">{item.vendor.name}</span>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="px-2 py-0.5 rounded-md bg-primary/[0.05] text-[9px] font-black text-primary uppercase border border-primary/10 tracking-wider">PO #{item.poId.split('-')[0]}</span>
+                            <span className="badge badge-primary !text-[9px] !px-2 !py-0.5">PO #{item.poId.split('-')[0]}</span>
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-5">
+                      <td className="table-cell">
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-xs font-bold text-foreground">{formatDate(item.orderDate)}</span>
+                          <Calendar className="w-4 h-4 text-muted-foreground opacity-30" />
+                          <span className="text-[11px] font-black text-foreground">{formatDate(item.orderDate)}</span>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-right">
+                      <td className="table-cell text-right">
                         <div className="flex flex-col items-end">
                           <div className="flex items-center gap-2">
                             <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">PENDING:</span>
-                            <span className="text-sm font-black text-warning">{remaining}</span>
+                            <span className="text-sm font-black text-warning tabular-nums">{remaining}</span>
                           </div>
-                          <div className="text-[9px] font-bold text-muted-foreground uppercase mt-1">
+                          <div className="text-[9px] font-bold text-muted-foreground uppercase mt-1 tracking-widest tabular-nums">
                             Ordered: {item.quantityOrdered}
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-right">
+                      <td className="table-cell text-right">
                         <button 
                           onClick={() => {
                             const initial: Record<string, number> = {};
@@ -311,9 +318,9 @@ export default function SupplyInwardsList({
                             setReviewValues(initial);
                             setShowReview(true);
                           }}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md   group/btn"
+                          className="btn btn-primary h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl"
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5 transition-transform group-hover/btn:rotate-12" />
+                          <CheckCircle2 className="w-3.5 h-3.5" />
                           Receive
                         </button>
                       </td>
@@ -321,10 +328,10 @@ export default function SupplyInwardsList({
                   );
                 }) : (
                   <tr>
-                    <td colSpan={6} className="px-8 py-20 text-center">
-                      <div className="flex flex-col items-center gap-4 opacity-40">
-                        <AlertCircle className="w-10 h-10" />
-                        <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">No pending items found.</p>
+                    <td colSpan={6} className="px-8 py-24 text-center">
+                      <div className="flex flex-col items-center gap-4 opacity-30">
+                        <AlertCircle className="w-12 h-12" />
+                        <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-xs">No pending items found.</p>
                       </div>
                     </td>
                   </tr>
@@ -337,19 +344,19 @@ export default function SupplyInwardsList({
 
       {/* Review Modal */}
       {showReview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-surface-lowest w-full max-w-4xl max-h-[85vh] rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-foreground/30 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-4xl max-h-[85vh] rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
             {/* Modal Header */}
-            <div className="p-8 border-b border-border-ghost flex items-center justify-between bg-surface-low/50">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-primary/10 rounded-2xl text-primary">
-                  <SlidersHorizontal className="w-6 h-6" />
+            <div className="p-10 border-b border-border-ghost flex items-center justify-between bg-surface-low/30">
+              <div className="flex items-center gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
+                  <SlidersHorizontal className="w-7 h-7" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-black text-foreground">Review Receipt</h2>
-                  <div className="flex items-center gap-4 mt-1">
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Adjust delivered quantities for {Object.keys(reviewValues).length} items</p>
-                    <span className="w-1 h-1 rounded-full bg-border-ghost"></span>
+                  <h2 className="heading-lg">Asset Receipt Review</h2>
+                  <div className="flex items-center gap-4 mt-2">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Adjusting {Object.keys(reviewValues).length} line items</p>
+                    <div className="w-1.5 h-1.5 rounded-full bg-border-ghost"></div>
                     <button
                       onClick={() => {
                         const initial: Record<string, number> = { ...reviewValues };
@@ -362,21 +369,21 @@ export default function SupplyInwardsList({
                       }}
                       className="text-[10px] font-black text-primary hover:underline uppercase tracking-widest"
                     >
-                      Set all to pending
+                      Reset to Pending
                     </button>
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => setShowReview(false)}
-                className="p-3 hover:bg-white rounded-2xl text-muted-foreground hover:text-foreground transition-all border border-transparent hover:border-border-ghost shadow-sm"
+                className="btn btn-ghost h-12 w-12 !p-0 rounded-2xl"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="flex-1 overflow-y-auto p-8 space-y-4 no-scrollbar">
+            <div className="flex-1 overflow-y-auto p-10 space-y-6 no-scrollbar bg-surface-low/5">
               {Object.keys(reviewValues).map(id => {
                 const [poId, itemId] = id.split('|');
                 const item = items.find(i => i.poId === poId && i.itemId === itemId);
@@ -384,36 +391,35 @@ export default function SupplyInwardsList({
                 const pending = item.quantityOrdered - item.quantityReceived;
 
                 return (
-                  <div key={id} className="p-5 bg-white rounded-3xl border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-6 hover:border-primary/20 transition-colors group">
-                    <div className="flex items-center gap-4 flex-1 min-w-0">
-                      <div className="w-12 h-12 rounded-xl bg-surface-low flex items-center justify-center font-black text-primary border border-border-ghost group-hover:bg-primary group-hover:text-white transition-all">
+                  <div key={id} className="p-6 bg-white rounded-[2rem] border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-8 hover:border-primary/20 transition-all group shadow-sm">
+                    <div className="flex items-center gap-5 flex-1 min-w-0">
+                      <div className="w-14 h-14 rounded-2xl bg-surface-low border border-border-ghost flex items-center justify-center font-black text-primary shrink-0 group-hover:border-primary/20 transition-all">
                         {item.item.sku[0]}
                       </div>
                       <div className="min-w-0">
-                        <p className="font-black text-foreground text-sm truncate">{item.item.name}</p>
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">SKU: {item.item.sku}</span>
-                          <span className="w-1 h-1 rounded-full bg-border-ghost"></span>
-                          <span className="text-[10px] font-black text-primary uppercase tracking-widest">PO #{poId.split('-')[0]}</span>
+                        <p className="font-black text-foreground text-base truncate">{item.item.name}</p>
+                        <div className="flex flex-wrap items-center gap-3 mt-2">
+                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest font-mono">SKU: {item.item.sku}</span>
+                          <span className="badge badge-primary !text-[9px]">PO #{poId.split('-')[0]}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-8 shrink-0">
+                    <div className="flex items-center gap-10 shrink-0">
                       <div className="text-right">
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">Expected Pending</p>
-                        <p className="text-sm font-black text-warning">{pending} <span className="text-[10px] opacity-60 uppercase">{item.item.unit}</span></p>
+                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Awaiting Receipt</p>
+                        <p className="text-lg font-black text-warning tabular-nums">{pending} <span className="text-[11px] opacity-40 uppercase ml-1">{item.item.unit}</span></p>
                       </div>
-                      <div className="w-px h-8 bg-border-ghost"></div>
+                      <div className="w-px h-12 bg-border-ghost"></div>
                       <div className="space-y-2">
-                        <p className="text-[9px] font-black text-primary uppercase tracking-widest">Actual Delivered</p>
+                        <p className="text-[10px] font-black text-primary uppercase tracking-widest ml-1">Actual Delivered</p>
                         <input
                           type="number"
                           value={reviewValues[id] || 0}
                           onChange={(e) => setReviewValues(prev => ({ ...prev, [id]: parseFloat(e.target.value) || 0 }))}
                           max={pending}
                           min={0}
-                          className="w-32 bg-surface-low border border-border-ghost rounded-xl px-4 py-2 text-sm font-black focus:ring-2 focus:ring-primary outline-none transition-all"
+                          className="input-field w-36 h-12 text-center text-lg tabular-nums"
                         />
                       </div>
                     </div>
@@ -423,27 +429,27 @@ export default function SupplyInwardsList({
             </div>
 
             {/* Modal Footer */}
-            <div className="p-8 border-t border-border-ghost bg-surface-low/50 flex items-center justify-between">
-              <div className="flex items-center gap-4 text-muted-foreground">
-                <AlertCircle className="w-4 h-4" />
-                <p className="text-[10px] font-bold uppercase tracking-widest leading-tight">
-                  Unreceived quantities will remain in "Pending Arrival" status.
+            <div className="p-10 border-t border-border-ghost bg-surface-low/30 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4 text-muted-foreground max-w-md">
+                <AlertCircle className="w-5 h-5 shrink-0 opacity-40" />
+                <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed italic opacity-70">
+                  Quantities not recorded here will remain as outstanding arrivals in the purchase records.
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <button
                   onClick={() => setShowReview(false)}
-                  className="px-6 py-3 bg-white text-foreground text-xs font-black rounded-2xl border border-border-ghost hover:bg-surface-low transition-all"
+                  className="btn btn-neutral h-14 px-8 rounded-[1.5rem]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handlePartialReceive}
                   disabled={isProcessing}
-                  className="px-8 py-3 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20   transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="btn btn-primary h-14 px-10 rounded-[1.5rem]"
                 >
-                  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                  Confirm Bulk Receipt
+                  {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
+                  Finalize Receipt
                 </button>
               </div>
             </div>

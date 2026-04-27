@@ -12,8 +12,10 @@ import {
   Clock,
   Loader2,
   MinusSquare,
+  Package,
   Square,
   Truck,
+  User,
   X
 } from "lucide-react";
 import Link from "next/link";
@@ -133,23 +135,33 @@ export default function SupplyOutwardsList({
         </div>
 
         {selectedIds.size > 0 && (
-          <div className="animate-in fade-in slide-in-from-left-4 duration-300">
-            <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1.5 pr-4 pl-5 h-[60px]">
-              <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary whitespace-nowrap">{selectedIds.size} Selected</span>
+          <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-10">
+            <div className="bg-foreground text-white px-8 py-4 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center gap-8 border border-white/10 backdrop-blur-md">
+              <div className="flex items-center gap-3 pr-8 border-r border-white/10">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+                   <Package className="w-5 h-5" />
+                </div>
+                <div>
+                   <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Bulk Protocol</p>
+                   <p className="text-sm font-black">{selectedIds.size} Items Selected</p>
+                </div>
               </div>
-
-              <div className="flex items-center gap-1">
-                <button
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => setSelectedIds(new Set())}
+                  className="btn btn-ghost text-white hover:bg-white/10 px-5 h-12"
+                >
+                  Clear Selection
+                </button>
+                <button 
                   onClick={handleBulkDispatch}
                   disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group flex items-center gap-2"
-                  title="Bulk Dispatch"
+                  className="btn btn-primary px-8 h-12 rounded-2xl"
                 >
                   {isProcessing ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <Truck className="w-4 h-4  transition-transform" />
+                    <Truck className="w-4 h-4" />
                   )}
                   <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">Dispatch Selected</span>
                 </button>
@@ -170,28 +182,30 @@ export default function SupplyOutwardsList({
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <div className="flex items-center justify-between px-2">
-          <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2">
-            <Clock className="w-4 h-4 text-warning" />
+          <h3 className="heading-md flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center text-warning border border-warning/10">
+               <Clock className="w-5 h-5" />
+            </div>
             Pending Dispatch Items
           </h3>
-          <Link href="/orders/dispatch" className="text-[10px] font-black text-primary hover:underline uppercase">Full Sale List</Link>
+          <Link href="/orders/dispatch" className="btn btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest">Full Sale List</Link>
         </div>
-
-        <div className="card-premium !p-0 overflow-hidden border-warning/10 shadow-lg shadow-warning/5">
+ 
+        <div className="table-container">
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="table-header bg-warning/[0.02]">
-                  <th className="px-6 py-4 w-10">
+            <table className="w-full text-left border-collapse">
+              <thead className="table-header">
+                <tr>
+                  <th className="table-cell-header w-12 text-center">
                     <button onClick={toggleAll} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
                       {selectedIds.size === items.length && items.length > 0 ? (
-                        <CheckSquare className="w-4 h-4 text-primary" />
+                        <CheckSquare className="w-5 h-5 text-primary" />
                       ) : selectedIds.size > 0 ? (
-                        <MinusSquare className="w-4 h-4 text-primary" />
+                        <MinusSquare className="w-5 h-5 text-primary" />
                       ) : (
-                        <Square className="w-4 h-4 text-muted-foreground opacity-50" />
+                        <Square className="w-5 h-5 text-muted-foreground opacity-20" />
                       )}
                     </button>
                   </th>
@@ -207,62 +221,56 @@ export default function SupplyOutwardsList({
                   const isSelected = selectedIds.has(item.id);
 
                   return (
-                    <tr key={item.id} className={cn(
-                      "group transition-all border-b border-border-ghost last:border-0",
-                      isSelected ? "bg-primary/[0.03]" : "hover:bg-surface-low/30"
-                    )}>
-                      <td className="px-6 py-5">
+                    <tr key={item.id} className={cn("table-row", isSelected && "bg-primary/[0.03]")}>
+                      <td className="table-cell text-center">
                         <button onClick={() => toggleOne(item.id)} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-primary" />
+                            <CheckSquare className="w-5 h-5 text-primary" />
                           ) : (
-                            <Square className="w-4 h-4 text-muted-foreground opacity-20 group-hover:opacity-100 transition-opacity" />
+                            <Square className="w-5 h-5 text-muted-foreground opacity-10 group-hover:opacity-40 transition-opacity" />
                           )}
                         </button>
                       </td>
-                      <td className="px-8 py-5">
+                      <td className="table-cell">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-bold text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-all">
+                          <div className="w-12 h-12 rounded-xl bg-surface-low border border-border-ghost flex items-center justify-center font-black text-primary shrink-0 group-hover:border-primary/20 transition-all">
                             {item.item.sku[0]}
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="font-bold text-foreground text-sm truncate">{item.item.name}</span>
-                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {item.item.sku}</span>
+                            <span className="font-black text-foreground text-sm truncate">{item.item.name}</span>
+                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1 font-mono">SKU: {item.item.sku}</span>
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-5">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-xs font-bold text-foreground truncate">{item.customer.name}</span>
-                          <div className="flex items-center gap-1.5 mt-1">
-                            <span className="px-2 py-0.5 rounded-md bg-primary/[0.05] text-[9px] font-black text-primary uppercase border border-primary/10 tracking-wider">DO #{item.orderId.split('-')[0]}</span>
+                      <td className="table-cell">
+                        <div className="flex flex-col gap-2">
+                          <span className="text-xs font-black text-foreground truncate">{item.customer.name}</span>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="badge badge-primary !text-[9px] !px-2 !py-0.5">DO #{item.orderId.split('-')[0]}</span>
                             {item.collectedBy && (
-                               <span className="px-2 py-0.5 rounded-md bg-indigo-500/[0.05] text-[9px] font-black text-indigo-600 uppercase border border-indigo-500/10 tracking-wider">Col: {item.collectedBy}</span>
-                            )}
-                            {item.dispatchedBy && (
-                               <span className="px-2 py-0.5 rounded-md bg-slate-500/[0.05] text-[9px] font-black text-slate-600 uppercase border border-slate-500/10 tracking-wider">Staff: {item.dispatchedBy}</span>
+                               <span className="badge badge-neutral !text-[9px] !px-2 !py-0.5">COL: {item.collectedBy}</span>
                             )}
                             {item.transportMode && (
-                               <span className="px-2 py-0.5 rounded-md bg-amber-500/[0.05] text-[9px] font-black text-amber-600 uppercase border border-amber-500/10 tracking-wider">{item.transportMode}</span>
+                               <span className="badge badge-warning !text-[9px] !px-2 !py-0.5">{item.transportMode}</span>
                             )}
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-5">
+                      <td className="table-cell">
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-xs font-bold text-foreground">{formatDate(item.createdAt)}</span>
+                          <Calendar className="w-4 h-4 text-muted-foreground opacity-30" />
+                          <span className="text-[11px] font-black text-foreground">{formatDate(item.createdAt)}</span>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-right">
+                      <td className="table-cell text-right">
                         <div className="flex flex-col items-end">
-                          <span className="text-sm font-black text-warning">{item.quantity}</span>
-                          <span className="text-[9px] font-bold text-muted-foreground uppercase mt-1">Units Booked</span>
+                          <span className="text-sm font-black text-warning tabular-nums">{item.quantity}</span>
+                          <span className="text-[9px] font-bold text-muted-foreground uppercase mt-1 tracking-widest">Units Booked</span>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-right">
-                        <Link href={`/orders/dispatch/${item.orderId}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-border-ghost hover:border-primary shadow-sm hover:shadow-md   group/btn">
-                          <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/btn:rotate-12" />
+                      <td className="table-cell text-right">
+                        <Link href={`/orders/dispatch/${item.orderId}`} className="btn btn-primary h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl">
+                          <ArrowUpRight className="w-3.5 h-3.5" />
                           Send
                         </Link>
                       </td>
@@ -270,10 +278,10 @@ export default function SupplyOutwardsList({
                   );
                 }) : (
                   <tr>
-                    <td colSpan={6} className="px-8 py-20 text-center">
-                      <div className="flex flex-col items-center gap-4 opacity-40">
-                        <AlertCircle className="w-10 h-10" />
-                        <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">No pending items found.</p>
+                    <td colSpan={6} className="px-8 py-24 text-center">
+                      <div className="flex flex-col items-center gap-4 opacity-30">
+                        <AlertCircle className="w-12 h-12" />
+                        <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-xs">No pending items found.</p>
                       </div>
                     </td>
                   </tr>

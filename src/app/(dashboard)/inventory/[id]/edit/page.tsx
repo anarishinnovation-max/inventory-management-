@@ -136,32 +136,32 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-8 lg:p-12 space-y-8 max-w-6xl mx-auto">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div className="space-y-2">
-          <Link href="/inventory" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Stock</span>
-          </Link>
-          <h2 className="text-4xl font-black tracking-tight text-foreground">Edit Item</h2>
-          <p className="text-muted-foreground font-medium">Update item details</p>
+    <form onSubmit={handleSubmit} className="max-w-7xl mx-auto space-y-12 pb-20 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-border-ghost pb-10">
+        <div>
+           <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">
+              <Link href="/inventory" className="hover:text-primary transition-colors">Inventory</Link>
+              <div className="w-1 h-1 rounded-full bg-primary/40" />
+              <span className="text-primary/80">Refining Record</span>
+           </nav>
+           <h1 className="heading-xl">Modify Asset Record</h1>
         </div>
+
         {!isEmployee && (
           <div className="flex items-center gap-3">
-            <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
+            <Link href="/inventory" className="btn btn-neutral h-12 px-6">
               Cancel
             </Link>
-            <button type="submit" disabled={loading} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all   disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? "Saving..." : "Save Changes"}
+            <button type="submit" disabled={loading} className="btn btn-primary h-12 px-8">
+              {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+              {loading ? "Saving..." : "Commit Changes"}
             </button>
           </div>
         )}
       </div>
 
       {error && (
-         <div className="p-4 mb-6 rounded-2xl bg-error/10 border border-error/20 text-error font-bold flex items-center gap-3">
+         <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
             <ShieldCheck className="w-5 h-5 shrink-0" />
             {error}
          </div>
@@ -169,40 +169,40 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-7 space-y-8">
-          <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
-            <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+          <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
+            <h3 className="heading-md flex items-center gap-3 border-b border-border-ghost pb-6">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
                  <Package className="w-5 h-5" />
               </div>
-              Item Info
+              Core Specifications
             </h3>
             
             <div className="space-y-6">
-              <div>
-                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Item Name</label>
-                <input required name="name" defaultValue={itemData?.name} readOnly={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-[15px] font-bold placeholder:text-muted-foreground/50 text-foreground", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="e.g. Motor, Bolt, Wire" type="text" />
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Asset Nomenclature</label>
+                <input required name="name" defaultValue={itemData?.name} readOnly={isEmployee} className={cn("input-field h-14", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="e.g. Industrial Motor, Copper Wire" type="text" />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">SKU</label>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Unique SKU Identifier</label>
                   <div className="relative">
-                    <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                    <input required name="sku" defaultValue={itemData?.sku} readOnly={isEmployee} className={cn("w-full pl-12 pr-4 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold font-mono text-foreground placeholder:text-muted-foreground/50", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="LXT-9982-A" type="text" />
+                    <QrCode className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                    <input required name="sku" defaultValue={itemData?.sku} readOnly={isEmployee} className={cn("input-field pl-14 h-14 font-mono", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="LXT-9982-A" type="text" />
                   </div>
                 </div>
                 
-                <div>
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
-                  <div className="px-5 py-4 bg-surface-low border border-border-ghost rounded-xl text-[15px] font-bold text-foreground opacity-80">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Measurement Unit</label>
+                  <div className="input-field h-14 flex items-center bg-surface-low/30 border-dashed">
                     {itemData?.unit}
                   </div>
                   <input type="hidden" name="unit" value={itemData?.unit} />
                 </div>
               </div>
               
-              <div>
-                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">Category</label>
+              <div className="space-y-4">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Operational Category</label>
                 <div className="flex flex-wrap gap-2">
                    {categories.map(cat => (
                       <button 
@@ -210,9 +210,9 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                         type="button"
                         onClick={() => !isEmployee && setSelectedCategoryId(cat.id)}
                         className={cn(
-                           "px-5 py-2.5 rounded-xl text-xs font-black transition-colors border",
+                           "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
                            selectedCategoryId === cat.id 
-                               ? "border-primary bg-primary/10 text-primary" 
+                               ? "border-primary bg-primary/10 text-primary shadow-sm" 
                                : "border-border-ghost text-muted-foreground hover:bg-surface-low",
                            isEmployee && "cursor-not-allowed opacity-80"
                         )}
@@ -227,70 +227,68 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         </div>
 
         <div className="lg:col-span-5 space-y-8">
-          <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
-            <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
-              <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
+          <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
+            <h3 className="heading-md flex items-center gap-3 border-b border-border-ghost pb-6">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
                  <Settings className="w-5 h-5" />
               </div>
-              Rules
+              Replenishment Logic
             </h3>
             
             <div className="space-y-8">
-              <div>
-                <div className="flex justify-between items-end mb-3">
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest">Low Stock Warning</label>
-                  <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Warning level</span>
+              <div className="space-y-2">
+                <div className="flex justify-between items-end px-1">
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Buffer Threshold</label>
+                  <span className="badge badge-error uppercase">Refill Level</span>
                 </div>
                 <div className="relative">
-                  <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} readOnly={isEmployee} className={cn("w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right text-foreground", isEmployee && "opacity-60 cursor-not-allowed")} type="number" min="0" />
+                  <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} readOnly={isEmployee} className={cn("input-field h-20 text-3xl font-black font-mono text-center", isEmployee && "opacity-60 cursor-not-allowed")} type="number" min="0" />
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-3 font-bold">We will tell you when items go below this level.</p>
+                <p className="text-[10px] text-muted-foreground px-1 font-bold italic leading-relaxed">Automated alerts will be triggered when available stock drops below this specific count.</p>
               </div>
 
-              <div className="flex items-center justify-between p-5 bg-surface-low rounded-2xl border border-border-ghost">
+              <div className="flex items-center justify-between p-6 bg-surface-low/30 rounded-[1.5rem] border border-border-ghost">
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-[15px] font-black text-foreground">Critical Item</p>
-                    <span className="px-2 py-0.5 rounded-full border border-success/50 text-[10px] font-black text-success uppercase tracking-wider">New</span>
+                    <p className="text-sm font-black text-foreground">Critical Status</p>
+                    <span className="badge badge-success !px-2 !py-0.5">NEW</span>
                   </div>
-                  <p className="text-xs font-bold text-muted-foreground mt-0.5">Flag for priority replenishment</p>
+                  <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Priority Flagging</p>
                 </div>
                 <button 
                   type="button" 
                   onClick={() => !isEmployee && setIsCritical(!isCritical)}
                   className={cn(
-                     "w-14 h-7 rounded-full relative transition-colors duration-300",
+                     "w-12 h-6 rounded-full relative transition-colors duration-300",
                      isCritical ? "bg-primary" : "bg-muted-foreground/30",
                      isEmployee && "cursor-not-allowed opacity-60"
                   )}
                 >
                   <div className={cn(
-                     "absolute top-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300",
+                     "absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300",
                      isCritical ? "right-1" : "left-1"
                   )}></div>
                 </button>
               </div>
             </div>
           </div>
-
-
-
-
         </div>
       </div>
 
       <InventoryStockManager itemId={id} />
 
-      <div className="mt-12 flex flex-col md:flex-row items-center justify-between p-6 bg-surface-lowest rounded-2xl border border-border-ghost shadow-ambient gap-6">
+      <div className="mt-12 flex flex-col md:flex-row items-center justify-between p-8 bg-surface-low/30 rounded-[2.5rem] border border-border-ghost shadow-ambient gap-6">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-success/10 text-success rounded-xl">
+          <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center text-success border border-success/10">
              <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-[15px] font-black text-foreground">Integrity Sync Active</p>
-            <p className="text-xs font-bold text-muted-foreground mt-0.5">Specifications will be updated across all modules instantly.</p>
+            <p className="text-sm font-black text-foreground">Real-time Synchronization Active</p>
+            <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Changes propagate across global modules instantly</p>
           </div>
         </div>
+        <div className="h-px w-full md:w-px md:h-12 bg-border-ghost" />
+        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] italic">Last synchronized: {new Date().toLocaleTimeString()}</p>
       </div>
     </form>
   );

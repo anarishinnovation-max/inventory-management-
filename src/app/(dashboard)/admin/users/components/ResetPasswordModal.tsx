@@ -51,17 +51,17 @@ export default function ResetPasswordModal({ user, onClose }: ResetPasswordModal
         <div className="p-8 flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/10">
                 <Key className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-bold">Reset Password</h2>
+                <h2 className="heading-md">Reset Password</h2>
                 <p className="text-sm text-muted-foreground">For {user.name} (@{user.username})</p>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-surface-muted rounded-xl transition-colors"
+              className="btn btn-ghost h-10 w-10 !p-0 rounded-xl"
             >
               <X className="w-6 h-6" />
             </button>
@@ -69,20 +69,20 @@ export default function ResetPasswordModal({ user, onClose }: ResetPasswordModal
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold ml-1">New Password</label>
+              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">New Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter new password..."
-                  className="w-full p-4 bg-surface-muted border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium pr-12"
+                  className="input-field h-14 pr-12"
                   autoFocus
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-2"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -96,14 +96,14 @@ export default function ResetPasswordModal({ user, onClose }: ResetPasswordModal
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 p-4 border border-border-ghost rounded-2xl font-bold hover:bg-surface-muted transition-all"
+                className="btn btn-neutral flex-1 h-14"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-[2] p-4 bg-primary text-white rounded-2xl font-bold hover:opacity-90 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                className="btn btn-primary flex-[2] h-14"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

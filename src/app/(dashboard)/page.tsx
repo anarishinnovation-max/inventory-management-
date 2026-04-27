@@ -208,10 +208,10 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="card-premium group">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-primary/10 text-primary rounded-xl transition-transform ">
+            <div className="p-3 bg-primary/10 text-primary rounded-xl transition-colors">
               <Package className="w-5 h-5" />
             </div>
-            <div className="badge bg-success/10 text-success border-success/20">
+            <div className="badge badge-success">
               <TrendingUp className="w-3 h-3 mr-1" />
               12%
             </div>
@@ -225,11 +225,11 @@ export default async function DashboardPage() {
 
         <div className="card-premium group">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-success/10 text-success rounded-xl transition-transform ">
+            <div className="p-3 bg-success/10 text-success rounded-xl transition-colors">
               <IndianRupee className="w-5 h-5" />
             </div>
-            <div className="badge bg-blue-50 text-blue-600 border-blue-100 italic lowercase font-medium opacity-0">
-              {/* Live label removed */}
+            <div className="opacity-0">
+              {/* Empty space for alignment */}
             </div>
           </div>
           <div className="mt-6">
@@ -239,12 +239,12 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="card-premium group border-error/5 hover:border-error/20 bg-error/[0.01]">
+        <div className="card-premium group border-error/10 bg-error/[0.01]">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-error/10 text-error rounded-xl transition-transform ">
+            <div className="p-3 bg-error/10 text-error rounded-xl transition-colors">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <Link href="/inventory?status=low" className="badge bg-error/10 text-error border-error/20 hover:bg-error hover:text-white transition-colors cursor-pointer">
+            <Link href="/inventory?status=low" className="badge badge-error hover:bg-error hover:text-white transition-colors cursor-pointer">
               View All
             </Link>
           </div>
@@ -265,10 +265,10 @@ export default async function DashboardPage() {
 
         <div className="card-premium group">
           <div className="flex justify-between items-start">
-            <div className="p-3 bg-indigo-500/10 text-indigo-500 rounded-xl transition-transform ">
+            <div className="p-3 bg-indigo-500/10 text-indigo-500 rounded-xl transition-colors">
               <IndianRupee className="w-5 h-5" />
             </div>
-            <div className="badge bg-indigo-50/50 text-indigo-600 border-indigo-100">
+            <div className="badge badge-indigo">
               MTD
             </div>
           </div>
@@ -286,7 +286,7 @@ export default async function DashboardPage() {
         <div className="lg:col-span-2 card-premium !p-8">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h3 className="text-xl font-black text-foreground">Items Moving In and Out</h3>
+              <h3 className="heading-md">Items Moving In and Out</h3>
               <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Movement in the last 10 days</p>
             </div>
             <div className="flex gap-4">
@@ -335,7 +335,7 @@ export default async function DashboardPage() {
             <div className="p-2 bg-error/10 rounded-lg">
               <BellRing className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-black uppercase tracking-tight">Need to Buy Soon</h3>
+            <h3 className="heading-md uppercase tracking-tight">Need to Buy Soon</h3>
           </div>
           <div className="space-y-3 flex-1">
             {data.replenish.length > 0 ? data.replenish.map((item: { id: string; name: string; sku: string; minStockLevel: number; current_qty: number; incoming_qty: number }, idx: number) => (
@@ -373,7 +373,7 @@ export default async function DashboardPage() {
             )}
           </div>
           <Link href="/orders/purchase/new" className="block w-full">
-            <button className="w-full mt-8 py-3.5 bg-error text-white rounded-xl text-[11px] font-black shadow-lg shadow-error/10 hover:opacity-90 transition-all  uppercase tracking-widest">Buy More</button>
+            <button className="btn btn-error w-full mt-8">Buy More</button>
           </Link>
         </div>
       </div>
@@ -381,49 +381,49 @@ export default async function DashboardPage() {
       {/* Bottom Detail Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Activity Table */}
-        <div className="lg:col-span-2 card-premium !p-0 overflow-hidden">
+        <div className="lg:col-span-2 table-container !p-0">
           <div className="p-6 pb-4 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <History className="w-4 h-4 text-primary" />
               </div>
-              <h3 className="text-lg font-black text-foreground">Activity Log</h3>
+              <h3 className="heading-md">Activity Log</h3>
             </div>
             <button className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity" suppressHydrationWarning>View Full List</button>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-surface-low/10">
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Action</th>
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Item Info</th>
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Change</th>
-                  <th className="px-6 py-4 text-[9px] font-black text-muted-foreground uppercase tracking-widest text-right">Status</th>
+            <table className="w-full text-left border-collapse">
+              <thead className="table-header">
+                <tr>
+                  <th className="table-cell-header">Action</th>
+                  <th className="table-cell-header">Item Info</th>
+                  <th className="table-cell-header">Change</th>
+                  <th className="table-cell-header text-right">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-ghost">
                 {data.recentActivity.map((tx: any) => (
-                  <tr key={tx.id} className="hover:bg-surface-low/40 transition-colors cursor-pointer group">
-                    <td className="px-6 py-4">
+                  <tr key={tx.id} className="table-row">
+                    <td className="table-cell">
                       <div className={cn(
-                        "badge rounded-lg gap-1.5 border-none",
-                        tx.type.includes('IN') || tx.type === 'PURCHASE' ? "bg-success/10 text-success" : "bg-primary/10 text-primary"
+                        "badge gap-1.5",
+                        tx.type.includes('IN') || tx.type === 'PURCHASE' ? "badge-success" : "badge-primary"
                       )}>
                         {tx.type.includes('IN') || tx.type === 'PURCHASE' ? <ArrowDownLeft className="w-2.5 h-2.5" /> : <ArrowUpRight className="w-2.5 h-2.5" />}
                         {tx.type}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="table-cell">
                       <div className="flex flex-col">
                         <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">{tx.item_name}</span>
                         <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{tx.sku}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="table-cell">
                       <span className="text-sm font-black text-foreground">{tx.type.includes('IN') || tx.type === 'PURCHASE' ? '+' : '-'}{tx.quantity}</span>
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="text-[9px] font-black text-success px-2 py-0.5 rounded-md border border-success/20 bg-success/5">DONE</span>
+                    <td className="table-cell text-right">
+                      <span className="badge badge-success">DONE</span>
                     </td>
                   </tr>
                 ))}
@@ -438,7 +438,7 @@ export default async function DashboardPage() {
             <div className="p-2 bg-warning/10 rounded-lg">
               <Zap className="w-4 h-4 text-warning" />
             </div>
-            <h3 className="text-lg font-black text-foreground">Popular Items</h3>
+            <h3 className="heading-md">Popular Items</h3>
           </div>
           <div className="space-y-6 flex-1">
             {data.velocity.length > 0 ? data.velocity.map((item: any, idx: number) => {
@@ -466,7 +466,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="mt-8 p-5 rounded-2xl bg-primary/[0.03] border border-primary/10 relative overflow-hidden group shadow-sm transition-all hover:bg-primary/[0.05]">
-            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl  transition-all duration-700" />
+            <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl transition-all duration-700" />
             <div className="flex items-start gap-4 relative z-10">
               <div className="w-9 h-9 shrink-0 rounded-xl bg-white shadow-premium flex items-center justify-center border border-primary/10">
                 <TrendingUp className="w-4 h-4 text-primary" />
@@ -490,7 +490,7 @@ export default async function DashboardPage() {
             <div className="p-2 bg-warning/10 rounded-lg">
               <Timer className="w-4 h-4 text-warning" />
             </div>
-            <h3 className="text-lg font-black text-foreground">Oldest Items in Inventory</h3>
+            <h3 className="heading-md">Oldest Items in Inventory</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {data.oldestItems.map((item: any, idx: number) => (

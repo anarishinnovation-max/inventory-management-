@@ -62,7 +62,7 @@ export default function InventoryPagination({
   return (
     <div className="p-6 bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost flex flex-col sm:flex-row items-center justify-between gap-4">
       <span className={cn(
-        "text-xs font-bold uppercase tracking-widest text-muted-foreground transition-opacity",
+        "text-[10px] font-black uppercase tracking-widest text-muted-foreground transition-opacity",
         isPending && "opacity-50"
       )}>
         Showing <span className="text-foreground">{startItem} to {endItem}</span> of {totalItems} SKUs
@@ -72,10 +72,10 @@ export default function InventoryPagination({
         <button 
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1 || isPending}
-          className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground disabled:opacity-30 border border-transparent hover:border-border-ghost transition-all"
+          className="btn btn-neutral h-9 w-9 !p-0 rounded-xl"
           suppressHydrationWarning
         >
-          <ChevronLeft className="w-5 h-5" />
+          <ChevronLeft className="w-4 h-4" />
         </button>
 
         {getPageNumbers().map((page, idx) => (
@@ -84,12 +84,12 @@ export default function InventoryPagination({
             onClick={() => typeof page === 'number' ? goToPage(page) : null}
             disabled={page === "..." || isPending}
             className={cn(
-              "w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all shadow-sm",
+              "btn h-9 w-9 !p-0 rounded-xl text-[10px] font-black uppercase tracking-widest",
               page === currentPage 
-                ? "bg-primary text-white shadow-primary/20" 
+                ? "btn-primary" 
                 : page === "..." 
-                  ? "bg-transparent text-muted-foreground cursor-default"
-                  : "bg-surface-lowest text-muted-foreground hover:bg-surface-low border border-border-ghost hover:border-primary/30"
+                  ? "bg-transparent text-muted-foreground cursor-default border-transparent hover:bg-transparent"
+                  : "btn-neutral"
             )}
             suppressHydrationWarning
           >
@@ -100,10 +100,10 @@ export default function InventoryPagination({
         <button 
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages || isPending}
-          className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-surface-low text-muted-foreground disabled:opacity-30 border border-transparent hover:border-border-ghost transition-all"
+          className="btn btn-neutral h-9 w-9 !p-0 rounded-xl"
           suppressHydrationWarning
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </div>

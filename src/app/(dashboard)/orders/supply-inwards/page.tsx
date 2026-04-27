@@ -59,8 +59,11 @@ async function getInwardData(options: {
 
   if (startDate || endDate) {
     wherePO.orderDate = {};
-    if (startDate) wherePO.orderDate.gte = new Date(startDate);
-    if (endDate) wherePO.orderDate.lte = new Date(endDate);
+    if (startDate && startDate.trim() !== "") wherePO.orderDate.gte = new Date(startDate);
+    if (endDate && endDate.trim() !== "") wherePO.orderDate.lte = new Date(endDate);
+    
+    // Clean up if both are empty after trim
+    if (Object.keys(wherePO.orderDate).length === 0) delete wherePO.orderDate;
   }
 
   if (query) {
@@ -163,92 +166,82 @@ export default async function SupplyInwardsPage({
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
-            <span>Orders</span>
+            <span>Inventory</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Supply Inwards</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Supply Inwards</h1>
-          <p className="text-muted-foreground mt-2 font-medium">Focusing on items that are yet to be received.</p>
+          <h1 className="heading-xl tracking-tight">Supply Inwards</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Tracking items currently on the way from vendors.</p>
         </div>
       </header>
 
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform  border border-primary/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-colors border border-primary/10">
                 <Package className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Ordered Items</p>
+              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Pending Orders</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingPOs.length}</h2>
+            </div>
+        </div>
+
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-colors border border-warning/10">
+                <Truck className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Items in Transit</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform  border border-warning/10">
-                <Clock className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Remaining Units</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{totalPendingQty}</h2>
-            </div>
-        </div>
-
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform  border border-success/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-colors border border-success/10">
                 <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Last 24h Inward</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{todayInwardCount}</h2>
+              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Recent Receipts</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{recentTransactions.length}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-indigo-500/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 transition-transform  border border-indigo-500/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-indigo-500/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 transition-colors border border-indigo-500/10">
                 <Users className="w-5 h-5" />
             </div>
             <div>
               <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.15em]">Active Vendors</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">
-                {new Set([...pendingItems.map(i => i.vendor.id), ...recentTransactions.map(t => t.vendorId)]).size}
+                {new Set([...pendingPOs.map(po => po.vendorId), ...recentTransactions.map(t => t.vendorId)]).size}
               </h2>
             </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main List & Filters */}
-        <div className="lg:col-span-12">
-          <SupplyInwardsList 
-            items={pendingItems}
-            searchQuery={q}
-            vendors={vendors}
-            currentVendorId={vendorId}
-            currentPONumber={poNumber}
-            currentStartDate={startDate}
-            currentEndDate={endDate}
-          />
-        </div>
-      </div>
+      <SupplyInwardsList 
+        items={pendingItems}
+        vendors={vendors}
+        currentVendorId={vendorId}
+        currentPONumber={poNumber}
+        currentStartDate={startDate}
+        currentEndDate={endDate}
+        searchQuery={q}
+      />
 
-      {/* Audit: Recently Received Section (Moved Below) */}
+      {/* Recent Audit Log - Moved to Bottom */}
       <div className="space-y-6 pt-10 border-t border-border-ghost">
-        <div className="flex items-center justify-between px-2">
-          <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-success" />
-            Audit: Recently Received
-          </h3>
-          <Link href="/transactions" className="text-[10px] font-black text-primary hover:underline uppercase tracking-widest">
-             Full History
-          </Link>
-        </div>
+        <h3 className="heading-md uppercase tracking-widest flex items-center gap-2 px-2">
+          <CheckCircle2 className="w-4 h-4 text-success" />
+          Audit: Recently Received
+        </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recentTransactions.length > 0 ? recentTransactions.slice(0, 6).map((tx: any) => (
-            <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group">
+          {recentTransactions.length > 0 ? recentTransactions.map((tx: any) => (
+            <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group border-success/10">
               <div className="flex items-start gap-4">
-                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0  transition-transform">
+                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 transition-colors">
                     <ArrowDownLeft className="w-6 h-6" />
                  </div>
                  <div className="flex-1 min-w-0">
@@ -258,23 +251,15 @@ export default async function SupplyInwardsPage({
                     </div>
                     <div className="flex items-center gap-3 mt-2">
                       <div className="flex items-center gap-1.5">
-                        <Truck className="w-3.5 h-3.5 text-muted-foreground" />
-                        <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.vendor?.name || 'Unknown Vendor'}</p>
+                        <Users className="w-3.5 h-3.5 text-muted-foreground" />
+                        <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.vendor?.name || 'Unknown'}</p>
                       </div>
-                      {tx.referenceType === "PO" && (
-                         <div className="flex items-center gap-1.5 px-2 py-0.5 bg-primary/5 rounded-lg border border-primary/10">
-                            <span className="text-[9px] font-black text-primary uppercase">PO #{tx.referenceId.split('-')[0]}</span>
-                         </div>
-                      )}
+                      <div className="badge badge-primary">
+                        PO #{tx.referenceId.split('-')[0].toUpperCase()}
+                      </div>
                     </div>
                     <div className="flex items-center justify-between mt-4 pt-4 border-t border-border-ghost">
-                       <div className="flex items-center gap-2">
-                          <div className="w-5 h-5 rounded-full bg-surface-low border border-border-ghost flex items-center justify-center text-[9px] font-bold">
-                             {tx.user?.name?.[0] || 'S'}
-                          </div>
-                          <span className="text-[10px] font-black text-muted-foreground uppercase">{tx.user?.name || 'System'}</span>
-                       </div>
-                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-tighter opacity-60">
+                       <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60">
                          {formatDate(tx.createdAt)}
                        </span>
                     </div>

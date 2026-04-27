@@ -5,7 +5,7 @@ import { AlertTriangle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function ConfirmDialog() {
-  const { isOpen, title, message, onConfirm, onCancel } = useConfirmStore();
+  const { isOpen, title, message, variant, onConfirm, onCancel } = useConfirmStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -16,10 +16,10 @@ export default function ConfirmDialog() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-surface-lowest w-full max-w-md rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="p-8">
           <div className="flex items-center justify-between mb-6">
-            <div className="p-3 bg-warning/10 rounded-2xl text-warning">
+            <div className={`p-3 rounded-2xl ${variant === 'error' ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary'}`}>
               <AlertTriangle className="w-6 h-6" />
             </div>
             <button
@@ -30,7 +30,7 @@ export default function ConfirmDialog() {
             </button>
           </div>
 
-          <h2 className="text-xl font-black text-foreground mb-2">{title}</h2>
+          <h2 className="heading-md mb-2">{title}</h2>
           <p className="text-sm font-bold text-muted-foreground leading-relaxed">
             {message}
           </p>
@@ -39,13 +39,13 @@ export default function ConfirmDialog() {
         <div className="p-8 pt-0 flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 px-6 py-3.5 bg-surface-low hover:bg-border-ghost text-foreground text-xs font-black rounded-2xl transition-all"
+            className="btn btn-ghost flex-1"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 px-6 py-3.5 bg-primary text-white text-xs font-black rounded-2xl shadow-xl shadow-primary/20   transition-all"
+            className={`btn flex-1 ${variant === 'error' ? 'btn-error' : 'btn-primary'}`}
           >
             Confirm
           </button>

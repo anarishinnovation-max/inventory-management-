@@ -35,13 +35,13 @@ export default function SearchInput({
 
   return (
     <div className="relative flex-1 min-w-[280px]">
-      <Search className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${isPending ? "text-primary animate-pulse" : "text-muted-foreground"}`} />
+      <Search className={`absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${isPending ? "text-primary animate-pulse" : "text-muted-foreground/50"}`} />
       <input 
         type="text" 
         defaultValue={defaultValue}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder={placeholder} 
-        className="w-full pl-14 pr-4 py-4 bg-white rounded-2xl shadow-ambient border border-border-ghost outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium text-sm"
+        className="input-field input-with-icon text-sm"
         suppressHydrationWarning
       />
     </div>

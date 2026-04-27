@@ -135,8 +135,8 @@ export default async function VendorsPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1 space-y-4">
-          <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
-            <BarChart3 className="w-3 h-3 text-primary" />
+          <h2 className="heading-md uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 mb-2">
+            <BarChart3 className="w-4 h-4 text-primary" />
             Vendors List
           </h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-1">
@@ -152,8 +152,8 @@ export default async function VendorsPage({
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                  <span className="badge px-2 py-0.5 rounded-md bg-primary/5 text-primary border-primary/10 text-[9px]">
-                    {vendor.items.length} SKUs
+                  <span className="badge badge-primary">
+                    {vendor.items.length} Items
                   </span>
                   <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
                 </div>
@@ -165,8 +165,8 @@ export default async function VendorsPage({
 
         <div className="lg:col-span-3 space-y-6">
            <div className="flex items-center justify-between">
-             <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-3">
-               Price List
+             <h2 className="heading-md flex items-center gap-3">
+               Item Pricing Ledger
              </h2>
              <div className="flex items-center gap-2">
                 <button className="p-2 rounded-lg hover:bg-surface-low text-muted-foreground transition-all border border-transparent hover:border-border-ghost">
@@ -175,11 +175,11 @@ export default async function VendorsPage({
              </div>
            </div>
 
-           <div className="card-premium !p-0 overflow-hidden">
+           <div className="table-container">
               <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead>
-                    <tr className="table-header">
+                <table className="w-full text-left border-collapse">
+                  <thead className="table-header">
+                    <tr>
                       <th className="table-cell-header">Vendor</th>
                       <th className="table-cell-header">Item & SKU</th>
                       <th className="table-cell-header text-right">Price</th>
@@ -189,8 +189,8 @@ export default async function VendorsPage({
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
                     {allCompetitiveItems.length > 0 ? allCompetitiveItems.map((entry: any, idx: number) => (
-                      <tr key={idx} className="hover:bg-surface-low/30 transition-all group border-b border-border-ghost last:border-0">
-                        <td className="px-8 py-5">
+                      <tr key={idx} className="table-row">
+                        <td className="table-cell">
                           <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-xl bg-linear-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20 text-xs">
                                {entry.vendorName[0]}
@@ -204,13 +204,13 @@ export default async function VendorsPage({
                             </div>
                           </div>
                         </td>
-                        <td className="px-8 py-5">
+                        <td className="table-cell">
                           <div>
                             <p className="font-bold text-foreground text-sm">{entry.itemName}</p>
                             <p className="text-[9px] font-black text-muted-foreground tracking-widest mt-0.5 uppercase">{entry.sku}</p>
                           </div>
                         </td>
-                        <td className="px-8 py-5 text-right">
+                        <td className="table-cell text-right">
                           <div className="flex flex-col items-end">
                              <div className="flex items-center gap-1">
                                 <span className="text-[9px] font-black text-muted-foreground opacity-50 uppercase">INR</span>
@@ -219,20 +219,20 @@ export default async function VendorsPage({
                              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Per piece</span>
                           </div>
                         </td>
-                        <td className="px-8 py-5">
+                        <td className="table-cell">
                           <div className="flex items-center gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-widest">
                              <Clock className="w-3.5 h-3.5 opacity-50" />
                              <span>{entry.leadTime}</span>
                           </div>
                         </td>
-                        <td className="px-8 py-5">
+                        <td className="table-cell">
                           {entry.isPreferred ? (
-                             <span className="badge rounded-lg gap-1.5 bg-primary/10 text-primary border-none text-[9px]">
+                             <span className="badge badge-primary gap-1.5">
                                 <Star className="w-3 h-3 fill-current" />
                                 Preferred
                              </span>
                           ) : (
-                             <span className="badge rounded-lg gap-1.5 bg-surface-low text-muted-foreground border-none text-[9px]">
+                             <span className="badge badge-neutral gap-1.5">
                                 <div className="w-1.5 h-1.5 rounded-full bg-current" />
                                 Secondary
                              </span>
@@ -241,7 +241,7 @@ export default async function VendorsPage({
                       </tr>
                     )) : (
                       <tr>
-                         <td colSpan={5} className="px-8 py-40 text-center text-muted-foreground font-medium">
+                         <td colSpan={5} className="table-cell text-center text-muted-foreground py-40">
                             <div className="flex flex-col items-center gap-4 opacity-30">
                                 <BarChart3 className="w-16 h-16" />
                                 <p className="text-2xl font-black text-foreground">No prices found matching your search.</p>

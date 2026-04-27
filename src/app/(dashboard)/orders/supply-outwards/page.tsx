@@ -46,14 +46,19 @@ async function getSupplyOutwardsData(companyId: string, q?: string, customerId?:
   if (startDate || endDate) {
     whereTx.createdAt = {};
     whereOrder.createdAt = {};
-    if (startDate) {
-      whereTx.createdAt.gte = new Date(startDate);
-      whereOrder.createdAt.gte = new Date(startDate);
+    if (startDate && startDate.trim() !== "") {
+      const sDate = new Date(startDate);
+      whereTx.createdAt.gte = sDate;
+      whereOrder.createdAt.gte = sDate;
     }
-    if (endDate) {
-      whereTx.createdAt.lte = new Date(endDate);
-      whereOrder.createdAt.lte = new Date(endDate);
+    if (endDate && endDate.trim() !== "") {
+      const eDate = new Date(endDate);
+      whereTx.createdAt.lte = eDate;
+      whereOrder.createdAt.lte = eDate;
     }
+
+    if (Object.keys(whereTx.createdAt).length === 0) delete whereTx.createdAt;
+    if (Object.keys(whereOrder.createdAt).length === 0) delete whereOrder.createdAt;
   }
 
   if (q) {
@@ -151,15 +156,15 @@ export default async function SupplyOutwardsPage({
             <span className="opacity-30">/</span>
             <span className="text-primary">Supply Outwards</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Supply Outwards</h1>
+          <h1 className="heading-xl tracking-tight">Supply Outwards</h1>
           <p className="text-muted-foreground mt-2 font-medium">Tracking items booked and dispatched to customers.</p>
         </div>
       </header>
 
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform  border border-primary/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-colors border border-primary/10">
                 <Package className="w-5 h-5" />
             </div>
             <div>
@@ -168,8 +173,8 @@ export default async function SupplyOutwardsPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform  border border-warning/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-colors border border-warning/10">
                 <Clock className="w-5 h-5" />
             </div>
             <div>
@@ -178,8 +183,8 @@ export default async function SupplyOutwardsPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform  border border-success/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-colors border border-success/10">
                 <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
@@ -188,8 +193,8 @@ export default async function SupplyOutwardsPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-indigo-500/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 transition-transform  border border-indigo-500/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-indigo-500/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 transition-colors border border-indigo-500/10">
                 <Users className="w-5 h-5" />
             </div>
             <div>
@@ -214,7 +219,7 @@ export default async function SupplyOutwardsPage({
 
       {/* Recent Audit Log - Moved to Bottom */}
       <div className="space-y-6 pt-10 border-t border-border-ghost">
-        <h3 className="text-sm font-black text-foreground uppercase tracking-widest flex items-center gap-2 px-2">
+        <h3 className="heading-md uppercase tracking-widest flex items-center gap-2 px-2">
           <CheckCircle2 className="w-4 h-4 text-success" />
           Audit: Recently Dispatched
         </h3>
@@ -223,7 +228,7 @@ export default async function SupplyOutwardsPage({
           {transactions.length > 0 ? transactions.map((tx: any) => (
             <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group">
               <div className="flex items-start gap-4">
-                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0  transition-transform">
+                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 transition-colors">
                     <ArrowUpRight className="w-6 h-6" />
                  </div>
                  <div className="flex-1 min-w-0">
@@ -237,8 +242,8 @@ export default async function SupplyOutwardsPage({
                         <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.customer?.name || 'Guest'}</p>
                       </div>
                       {tx.referenceType === "DISPATCH" && (
-                         <div className="flex items-center gap-1.5 px-2 py-0.5 bg-primary/5 rounded-lg border border-primary/10">
-                            <span className="text-[9px] font-black text-primary uppercase">DO #{tx.referenceId.split('-')[0]}</span>
+                         <div className="badge badge-primary">
+                            DO #{tx.referenceId.split('-')[0]}
                          </div>
                       )}
                     </div>
@@ -261,7 +266,7 @@ export default async function SupplyOutwardsPage({
         </div>
         
         <div className="flex justify-center">
-          <Link href="/transactions" className="flex items-center gap-2 px-6 py-3 text-[10px] font-black text-muted-foreground hover:text-primary transition-colors uppercase tracking-[0.2em] border border-border-ghost rounded-2xl hover:bg-surface-low">
+          <Link href="/transactions" className="btn btn-ghost h-12 px-6">
              View Full Audit Log
              <ChevronRight className="w-3 h-3" />
           </Link>

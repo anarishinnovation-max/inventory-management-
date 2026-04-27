@@ -166,7 +166,7 @@ export function ItemBreakdownModal({
                   <div className="w-1 h-1 rounded-full bg-primary/40" />
                   <span className="text-primary/80">Asset Breakdown</span>
                </nav>
-               <h2 className="text-4xl font-black text-foreground tracking-tight leading-tight mb-4">{itemName}</h2>
+               <h2 className="heading-xl leading-tight mb-4">{itemName}</h2>
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex items-center gap-2.5 px-4 py-2 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-2xl shadow-sm">
                     <Package className="w-4 h-4" />
@@ -192,9 +192,9 @@ export function ItemBreakdownModal({
           </div>
           <button 
             onClick={onClose}
-            className="p-4 rounded-2xl hover:bg-surface-low text-muted-foreground hover:text-foreground transition-all group"
+            className="btn btn-ghost h-14 w-14 !p-0 rounded-2xl group"
           >
-             <X className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
+             <X className="w-8 h-8 transition-colors" />
           </button>
         </header>
 
@@ -202,8 +202,8 @@ export function ItemBreakdownModal({
            {loading ? (
              <div className="py-32 flex flex-col items-center justify-center gap-6">
                 <div className="relative">
-                  <div className="w-16 h-16 rounded-full border-4 border-primary/10 border-t-primary animate-spin" />
-                  <Layers className="w-6 h-6 text-primary absolute inset-0 m-auto" />
+                   <div className="w-16 h-16 rounded-full border-4 border-primary/10 border-t-primary animate-spin" />
+                   <Layers className="w-6 h-6 text-primary absolute inset-0 m-auto" />
                 </div>
                 <p className="text-lg font-black text-muted-foreground animate-pulse tracking-tight">Synchronizing data...</p>
              </div>
@@ -213,30 +213,32 @@ export function ItemBreakdownModal({
                 <div className="flex items-center gap-1.5 bg-surface-low/30 p-1.5 rounded-3xl border border-border-ghost w-fit mx-auto sm:mx-0">
                    <button 
                      onClick={() => setActiveTab("buying")}
-                     className={`flex items-center gap-3 px-12 py-3.5 rounded-[1.25rem] font-black text-xs uppercase tracking-widest transition-all ${
+                     className={cn(
+                       "flex items-center gap-3 px-12 py-3.5 rounded-[1.25rem] font-black text-xs uppercase tracking-widest transition-all",
                        activeTab === "buying" 
                          ? "bg-white text-primary shadow-lg shadow-primary/5 border border-border-ghost" 
                          : "text-muted-foreground hover:text-foreground hover:bg-white/50"
-                     }`}
+                     )}
                    >
-                     <ArrowDownLeft className={cn("w-4 h-4 transition-transform", activeTab === "buying" && "scale-110")} />
+                     <ArrowDownLeft className="w-4 h-4" />
                      <span>Buying</span>
-                     <span className={`px-2 py-0.5 rounded-md text-[9px] ${activeTab === "buying" ? "bg-primary/10 text-primary" : "bg-muted-foreground/10 text-muted-foreground"}`}>
+                     <span className={`badge ${activeTab === "buying" ? "badge-primary" : "badge-neutral"}`}>
                         {purchaseHistory.length + incomingPOs.length}
                      </span>
                    </button>
 
                    <button 
                      onClick={() => setActiveTab("selling")}
-                     className={`flex items-center gap-3 px-12 py-3.5 rounded-[1.25rem] font-black text-xs uppercase tracking-widest transition-all ${
+                     className={cn(
+                       "flex items-center gap-3 px-12 py-3.5 rounded-[1.25rem] font-black text-xs uppercase tracking-widest transition-all",
                        activeTab === "selling" 
                          ? "bg-white text-error shadow-lg shadow-error/5 border border-border-ghost" 
                          : "text-muted-foreground hover:text-foreground hover:bg-white/50"
-                     }`}
+                     )}
                    >
-                     <ArrowUpRight className={cn("w-4 h-4 transition-transform", activeTab === "selling" && "scale-110")} />
+                     <ArrowUpRight className="w-4 h-4" />
                      <span>Selling</span>
-                     <span className={`px-2 py-0.5 rounded-md text-[9px] ${activeTab === "selling" ? "bg-error/10 text-error" : "bg-muted-foreground/10 text-muted-foreground"}`}>
+                     <span className={`badge ${activeTab === "selling" ? "badge-error" : "badge-neutral"}`}>
                         {sellingHistory.length + customerOrders.length}
                      </span>
                    </button>
@@ -249,23 +251,23 @@ export function ItemBreakdownModal({
                       <section className="space-y-8">
                         <div className="flex items-end justify-between border-b border-border-ghost pb-6 px-2">
                           <div>
-                            <h3 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-3">
-                               <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <h3 className="heading-md flex items-center gap-3">
+                               <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
                                  <ArrowDownLeft className="w-5 h-5" />
-                               </div>
+                                </div>
                                Inward Journal
                             </h3>
                             <p className="text-xs font-bold text-muted-foreground mt-2 tracking-tight">Tracking all purchase receipts and batch distributions.</p>
                           </div>
-                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-40 bg-surface-low px-3 py-1 rounded-full border border-border-ghost">COMPLETED RECEIPTS</span>
+                          <span className="badge badge-neutral opacity-40">COMPLETED RECEIPTS</span>
                         </div>
 
                         <div className="grid grid-cols-1 gap-4">
                           {purchaseHistory.length > 0 ? purchaseHistory.map((entry, idx) => (
-                            <div key={idx} className="group bg-white p-6 rounded-[2rem] border border-border-ghost shadow-sm hover:shadow-xl  transition-all duration-500">
+                            <div key={idx} className="group bg-surface-lowest p-6 rounded-[2rem] border border-border-ghost shadow-ambient transition-all duration-500">
                               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div className="flex items-center gap-5">
-                                  <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center font-black text-primary text-lg border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                                  <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center font-black text-primary text-lg border border-primary/10 transition-all duration-500">
                                     {entry.vendor?.[0] || "V"}
                                   </div>
                                   <div>
@@ -285,7 +287,7 @@ export function ItemBreakdownModal({
                                   </div>
                                   <div className="flex flex-col items-end">
                                     <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-50">Available</span>
-                                    <span className={`px-4 py-1 rounded-xl border font-black text-xs tabular-nums tracking-widest uppercase ${entry.remainingQty > 0 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-surface-low text-muted-foreground border-border-ghost opacity-40'}`}>
+                                    <span className={`badge ${entry.remainingQty > 0 ? 'badge-success' : 'badge-neutral opacity-40'}`}>
                                         {entry.remainingQty > 0 ? `${entry.remainingQty} Left` : 'Sold Out'}
                                     </span>
                                   </div>
@@ -309,20 +311,20 @@ export function ItemBreakdownModal({
                       <section className="space-y-8">
                         <div className="flex items-center gap-3 border-b border-border-ghost pb-6 px-2 text-emerald-600">
                           <Truck className="w-6 h-6" />
-                          <h3 className="text-2xl font-black tracking-tight uppercase tracking-[0.1em]">Supply Pipeline</h3>
+                          <h3 className="heading-md uppercase">Supply Pipeline</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {incomingPOs.length > 0 ? incomingPOs.map((po) => (
-                            <div key={po.poId} className="bg-white p-8 rounded-[2.5rem] border border-border-ghost shadow-ambient hover:shadow-xl transition-all group relative overflow-hidden">
+                            <div key={po.poId} className="bg-surface-lowest p-8 rounded-[2.5rem] border border-border-ghost shadow-ambient transition-all group relative overflow-hidden">
                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                  <Truck className="w-12 h-12 text-emerald-600 rotate-12" />
                               </div>
                               <div className="flex flex-col h-full justify-between">
                                 <div>
-                                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-500/5 px-3 py-1 rounded-lg border border-emerald-500/10">PO #{po.poId.split("-")[0].toUpperCase()}</span>
+                                  <span className="badge badge-primary">PO #{po.poId.split("-")[0].toUpperCase()}</span>
                                   <h4 className="text-xl font-black text-foreground mt-4 tracking-tight">{po.vendor}</h4>
                                   <div className="flex items-center gap-3 mt-2">
-                                    <span className="text-[10px] font-black text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-md uppercase tracking-tighter">
+                                    <span className="badge badge-success text-[10px]">
                                        ETA: {po.expectedDelivery ? new Date(po.expectedDelivery).toLocaleDateString('en-IN', { month: "short", day: "2-digit", year: "numeric" }) : 'CONFIRMING'}
                                     </span>
                                   </div>
@@ -335,7 +337,7 @@ export function ItemBreakdownModal({
                                    </div>
                                    <div className="flex items-center gap-2">
                                       <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">{po.status}</span>
+                                      <span className="badge badge-neutral text-[10px]">{po.status}</span>
                                    </div>
                                 </div>
                               </div>
@@ -357,23 +359,23 @@ export function ItemBreakdownModal({
                       <section className="space-y-8">
                         <div className="flex items-end justify-between border-b border-border-ghost pb-6 px-2">
                           <div>
-                            <h3 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-3">
-                               <div className="w-8 h-8 rounded-xl bg-error/10 flex items-center justify-center text-error">
+                            <h3 className="heading-md flex items-center gap-3">
+                               <div className="w-8 h-8 rounded-xl bg-error/10 flex items-center justify-center text-error border border-error/10">
                                  <ArrowUpRight className="w-5 h-5" />
                                </div>
                                Outward Journal
                             </h3>
                             <p className="text-xs font-bold text-muted-foreground mt-2 tracking-tight">Log of all dispatches and inventory deductions.</p>
                           </div>
-                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-40 bg-surface-low px-3 py-1 rounded-full border border-border-ghost">COMPLETED DISPATCHES</span>
+                          <span className="badge badge-neutral opacity-40">COMPLETED DISPATCHES</span>
                         </div>
 
                         <div className="grid grid-cols-1 gap-4">
                           {sellingHistory.length > 0 ? sellingHistory.map((entry, idx) => (
-                            <div key={idx} className="group bg-white p-6 rounded-[2rem] border border-border-ghost shadow-sm hover:shadow-xl  transition-all duration-500">
+                            <div key={idx} className="group bg-surface-lowest p-6 rounded-[2rem] border border-border-ghost shadow-ambient transition-all duration-500">
                               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div className="flex items-center gap-5">
-                                  <div className="w-14 h-14 rounded-2xl bg-error/5 flex items-center justify-center font-black text-error text-lg border border-error/10 group-hover:bg-error group-hover:text-white transition-all duration-500">
+                                  <div className="w-14 h-14 rounded-2xl bg-error/5 flex items-center justify-center font-black text-error text-lg border border-error/10 transition-all duration-500">
                                     {entry.customer?.[0] || "C"}
                                   </div>
                                   <div>
@@ -381,7 +383,7 @@ export function ItemBreakdownModal({
                                     <div className="flex items-center gap-3 mt-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                                        <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 opacity-40" /> {new Date(entry.date).toLocaleDateString('en-IN', { month: "short", day: "2-digit", year: "numeric" })}</span>
                                        <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                                       <span className="text-success font-black">Status: Verified</span>
+                                       <span className="badge badge-success text-[10px]">Verified</span>
                                     </div>
                                   </div>
                                 </div>
@@ -409,19 +411,19 @@ export function ItemBreakdownModal({
 
                       {/* Section 2: Open Reservations (Customer Orders) */}
                       <section className="space-y-8">
-                        <div className="flex items-center gap-3 border-b border-border-ghost pb-6 px-2 text-indigo-600">
+                        <div className="flex items-center gap-3 border-b border-border-ghost pb-6 px-2 text-primary">
                           <ShoppingCart className="w-6 h-6" />
-                          <h3 className="text-2xl font-black tracking-tight uppercase tracking-[0.1em]">Open Reservations</h3>
+                          <h3 className="heading-md uppercase">Open Reservations</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {customerOrders.length > 0 ? customerOrders.map((order) => (
-                            <div key={order.orderId} className="bg-white p-8 rounded-[2.5rem] border border-border-ghost shadow-ambient hover:shadow-xl transition-all group relative overflow-hidden">
+                            <div key={order.orderId} className="bg-surface-lowest p-8 rounded-[2.5rem] border border-border-ghost shadow-ambient transition-all group relative overflow-hidden">
                               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                 <ShoppingCart className="w-12 h-12 text-indigo-600 -rotate-12" />
+                                 <ShoppingCart className="w-12 h-12 text-primary -rotate-12" />
                               </div>
                               <div className="flex flex-col h-full justify-between">
                                 <div>
-                                  <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-500/5 px-3 py-1 rounded-lg border border-indigo-500/10">ORDER #{order.orderId.split("-")[0].toUpperCase()}</span>
+                                  <span className="badge badge-primary">ORDER #{order.orderId.split("-")[0].toUpperCase()}</span>
                                   <h4 className="text-xl font-black text-foreground mt-4 tracking-tight">{order.customer}</h4>
                                   <p className="text-xs font-bold text-muted-foreground mt-1 flex items-center gap-2">
                                      <Calendar className="w-3.5 h-3.5 opacity-40" /> Booked on {new Date(order.orderDate).toLocaleDateString('en-IN', { month: "short", day: "2-digit" })}
@@ -434,7 +436,7 @@ export function ItemBreakdownModal({
                                       <span className="text-2xl font-black text-foreground">{order.quantity} Units</span>
                                    </div>
                                    <div className="flex flex-col items-end">
-                                      <span className={`px-4 py-1.5 rounded-xl font-black text-[10px] uppercase tracking-widest ${order.status === 'pending' ? 'bg-warning/10 text-warning border border-warning/10' : 'bg-primary/10 text-primary border border-primary/10'}`}>
+                                      <span className={`badge ${order.status === 'pending' ? 'badge-warning' : 'badge-primary'}`}>
                                          {order.status}
                                       </span>
                                    </div>
@@ -444,7 +446,7 @@ export function ItemBreakdownModal({
                           )) : (
                             <div className="col-span-full bg-surface-low/30 rounded-[2.5rem] border border-border-ghost border-dashed py-16 text-center">
                                <ShoppingCart className="w-12 h-12 text-muted-foreground opacity-10 mx-auto mb-4" />
-                               <p className="text-xs font-bold text-muted-foreground italic tracking-tight">No active customer reservations.</p>
+                               <p className="text-xs font-bold text-muted-foreground italic tracking-tight">No active reservations.</p>
                             </div>
                           )}
                         </div>
@@ -455,7 +457,7 @@ export function ItemBreakdownModal({
              </div>
            ) : (
               <div className="py-32 flex flex-col items-center justify-center text-center gap-8 group">
-                <div className="w-24 h-24 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center  group-hover:rotate-6 transition-all duration-700">
+                <div className="w-24 h-24 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center transition-all duration-700">
                   <Layers className="w-12 h-12 opacity-20" />
                 </div>
                 <div>
@@ -468,7 +470,7 @@ export function ItemBreakdownModal({
   
         <footer className="px-12 py-10 bg-white border-t border-border-ghost shrink-0 flex flex-col sm:flex-row justify-between items-center gap-6">
            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center text-success">
+              <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center text-success border border-success/10">
                  <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
@@ -478,7 +480,7 @@ export function ItemBreakdownModal({
            </div>
            <button 
              onClick={onClose}
-             className="w-full sm:w-auto px-12 py-4 bg-foreground text-white rounded-[1.25rem] font-black shadow-2xl   transition-all text-[11px] uppercase tracking-[0.25em]"
+             className="btn btn-primary px-12 h-14"
            >
               Dismiss Breakdown
            </button>

@@ -65,16 +65,16 @@ export default async function TransactionsPage() {
              <span className="opacity-30">/</span>
              <span className="text-primary">Activity Log</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Activity Log</h1>
+          <h1 className="heading-xl tracking-tight">Activity Log</h1>
           <p className="text-muted-foreground mt-2 font-medium">A list of every time items were moved or changed.</p>
         </div>
         <ExportButton data={transactions} />
       </header>
 
-      <div className="card-premium !p-0 overflow-hidden">
+      <div className="table-container !p-0">
         <div className="px-8 py-4 border-b border-border-ghost bg-surface-low/30 flex items-center justify-between">
-           <h3 className="text-[11px] font-black text-foreground uppercase tracking-wider">Recent Activity</h3>
-           <div className="badge border-none bg-white shadow-sm text-[9px] px-2.5 h-6">
+           <h3 className="heading-md uppercase tracking-wider">Recent Activity</h3>
+           <div className="badge badge-neutral">
               {transactions.length} RECORDS
            </div>
         </div>
@@ -92,15 +92,15 @@ export default async function TransactionsPage() {
             </thead>
             <tbody className="divide-y divide-border-ghost">
               {transactions.length > 0 ? transactions.map((tx: any) => (
-                <tr key={tx.id} className="hover:bg-surface-low/30 transition-all group border-b border-border-ghost last:border-0">
-                  <td className="px-8 py-5">
+                <tr key={tx.id} className="table-row">
+                  <td className="table-cell">
                     <div className="flex items-center gap-4">
                       {tx.type.includes("IN") || tx.type === "PURCHASE" ? (
-                        <div className="w-9 h-9 rounded-lg bg-success/10 text-success flex items-center justify-center shadow-inner">
+                        <div className="w-9 h-9 rounded-lg bg-success/10 text-success flex items-center justify-center shadow-inner transition-colors">
                           <ArrowDownLeft className="w-4 h-4" />
                         </div>
                       ) : (
-                        <div className="w-9 h-9 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center shadow-inner">
+                        <div className="w-9 h-9 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center shadow-inner transition-colors">
                           <ArrowUpRight className="w-4 h-4" />
                         </div>
                       )}
@@ -110,13 +110,13 @@ export default async function TransactionsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-8 py-5">
+                  <td className="table-cell">
                     <div className="flex flex-col">
                       <p className="font-bold text-foreground text-xs leading-tight">{tx.item.name}</p>
                       <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {tx.item.sku}</p>
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-right">
+                  <td className="table-cell text-right">
                     <span className={cn(
                       "text-base font-black tracking-tight",
                       tx.quantity > 0 ? "text-success" : "text-foreground"
@@ -124,7 +124,7 @@ export default async function TransactionsPage() {
                       {tx.quantity > 0 ? "+" : ""}{tx.quantity}
                     </span>
                   </td>
-                  <td className="px-8 py-5">
+                  <td className="table-cell">
                     {tx.rack ? (
                        <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary transition-all" />
@@ -133,10 +133,10 @@ export default async function TransactionsPage() {
                           </span>
                        </div>
                     ) : (
-                        <span className="badge bg-surface-low text-muted-foreground text-[8px] h-5 border-none">MOVING</span>
+                        <span className="badge badge-neutral">MOVING</span>
                     )}
                   </td>
-                  <td className="px-8 py-5">
+                  <td className="table-cell">
                     {tx.customer ? (
                       <div className="flex items-center gap-2">
                         <UsersIcon className="w-3.5 h-3.5 text-indigo-500 opacity-40 group-hover:opacity-100 transition-all" />
@@ -151,7 +151,7 @@ export default async function TransactionsPage() {
                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-30 italic">Stock Change</span>
                     )}
                   </td>
-                  <td className="px-8 py-5 text-right">
+                  <td className="table-cell text-right">
                       <p className="text-[11px] font-black text-foreground">
                         {new Date(tx.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </p>

@@ -19,6 +19,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+import { showToast } from "@/lib/toast";
+
 export default function DispatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
@@ -26,7 +28,6 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchOrder() {
@@ -38,11 +39,11 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
           if (found) {
             setOrder(found);
           } else {
-            setError("Dispatch order not found.");
+            showToast("Dispatch order record not found.", "error");
           }
         }
       } catch (err) {
-        setError("Failed to load dispatch details.");
+        showToast("Failed to load dispatch details.", "error");
       } finally {
         setLoading(false);
       }
@@ -52,7 +53,6 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
 
   const handleDispatch = async () => {
     setSubmitting(true);
-    setError("");
 
     try {
       const res = await fetch(`/api/dispatch-orders/${id}/dispatch`, {
@@ -60,14 +60,15 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
       });
 
       if (res.ok) {
+        showToast("Consignment dispatch confirmed.", "success");
         router.refresh();
         window.location.reload();
       } else {
         const data = await res.json();
-        setError(data.error || "Failed to confirm dispatch.");
+        showToast(data.error || "Failed to confirm dispatch.", "error");
       }
     } catch (err) {
-      setError("Network or server failure.");
+      showToast("Network or server failure during dispatch.", "error");
     } finally {
       setSubmitting(false);
     }
@@ -75,19 +76,19 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-bold animate-pulse">Retrieving Fulfillment Mandate...</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-xs animate-pulse">Retrieving Fulfillment Mandate...</p>
       </div>
     );
   }
 
-  if (error || !order) {
+  if (!order) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[40vh] gap-6">
-        <AlertCircle className="w-12 h-12 text-error" />
-        <p className="text-lg font-bold text-foreground">{error || "Order not found"}</p>
-        <Link href="/orders/dispatch" className="btn-secondary">Back to Dispatch List</Link>
+      <div className="flex flex-col items-center justify-center min-h-[40vh] gap-8">
+        <AlertCircle className="w-16 h-16 text-error opacity-20" />
+        <p className="text-lg font-black text-foreground uppercase tracking-widest">Order data unavailable</p>
+        <Link href="/orders/dispatch" className="btn btn-neutral px-8">Back to Dispatch List</Link>
       </div>
     );
   }
@@ -95,19 +96,19 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
   const isDispatched = order.status === "dispatched";
 
   return (
-    <div className="p-8 lg:p-12 space-y-10 max-w-7xl mx-auto pb-24">
+    <div className="p-8 lg:p-12 space-y-12 max-w-7xl mx-auto pb-24">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div className="space-y-4">
-          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+        <div className="space-y-6">
+          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit">
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dispatch Registry</span>
           </Link>
-          <div className="flex items-center gap-4">
-             <h1 className="text-4xl font-black tracking-tight text-foreground">DO #{order.id.split('-')[0].toUpperCase()}</h1>
+          <div className="flex items-center gap-6">
+             <h1 className="heading-xl tracking-tight tabular-nums">DO #{order.id.split('-')[0].toUpperCase()}</h1>
              <span className={cn(
-                "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border",
-                isDispatched ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-orange-50 text-orange-600 border-orange-100"
+                "badge !px-4 !py-1.5",
+                isDispatched ? "badge-success" : "badge-warning"
              )}>
                 {order.status}
              </span>
@@ -116,36 +117,38 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Left Column: Items */}
-        <div className="lg:col-span-8 space-y-8">
-           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost">
-              <h3 className="text-xl font-black text-foreground mb-8 border-b border-border-ghost pb-6 flex items-center gap-3">
-                 <Package className="w-6 h-6 text-primary" />
+        <div className="lg:col-span-8 space-y-10">
+           <div className="bg-white p-10 rounded-[3rem] shadow-ambient border border-border-ghost">
+              <h3 className="heading-md mb-10 border-b border-border-ghost pb-8 flex items-center gap-4">
+                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
+                    <Package className="w-6 h-6" />
+                 </div>
                  Items for Fulfillment
               </h3>
               
               <div className="space-y-6">
                  {order.items.map((item: any) => (
-                    <div key={item.id} className="p-6 bg-surface-low/30 rounded-3xl border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-6">
-                       <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-white border border-border-ghost flex items-center justify-center font-bold text-primary">
+                    <div key={item.id} className="p-8 bg-surface-low/30 rounded-[2rem] border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-8 group">
+                       <div className="flex items-center gap-6">
+                          <div className="w-14 h-14 rounded-2xl bg-white border border-border-ghost flex items-center justify-center font-black text-primary text-xl shadow-sm group-hover:border-primary/30 transition-colors">
                              {item.item.sku[0]}
                           </div>
                           <div>
-                             <p className="font-black text-foreground">{item.item.name}</p>
-                             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{item.item.sku}</p>
+                             <p className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{item.item.name}</p>
+                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">{item.item.sku}</p>
                           </div>
                        </div>
                        
-                       <div className="flex items-center gap-12 text-center">
+                       <div className="flex items-center gap-16 text-center">
                           <div>
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Target Quantity</p>
-                             <p className="text-lg font-black text-foreground">{item.quantity} {item.item.unit}</p>
+                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Target Quantity</p>
+                             <p className="text-xl font-black text-foreground tabular-nums">{item.quantity} <span className="text-xs font-bold opacity-40 uppercase tracking-widest ml-1">{item.item.unit}</span></p>
                           </div>
                           <div>
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Unit Price</p>
-                             <p className="text-lg font-black text-foreground">₹{item.sellingPrice.toLocaleString()}</p>
+                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Unit Price</p>
+                             <p className="text-xl font-black text-primary tabular-nums">₹{item.sellingPrice.toLocaleString()}</p>
                           </div>
                        </div>
                     </div>
@@ -155,76 +158,74 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
         </div>
 
         {/* Right Column: Fulfillment */}
-        <div className="lg:col-span-4 space-y-8">
-           <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
-              <h3 className="text-xl font-black text-foreground border-b border-border-ghost pb-4">Consignment Action</h3>
+        <div className="lg:col-span-4 space-y-10">
+           <div className="bg-white p-10 rounded-[3rem] shadow-ambient border border-border-ghost space-y-10">
+              <h3 className="heading-md border-b border-border-ghost pb-6">Consignment Action</h3>
               
               <div className="space-y-6">
-                 <div className="p-6 rounded-2xl bg-indigo-50 border border-indigo-100">
-                    <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-2">Recipient Entity</p>
-                    <p className="text-lg font-black text-indigo-900">{order.customer.name}</p>
-                    <p className="text-xs font-medium text-indigo-700/70 mt-1">{order.customer.email || "Verification Pending"}</p>
+                 <div className="p-8 rounded-[2rem] bg-indigo-50 border border-indigo-100 shadow-sm">
+                    <p className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-3">Recipient Entity</p>
+                    <p className="text-xl font-black text-indigo-900 tracking-tight">{order.customer.name}</p>
+                    <p className="text-xs font-bold text-indigo-700/60 mt-2 uppercase tracking-tight">{order.customer.email || "Verification Pending"}</p>
                  </div>
 
-                 <div className="p-6 rounded-2xl bg-blue-50 border border-blue-100">
-                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-2">Mode of Payment</p>
-                    <p className="text-lg font-black text-blue-900">{order.paymentMode || "Cash"}</p>
+                 <div className="p-8 rounded-[2rem] bg-blue-50 border border-blue-100 shadow-sm">
+                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-3">Mode of Payment</p>
+                    <p className="text-xl font-black text-blue-900 tracking-tight">{order.paymentMode || "Cash"}</p>
                  </div>
 
                  {order.collectedBy && (
-                   <div className="p-6 rounded-2xl bg-purple-50 border border-purple-100">
-                      <p className="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-2">Collected By (Customer)</p>
-                      <p className="text-lg font-black text-purple-900">{order.collectedBy}</p>
+                   <div className="p-8 rounded-[2rem] bg-purple-50 border border-purple-100 shadow-sm">
+                      <p className="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-3">Collected By (Customer)</p>
+                      <p className="text-xl font-black text-purple-900 tracking-tight">{order.collectedBy}</p>
                    </div>
                  )}
 
                  {order.dispatchedBy && (
-                   <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                      <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-2">Dispatched By (Our Staff)</p>
-                      <p className="text-lg font-black text-slate-900">{order.dispatchedBy}</p>
+                   <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 shadow-sm">
+                      <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] mb-3">Dispatched By (Our Staff)</p>
+                      <p className="text-xl font-black text-slate-900 tracking-tight">{order.dispatchedBy}</p>
                    </div>
                  )}
 
                  {order.transportMode && (
-                   <div className="p-6 rounded-2xl bg-amber-50 border border-amber-100">
-                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2">Transport Mode</p>
-                      <p className="text-lg font-black text-amber-900">{order.transportMode}</p>
+                   <div className="p-8 rounded-[2rem] bg-amber-50 border border-amber-100 shadow-sm">
+                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">Transport Mode</p>
+                      <p className="text-xl font-black text-amber-900 tracking-tight">{order.transportMode}</p>
                    </div>
                  )}
 
                  {isDispatched ? (
-                    <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center gap-4">
-                       <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-                       <p className="text-sm font-black text-emerald-900">Shipment confirmed and issued.</p>
+                    <div className="p-8 rounded-[2rem] bg-emerald-50 border border-emerald-100 flex items-center gap-5">
+                       <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 border border-emerald-200">
+                          <CheckCircle2 className="w-6 h-6" />
+                       </div>
+                       <p className="text-sm font-black text-emerald-900 leading-tight">Shipment confirmed and issued.</p>
                     </div>
                  ) : (
-                    <div className="space-y-4">
-                       {error && (
-                          <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-xs font-bold flex items-center gap-2">
-                             <AlertCircle className="w-4 h-4" />
-                             {error}
-                          </div>
-                       )}
+                    <div className="space-y-6 pt-4">
                        <button 
                          onClick={handleDispatch}
                          disabled={submitting}
-                         className="w-full py-4 bg-primary text-white rounded-2xl font-black text-[15px] shadow-xl   transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                         className="btn btn-primary w-full h-16 shadow-glow-primary !text-[15px] !rounded-[1.5rem]"
                        >
-                         {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                         {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Send className="w-6 h-6" />}
                          {submitting ? "Processing..." : "Confirm Outward Dispatch"}
                        </button>
-                       <p className="text-[10px] text-center text-muted-foreground font-bold uppercase tracking-widest">
-                          Final action: This will deduct stock from inventory.
+                       <p className="text-[10px] text-center text-muted-foreground font-black uppercase tracking-[0.2em] px-4 leading-relaxed opacity-70">
+                          Final action: This will permanently deduct stock from active inventory batches.
                        </p>
                     </div>
                  )}
               </div>
            </div>
 
-           <div className="bg-surface-lowest p-8 rounded-[2.5rem] border border-border-ghost shadow-ambient">
+           <div className="card-premium !p-8 bg-surface-low border-border-ghost shadow-ambient">
               <div className="flex items-center gap-3 mb-4">
-                 <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                 <h4 className="text-sm font-black text-foreground uppercase tracking-tight">Integrity Check</h4>
+                 <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                    <ShieldCheck className="w-4 h-4" />
+                 </div>
+                 <h4 className="text-[10px] font-black text-foreground uppercase tracking-[0.2em]">Integrity Check</h4>
               </div>
               <p className="text-xs font-medium text-muted-foreground leading-relaxed">
                  All items in this consignment have been pre-reserved at the time of order booking. Confirmation will finalize the decrement from the physical ledger.

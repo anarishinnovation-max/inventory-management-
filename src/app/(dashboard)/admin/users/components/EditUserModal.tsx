@@ -62,14 +62,14 @@ export default function EditUserModal({ user, onClose, onSuccess }: EditUserModa
         <div className="p-8 flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center border border-secondary/10">
                 <UserCircle className="w-6 h-6 text-secondary" />
               </div>
-              <h2 className="text-xl font-bold">Edit Member</h2>
+              <h2 className="heading-md">Edit Member</h2>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-surface-muted rounded-xl transition-colors"
+              className="btn btn-ghost h-10 w-10 !p-0 rounded-xl"
             >
               <X className="w-6 h-6" />
             </button>
@@ -77,59 +77,54 @@ export default function EditUserModal({ user, onClose, onSuccess }: EditUserModa
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold ml-1">Full Name</label>
+              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">Full Name</label>
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full p-4 bg-surface-muted border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                className="input-field h-14"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold ml-1">Username</label>
+              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">Username</label>
               <input
                 type="text"
                 required
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s+/g, '') })}
-                className="w-full p-4 bg-surface-muted border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                className="input-field h-14"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold ml-1 text-muted-foreground">Access Level (Role)</label>
-              <div className="grid grid-cols-3 gap-2 p-1.5 bg-surface-muted rounded-2xl border border-border-ghost">
+              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">Access Level (Role)</label>
+              <select
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                className="input-field h-14"
+              >
                 {Object.values(UserRole).map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, role: r })}
-                    className={`py-2 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all ${
-                      formData.role === r 
-                        ? "bg-white text-primary shadow-sm border border-border-ghost" 
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {r}
-                  </button>
+                  <option key={r} value={r}>
+                    {r.charAt(0) + r.slice(1).toLowerCase()}
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
 
             <div className="flex gap-3 mt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 p-4 border border-border-ghost rounded-2xl font-bold hover:bg-surface-muted transition-all"
+                className="btn btn-neutral flex-1 h-14"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-[2] p-4 bg-secondary text-white rounded-2xl font-bold hover:opacity-90 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                className="btn btn-primary flex-[2] h-14"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

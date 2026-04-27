@@ -66,12 +66,15 @@ export function SearchableSelect({
     <div className={cn("relative w-full", className, isOpen && "z-50")} ref={containerRef}>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-surface-lowest border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer flex items-center justify-between transition-all hover:bg-surface-lowest hover:border-primary/20 shadow-sm"
+        className={cn(
+          "input-field flex items-center justify-between gap-3 text-sm transition-all duration-300 cursor-pointer",
+          isOpen && "border-primary/60 ring-4 ring-primary/10 shadow-glow bg-surface-lowest",
+        )}
       >
-        <span className={cn("truncate mr-2", !selectedItem && "text-muted-foreground")}>
+        <span className={cn("truncate mr-2", !selectedItem && "text-muted-foreground font-medium", selectedItem && "font-black")}>
           {getDisplayValue()}
         </span>
-        <ChevronDown className={cn("w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-300", isOpen && "rotate-180")} />
+        <ChevronDown className={cn("w-4 h-4 text-muted-foreground shrink-0 transition-colors duration-300", isOpen && "text-primary")} />
       </div>
 
       {isOpen && (
@@ -85,7 +88,7 @@ export function SearchableSelect({
                 placeholder="Type to search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-surface-lowest border border-border-ghost rounded-xl pl-10 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-primary outline-none"
+                className="input-field h-12 pl-11 pr-4 text-sm"
               />
             </div>
           </div>
@@ -104,34 +107,31 @@ export function SearchableSelect({
                       setSearch("");
                     }}
                     className={cn(
-                      "flex items-center justify-between px-4 py-3 rounded-2xl cursor-pointer transition-all mb-1 last:mb-0",
-                      isSelected ? "bg-primary text-white shadow-lg shadow-primary/20" : "hover:bg-surface-low text-foreground"
+                      "flex items-center justify-between px-4 py-3.5 rounded-xl cursor-pointer transition-all",
+                      isSelected 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-foreground hover:bg-surface-low"
                     )}
                   >
-                    <div className="flex flex-col min-w-0">
+                    <div className="flex-1 min-w-0">
                       {renderItem ? renderItem(item) : (
-                        <>
-                          {typeof item === 'string' ? (
-                            <span className="text-sm font-bold truncate">{item}</span>
-                          ) : (
-                            <>
-                              {item.sku && <span className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-0.5 truncate">{item.sku}</span>}
-                              <span className="text-sm font-bold truncate">{item.name || item.label}</span>
-                            </>
-                          )}
-                        </>
+                        typeof item === 'string' ? (
+                          <p className="text-[11px] font-black uppercase tracking-widest truncate">{item}</p>
+                        ) : (
+                          <div className="flex flex-col">
+                            <p className="text-[11px] font-black uppercase tracking-widest truncate">{item.name || item.label}</p>
+                            {item.sku && <p className="text-[9px] font-bold text-muted-foreground uppercase mt-0.5">SKU: {item.sku}</p>}
+                          </div>
+                        )
                       )}
                     </div>
-                    {isSelected && <Check className="w-4 h-4 shrink-0 ml-2" />}
+                    {isSelected && <Check className="w-4 h-4 shrink-0" />}
                   </div>
                 );
               })
             ) : (
               <div className="p-8 text-center">
-                <div className="w-12 h-12 bg-surface-low rounded-2xl flex items-center justify-center text-muted-foreground mx-auto mb-3 opacity-30">
-                  <Search className="w-6 h-6" />
-                </div>
-                <p className="text-xs font-bold text-muted-foreground">No matches found</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">No items found</p>
               </div>
             )}
           </div>

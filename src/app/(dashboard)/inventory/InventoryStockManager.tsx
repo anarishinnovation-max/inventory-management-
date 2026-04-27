@@ -100,32 +100,32 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
   }
 
   return (
-    <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
-      <div className="flex items-center justify-between border-b border-border-ghost pb-4">
-        <h3 className="text-xl font-black flex items-center gap-3 text-foreground">
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+    <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-8">
+      <div className="flex items-center justify-between border-b border-border-ghost pb-6">
+        <h3 className="heading-md flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
              <MapPin className="w-5 h-5" />
           </div>
-          Where Items Are
+          Storage Locations
         </h3>
         <button 
           type="button"
           onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-surface-low hover:bg-surface-high rounded-xl text-xs font-black transition-colors border border-border-ghost text-foreground"
+          className="btn btn-neutral h-10 px-4 text-xs"
         >
-          {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Add New Spot</>}
+          {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Add Spot</>}
         </button>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-xs font-bold flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-xs font-black flex items-center gap-2 uppercase tracking-widest">
           <AlertCircle className="w-4 h-4" />
           {error}
         </div>
       )}
 
       {message && (
-        <div className="p-4 rounded-xl bg-success/10 border border-success/20 text-success text-xs font-bold flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-success/10 border border-success/20 text-success text-xs font-black flex items-center gap-2 uppercase tracking-widest">
           <CheckCircle2 className="w-4 h-4" />
           {message}
         </div>
@@ -134,14 +134,14 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
       <div className="space-y-4">
         {/* Add New Location Form */}
         {showAddForm && (
-          <div className="p-6 bg-primary/5 rounded-2xl border border-primary/20 space-y-4 animate-in fade-in slide-in-from-top-2">
+          <div className="p-8 bg-primary/5 rounded-[2rem] border border-primary/10 space-y-6 animate-in fade-in slide-in-from-top-2">
              <div className="grid grid-cols-1 gap-4">
-                <div className="space-y-1.5">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Select Rack Number</label>
+                <div className="space-y-2">
+                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Select Target Rack</label>
                    <select 
                       value={newRackId}
                       onChange={(e) => setNewRackId(e.target.value)}
-                      className="w-full px-4 py-3 bg-white border border-border-ghost rounded-xl text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-primary transition-all"
+                      className="input-field h-14"
                    >
                       <option value="">Choose Rack...</option>
                       {allRacks
@@ -156,10 +156,10 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                 type="button"
                 disabled={!newRackId || updatingId === "new"}
                 onClick={() => handleUpdateStock(newRackId, 0)}
-                className="w-full py-3 bg-primary text-white rounded-xl text-xs font-black shadow-lg shadow-primary/20   transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="btn btn-primary w-full h-14"
              >
-                {updatingId === "new" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Finish Adding
+                {updatingId === "new" ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                Confirm Rack Assignment
              </button>
           </div>
         )}
@@ -168,14 +168,14 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
         {stocks.length > 0 ? (
           <div className="grid grid-cols-1 gap-4">
             {stocks.map((stock) => (
-              <div key={stock.id} className="p-5 bg-surface-low rounded-2xl border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-6 group hover:border-primary/20 transition-colors">
+              <div key={stock.id} className="p-5 bg-surface-low/30 rounded-[1.5rem] border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-6 group hover:border-primary/20 transition-all">
                 <div className="flex items-center gap-4 w-full md:w-auto">
-                   <div className="w-12 h-12 rounded-xl bg-white border border-border-ghost flex items-center justify-center text-primary shadow-sm">
+                   <div className="w-12 h-12 rounded-xl bg-surface-lowest border border-border-ghost flex items-center justify-center text-primary shadow-sm">
                       <span className="text-xs font-black text-foreground">{stock.rackNumber}</span>
                    </div>
                    <div>
                       <p className="text-sm font-black text-foreground">Rack {stock.rackNumber}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Rack Spot</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Physical Placement</p>
                    </div>
                 </div>
 
@@ -189,7 +189,7 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                            handleUpdateStock(stock.rackId, 0, stock.id);
                         }
                       }}
-                      className="p-2.5 hover:bg-error/10 text-muted-foreground hover:text-error rounded-xl transition-all"
+                      className="btn btn-ghost h-10 w-10 !p-0 rounded-xl bg-error/5 text-error hover:bg-error/10 border-error/10"
                    >
                       <Trash2 className="w-4 h-4" />
                    </button>
@@ -198,12 +198,12 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
             ))}
           </div>
         ) : !showAddForm && (
-          <div className="p-12 border-2 border-dashed border-border-ghost rounded-4xl flex flex-col items-center text-center">
-             <div className="w-16 h-16 rounded-full bg-surface-low flex items-center justify-center text-muted-foreground mb-4">
-                <SquareStack className="w-8 h-8 opacity-20" />
+          <div className="p-16 border-2 border-dashed border-border-ghost rounded-[2.5rem] flex flex-col items-center text-center">
+             <div className="w-20 h-20 rounded-full bg-surface-low flex items-center justify-center text-muted-foreground mb-6">
+                <SquareStack className="w-10 h-10 opacity-20" />
              </div>
-             <p className="font-black text-foreground">No Rack spots yet.</p>
-             <p className="text-sm font-medium text-muted-foreground mt-1 max-w-xs">Add this item to a Rack to start tracking.</p>
+             <p className="text-lg font-black text-foreground">No Locations Assigned</p>
+             <p className="text-sm font-medium text-muted-foreground mt-2 max-w-xs leading-relaxed">This item hasn't been assigned to a physical rack yet. Use the button above to add a storage spot.</p>
           </div>
         )}
       </div>

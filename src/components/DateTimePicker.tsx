@@ -168,11 +168,14 @@ export function PremiumDateTimePicker({
     <div className={cn("relative w-full", className, isOpen && "z-50")} ref={containerRef}>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-surface-lowest border border-border-ghost rounded-2xl px-5 py-4 font-black text-[15px] focus:ring-2 focus:ring-primary outline-none cursor-pointer flex items-center justify-between transition-all hover:bg-surface-lowest hover:border-primary/20 shadow-sm group"
+        className={cn(
+          "input-field flex items-center justify-between gap-3 text-sm transition-all duration-300 cursor-pointer",
+          isOpen && "border-primary/60 ring-4 ring-primary/10 shadow-glow bg-surface-lowest",
+        )}
       >
         <div className="flex items-center gap-3">
           <CalendarIcon className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-          <span className={cn("truncate", !dateValue && "text-muted-foreground")}>
+          <span className={cn("truncate font-black", !dateValue && "text-muted-foreground font-medium")}>
             {dateValue ? dateValue.toLocaleString('en-IN', { 
               day: '2-digit', month: 'short', year: 'numeric',
               hour: '2-digit', minute: '2-digit', hour12: true 
@@ -183,8 +186,94 @@ export function PremiumDateTimePicker({
 
       {isOpen && (
         <div className="absolute z-[100] w-[320px] mt-2 bg-surface-lowest border border-border-ghost rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-          {renderCalendar()}
-          {renderTimePicker()}
+          <div className="p-5 space-y-4">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="heading-md uppercase tracking-widest">{viewDate.toLocaleString('default', { month: 'long' })} {viewDate.getFullYear()}</h4>
+              <div className="flex gap-1">
+                <button 
+                  type="button"
+                  onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1))}
+                  className="btn btn-ghost h-9 w-9 !p-0 rounded-lg"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1))}
+                  className="btn btn-ghost h-9 w-9 !p-0 rounded-lg"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-7 gap-1 text-center">
+              {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                <div key={day} className="text-[10px] font-black text-muted-foreground uppercase py-2">{day}</div>
+              ))}
+              {(() => {
+                const year = viewDate.getFullYear();
+                const month = viewDate.getMonth();
+                const days = daysInMonth(year, month);
+                const firstDay = firstDayOfMonth(year, month);
+                const calendarDays = [];
+                for (let i = 0; i < firstDay; i++) calendarDays.push(<div key={`empty-${i}`} />);
+                for (let d = 1; d <= days; d++) {
+                  const isSelected = dateValue?.getDate() === d && dateValue?.getMonth() === month && dateValue?.getFullYear() === year;
+                  const isToday = new Date().getDate() === d && new Date().getMonth() === month && new Date().getFullYear() === year;
+                  const currentDayDate = new Date(year, month, d);
+                  const isDisabled = minDate ? currentDayDate < new Date(minDate.setHours(0,0,0,0)) : false;
+                  calendarDays.push(
+                    <button
+                      key={d}
+                      type="button"
+                      disabled={isDisabled}
+                      onClick={() => handleDateSelect(d)}
+                      className={cn(
+                        "w-9 h-9 rounded-xl text-xs font-bold transition-all flex items-center justify-center relative",
+                        isSelected ? "bg-primary text-white shadow-lg shadow-primary/30" : "hover:bg-surface-low text-foreground",
+                        isToday && !isSelected && "text-primary border border-primary/20",
+                        isDisabled && "opacity-20 cursor-not-allowed grayscale"
+                      )}
+                    >
+                      {d}
+                      {isToday && <div className="absolute bottom-1.5 w-1 h-1 bg-primary rounded-full" />}
+                    </button>
+                  );
+                }
+                return calendarDays;
+              })()}
+            </div>
+          </div>
+          
+          <div className="p-5 bg-surface-low/30 border-t border-border-ghost flex items-center justify-center gap-6">
+            <div className="flex items-center gap-3">
+              <Clock className="w-4 h-4 text-primary" />
+              <div className="flex items-center gap-2">
+                <input 
+                  type="number" 
+                  min="0" max="23" 
+                  value={(dateValue ? dateValue.getHours() : 12).toString().padStart(2, '0')}
+                  onChange={(e) => handleTimeChange('hours', parseInt(e.target.value))}
+                  className="input-field w-14 h-10 text-center font-mono p-0"
+                />
+                <span className="font-black text-muted-foreground">:</span>
+                <input 
+                  type="number" 
+                  min="0" max="59" 
+                  value={(dateValue ? dateValue.getMinutes() : 0).toString().padStart(2, '0')}
+                  onChange={(e) => handleTimeChange('minutes', parseInt(e.target.value))}
+                  className="input-field w-14 h-10 text-center font-mono p-0"
+                />
+              </div>
+            </div>
+            <button 
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="btn btn-primary h-10 px-4 text-[10px] uppercase tracking-widest"
+            >
+              Set
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -59,28 +59,28 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
         <div className="p-10 flex flex-col gap-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/10">
                 <UserPlus className="w-7 h-7 text-primary" />
               </div>
               <div>
-                <h2 className="text-2xl font-black">Add Team Member</h2>
+                <h2 className="heading-md">Add Team Member</h2>
                 <p className="text-sm text-muted-foreground font-medium text-balance">Create a new account for your staff member.</p>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-3 hover:bg-surface-muted rounded-2xl transition-colors"
+              className="btn btn-ghost h-12 w-12 !p-0 rounded-2xl"
             >
               <X className="w-7 h-7 text-muted-foreground" />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
                {/* Name */}
               <div className="flex flex-col gap-2 col-span-2">
-                <label className="text-sm font-bold ml-1 flex items-center gap-2">
-                  <User className="w-4 h-4 text-primary" />
+                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                  <User className="w-3.5 h-3.5 text-primary" />
                   Full Name
                 </label>
                 <input
@@ -89,14 +89,14 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. John Doe"
-                  className="w-full p-4 bg-surface-muted border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold"
+                  className="input-field h-14"
                 />
               </div>
 
               {/* Username */}
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold ml-1 flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-primary" />
+                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                  <Mail className="w-3.5 h-3.5 text-primary" />
                   Username
                 </label>
                 <input
@@ -105,20 +105,20 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   placeholder="e.g. jdoe"
-                  className="w-full p-4 bg-surface-muted border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold"
+                  className="input-field h-14"
                 />
               </div>
 
               {/* Role */}
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold ml-1 flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-primary" />
+                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                  <ShieldCheck className="w-3.5 h-3.5 text-primary" />
                   Role
                 </label>
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                  className="w-full p-4 bg-surface-muted border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold"
+                  className="input-field h-14"
                 >
                   <option value={UserRole.EMPLOYEE}>Employee</option>
                   <option value={UserRole.MANAGER}>Manager</option>
@@ -128,8 +128,8 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
 
               {/* Password */}
               <div className="flex flex-col gap-2 col-span-2">
-                <label className="text-sm font-bold ml-1 flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-primary" />
+                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                  <Lock className="w-3.5 h-3.5 text-primary" />
                   Initial Password
                 </label>
                 <input
@@ -138,7 +138,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="Set a secure password..."
-                  className="w-full p-4 bg-surface-muted border border-border-ghost rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold"
+                  className="input-field h-14"
                 />
               </div>
             </div>
@@ -147,14 +147,14 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 p-5 border border-border-ghost rounded-2xl font-black hover:bg-surface-muted transition-all"
+                className="btn btn-neutral flex-1 h-16"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-[2] p-5 bg-primary text-white rounded-2xl font-black hover:opacity-90 disabled:opacity-50 transition-all flex items-center justify-center gap-3 shadow-ambient-primary"
+                className="btn btn-primary flex-[2] h-16"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-6 h-6 animate-spin" />

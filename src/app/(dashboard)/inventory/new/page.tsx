@@ -74,7 +74,7 @@ export default function NewItemPage() {
       unit: formData.get("unit"),
       minStockLevel: parseFloat(formData.get("minStockLevel") as string),
       isCritical: isCritical,
-      rackId: formData.get("rackId"),
+      rackId: selectedRackId,
     };
 
     try {
@@ -99,193 +99,201 @@ export default function NewItemPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-8 lg:p-12 space-y-8 max-w-6xl mx-auto">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div className="space-y-2">
-          <Link href="/inventory" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit">
+    <div className="p-8 lg:p-12 max-w-7xl mx-auto pb-24">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="space-y-4">
+          <Link href="/inventory" className="flex items-center gap-2 text-primary font-bold text-sm hover:underline w-fit group">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Stock</span>
+            <span>Back to Inventory</span>
           </Link>
-          <h2 className="text-4xl font-black tracking-tight text-foreground">Add New Item</h2>
-          <p className="text-muted-foreground font-medium">Fill in the form to add a new item.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/inventory" className="px-6 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-low transition-colors rounded-xl border border-transparent hover:border-border-ghost">
-            Discard
-          </Link>
-          <button type="submit" disabled={loading || fetchingCategories} className="px-8 py-3 text-sm font-black text-white bg-linear-to-r from-primary to-indigo-600 rounded-xl shadow-lg hover:shadow-primary/20 transition-all   disabled:opacity-50 disabled:scale-100 flex items-center gap-2">
-            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            Save Item
-          </button>
+          <h1 className="heading-xl">Register New Item</h1>
+          <p className="text-muted-foreground text-lg font-medium">Create a new product entry in your catalog.</p>
         </div>
       </div>
 
-      {error && (
-         <div className="p-4 mb-6 rounded-2xl bg-error/10 border border-error/20 text-error font-bold flex items-center gap-3">
-            <ShieldCheck className="w-5 h-5 shrink-0" />
-            {error}
-         </div>
-      )}
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* Main Form Fields */}
+        <div className="lg:col-span-8 space-y-8">
+          <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost">
+            <div className="flex items-center gap-4 border-b border-border-ghost pb-6 mb-8">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
+                <Package className="w-6 h-6" />
+              </div>
+              <h3 className="heading-md">Basic Information</h3>
+            </div>
 
-      {/* Bento Grid Form Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Left Column: Primary Information */}
-        <div className="lg:col-span-7 space-y-8">
-          
-          <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
-            <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                 <Package className="w-5 h-5" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Item Name */}
+              <div className="md:col-span-2 group">
+                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Item Name</label>
+                <input
+                  name="name"
+                  type="text"
+                  required
+                  placeholder="e.g. Industrial Valve X-500"
+                  className="input-field h-14"
+                />
               </div>
-              Item Info
-            </h3>
-            
-            <div className="space-y-6">
-              <div>
-                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Item Name</label>
-                <input required name="name" className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-[15px] font-bold placeholder:text-muted-foreground/50 text-foreground" placeholder="e.g. Motor, Bolt, Wire" type="text" />
+
+              {/* SKU */}
+              <div className="group">
+                <div className="flex items-center gap-2 mb-3">
+                  <QrCode className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">SKU / Code</label>
+                </div>
+                <input
+                  name="sku"
+                  type="text"
+                  required
+                  placeholder="e.g. IV-500-RED"
+                  className="input-field h-14 font-mono"
+                />
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">SKU</label>
-                  <div className="relative">
-                    <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                    <input required name="sku" className="w-full pl-12 pr-4 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-[15px] font-bold font-mono text-foreground placeholder:text-muted-foreground/50" placeholder="LXT-9982-A" type="text" />
-                  </div>
+
+              {/* Category */}
+              <div className="group">
+                <div className="flex items-center gap-2 mb-3">
+                  <Settings className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">Category</label>
                 </div>
-                
-                <div>
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Unit</label>
-                  <SearchableSelect 
-                    items={[
-                      { id: "Pieces", name: "Piece (pcs)" },
-                      { id: "Kilograms", name: "Kilogram (kg)" },
-                      { id: "Boxes", name: "Box (box)" }
-                    ]}
-                    value={unit}
-                    onChange={(val) => setUnit(val)}
-                    placeholder="Select Unit"
-                  />
-                  <input type="hidden" name="unit" value={unit} />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">Category</label>
-                <div className="flex flex-wrap gap-2">
-                   {fetchingCategories ? (
-                       <div className="flex items-center gap-2 text-muted-foreground text-xs font-bold px-4 py-2">
-                           <Loader2 className="w-4 h-4 animate-spin" /> Fetching categories...
-                       </div>
-                   ) : categories.map(cat => (
-                      <button 
-                        key={cat.id} 
-                        type="button"
-                        onClick={() => setSelectedCategoryId(cat.id)}
-                        className={cn(
-                           "px-5 py-2.5 rounded-xl text-xs font-black transition-colors border",
-                           selectedCategoryId === cat.id 
-                               ? "border-primary bg-primary/10 text-primary" 
-                               : "border-border-ghost text-muted-foreground hover:bg-surface-low"
-                        )}
-                      >
-                         {cat.name}
-                      </button>
-                   ))}
-                   <button type="button" className="px-5 py-2.5 rounded-xl bg-surface-low text-muted-foreground text-xs font-black flex items-center gap-2 hover:bg-surface-high transition-colors">
-                    <span>+</span> New
-                  </button>
-                </div>
+                <SearchableSelect 
+                  items={categories}
+                  value={selectedCategoryId}
+                  onChange={(val) => setSelectedCategoryId(val)}
+                  placeholder="Select Category"
+                />
               </div>
             </div>
           </div>
 
-        </div>
-
-        {/* Right Column: Operational Controls */}
-        <div className="lg:col-span-5 space-y-8">
-          <div className="bg-surface-lowest p-8 rounded-4xl shadow-ambient border border-border-ghost space-y-8">
-            <h3 className="text-xl font-black flex items-center gap-3 text-foreground border-b border-border-ghost pb-4">
-              <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
-                 <Settings className="w-5 h-5" />
+          <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost">
+            <div className="flex items-center gap-4 border-b border-border-ghost pb-6 mb-8">
+              <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary border border-secondary/10">
+                <TrendingUp className="w-6 h-6" />
               </div>
-              Rules
-            </h3>
-            
-            {/* Stock Parameters */}
-            <div className="space-y-8">
-              <div>
-                <div className="flex justify-between items-end mb-3">
-                  <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest">Low Stock Warning</label>
-                  <span className="text-[10px] font-black text-error bg-error/10 px-2 py-1 rounded-md uppercase tracking-wider">Warning level</span>
-                </div>
-                <div className="relative">
-                  <input required name="minStockLevel" className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-xl focus:ring-2 focus:ring-primary outline-none text-xl font-black font-mono text-right text-foreground" type="number" defaultValue="25" min="0" />
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-3 font-bold">We will tell you when items go below this level.</p>
-              </div>
+              <h3 className="heading-md">Stock Control</h3>
+            </div>
 
-              {/* Toggle Component */}
-              <div className="flex items-center justify-between p-5 bg-surface-low rounded-2xl border border-border-ghost">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-[15px] font-black text-foreground">Critical Item</p>
-                    <span className="px-2 py-0.5 rounded-full border border-success/50 text-[10px] font-black text-success uppercase tracking-wider">New</span>
-                  </div>
-                  <p className="text-xs font-bold text-muted-foreground mt-0.5">Flag for priority replenishment</p>
-                </div>
-                <button 
-                  type="button" 
-                  onClick={() => setIsCritical(!isCritical)}
-                  className={cn(
-                     "w-14 h-7 rounded-full relative transition-colors duration-300",
-                     isCritical ? "bg-primary" : "bg-muted-foreground/30"
-                  )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Unit */}
+              <div className="group">
+                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Unit of Measurement</label>
+                <select 
+                  name="unit"
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                  className="input-field h-14"
                 >
-                  <div className={cn(
-                     "absolute top-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300",
-                     isCritical ? "right-1" : "left-1"
-                  )}></div>
-                </button>
+                  <option value="Pieces">Pieces (pcs)</option>
+                  <option value="Boxes">Boxes</option>
+                  <option value="Kgs">Kilograms (kg)</option>
+                  <option value="Meters">Meters (m)</option>
+                  <option value="Liters">Liters (L)</option>
+                </select>
               </div>
 
-              {/* Location Selector (Visual Only) */}
-              <div className="pt-4 border-t border-border-ghost">
-                <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4">Main Spot in Rack</label>
-                <div className="space-y-2">
-                  <SearchableSelect 
-                    items={racks.map(r => ({ id: r.id, name: `Rack ${r.rackNumber}` }))}
-                    value={selectedRackId}
-                    onChange={(val) => setSelectedRackId(val)}
-                    placeholder="Select Rack Location"
-                  />
-                  <input type="hidden" name="rackId" value={selectedRackId} />
-                </div>
+              {/* Min Stock Level */}
+              <div className="group">
+                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Low Stock Alert Level</label>
+                <input
+                  name="minStockLevel"
+                  type="number"
+                  min="0"
+                  required
+                  placeholder="e.g. 10"
+                  className="input-field h-14 font-mono"
+                />
               </div>
             </div>
           </div>
-
-
         </div>
-      </div>
 
-      {/* Bottom Sticky Footer */}
-      <div className="mt-12 flex flex-col md:flex-row items-center justify-between p-6 bg-surface-lowest rounded-2xl border border-border-ghost shadow-ambient gap-6">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-success/10 text-success rounded-xl">
-             <ShieldCheck className="w-6 h-6" />
+        {/* Sidebar: Metadata & Actions */}
+        <div className="lg:col-span-4 space-y-8">
+          <div className="bg-surface-lowest p-8 rounded-[2.5rem] shadow-ambient border border-border-ghost space-y-10">
+            <div className="flex items-center gap-4 border-b border-border-ghost pb-6">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="heading-md">Settings</h3>
+            </div>
+
+            <div className="space-y-8">
+              {/* Rack Assignment */}
+              <div className="group">
+                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Initial Rack Assignment</label>
+                <SearchableSelect 
+                  items={racks.map(r => ({ id: r.id, name: `Rack ${r.rackNumber}` }))}
+                  value={selectedRackId}
+                  onChange={(val) => setSelectedRackId(val)}
+                  placeholder="Select Rack Location"
+                />
+              </div>
+
+              {/* Critical Toggle */}
+              <div 
+                onClick={() => setIsCritical(!isCritical)}
+                className={cn(
+                  "flex items-center justify-between p-5 rounded-[1.5rem] border cursor-pointer transition-all",
+                  isCritical 
+                    ? "bg-error/5 border-error/20 text-error" 
+                    : "bg-surface-low/50 border-border-ghost text-muted-foreground hover:bg-surface-low"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+                    isCritical ? "bg-error/10" : "bg-muted/10"
+                  )}>
+                    <ShieldCheck className={cn("w-5 h-5", isCritical ? "text-error" : "text-muted-foreground")} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-widest">Mark as Critical</p>
+                    <p className="text-[10px] font-medium opacity-60">High priority monitoring</p>
+                  </div>
+                </div>
+                <div className={cn(
+                  "w-10 h-6 rounded-full relative transition-colors p-1",
+                  isCritical ? "bg-error" : "bg-muted/20"
+                )}>
+                  <div className={cn(
+                    "absolute top-1 w-4 h-4 rounded-full bg-white transition-all",
+                    isCritical ? "left-5" : "left-1"
+                  )} />
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-8 border-t border-border-ghost space-y-4">
+              {error && (
+                <p className="text-xs font-black text-error text-center mb-4 uppercase tracking-widest">{error}</p>
+              )}
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary w-full h-16"
+              >
+                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Register Item"}
+              </button>
+              <Link
+                href="/inventory"
+                className="btn btn-neutral w-full h-16 text-center flex items-center justify-center"
+              >
+                Discard Changes
+              </Link>
+            </div>
           </div>
-          <div>
-            <p className="text-[15px] font-black text-foreground">Ready to Register</p>
-            <p className="text-xs font-bold text-muted-foreground mt-0.5">Please fill all boxes. SKU must be new.</p>
+
+          {/* Help Card */}
+          <div className="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10">
+            <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-4">Quick Tip</h4>
+            <p className="text-sm font-medium text-muted-foreground leading-relaxed">
+              Registering an item only creates the catalog entry. To add physical stock, please create a <strong>Purchase Order</strong> or use the <strong>Inward Supply</strong> tool.
+            </p>
           </div>
         </div>
-      </div>
-
-    </form>
+      </form>
+    </div>
   );
 }
-

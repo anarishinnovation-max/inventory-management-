@@ -16,6 +16,7 @@ function cn(...inputs: ClassValue[]) {
 
 import { CustomerModal } from "./CustomerModal";
 import { CustomerSearch } from "./CustomerSearch";
+import SearchInput from "@/components/SearchInput";
 
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -73,22 +74,27 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
           <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
              <span>Home</span>
              <span className="opacity-30">/</span>
-             <span className="text-primary">Customers</span>
+             <span className="text-primary">CRM</span>
           </nav>
-          <h1 className="heading-xl tracking-tight">Our Customers</h1>
-          <p className="text-muted-foreground mt-2 font-medium">A list of everyone who buys from us.</p>
+          <h1 className="heading-xl tracking-tight">Customer Ledger</h1>
+          <p className="text-muted-foreground mt-2 font-medium">Tracking relationship history and order distributions.</p>
         </div>
         <div className="flex items-center gap-3">
-            <CustomerSearch />
+            <div className="w-80">
+                <SearchInput 
+                    defaultValue={q}
+                    placeholder="Search by Name or Email..."
+                />
+            </div>
             {(session.role === 'OWNER' || session.role === 'MANAGER') && <CustomerModal />}
         </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1 space-y-4">
-          <h2 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2 mb-2">
-            <Users className="w-3 h-3 text-primary" />
-            Customers List
+          <h2 className="heading-md uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 mb-2">
+            <Users className="w-4 h-4 text-primary" />
+            Active Clients
           </h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-1">
             {customers.map((customer: any) => (
@@ -96,14 +102,14 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                         <p className="font-bold text-foreground text-sm truncate">{customer.name}</p>
-                        <p className="text-[9px] font-black text-muted-foreground uppercase mt-1 tracking-widest truncate">{customer.contact || "No contact"}</p>
+                        <p className="text-[9px] font-black text-muted-foreground uppercase mt-1 tracking-widest truncate">{customer.email || customer.phone || "No contact"}</p>
                     </div>
                     <div className="w-8 h-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center font-black text-xs text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
                         {customer.name[0]}
                     </div>
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                  <span className="badge px-2 py-0.5 rounded-md bg-primary/5 text-primary border-primary/10 text-[9px]">
+                  <span className="badge badge-primary">
                     {customer.totalTransactions} Orders
                   </span>
                   <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
@@ -116,7 +122,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
 
         <div className="lg:col-span-3 space-y-6">
            <div className="flex items-center justify-between">
-             <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-3">
+             <h2 className="heading-md flex items-center gap-3">
                Customer Info
              </h2>
              <div className="flex items-center gap-2">
@@ -126,11 +132,11 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
              </div>
            </div>
 
-           <div className="card-premium !p-0 overflow-hidden">
+           <div className="table-container">
               <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead>
-                    <tr className="table-header">
+                <table className="w-full text-left border-collapse">
+                  <thead className="table-header">
+                    <tr>
                       <th className="table-cell-header">Customer</th>
                       <th className="table-cell-header">Phone/Email</th>
                       <th className="table-cell-header">Address</th>
@@ -140,8 +146,8 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
                     {customers.length > 0 ? customers.map((c: any) => (
-                      <tr key={c.id} className="hover:bg-surface-low/30 transition-all group cursor-pointer border-b border-border-ghost last:border-0">
-                        <td className="px-8 py-5">
+                      <tr key={c.id} className="table-row">
+                        <td className="table-cell">
                           <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-xl bg-linear-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20 text-xs">
                                {c.name[0]}
@@ -152,26 +158,23 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                             </div>
                           </div>
                         </td>
-                        <td className="px-8 py-5 text-xs font-bold text-foreground">
+                        <td className="table-cell text-xs font-bold text-foreground">
                             {c.contact || "—"}
                         </td>
-                        <td className="px-8 py-5">
+                        <td className="table-cell">
                           <div className="flex items-start gap-2 text-muted-foreground group-hover:text-foreground transition-colors max-w-[200px]">
                              <MapPin className="w-3 h-3 mt-0.5 shrink-0 opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all" />
                              <span className="text-xs font-medium line-clamp-1">{c.address || "No address yet"}</span>
                           </div>
                         </td>
-                        <td className="px-8 py-5">
+                        <td className="table-cell">
                            <div className="flex flex-col">
                               <span className="text-xs font-black text-foreground">{c.lastInteraction ? new Date(c.lastInteraction).toLocaleDateString() : 'Inactive'}</span>
                               <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">Last visit</span>
                            </div>
                         </td>
-                        <td className="px-8 py-5">
-                          <span className={cn(
-                             "badge rounded-lg gap-1.5 border-none",
-                             c.totalTransactions > 10 ? "bg-success/10 text-success" : "bg-primary/10 text-primary"
-                          )}>
+                        <td className="table-cell">
+                          <span className={`badge gap-1.5 ${c.totalTransactions > 10 ? "badge-success" : "badge-primary"}`}>
                              <div className="w-1.5 h-1.5 rounded-full bg-current" />
                              {c.totalTransactions > 10 ? 'VIP Customer' : 'Regular'}
                           </span>
@@ -179,7 +182,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                       </tr>
                     )) : (
                       <tr>
-                         <td colSpan={5} className="px-8 py-40 text-center text-muted-foreground font-medium">
+                         <td colSpan={5} className="table-cell text-center text-muted-foreground py-40">
                             <div className="flex flex-col items-center gap-4 opacity-30">
                                 <Users className="w-16 h-16" />
                                 <p className="text-2xl font-black text-foreground">No customers found.</p>

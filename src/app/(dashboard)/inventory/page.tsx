@@ -216,12 +216,12 @@ export default async function InventoryPage({
             <span className="opacity-30">/</span>
             <span className="text-primary">Inventory</span>
           </nav>
-          <h1 className="text-4xl font-black text-foreground tracking-tight">Inventory List</h1>
+          <h1 className="heading-xl tracking-tight">Inventory List</h1>
           <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
         <div className="flex items-center gap-3">
             {(session.role === 'OWNER' || session.role === 'MANAGER') && (
-              <Link href="/inventory/new" className="btn-primary shadow-glow h-14">
+              <Link href="/inventory/new" className="btn btn-primary h-12">
                 <PlusCircle className="w-4 h-4" />
                 <span>Add New Item</span>
               </Link>
@@ -231,8 +231,8 @@ export default async function InventoryPage({
 
       {/* Stats row matched with Purchase Bills */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-transform  border border-primary/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-colors border border-primary/10">
                 <Package className="w-5 h-5" />
             </div>
             <div>
@@ -241,8 +241,8 @@ export default async function InventoryPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-error/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-error/5 text-error transition-transform  border border-error/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-error/5 text-error transition-colors border border-error/10">
                 <TrendingUp className="w-5 h-5 rotate-180" />
             </div>
             <div>
@@ -251,8 +251,8 @@ export default async function InventoryPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-transform  border border-warning/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-colors border border-warning/10">
                 <TrendingUp className="w-5 h-5" />
             </div>
             <div>
@@ -261,8 +261,8 @@ export default async function InventoryPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/5 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-transform  border border-success/10">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-colors border border-success/10">
                 <PlusCircle className="w-5 h-5" />
             </div>
             <div>

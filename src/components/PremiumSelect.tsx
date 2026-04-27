@@ -58,7 +58,7 @@ export default function PremiumSelect({
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         className={cn(
-          "w-full flex items-center justify-between gap-3 bg-white border border-border-ghost rounded-2xl px-5 py-4 text-sm font-bold text-foreground transition-all duration-300 hover:border-primary/40 hover:shadow-ambient focus:outline-none focus:ring-4 focus:ring-primary/5",
+          "input-field flex items-center justify-between gap-3 text-sm transition-all duration-300",
           isOpen && "border-primary/60 ring-4 ring-primary/10 shadow-glow bg-surface-lowest",
           disabled && "opacity-50 cursor-not-allowed grayscale"
         )}
@@ -78,7 +78,7 @@ export default function PremiumSelect({
           </span>
         </div>
         <ChevronDown className={cn(
-          "w-4 h-4 text-muted-foreground transition-all duration-500",
+          "w-4 h-4 text-muted-foreground transition-colors duration-500",
           isOpen && "rotate-180 text-primary"
         )} />
       </button>
@@ -88,21 +88,21 @@ export default function PremiumSelect({
           {showSearch && (
             <div className="p-4 border-b border-border-ghost bg-surface-low/30">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                   autoFocus
                   type="text"
                   placeholder="Search options..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-border-ghost rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                  className="input-field h-10 pl-11 pr-10 text-xs"
                 />
                 {searchQuery && (
                    <button 
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-surface-low rounded-md"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 btn btn-ghost h-7 w-7 !p-0 rounded-md"
                    >
-                     <X className="w-3 h-3 text-muted-foreground" />
+                     <X className="w-3.5 h-3.5 text-muted-foreground" />
                    </button>
                 )}
               </div>
