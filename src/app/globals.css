@@ -33,7 +33,7 @@
   --radius-lg: 0.75rem;
   --radius-md: 0.5rem;
   
-  --font-sans: "Inter", "Geist", system-ui, sans-serif;
+  --font-sans: var(--font-inter), "Geist", system-ui, sans-serif;
   --font-mono: "Geist Mono", "Input Sans", monospace;
 }
 

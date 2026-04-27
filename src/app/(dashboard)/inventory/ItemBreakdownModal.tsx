@@ -69,6 +69,7 @@ export function ItemBreakdownModal({
   itemName, 
   totalStock,
   incomingQty,
+  minStockLevel,
   isOpen, 
   onClose 
 }: { 
@@ -76,6 +77,7 @@ export function ItemBreakdownModal({
   itemName: string; 
   totalStock: number;
   incomingQty: number;
+  minStockLevel: number;
   isOpen: boolean; 
   onClose: () => void; 
 }) {

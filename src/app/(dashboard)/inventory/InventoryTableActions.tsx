@@ -125,7 +125,7 @@ export default function InventoryTableActions({
         onClose={() => setShowScrap(false)}
         itemId={itemId}
         itemName={itemName}
-        currentStock={totalStock}
+        totalStock={totalStock}
       />
     </div>
   );

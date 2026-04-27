@@ -10,7 +10,12 @@ import {
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 export function ScrapModal({ 
   itemId, 
   itemName, 

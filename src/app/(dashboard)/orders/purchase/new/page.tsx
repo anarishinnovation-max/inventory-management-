@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { StockBreakdownPopup } from "./StockBreakdownPopup";
@@ -414,7 +415,7 @@ function NewPurchaseOrderForm() {
               </div>
            </div>
 
-           <div className="card-premium bg-primary p-10 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
+           <div className="card-premium !bg-primary p-10 text-white shadow-xl shadow-primary/20 relative overflow-hidden group">
               <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
               <div className="flex items-center gap-4 mb-6 relative z-10">
                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">

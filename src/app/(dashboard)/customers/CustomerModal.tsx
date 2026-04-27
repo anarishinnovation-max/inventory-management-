@@ -40,7 +40,7 @@ export function CustomerModal() {
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-black text-sm shadow-lg shadow-primary/20   transition-all"
+        className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/50 transition-all"
       >
         <Plus className="w-4 h-4" />
         Add Customer
