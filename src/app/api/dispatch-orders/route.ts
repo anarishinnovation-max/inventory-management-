@@ -60,6 +60,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    if (expectedDelivery) {
+      const deliveryDate = new Date(expectedDelivery);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (deliveryDate < today) {
+        return NextResponse.json({ error: "Delivery date cannot be in the past" }, { status: 400 });
+      }
+    }
+
     const order = await InventoryService.createDispatchOrder({
       customerId,
       companyId: session.companyId,

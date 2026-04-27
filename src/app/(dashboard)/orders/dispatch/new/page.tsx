@@ -577,14 +577,36 @@ export default function NewDispatchOrderPage() {
                       
                       {item.itemId && (
                         <div className="mt-3 space-y-3">
+                          <div className="grid grid-cols-2 gap-2">
+                             <div className="flex flex-col gap-1 px-3 py-2 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
+                                <span className="text-[9px] font-black text-emerald-600/60 uppercase tracking-tighter">Total Available</span>
+                                <span className="text-xs font-black text-emerald-700">{available} units</span>
+                             </div>
+                             {(() => {
+                                const data = getInventoryData(item.itemId);
+                                const batches = data?.batches || [];
+                                const totalRemaining = batches.reduce((acc, b) => acc + b.remainingQty, 0);
+                                const avgPrice = totalRemaining > 0 
+                                  ? batches.reduce((acc, b) => acc + (b.remainingQty * b.costPerUnit), 0) / totalRemaining 
+                                  : 0;
+                                const latestPrice = batches.length > 0 ? batches[0].costPerUnit : 0;
+
+                                return (
+                                  <>
+                                    <div className="flex flex-col gap-1 px-3 py-2 bg-primary/5 border border-primary/10 rounded-xl">
+                                       <span className="text-[9px] font-black text-primary/60 uppercase tracking-tighter">Avg Rate</span>
+                                       <span className="text-xs font-black text-primary">₹{avgPrice.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1 px-3 py-2 bg-indigo-500/5 border border-indigo-500/10 rounded-xl">
+                                       <span className="text-[9px] font-black text-indigo-600/60 uppercase tracking-tighter">Latest Rate</span>
+                                       <span className="text-xs font-black text-indigo-700">₹{latestPrice.toLocaleString()}</span>
+                                    </div>
+                                  </>
+                                );
+                             })()}
+                          </div>
+                          
                           <div className="flex items-center gap-2">
-                             <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg ${
-                               available > 0 
-                                 ? 'bg-emerald-500/10 text-emerald-700' 
-                                 : 'bg-error/10 text-error'
-                             }`}>
-                               Available: {available} units
-                             </span>
                              {item.itemId && (
                                <button
                                  type="button"
@@ -597,10 +619,10 @@ export default function NewDispatchOrderPage() {
                                       });
                                    }
                                  }}
-                                 className="p-1.5 rounded-lg bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
-                                 title="Show Stock Breakdown"
+                                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all text-[10px] font-black uppercase tracking-widest border border-border-ghost"
                                >
-                                 <Eye className="w-3.5 h-3.5" />
+                                 <Eye className="w-3 h-3" />
+                                 View Breakdown
                                </button>
                              )}
                           </div>
@@ -680,6 +702,7 @@ export default function NewDispatchOrderPage() {
                    value={expectedDelivery}
                    onChange={(val) => setExpectedDelivery(val)}
                    placeholder="Select Delivery Date & Time"
+                   minDate={new Date()}
                  />
               </div>
 

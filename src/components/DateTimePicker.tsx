@@ -10,17 +10,19 @@ function cn(...inputs: ClassValue[]) {
 }
 
 interface DateTimePickerProps {
-  value: string; // ISO string or empty
+  value: string; 
   onChange: (val: string) => void;
   placeholder?: string;
   className?: string;
+  minDate?: Date;
 }
 
 export function PremiumDateTimePicker({
   value,
   onChange,
   placeholder = "Select Date & Time",
-  className
+  className,
+  minDate
 }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,15 +74,20 @@ export function PremiumDateTimePicker({
       const isSelected = dateValue?.getDate() === d && dateValue?.getMonth() === month && dateValue?.getFullYear() === year;
       const isToday = new Date().getDate() === d && new Date().getMonth() === month && new Date().getFullYear() === year;
       
+      const currentDayDate = new Date(year, month, d);
+      const isDisabled = minDate ? currentDayDate < new Date(minDate.setHours(0,0,0,0)) : false;
+
       calendarDays.push(
         <button
           key={d}
           type="button"
+          disabled={isDisabled}
           onClick={() => handleDateSelect(d)}
           className={cn(
             "w-9 h-9 rounded-xl text-xs font-bold transition-all flex items-center justify-center relative",
             isSelected ? "bg-primary text-white shadow-lg shadow-primary/30" : "hover:bg-surface-low text-foreground",
-            isToday && !isSelected && "text-primary border border-primary/20"
+            isToday && !isSelected && "text-primary border border-primary/20",
+            isDisabled && "opacity-20 cursor-not-allowed grayscale"
           )}
         >
           {d}
