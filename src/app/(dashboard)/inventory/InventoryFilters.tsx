@@ -105,7 +105,7 @@ export default function InventoryFilters({
 
       {isExpanded && (
         <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient animate-in fade-in slide-in-from-top-4 duration-300">
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+           <div className="grid">
               <div className="space-y-4">
                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-4">
                   <Tag className="w-3 h-3" /> Filter by Category
@@ -114,7 +114,7 @@ export default function InventoryFilters({
                    <button 
                      onClick={() => updateFilter("category", "all")}
                      className={cn(
-                        "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                        "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
                         currentCategory === 'all' 
                           ? "bg-primary text-white border-primary shadow-md shadow-primary/20" 
                           : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/30"
@@ -127,7 +127,7 @@ export default function InventoryFilters({
                         key={cat}
                         onClick={() => updateFilter("category", cat)}
                         className={cn(
-                           "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                           "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border whitespace-nowrap",
                            currentCategory === cat 
                              ? "bg-primary text-white border-primary shadow-md shadow-primary/20" 
                              : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/30"
