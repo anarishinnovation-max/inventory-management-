@@ -8,7 +8,11 @@ import {
   History,
   MapPin,
   Truck,
-  Users as UsersIcon
+  Users as UsersIcon,
+  Package,
+  Flame,
+  Sparkles,
+  RefreshCw
 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import { ExportButton } from "./ExportButton";
@@ -133,17 +137,55 @@ export default async function TransactionsPage({
                 <tr key={tx.id} className="table-row">
                   <td className="table-cell">
                     <div className="flex items-center gap-4">
-                      {tx.type.includes("IN") || tx.type === "PURCHASE" ? (
-                        <div className="w-9 h-9 rounded-lg bg-success/10 text-success flex items-center justify-center shadow-inner transition-colors">
-                          <ArrowDownLeft className="w-4 h-4" />
-                        </div>
-                      ) : (
-                        <div className="w-9 h-9 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center shadow-inner transition-colors">
-                          <ArrowUpRight className="w-4 h-4" />
-                        </div>
-                      )}
+                      {(() => {
+                        if (tx.type === "PURCHASE" || tx.type === "ADJUSTMENT_IN") {
+                          return (
+                            <div className="w-9 h-9 rounded-lg bg-success/10 text-success flex items-center justify-center shadow-inner">
+                              <ArrowDownLeft className="w-4 h-4" />
+                            </div>
+                          );
+                        }
+                        if (tx.type === "SALE" || tx.type === "OUTWARD") {
+                          return (
+                            <div className="w-9 h-9 rounded-lg bg-orange-500/10 text-orange-500 flex items-center justify-center shadow-inner">
+                              <ArrowUpRight className="w-4 h-4" />
+                            </div>
+                          );
+                        }
+                        if (tx.type === "SCRAP") {
+                          return (
+                            <div className="w-9 h-9 rounded-lg bg-error/10 text-error flex items-center justify-center shadow-inner">
+                              <Flame className="w-4 h-4" />
+                            </div>
+                          );
+                        }
+                        if (tx.type === "INITIAL_REGISTRY") {
+                          return (
+                            <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center shadow-inner">
+                              <Sparkles className="w-4 h-4" />
+                            </div>
+                          );
+                        }
+                        if (tx.type === "MOVE") {
+                          return (
+                            <div className="w-9 h-9 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center shadow-inner">
+                              <MapPin className="w-4 h-4" />
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className="w-9 h-9 rounded-lg bg-surface-low text-muted-foreground flex items-center justify-center shadow-inner">
+                            <RefreshCw className="w-4 h-4" />
+                          </div>
+                        );
+                      })()}
                       <div>
-                        <p className="font-black text-foreground text-[11px] tracking-tight group-hover:text-primary transition-all">{tx.type}</p>
+                        <p className="font-black text-foreground text-[11px] tracking-tight group-hover:text-primary transition-all">
+                          {tx.type === "INITIAL_REGISTRY" ? "REGISTRY" : 
+                           tx.type === "SALE" ? "DISPATCH" : 
+                           tx.type === "OUTWARD" ? "MANUAL OUT" : 
+                           tx.type.replace("_", " ")}
+                        </p>
                         <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.1em] mt-0.5">{tx.referenceType || "GENERAL"}</p>
                       </div>
                     </div>

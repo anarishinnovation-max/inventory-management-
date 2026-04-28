@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac-utils";
+import { revalidatePath } from "next/cache";
 
 export async function GET(
   request: Request,
@@ -113,6 +114,10 @@ export async function PUT(
         isCritical: isCritical !== undefined ? !!isCritical : undefined,
       },
     });
+
+    // Clear caches for related pages
+    revalidatePath("/inventory");
+    revalidatePath("/transactions");
 
     return NextResponse.json(updatedItem);
   } catch (error: any) {

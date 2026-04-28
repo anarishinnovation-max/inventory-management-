@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, User, Activity, Calendar as CalendarIcon, FilterX } from "lucide-react";
+import { Search, User, Activity, Calendar as CalendarIcon, FilterX, ChevronDown } from "lucide-react";
+import { SearchableSelect } from "@/components/SearchableSelect";
 import { useEffect, useState } from "react";
 
 export function TransactionFilters({ users }: { users: any[] }) {
@@ -17,12 +18,14 @@ export function TransactionFilters({ users }: { users: any[] }) {
   });
 
   const actionTypes = [
-    { label: "Purchase", value: "PURCHASE" },
-    { label: "Dispatch", value: "dispatch" },
-    { label: "Latest Received", value: "PURCHASE" },
-    { label: "Latest Sent", value: "dispatch" },
-    { label: "Adjustment", value: "adjustment" },
-    { label: "Internal Move", value: "MOVE" }
+    { name: "Purchase", id: "PURCHASE" },
+    { name: "Dispatch (Sale)", id: "SALE" },
+    { name: "Inventory Registry", id: "INITIAL_REGISTRY" },
+    { name: "Scrapped Stock", id: "SCRAP" },
+    { name: "Adjustment (In)", id: "ADJUSTMENT_IN" },
+    { name: "Adjustment (Out)", id: "ADJUSTMENT_OUT" },
+    { name: "Manual Outward", id: "OUTWARD" },
+    { name: "Internal Move", id: "MOVE" }
   ];
 
   const updateFilters = (newFilters: any) => {
@@ -77,35 +80,35 @@ export function TransactionFilters({ users }: { users: any[] }) {
         {/* User Filter */}
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Performed By</label>
-          <div className="relative">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <select 
-              name="user"
-              value={filters.user}
-              onChange={handleInputChange}
-              className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-low border border-border-ghost focus:border-primary outline-none transition-all text-sm font-bold appearance-none cursor-pointer"
-            >
-              <option value="">All Users</option>
-              {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
-            </select>
-          </div>
+          <SearchableSelect 
+            items={users.map(u => ({ id: u.id, name: u.name }))}
+            value={filters.user}
+            onChange={(val) => {
+              const updated = { ...filters, user: val };
+              setFilters(updated);
+              updateFilters(updated);
+            }}
+            placeholder="All Users"
+            className="h-12 !rounded-xl"
+            icon={<User className="w-4 h-4 text-muted-foreground" />}
+          />
         </div>
 
         {/* Action Type */}
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Action Type</label>
-          <div className="relative">
-            <Activity className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <select 
-              name="type"
-              value={filters.type}
-              onChange={handleInputChange}
-              className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-low border border-border-ghost focus:border-primary outline-none transition-all text-sm font-bold appearance-none cursor-pointer"
-            >
-              <option value="">All Actions</option>
-              {actionTypes.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-            </select>
-          </div>
+          <SearchableSelect 
+            items={actionTypes}
+            value={filters.type}
+            onChange={(val) => {
+              const updated = { ...filters, type: val };
+              setFilters(updated);
+              updateFilters(updated);
+            }}
+            placeholder="All Actions"
+            className="h-12 !rounded-xl"
+            icon={<Activity className="w-4 h-4 text-muted-foreground" />}
+          />
         </div>
 
         {/* Date Range */}
