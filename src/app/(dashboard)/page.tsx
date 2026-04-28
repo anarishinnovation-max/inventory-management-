@@ -185,6 +185,9 @@ export default async function DashboardPage() {
   if (!session) {
     redirect("/login");
   }
+  if (session.role === "SUPER_ADMIN") {
+    redirect("/super-admin");
+  }
 
   const data = await getCachedDashboardAnalytics(session.companyId).catch((e) => {
     console.error("Dashboard data fetch error:", e);

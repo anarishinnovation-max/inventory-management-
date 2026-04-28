@@ -16,8 +16,10 @@ export async function GET() {
   });
 
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
+
+  console.log(`[auth/me] Successfully authenticated user: ${user.username}`);
 
   return NextResponse.json({
     id: user.id,
@@ -25,6 +27,6 @@ export async function GET() {
     name: user.name,
     role: user.role,
     companyId: user.companyId,
-    companyName: user.company?.name || "SS Cutting Tools",
+    companyName: user.company?.name || "Platform Admin",
   });
 }

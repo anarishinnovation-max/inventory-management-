@@ -3,6 +3,7 @@
 import { clsx, type ClassValue } from "clsx";
 import {
   Box,
+  Building2,
   ChevronDown,
   ChevronRight,
   CreditCard,
@@ -74,6 +75,14 @@ const menuSections: MenuSection[] = [
       { name: "Admin Control", icon: ShieldCheck, href: "/admin", roles: ["OWNER"] },
       { name: "Settings", icon: Settings, href: "/settings", roles: ["OWNER", "MANAGER"] },
     ]
+  },
+  {
+    title: "Platform",
+    items: [
+      { name: "Super Console", icon: ShieldCheck, href: "/super-admin", roles: ["SUPER_ADMIN"] },
+      { name: "Companies", icon: Building2, href: "/super-admin/companies", roles: ["SUPER_ADMIN"] },
+      { name: "Global Users", icon: Users, href: "/super-admin/users", roles: ["SUPER_ADMIN"] },
+    ]
   }
 ];
 
@@ -120,9 +129,13 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-4 py-4 space-y-8 overflow-y-auto no-scrollbar scroll-smooth">
         {menuSections.map((section, idx) => {
-          const visibleItems = section.items.filter(item => 
-            !item.roles || (userData?.role && item.roles.includes(userData.role.toUpperCase()))
-          );
+          const visibleItems = section.items.filter(item => {
+            const isSuperAdmin = userData?.role?.toUpperCase() === "SUPER_ADMIN";
+            if (isSuperAdmin) {
+              return item.roles?.includes("SUPER_ADMIN");
+            }
+            return !item.roles || (userData?.role && item.roles.includes(userData.role.toUpperCase()));
+          });
 
           if (visibleItems.length === 0) return null;
 

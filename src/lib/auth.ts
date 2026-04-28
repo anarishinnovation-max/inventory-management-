@@ -24,7 +24,7 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
-export async function login(id: string, username: string, role: UserRole, companyId: string) {
+export async function login(id: string, username: string, role: UserRole, companyId: string | null) {
   const expires = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
   const session = await encrypt({ id, username, role, companyId, expires });
 

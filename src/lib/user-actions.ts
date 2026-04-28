@@ -84,5 +84,9 @@ export async function handleLoginAction(formData: FormData) {
   }
 
   await login(user.id, user.username, user.role as UserRole, user.companyId);
-  redirect("/");
+  if (user.role === "SUPER_ADMIN") {
+    redirect("/super-admin");
+  } else {
+    redirect("/");
+  }
 }

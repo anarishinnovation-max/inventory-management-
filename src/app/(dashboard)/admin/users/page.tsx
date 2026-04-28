@@ -37,7 +37,20 @@ export default function UsersPage() {
   const [editUser, setEditUser] = useState<TeamMember | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [currentUserRole, setCurrentUserRole] = useState<UserRole | null>(null);
   const confirm = useConfirm();
+
+  const fetchCurrentUser = async () => {
+    try {
+      const res = await fetch("/api/auth/me");
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentUserRole(data.role as UserRole);
+      }
+    } catch (err) {
+      console.error("Failed to fetch current user", err);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -54,6 +67,7 @@ export default function UsersPage() {
 
   useEffect(() => {
     fetchUsers();
+    fetchCurrentUser();
   }, []);
 
   const getRoleIcon = (role: UserRole) => {
@@ -98,13 +112,15 @@ export default function UsersPage() {
           </p>
         </div>
         
-        <button 
-          onClick={() => setIsAddModalOpen(true)}
-          className="btn btn-primary self-start"
-        >
-          <UserPlus className="w-5 h-5" />
-          Add Team Member
-        </button>
+        {currentUserRole === UserRole.SUPER_ADMIN && (
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="btn btn-primary self-start"
+          >
+            <UserPlus className="w-5 h-5" />
+            Add Team Member
+          </button>
+        )}
       </div>
 
       {/* Users Table */}
@@ -162,7 +178,8 @@ export default function UsersPage() {
                       <div className="relative inline-block text-left">
                         <button 
                           onClick={() => setActiveMenu(activeMenu === user.id ? null : user.id)}
-                          className="p-3 hover:bg-surface-muted rounded-xl transition-colors"
+                          className="p-3 hover:bg-surface-muted rounded-xl transition-colors disabled:opacity-50"
+                          disabled={currentUserRole !== UserRole.SUPER_ADMIN}
                         >
                           <MoreVertical className="w-5 h-5 text-muted-foreground" />
                         </button>

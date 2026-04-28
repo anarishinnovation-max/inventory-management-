@@ -10,7 +10,8 @@
     "seed": "prisma db seed",
     "backfill:batches": "tsx scripts/backfill-inventory-batches.ts",
     "postinstall": "prisma generate",
-    "db:migrate:prod": "prisma migrate deploy"
+    "db:migrate:prod": "prisma migrate deploy",
+    "promote": "tsx scripts/promote-super-admin.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

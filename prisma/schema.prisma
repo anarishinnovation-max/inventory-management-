@@ -33,11 +33,11 @@ model User {
   emailAlerts      Boolean                @default(true)
   twoFactorEnabled Boolean                @default(false)
   createdAt        DateTime               @default(now())
-  companyId        String
+  companyId        String?
   role             UserRole               @default(EMPLOYEE)
   batches          InventoryBatch[]
   transactions     InventoryTransaction[]
-  company          Company                @relation(fields: [companyId], references: [id])
+  company          Company?               @relation(fields: [companyId], references: [id])
 }
 
 model Category {
@@ -255,6 +255,7 @@ model InventoryTransaction {
 }
 
 enum UserRole {
+  SUPER_ADMIN
   OWNER
   MANAGER
   EMPLOYEE

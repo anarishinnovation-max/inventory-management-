@@ -9,14 +9,19 @@ export async function hasPermission(permission: Permission): Promise<boolean> {
   return checkPermission(session.role as UserRole, permission);
 }
 
+export async function isSuperAdmin(): Promise<boolean> {
+  const session = await getSession();
+  return session?.role === UserRole.SUPER_ADMIN;
+}
+
 export async function isOwner(): Promise<boolean> {
   const session = await getSession();
-  return session?.role === UserRole.OWNER;
+  return session?.role === UserRole.OWNER || session?.role === UserRole.SUPER_ADMIN;
 }
 
 export async function isManager(): Promise<boolean> {
   const session = await getSession();
-  return session?.role === UserRole.MANAGER || session?.role === UserRole.OWNER;
+  return session?.role === UserRole.MANAGER || session?.role === UserRole.OWNER || session?.role === UserRole.SUPER_ADMIN;
 }
 
 export async function isEmployee(): Promise<boolean> {
