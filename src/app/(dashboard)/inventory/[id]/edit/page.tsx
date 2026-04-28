@@ -141,7 +141,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           <h1 className="heading-xl">Edit Item</h1>
         </div>
 
-        {!isEmployee && (
+        {!isEmployee ? (
           <div className="flex items-center gap-3">
             <Link href="/inventory" className="btn btn-neutral h-12 px-6">
               Cancel
@@ -151,6 +151,10 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
+        ) : (
+          <Link href="/inventory" className="btn btn-neutral h-12 px-6">
+            Back to Inventory
+          </Link>
         )}
       </div>
 
@@ -174,20 +178,31 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             <div className="space-y-6">
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Item Name</label>
-                <input required name="name" defaultValue={itemData?.name} readOnly={isEmployee} className={cn("input-field h-14", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="e.g. Industrial Motor, Copper Wire" type="text" />
+                {isEmployee ? (
+                  <div className="text-xl font-black text-foreground py-1">{itemData?.name}</div>
+                ) : (
+                  <input required name="name" defaultValue={itemData?.name} className="input-field h-14" placeholder="e.g. Industrial Motor, Copper Wire" type="text" />
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Unique SKU Identifier</label>
-                  <div className="relative">
-                    <input required name="sku" defaultValue={itemData?.sku} readOnly={isEmployee} className={cn("input-field pl-14 h-14 font-mono", isEmployee && "opacity-60 cursor-not-allowed")} placeholder="LXT-9982-A" type="text" />
-                  </div>
+                  {isEmployee ? (
+                    <div className="text-lg font-black font-mono text-primary py-1">{itemData?.sku}</div>
+                  ) : (
+                    <div className="relative">
+                      <input required name="sku" defaultValue={itemData?.sku} className="input-field pl-5 h-14 font-mono" placeholder="LXT-9982-A" type="text" />
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Measurement Unit</label>
-                  <div className="input-field h-14 flex items-center bg-surface-low/30 border-dashed">
+                  <div className={cn(
+                    "text-lg font-black text-foreground py-1",
+                    !isEmployee && "input-field h-14 flex items-center bg-surface-low/30 border-dashed"
+                  )}>
                     {itemData?.unit}
                   </div>
                   <input type="hidden" name="unit" value={itemData?.unit} />
@@ -197,22 +212,27 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               <div className="space-y-4">
                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Operational Category</label>
                 <div className="flex flex-wrap gap-2">
-                  {categories.map(cat => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => !isEmployee && setSelectedCategoryId(cat.id)}
-                      className={cn(
-                        "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
-                        selectedCategoryId === cat.id
-                          ? "border-primary bg-primary/10 text-primary shadow-sm"
-                          : "border-border-ghost text-muted-foreground hover:bg-surface-low",
-                        isEmployee && "cursor-not-allowed opacity-80"
-                      )}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
+                  {isEmployee ? (
+                    <div className="px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary/10 text-primary border border-primary/10">
+                      {categories.find(cat => cat.id === selectedCategoryId)?.name || "Uncategorized"}
+                    </div>
+                  ) : (
+                    categories.map(cat => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setSelectedCategoryId(cat.id)}
+                        className={cn(
+                          "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                          selectedCategoryId === cat.id
+                            ? "border-primary bg-primary/10 text-primary shadow-sm"
+                            : "border-border-ghost text-muted-foreground hover:bg-surface-low"
+                        )}
+                      >
+                        {cat.name}
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -234,34 +254,39 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Buffer Threshold</label>
                   <span className="badge badge-error uppercase">Refill Level</span>
                 </div>
-                <div className="relative">
-                  <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} readOnly={isEmployee} className={cn("input-field h-20 text-3xl font-black font-mono text-center", isEmployee && "opacity-60 cursor-not-allowed")} type="number" min="0" />
-                </div>
-                <p className="text-[10px] text-muted-foreground px-1 font-bold italic leading-relaxed">Automated alerts will be triggered when available stock drops below this specific count.</p>
+                {isEmployee ? (
+                  <div className="text-5xl font-black font-mono text-foreground pt-4">{itemData?.minStockLevel}</div>
+                ) : (
+                  <div className="relative">
+                    <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} className="input-field h-20 text-3xl font-black font-mono text-center" type="number" min="0" />
+                  </div>
+                )}
+                {!isEmployee && <p className="text-[10px] text-muted-foreground px-1 font-bold italic leading-relaxed">Automated alerts will be triggered when available stock drops below this specific count.</p>}
               </div>
 
               <div className="flex items-center justify-between p-6 bg-surface-low/30 rounded-[1.5rem] border border-border-ghost">
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-black text-foreground">Critical Status</p>
-                    <span className="badge badge-success !px-2 !py-0.5">NEW</span>
+                    {isCritical && <span className="badge badge-error !px-2 !py-0.5">CRITICAL</span>}
                   </div>
                   <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Priority Flagging</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => !isEmployee && setIsCritical(!isCritical)}
-                  className={cn(
-                    "w-12 h-6 rounded-full relative transition-colors duration-300",
-                    isCritical ? "bg-primary" : "bg-muted-foreground/30",
-                    isEmployee && "cursor-not-allowed opacity-60"
-                  )}
-                >
-                  <div className={cn(
-                    "absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300",
-                    isCritical ? "right-1" : "left-1"
-                  )}></div>
-                </button>
+                {!isEmployee && (
+                  <button
+                    type="button"
+                    onClick={() => setIsCritical(!isCritical)}
+                    className={cn(
+                      "w-12 h-6 rounded-full relative transition-colors duration-300",
+                      isCritical ? "bg-primary" : "bg-muted-foreground/30"
+                    )}
+                  >
+                    <div className={cn(
+                      "absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-300",
+                      isCritical ? "right-1" : "left-1"
+                    )}></div>
+                  </button>
+                )}
               </div>
             </div>
           </div>
