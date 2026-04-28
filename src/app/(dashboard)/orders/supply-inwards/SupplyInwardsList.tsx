@@ -176,18 +176,13 @@ export default function SupplyInwardsList({
         </div>
 
         {selectedIds.size > 0 && (
-          <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-10">
-            <div className="bg-foreground text-white px-8 py-4 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center gap-8 border border-white/10 backdrop-blur-md">
-              <div className="flex items-center gap-3 pr-8 border-r border-white/10">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
-                   <Clock className="w-5 h-5" />
-                </div>
-                <div>
-                   <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Logistics Protocol</p>
-                   <p className="text-sm font-black">{selectedIds.size} Lines Selected</p>
-                </div>
+          <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1 pr-4 pl-5">
+              <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
               </div>
-              <div className="flex items-center gap-4">
+
+              <div className="flex items-center gap-1">
                 <button 
                   onClick={() => {
                     const initial: Record<string, number> = {};
@@ -200,22 +195,22 @@ export default function SupplyInwardsList({
                     setShowReview(true);
                   }}
                   disabled={isProcessing}
-                  className="btn btn-neutral text-white hover:bg-white/10 px-5 h-12"
+                  className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group"
+                  title="Review & Partial"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
-                  Review & Partial
                 </button>
                 <button 
                   onClick={handleBulkReceive}
                   disabled={isProcessing}
-                  className="btn btn-primary px-8 h-12 rounded-2xl"
+                  className="p-2.5 rounded-xl hover:bg-success/5 text-success transition-all group"
+                  title="Confirm Full Receipt"
                 >
                   {isProcessing ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <ArrowDownToLine className="w-4 h-4" />
                   )}
-                  <span className="text-[10px] font-black uppercase tracking-widest hidden md:block">Confirm Full Receipt</span>
                 </button>
               </div>
             </div>
