@@ -10,8 +10,7 @@ export type Permission =
   | "rack:*" | "rack:view" | "rack:create" | "rack:update" | "rack:delete"
   | "reports:view"
   | "company:manage"
-  | "users:view"
-  | "users:manage"
+  | "users:*" | "users:view" | "users:manage"
   | "billing:access";
 
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
@@ -25,7 +24,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "rack:*",
     "reports:view",
     "billing:access",
-    "users:view"
+    "users:*"
   ],
   [UserRole.MANAGER]: [
     "items:*",
@@ -36,7 +35,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "rack:*",
     "reports:view",
     "billing:access",
-    "users:view"
+    "users:*"
   ],
   [UserRole.EMPLOYEE]: [
     "items:view",

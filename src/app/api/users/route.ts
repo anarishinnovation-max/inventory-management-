@@ -32,6 +32,7 @@ export async function GET() {
 
     return NextResponse.json(users);
   } catch (error: any) {
+    console.error("[api/users] GET error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

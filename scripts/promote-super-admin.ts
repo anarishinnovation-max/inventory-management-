@@ -8,23 +8,35 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
-  const username = process.argv[2];
+import bcrypt from "bcryptjs";
 
-  if (!username) {
-    console.error("Please provide a username: npm run promote <username>");
-    process.exit(1);
-  }
+async function main() {
+  const username = process.argv[2] || "superadmin";
+  const password = process.argv[3] || "admin123";
 
   try {
-    const user = await prisma.user.update({
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const user = await prisma.user.upsert({
       where: { username },
-      data: { role: UserRole.SUPER_ADMIN },
+      update: { 
+        role: UserRole.SUPER_ADMIN,
+        companyId: null 
+      },
+      create: { 
+        username,
+        password: hashedPassword,
+        name: "Platform Admin",
+        role: UserRole.SUPER_ADMIN,
+        companyId: null
+      },
     });
 
-    console.log(`Successfully promoted ${user.username} to SUPER_ADMIN`);
+    console.log(`Successfully created/promoted ${user.username} to SUPER_ADMIN`);
+    console.log(`Username: ${username}`);
+    console.log(`Password: ${password === "admin123" ? "(default: admin123)" : "********"}`);
   } catch (error) {
-    console.error("Failed to promote user:", error);
+    console.error("Failed to setup Super Admin:", error);
     process.exit(1);
   } finally {
     await prisma.$disconnect();
