@@ -26,6 +26,7 @@ function cn(...inputs: ClassValue[]) {
 
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 async function getVendorsWithPricing(query?: string, companyId?: string) {
   if (!companyId) return [];
@@ -141,7 +142,11 @@ export default async function VendorsPage({
           </h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto no-scrollbar pr-1">
             {vendors.map((vendor: any) => (
-              <div key={vendor.id} className="p-4 card-premium group hover:border-primary/30 transition-all cursor-pointer bg-white/50">
+              <Link 
+                key={vendor.id} 
+                href={`/vendors/${vendor.id}`}
+                className="p-4 card-premium group hover:border-primary/30 transition-all cursor-pointer bg-white/50 block"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-bold text-foreground text-sm truncate">{vendor.name}</p>
@@ -157,7 +162,7 @@ export default async function VendorsPage({
                   </span>
                   <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
                 </div>
-              </div>
+              </Link>
             ))}
             {vendors.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No vendors found.</p>}
           </div>
@@ -166,7 +171,7 @@ export default async function VendorsPage({
         <div className="lg:col-span-3 space-y-6">
            <div className="flex items-center justify-between">
              <h2 className="heading-md flex items-center gap-3">
-               Item Pricing Ledger
+               Vendor Procurement Ledger
              </h2>
              <div className="flex items-center gap-2">
                 <button className="p-2 rounded-lg hover:bg-surface-low text-muted-foreground transition-all border border-transparent hover:border-border-ghost">
@@ -180,16 +185,16 @@ export default async function VendorsPage({
                 <table className="w-full text-left border-collapse">
                   <thead className="table-header">
                     <tr>
-                      <th className="table-cell-header">Vendor</th>
+                      <th className="table-cell-header">Vendor Partner</th>
                       <th className="table-cell-header">Item & SKU</th>
-                      <th className="table-cell-header text-right">Price</th>
-                      <th className="table-cell-header">Time to Send</th>
-                      <th className="table-cell-header">Rating</th>
+                      <th className="table-cell-header text-right">Unit Price</th>
+                      <th className="table-cell-header">Supply Time</th>
+                      <th className="table-cell-header text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-ghost">
                     {allCompetitiveItems.length > 0 ? allCompetitiveItems.map((entry: any, idx: number) => (
-                      <tr key={idx} className="table-row">
+                      <tr key={idx} className="table-row group">
                         <td className="table-cell">
                           <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-xl bg-linear-to-br from-primary to-indigo-600 flex items-center justify-center font-black text-white shadow-lg shadow-primary/20 text-xs">
@@ -225,18 +230,13 @@ export default async function VendorsPage({
                              <span>{entry.leadTime}</span>
                           </div>
                         </td>
-                        <td className="table-cell">
-                          {entry.isPreferred ? (
-                             <span className="badge badge-primary gap-1.5">
-                                <Star className="w-3 h-3 fill-current" />
-                                Preferred
-                             </span>
-                          ) : (
-                             <span className="badge badge-neutral gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                                Secondary
-                             </span>
-                          )}
+                        <td className="table-cell text-right">
+                          <Link 
+                            href={`/vendors/${vendors.find((v: any) => v.name === entry.vendorName)?.id}`}
+                            className="btn btn-neutral h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
+                          >
+                             View History
+                          </Link>
                         </td>
                       </tr>
                     )) : (

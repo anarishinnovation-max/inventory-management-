@@ -189,6 +189,7 @@ model Customer {
   contact        String?
   address        String?
   companyId      String
+  createdAt      DateTime               @default(now())
   company        Company                @relation(fields: [companyId], references: [id])
   dispatchOrders DispatchOrder[]
   transactions   InventoryTransaction[]

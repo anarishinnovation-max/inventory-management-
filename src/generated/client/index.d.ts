@@ -15648,6 +15648,7 @@ export namespace Prisma {
     contact: string | null
     address: string | null
     companyId: string | null
+    createdAt: Date | null
   }
 
   export type CustomerMaxAggregateOutputType = {
@@ -15657,6 +15658,7 @@ export namespace Prisma {
     contact: string | null
     address: string | null
     companyId: string | null
+    createdAt: Date | null
   }
 
   export type CustomerCountAggregateOutputType = {
@@ -15666,6 +15668,7 @@ export namespace Prisma {
     contact: number
     address: number
     companyId: number
+    createdAt: number
     _all: number
   }
 
@@ -15677,6 +15680,7 @@ export namespace Prisma {
     contact?: true
     address?: true
     companyId?: true
+    createdAt?: true
   }
 
   export type CustomerMaxAggregateInputType = {
@@ -15686,6 +15690,7 @@ export namespace Prisma {
     contact?: true
     address?: true
     companyId?: true
+    createdAt?: true
   }
 
   export type CustomerCountAggregateInputType = {
@@ -15695,6 +15700,7 @@ export namespace Prisma {
     contact?: true
     address?: true
     companyId?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -15777,6 +15783,7 @@ export namespace Prisma {
     contact: string | null
     address: string | null
     companyId: string
+    createdAt: Date
     _count: CustomerCountAggregateOutputType | null
     _min: CustomerMinAggregateOutputType | null
     _max: CustomerMaxAggregateOutputType | null
@@ -15803,6 +15810,7 @@ export namespace Prisma {
     contact?: boolean
     address?: boolean
     companyId?: boolean
+    createdAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     dispatchOrders?: boolean | Customer$dispatchOrdersArgs<ExtArgs>
     transactions?: boolean | Customer$transactionsArgs<ExtArgs>
@@ -15816,6 +15824,7 @@ export namespace Prisma {
     contact?: boolean
     address?: boolean
     companyId?: boolean
+    createdAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -15826,6 +15835,7 @@ export namespace Prisma {
     contact?: boolean
     address?: boolean
     companyId?: boolean
+    createdAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -15836,9 +15846,10 @@ export namespace Prisma {
     contact?: boolean
     address?: boolean
     companyId?: boolean
+    createdAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "contact" | "address" | "companyId", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "contact" | "address" | "companyId" | "createdAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     dispatchOrders?: boolean | Customer$dispatchOrdersArgs<ExtArgs>
@@ -15866,6 +15877,7 @@ export namespace Prisma {
       contact: string | null
       address: string | null
       companyId: string
+      createdAt: Date
     }, ExtArgs["result"]["customer"]>
     composites: {}
   }
@@ -16298,6 +16310,7 @@ export namespace Prisma {
     readonly contact: FieldRef<"Customer", 'String'>
     readonly address: FieldRef<"Customer", 'String'>
     readonly companyId: FieldRef<"Customer", 'String'>
+    readonly createdAt: FieldRef<"Customer", 'DateTime'>
   }
     
 
@@ -20517,7 +20530,8 @@ export namespace Prisma {
     email: 'email',
     contact: 'contact',
     address: 'address',
-    companyId: 'companyId'
+    companyId: 'companyId',
+    createdAt: 'createdAt'
   };
 
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -21538,6 +21552,7 @@ export namespace Prisma {
     contact?: StringNullableFilter<"Customer"> | string | null
     address?: StringNullableFilter<"Customer"> | string | null
     companyId?: StringFilter<"Customer"> | string
+    createdAt?: DateTimeFilter<"Customer"> | Date | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     dispatchOrders?: DispatchOrderListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
@@ -21550,6 +21565,7 @@ export namespace Prisma {
     contact?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     companyId?: SortOrder
+    createdAt?: SortOrder
     company?: CompanyOrderByWithRelationInput
     dispatchOrders?: DispatchOrderOrderByRelationAggregateInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
@@ -21566,6 +21582,7 @@ export namespace Prisma {
     contact?: StringNullableFilter<"Customer"> | string | null
     address?: StringNullableFilter<"Customer"> | string | null
     companyId?: StringFilter<"Customer"> | string
+    createdAt?: DateTimeFilter<"Customer"> | Date | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     dispatchOrders?: DispatchOrderListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
@@ -21578,6 +21595,7 @@ export namespace Prisma {
     contact?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     companyId?: SortOrder
+    createdAt?: SortOrder
     _count?: CustomerCountOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
     _min?: CustomerMinOrderByAggregateInput
@@ -21593,6 +21611,7 @@ export namespace Prisma {
     contact?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     address?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     companyId?: StringWithAggregatesFilter<"Customer"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
   }
 
   export type DispatchOrderWhereInput = {
@@ -22697,6 +22716,7 @@ export namespace Prisma {
     email?: string | null
     contact?: string | null
     address?: string | null
+    createdAt?: Date | string
     company: CompanyCreateNestedOneWithoutCustomersInput
     dispatchOrders?: DispatchOrderCreateNestedManyWithoutCustomerInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCustomerInput
@@ -22709,6 +22729,7 @@ export namespace Prisma {
     contact?: string | null
     address?: string | null
     companyId: string
+    createdAt?: Date | string
     dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutCustomerInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -22719,6 +22740,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutCustomersNestedInput
     dispatchOrders?: DispatchOrderUpdateManyWithoutCustomerNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCustomerNestedInput
@@ -22731,6 +22753,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutCustomerNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -22742,6 +22765,7 @@ export namespace Prisma {
     contact?: string | null
     address?: string | null
     companyId: string
+    createdAt?: Date | string
   }
 
   export type CustomerUpdateManyMutationInput = {
@@ -22750,6 +22774,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CustomerUncheckedUpdateManyInput = {
@@ -22759,6 +22784,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DispatchOrderCreateInput = {
@@ -23836,6 +23862,7 @@ export namespace Prisma {
     contact?: SortOrder
     address?: SortOrder
     companyId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type CustomerMaxOrderByAggregateInput = {
@@ -23845,6 +23872,7 @@ export namespace Prisma {
     contact?: SortOrder
     address?: SortOrder
     companyId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type CustomerMinOrderByAggregateInput = {
@@ -23854,6 +23882,7 @@ export namespace Prisma {
     contact?: SortOrder
     address?: SortOrder
     companyId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type CustomerScalarRelationFilter = {
@@ -25966,6 +25995,7 @@ export namespace Prisma {
     email?: string | null
     contact?: string | null
     address?: string | null
+    createdAt?: Date | string
     dispatchOrders?: DispatchOrderCreateNestedManyWithoutCustomerInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCustomerInput
   }
@@ -25976,6 +26006,7 @@ export namespace Prisma {
     email?: string | null
     contact?: string | null
     address?: string | null
+    createdAt?: Date | string
     dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutCustomerInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -26347,6 +26378,7 @@ export namespace Prisma {
     contact?: StringNullableFilter<"Customer"> | string | null
     address?: StringNullableFilter<"Customer"> | string | null
     companyId?: StringFilter<"Customer"> | string
+    createdAt?: DateTimeFilter<"Customer"> | Date | string
   }
 
   export type DispatchOrderUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -29099,6 +29131,7 @@ export namespace Prisma {
     email?: string | null
     contact?: string | null
     address?: string | null
+    createdAt?: Date | string
     company: CompanyCreateNestedOneWithoutCustomersInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCustomerInput
   }
@@ -29110,6 +29143,7 @@ export namespace Prisma {
     contact?: string | null
     address?: string | null
     companyId: string
+    createdAt?: Date | string
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -29196,6 +29230,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutCustomersNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCustomerNestedInput
   }
@@ -29207,6 +29242,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -29407,6 +29443,7 @@ export namespace Prisma {
     email?: string | null
     contact?: string | null
     address?: string | null
+    createdAt?: Date | string
     company: CompanyCreateNestedOneWithoutCustomersInput
     dispatchOrders?: DispatchOrderCreateNestedManyWithoutCustomerInput
   }
@@ -29418,6 +29455,7 @@ export namespace Prisma {
     contact?: string | null
     address?: string | null
     companyId: string
+    createdAt?: Date | string
     dispatchOrders?: DispatchOrderUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -29604,6 +29642,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutCustomersNestedInput
     dispatchOrders?: DispatchOrderUpdateManyWithoutCustomerNestedInput
   }
@@ -29615,6 +29654,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     companyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -29769,6 +29809,7 @@ export namespace Prisma {
     email?: string | null
     contact?: string | null
     address?: string | null
+    createdAt?: Date | string
   }
 
   export type DispatchOrderCreateManyCompanyInput = {
@@ -29886,6 +29927,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dispatchOrders?: DispatchOrderUpdateManyWithoutCustomerNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCustomerNestedInput
   }
@@ -29896,6 +29938,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dispatchOrders?: DispatchOrderUncheckedUpdateManyWithoutCustomerNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -29906,6 +29949,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DispatchOrderUpdateWithoutCompanyInput = {

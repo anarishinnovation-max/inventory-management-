@@ -22,10 +22,38 @@ import { cacheQuery } from "@/lib/cache";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-async function getTransactionsRaw(companyId?: string) {
+async function getTransactionsRaw(companyId?: string, filters: any = {}) {
   if (!companyId) return [];
+  
+  const where: any = { companyId };
+  
+  if (filters.q) {
+    where.OR = [
+      { item: { name: { contains: filters.q, mode: 'insensitive' } } },
+      { item: { sku: { contains: filters.q, mode: 'insensitive' } } }
+    ];
+  }
+  
+  if (filters.user) {
+    where.userId = filters.user;
+  }
+  
+  if (filters.type) {
+    where.type = filters.type;
+  }
+  
+  if (filters.start || filters.end) {
+    where.createdAt = {};
+    if (filters.start) where.createdAt.gte = new Date(filters.start);
+    if (filters.end) {
+      const endDate = new Date(filters.end);
+      endDate.setHours(23, 59, 59, 999);
+      where.createdAt.lte = endDate;
+    }
+  }
+
   const transactions = await (prisma as any).inventoryTransaction.findMany({
-    where: { companyId },
+    where,
     include: {
       item: true,
       rack: true,
@@ -41,20 +69,28 @@ async function getTransactionsRaw(companyId?: string) {
   return transactions;
 }
 
-const getTransactions = (companyId?: string) => cacheQuery(
-  () => getTransactionsRaw(companyId),
-  ["transactions-log", companyId || "none"],
-  60
-)();
+import { TransactionFilters } from "./TransactionFilters";
 
-export default async function TransactionsPage() {
+export default async function TransactionsPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ [key: string]: string | undefined }> 
+}) {
   const session = await getSession();
   if (!session) redirect("/login");
 
-  const transactions = await getTransactions(session.companyId).catch((e) => {
-      console.error("Audit log fetch error:", e);
-      return [];
-  });
+  const filters = await searchParams;
+
+  const [transactions, users] = await Promise.all([
+    getTransactionsRaw(session.companyId, filters).catch((e) => {
+        console.error("Audit log fetch error:", e);
+        return [];
+    }),
+    prisma.user.findMany({
+      where: { companyId: session.companyId },
+      select: { id: true, name: true }
+    })
+  ]);
 
   return (
     <div className="space-y-10 pb-10">
@@ -71,11 +107,13 @@ export default async function TransactionsPage() {
         <ExportButton data={transactions} />
       </header>
 
+      <TransactionFilters users={users} />
+
       <div className="table-container !p-0">
         <div className="px-8 py-4 border-b border-border-ghost bg-surface-low/30 flex items-center justify-between">
-           <h3 className="heading-md uppercase tracking-wider">Recent Activity</h3>
+           <h3 className="heading-md uppercase tracking-wider">Filtered Activity</h3>
            <div className="badge badge-neutral">
-              {transactions.length} RECORDS
+              {transactions.length} RECORDS FOUND
            </div>
         </div>
         <div className="overflow-x-auto">
@@ -85,7 +123,7 @@ export default async function TransactionsPage() {
                 <th className="table-cell-header">Action</th>
                 <th className="table-cell-header">Item Name</th>
                 <th className="table-cell-header text-right">Change</th>
-                <th className="table-cell-header">Rack</th>
+                <th className="table-cell-header text-center">User</th>
                 <th className="table-cell-header">Vendor / Customer</th>
                 <th className="table-cell-header text-right">Date & Time</th>
               </tr>
@@ -124,17 +162,13 @@ export default async function TransactionsPage() {
                       {tx.quantity > 0 ? "+" : ""}{tx.quantity}
                     </span>
                   </td>
-                  <td className="table-cell">
-                    {tx.rack ? (
-                       <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary transition-all" />
-                          <span className="text-[11px] font-bold text-foreground">
-                            RACK-{tx.rack.rackNumber}
-                          </span>
+                  <td className="table-cell text-center">
+                    <div className="flex flex-col items-center">
+                       <div className="w-7 h-7 rounded-full bg-surface-low border border-border-ghost flex items-center justify-center text-[9px] font-black text-muted-foreground mb-1">
+                          {tx.user?.name[0]}
                        </div>
-                    ) : (
-                        <span className="badge badge-neutral">MOVING</span>
-                    )}
+                       <span className="text-[9px] font-black text-foreground uppercase tracking-tighter">{tx.user?.name}</span>
+                    </div>
                   </td>
                   <td className="table-cell">
                     {tx.customer ? (
