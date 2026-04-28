@@ -11,7 +11,8 @@ import {
   Loader2,
   AlertCircle,
   CreditCard,
-  ChevronRight
+  ChevronRight,
+  Download
 } from "lucide-react";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
@@ -117,6 +118,14 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
         </div>
 
         <div className="flex items-center gap-3">
+           <Link 
+             href={`/orders/purchase/${order.id}/bill`}
+             target="_blank"
+             className="btn btn-neutral h-12 px-6 !rounded-xl flex items-center gap-2"
+           >
+             <Download className="w-4 h-4" />
+             Download Bill
+           </Link>
            {!isFullyReceived && (
              <Link 
                href="/orders/supply-inwards"

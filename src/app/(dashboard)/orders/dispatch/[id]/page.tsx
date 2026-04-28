@@ -8,7 +8,8 @@ import {
     Loader2,
     Package,
     Send,
-    ShieldCheck
+    ShieldCheck,
+    Download
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -114,6 +115,17 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
              </span>
           </div>
           <p className="text-muted-foreground text-lg font-medium">Customer Recipient: <span className="text-foreground font-black">{order.customer.name}</span></p>
+        </div>
+
+        <div className="flex items-center gap-4">
+           <Link 
+             href={`/orders/dispatch/${order.id}/bill`}
+             target="_blank"
+             className="btn btn-neutral h-14 px-8 !rounded-2xl flex items-center gap-3 shadow-sm hover:shadow-md transition-all"
+           >
+             <Download className="w-5 h-5 text-success" />
+             <span className="text-sm font-black uppercase tracking-widest">Download Bill</span>
+           </Link>
         </div>
       </div>
 

@@ -10,7 +10,8 @@ import {
   Truck,
   Search,
   CreditCard,
-  DollarSign
+  DollarSign,
+  Download
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
@@ -318,10 +319,20 @@ export default async function PurchaseOrdersPage({
                       </td>
 
                       <td className="table-cell text-right">
-                        <Link href={`/orders/purchase/${po.id}`} className="btn btn-primary h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl">
-                          <Eye className="w-3.5 h-3.5" />
-                          Details
-                        </Link>
+                        <div className="flex items-center justify-end gap-2">
+                          <Link 
+                            href={`/orders/purchase/${po.id}/bill`} 
+                            target="_blank"
+                            className="btn btn-neutral h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            Bill
+                          </Link>
+                          <Link href={`/orders/purchase/${po.id}`} className="btn btn-primary h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl">
+                            <Eye className="w-3.5 h-3.5" />
+                            Details
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   );

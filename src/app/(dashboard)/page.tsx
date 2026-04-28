@@ -63,17 +63,20 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
       // 3. Vendor Count
       prisma.vendor.count({ where: { companyId } }),
 
-      // 4. Stock Flow Dynamics (Last 30 days)
+      // 4. Inventory Aging (FIFO Buckets)
       prisma.$queryRaw<any[]>`
         SELECT 
-          date_trunc('day', t."createdAt") as day,
-          SUM(CASE WHEN t.type IN ('PURCHASE', 'ADJUSTMENT_IN') THEN ABS(t.quantity) ELSE 0 END)::int as inbound,
-          SUM(CASE WHEN t.type IN ('SALE', 'ADJUSTMENT_OUT') THEN ABS(t.quantity) ELSE 0 END)::int as outbound
-        FROM "InventoryTransaction" t
-        WHERE t."createdAt" > (NOW() - INTERVAL '30 days') AND t."companyId" = ${companyId}
+          CASE 
+            WHEN b."purchaseDate" > NOW() - INTERVAL '30 days' THEN '0-30 Days'
+            WHEN b."purchaseDate" > NOW() - INTERVAL '60 days' THEN '31-60 Days'
+            WHEN b."purchaseDate" > NOW() - INTERVAL '90 days' THEN '61-90 Days'
+            ELSE '90+ Days'
+          END as bucket,
+          SUM(b."remainingQty")::int as units
+        FROM "InventoryBatch" b
+        INNER JOIN "Inventory" i ON b."inventoryId" = i.id
+        WHERE b."remainingQty" > 0 AND i."companyId" = ${companyId}
         GROUP BY 1
-        ORDER BY 1 DESC
-        LIMIT 10
       `,
 
       // 5. Recent Stock Activity
@@ -110,15 +113,17 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         LIMIT 3
       `,
 
-      // 8. Oldest Items
-      prisma.item.findMany({
+      // 8. FIFO Queue (Oldest Stock)
+      prisma.inventoryBatch.findMany({
         where: {
-          companyId,
-          inventory: { quantityAvailable: { gt: 0 } }
+          remainingQty: { gt: 0 },
+          inventory: { companyId }
         },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { purchaseDate: 'asc' },
         take: 5,
-        include: { inventory: true }
+        include: {
+          inventory: { include: { item: true } }
+        }
       }),
 
       // 9. Monthly Revenue
@@ -136,11 +141,11 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
       stockStatsResult,
       stockValueResult,
       vendorsCount,
-      flowResult,
+      agingResult,
       recentActivity,
       velocityResult,
       replenishItems,
-      oldestItems,
+      fifoQueueResult,
       monthlyRevenueResult
     ] = results;
 
@@ -157,7 +162,7 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         vendorsCount: vendorsCount,
         monthlyRevenue: monthlyRevenue,
       },
-      flow: (flowResult as any[] || []).reverse(),
+      aging: agingResult as any[] || [],
       recentActivity: (recentActivity as any[] || []).map((tx: any) => ({
         id: tx.id,
         type: tx.type,
@@ -168,7 +173,7 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
       })),
       velocity: velocityResult as any[] || [],
       replenish: replenishItems as any[] || [],
-      oldestItems: oldestItems as any[] || []
+      fifoQueue: fifoQueueResult as any[] || []
     };
   },
   ["dashboard-analytics-v5", companyId],
@@ -185,11 +190,11 @@ export default async function DashboardPage() {
     console.error("Dashboard data fetch error:", e);
     return {
       kpis: { totalItems: 0, stockValue: 0, lowStockCount: 0, outOfStockCount: 0, vendorsCount: 0, monthlyRevenue: 0 },
-      flow: [],
+      aging: [],
       recentActivity: [],
       velocity: [],
       replenish: [],
-      oldestItems: []
+      fifoQueue: []
     };
   });
 
@@ -281,51 +286,50 @@ export default async function DashboardPage() {
       </div>
 
       {/* Analytics Visualization Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Stock Flow Charts */}
-        <div className="lg:col-span-2 card-premium !p-8">
-          <div className="flex items-center justify-between mb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* FIFO Inventory Strategy */}
+        <div className="card-premium !p-8 flex flex-col">
+          <div className="flex items-center justify-between mb-8">
             <div>
-              <h3 className="heading-md">Items Moving In and Out</h3>
-              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Movement in the last 10 days</p>
+              <h3 className="heading-md">FIFO Inventory Priority</h3>
+              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Clear oldest stock first</p>
             </div>
-            <div className="flex gap-4">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-primary">
-                <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_oklch(0.55_0.18_250)]"></span> Incoming
-              </div>
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-indigo-300">
-                <span className="w-2 h-2 rounded-full bg-indigo-300 shadow-[0_0_8px_oklch(0.6_0.1_250)]"></span> Outgoing
+            <div className="hidden sm:flex gap-4">
+              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-warning">
+                <span className="w-2 h-2 rounded-full bg-warning shadow-[0_0_8px_oklch(0.7_0.2_80)]"></span> High Age
               </div>
             </div>
           </div>
 
-          <div className="h-48 flex items-end gap-2.5 px-2 relative border-b border-border-ghost pb-1">
-            {data.flow.length > 0 ? data.flow.map((day: { inbound: number; outbound: number; day: Date }, idx: number) => {
-              const maxVal = Math.max(...data.flow.map((d: any) => Math.max(d.inbound, d.outbound))) || 1;
-              const inHeight = (day.inbound / maxVal) * 100;
-              const outHeight = (day.outbound / maxVal) * 100;
-              return (
-                <div key={idx} className="flex-1 flex gap-1 items-end group relative h-full">
-                  {/* Tooltip */}
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-foreground text-white px-2 py-1 rounded-lg text-[10px] font-black opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-10 shadow-xl whitespace-nowrap">
-                    +{day.inbound} / -{day.outbound}
+          <div className="flex-1 mt-4">
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-6">Priority Fulfillment Queue</p>
+            <div className="space-y-4">
+              {data.fifoQueue.map((batch: any, idx: number) => (
+                <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-surface-low/30 border border-border-ghost group hover:border-primary/20 transition-all shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 shrink-0 rounded-xl bg-primary/5 text-primary flex items-center justify-center shadow-inner">
+                      <History className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-foreground truncate max-w-[150px] sm:max-w-[200px]">{batch.inventory.item.name}</p>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{batch.inventory.item.sku}</p>
+                    </div>
                   </div>
-                  <div className="flex-1 bg-primary/20 rounded-t-sm transition-all duration-700 relative group-hover:bg-primary/30" style={{ height: `${inHeight}%` }}>
-                    <div className="absolute inset-x-0 bottom-0 bg-primary rounded-t-sm h-full opacity-60 group-hover:opacity-100" />
-                  </div>
-                  <div className="flex-1 bg-indigo-300/20 rounded-t-sm transition-all duration-700 relative group-hover:bg-indigo-300/30" style={{ height: `${outHeight}%` }}>
-                    <div className="absolute inset-x-0 bottom-0 bg-indigo-300 rounded-t-sm h-full opacity-60 group-hover:opacity-100" />
+                  <div className="sm:text-right border-t sm:border-t-0 border-border-ghost/50 pt-3 sm:pt-0">
+                    <p className="text-sm font-black text-foreground">{batch.remainingQty} <span className="text-[10px] font-medium text-muted-foreground uppercase">Units</span></p>
+                    <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">
+                      Stock Date: {new Date(batch.purchaseDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                    </p>
                   </div>
                 </div>
-              );
-            }) : (
-              <div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-medium italic text-xs">
-                Not enough data to show movement.
-              </div>
-            )}
-          </div>
-          <div className="flex justify-between mt-4 text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] px-2">
-            {data.flow.map((d: { inbound: number; outbound: number; day: Date }, i: number) => <span key={i} className="flex-1 text-center">{new Date(d.day).toLocaleDateString([], { day: '2-digit', month: 'short' })}</span>)}
+              ))}
+              {data.fifoQueue.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+                  <Activity className="w-8 h-8 opacity-10 mb-4" />
+                  <p className="text-[10px] uppercase font-black tracking-widest">No aging stock found</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -339,20 +343,20 @@ export default async function DashboardPage() {
           </div>
           <div className="space-y-3 flex-1">
             {data.replenish.length > 0 ? data.replenish.map((item: { id: string; name: string; sku: string; minStockLevel: number; current_qty: number; incoming_qty: number }, idx: number) => (
-              <div key={idx} className="bg-white p-4 rounded-xl border border-error/5 flex items-center justify-between group hover:border-error/20 transition-all shadow-sm">
+              <div key={idx} className="bg-white p-4 rounded-xl border border-error/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-error/20 transition-all shadow-sm">
                 <div className="flex items-center gap-4">
                     <div 
-                      className="w-10 h-10 rounded-xl bg-error/5 text-error flex items-center justify-center shadow-inner"
+                      className="w-10 h-10 shrink-0 rounded-xl bg-error/5 text-error flex items-center justify-center shadow-inner"
                     >
                         <ShoppingCart className="w-4 h-4" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                         <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
-                        <p className="text-xs font-bold text-foreground mt-0.5 truncate max-w-[120px]">{item.name}</p>
+                        <p className="text-xs font-bold text-foreground mt-0.5 truncate max-w-[150px]">{item.name}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
+                <div className="flex items-center justify-between sm:justify-end gap-6 border-t sm:border-t-0 border-error/5 pt-3 sm:pt-0">
+                  <div className="sm:text-right">
                     <p className="text-xs font-black text-error">{item.current_qty} Units</p>
                     <p className="text-[9px] text-muted-foreground font-bold italic">Min: {item.minStockLevel}</p>
                   </div>
@@ -483,38 +487,8 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Oldest Items Row */}
-      <div className="grid grid-cols-1 gap-8">
-        <div className="card-premium flex flex-col !p-8 border-warning/10 bg-warning/[0.02]">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-warning/10 rounded-lg">
-              <Timer className="w-4 h-4 text-warning" />
-            </div>
-            <h3 className="heading-md">Oldest Items in Inventory</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {data.oldestItems.map((item: any, idx: number) => (
-              <div key={item.id} className="bg-white p-4 rounded-xl border border-warning/5 shadow-sm hover:border-warning/20 transition-all">
-                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
-                <p className="text-xs font-bold text-foreground mt-1 truncate">{item.name}</p>
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-ghost">
-                  <span className="text-[10px] font-bold text-muted-foreground">
-                    {new Date(item.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}
-                  </span>
-                  <span className="text-xs font-black text-warning">
-                    {item.inventory?.quantityAvailable} Units
-                  </span>
-                </div>
-              </div>
-            ))}
-            {data.oldestItems.length === 0 && (
-              <div className="col-span-full py-8 text-center text-muted-foreground font-medium text-xs italic">
-                No items found.
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* Spacer for bottom padding */}
+      <div className="h-10" />
     </div>
   );
 }

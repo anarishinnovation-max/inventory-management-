@@ -4,7 +4,9 @@ import { clsx, type ClassValue } from "clsx";
 import {
     CheckCircle2,
     Clock,
-    Plus
+    Plus,
+    Download,
+    Eye
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
@@ -232,11 +234,22 @@ export default async function DispatchPage({
                           {order.status}
                        </span>
                     </td>
-                    <td className="table-cell text-right">
-                       <Link href={`/orders/dispatch/${order.id}`} className="btn btn-primary h-10 px-5 text-[9px] font-black uppercase tracking-widest rounded-xl">
-                          View & Send
-                       </Link>
-                    </td>
+                     <td className="table-cell text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link 
+                            href={`/orders/dispatch/${order.id}/bill`} 
+                            target="_blank"
+                            className="btn btn-neutral h-10 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-success/5 hover:text-success transition-all"
+                          >
+                            <Download className="w-4 h-4" />
+                            Bill
+                          </Link>
+                          <Link href={`/orders/dispatch/${order.id}`} className="btn btn-primary h-10 px-5 text-[9px] font-black uppercase tracking-widest rounded-xl">
+                             <Eye className="w-4 h-4" />
+                             View
+                          </Link>
+                        </div>
+                     </td>
                   </tr>
                 )) : (
                   <tr>
