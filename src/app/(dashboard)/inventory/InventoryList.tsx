@@ -386,13 +386,13 @@ export default function InventoryList({
                         </div>
                       </div>
                     </td>
-                    <td className="table-cell cursor-pointer hidden lg:table-cell" onClick={() => setBreakdownItem(item)}>
+                    <td className="table-cell hidden lg:table-cell">
                       <span className="badge badge-primary">
                         {item.category}
                       </span>
                     </td>
 
-                    <td className="table-cell text-right font-mono cursor-pointer" onClick={() => setBreakdownItem(item)}>
+                    <td className="table-cell text-right font-mono">
                       <div className="flex flex-col items-end">
                         <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
                           {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
@@ -404,12 +404,12 @@ export default function InventoryList({
                         )}
                       </div>
                     </td>
-                    <td className="table-cell cursor-pointer hidden md:table-cell" onClick={() => setBreakdownItem(item)}>
+                    <td className="table-cell hidden md:table-cell">
                       <span className="text-[10px] font-black text-muted-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost uppercase tracking-widest">
                         {rackLocations || "N/A"}
                       </span>
                     </td>
-                    <td className="table-cell cursor-pointer hidden sm:table-cell" onClick={() => setBreakdownItem(item)}>
+                    <td className="table-cell hidden sm:table-cell">
                       {isUrgent ? (
                         <span className="badge badge-error">Urgent</span>
                       ) : isShortage ? (

@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Filter, ChevronDown, X, Tag } from "lucide-react";
-import { useState, useTransition } from "react";
+import { Filter, ChevronDown, X, Tag, Search, Check } from "lucide-react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { SearchableSelect } from "@/components/SearchableSelect";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,7 +25,6 @@ export default function InventoryFilters({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const statuses = [
     { label: "All Items", value: "all" },
@@ -33,6 +33,11 @@ export default function InventoryFilters({
     { label: "Out of Stock", value: "outofstock" },
     { label: "Urgent", value: "urgent" },
     { label: "Ordered", value: "ordered" },
+  ];
+
+  const activityOptions = [
+    { id: "latest_sent", name: "Latest Sent" },
+    { id: "latest_received", name: "Latest Received" },
   ];
 
   const updateFilter = (key: string, value: string) => {
@@ -78,19 +83,27 @@ export default function InventoryFilters({
           ))}
         </div>
 
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className={cn(
-            "btn ml-auto h-11 px-6 text-[10px]",
-            isExpanded || currentCategory !== "all"
-              ? "btn-primary"
-              : "btn-neutral"
-          )}
-        >
-          <Filter className="w-3.5 h-3.5" />
-          <span>{isExpanded ? "Hide Filters" : "More Filters"}</span>
-          <ChevronDown className={cn("w-3.5 h-3.5 transition-all", isExpanded && "opacity-50")} />
-        </button>
+        {/* Activity Dropdown - Custom */}
+        <div className="w-[180px]">
+           <SearchableSelect 
+             items={activityOptions}
+             value={currentStatus.startsWith('latest_') ? currentStatus : 'all'}
+             onChange={(val) => updateFilter("status", val)}
+             placeholder="Activity Log"
+             className="!rounded-full h-11"
+           />
+        </div>
+
+        {/* Category Dropdown - Custom */}
+        <div className="w-[220px]">
+           <SearchableSelect 
+             items={categories.map(c => ({ id: c, name: c }))}
+             value={currentCategory}
+             onChange={(val) => updateFilter("category", val)}
+             placeholder="All Categories"
+             className="!rounded-full h-11"
+           />
+        </div>
 
         {hasActiveFilters && (
           <button
@@ -102,45 +115,6 @@ export default function InventoryFilters({
           </button>
         )}
       </div>
-
-      {isExpanded && (
-        <div className="bg-surface-lowest p-8 rounded-[2rem] border border-border-ghost shadow-ambient animate-in fade-in slide-in-from-top-4 duration-300">
-           <div className="grid">
-              <div className="space-y-4">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-4">
-                  <Tag className="w-3 h-3" /> Filter by Category
-                </label>
-                <div className="flex flex-wrap gap-2">
-                   <button 
-                     onClick={() => updateFilter("category", "all")}
-                     className={cn(
-                        "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
-                        currentCategory === 'all' 
-                          ? "bg-primary text-white border-primary shadow-md shadow-primary/20" 
-                          : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/30"
-                     )}
-                   >
-                     All Categories
-                   </button>
-                   {categories.map(cat => (
-                      <button 
-                        key={cat}
-                        onClick={() => updateFilter("category", cat)}
-                        className={cn(
-                           "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border whitespace-nowrap",
-                           currentCategory === cat 
-                             ? "bg-primary text-white border-primary shadow-md shadow-primary/20" 
-                             : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/30"
-                        )}
-                      >
-                        {cat}
-                      </button>
-                   ))}
-                </div>
-              </div>
-           </div>
-        </div>
-      )}
     </div>
   );
 }

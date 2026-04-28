@@ -19,6 +19,8 @@ export function TransactionFilters({ users }: { users: any[] }) {
   const actionTypes = [
     { label: "Purchase", value: "PURCHASE" },
     { label: "Dispatch", value: "dispatch" },
+    { label: "Latest Received", value: "PURCHASE" },
+    { label: "Latest Sent", value: "dispatch" },
     { label: "Adjustment", value: "adjustment" },
     { label: "Internal Move", value: "MOVE" }
   ];

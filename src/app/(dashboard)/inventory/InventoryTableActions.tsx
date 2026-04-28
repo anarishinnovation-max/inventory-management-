@@ -132,7 +132,7 @@ export default function InventoryTableActions({
               setShowScrap(true);
               setShowDropdown(false);
             }}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors text-left"
+            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-error hover:bg-error/5 transition-colors text-left"
           >
             <Flame className="w-3.5 h-3.5" />
             <span>Scrap Items</span>
@@ -142,7 +142,7 @@ export default function InventoryTableActions({
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors text-left border-t border-border-ghost/50"
+              className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-error hover:bg-error/5 transition-colors text-left border-t border-border-ghost/50"
             >
               {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
               <span>Delete Item</span>

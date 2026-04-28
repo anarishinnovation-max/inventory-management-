@@ -172,7 +172,7 @@ export function ItemBreakdownModal({
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm">
                     <Package className="w-3.5 h-3.5" />
-                    <span className="text-[11px] font-black">{totalStock} Units On Hand</span>
+                    <span className="text-[11px] font-black">{totalStock} Units In Stock</span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 text-primary rounded-xl shadow-sm">
                     <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>

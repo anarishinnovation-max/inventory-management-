@@ -73,7 +73,21 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     }
   });
 
-  const mappedAll = allItemsSummary.map((item: any) => {
+  // First fetch items with their latest transaction logs if needed
+  const itemsWithLogs = await Promise.all(allItemsSummary.map(async (item: any) => {
+    let lastLogType = null;
+    if (status === 'latest_sent' || status === 'latest_received') {
+      const lastLog = await prisma.inventoryTransaction.findFirst({
+        where: { itemId: item.id },
+        orderBy: { createdAt: 'desc' },
+        select: { type: true }
+      });
+      lastLogType = lastLog?.type;
+    }
+    return { ...item, lastLogType };
+  }));
+
+  const mappedAll = itemsWithLogs.map((item: any) => {
     const total = item.inventory?.quantityAvailable ?? 0;
     const incoming = item.inventory?.incomingQty ?? 0;
     const reserved = item.inventory?.quantityReserved ?? 0;
@@ -105,6 +119,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
       isPartial: total > 0 && total < reserved,
       isOrdered: incoming > 0 && netAvailable >= 0,
       isInStock: total > (item.minStockLevel ?? 0) && total >= reserved,
+      lastLogType: item.lastLogType,
       category: item.category?.name || "Uncategorized",
       updatedAt: item.inventory?.updatedAt || item.createdAt
     };
@@ -120,6 +135,8 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
       if (status === 'instock') return item.isInStock;
       if (status === 'outofstock') return item.isOutOfStock;
       if (status === 'ordered') return item.isOrdered;
+      if (status === 'latest_sent') return item.lastLogType === 'SALE';
+      if (status === 'latest_received') return item.lastLogType === 'PURCHASE';
       return true;
     });
   }
