@@ -39,10 +39,12 @@ async function getInwardData(options: {
   poNumber?: string, 
   startDate?: string, 
   endDate?: string,
-  companyId?: string 
+  companyId?: string,
+  page?: number,
+  pageSize?: number
 }) {
-  const { query, vendorId, poNumber, startDate, endDate, companyId } = options;
-  if (!companyId) return { pendingPOs: [], pendingItems: [], recentTransactions: [] };
+  const { query, vendorId, poNumber, startDate, endDate, companyId, page = 1, pageSize = 10 } = options;
+  if (!companyId) return { pendingPOs: [], pendingItems: [], recentTransactions: [], totalPages: 0, totalItems: 0 };
 
   const wherePO: Prisma.PurchaseOrderWhereInput = {
     companyId,
@@ -62,7 +64,6 @@ async function getInwardData(options: {
     if (startDate && startDate.trim() !== "") wherePO.orderDate.gte = new Date(startDate);
     if (endDate && endDate.trim() !== "") wherePO.orderDate.lte = new Date(endDate);
     
-    // Clean up if both are empty after trim
     if (Object.keys(wherePO.orderDate).length === 0) delete wherePO.orderDate;
   }
 
@@ -75,7 +76,8 @@ async function getInwardData(options: {
     ];
   }
 
-  const [pendingPOs, recentTransactions] = await Promise.all([
+  const [totalPOs, pendingPOs, recentTransactions] = await Promise.all([
+    prisma.purchaseOrder.count({ where: wherePO }),
     prisma.purchaseOrder.findMany({
       where: wherePO,
       include: {
@@ -88,7 +90,9 @@ async function getInwardData(options: {
       },
       orderBy: {
         createdAt: 'desc'
-      }
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize
     }),
     prisma.inventoryTransaction.findMany({
       where: {
@@ -125,7 +129,13 @@ async function getInwardData(options: {
       }))
   );
 
-  return { pendingPOs, pendingItems, recentTransactions };
+  return { 
+    pendingPOs, 
+    pendingItems, 
+    recentTransactions, 
+    totalPages: Math.ceil(totalPOs / pageSize),
+    totalItems: totalPOs 
+  };
 }
 
 export default async function SupplyInwardsPage({
@@ -142,15 +152,18 @@ export default async function SupplyInwardsPage({
   const poNumber = typeof sParams.poNumber === 'string' ? sParams.poNumber : '';
   const startDate = typeof sParams.startDate === 'string' ? sParams.startDate : '';
   const endDate = typeof sParams.endDate === 'string' ? sParams.endDate : '';
+  const pageParam = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
+  const page = isNaN(pageParam) ? 1 : Math.max(1, pageParam);
   
-  const { pendingPOs, pendingItems, recentTransactions } = await getInwardData({
+  const { pendingPOs, pendingItems, recentTransactions, totalPages } = await getInwardData({
     query: q,
     vendorId,
     poNumber,
     startDate,
     endDate,
-    companyId: session.companyId
-  }).catch(() => ({ pendingPOs: [], pendingItems: [], recentTransactions: [] }));
+    companyId: session.companyId,
+    page
+  }).catch(() => ({ pendingPOs: [], pendingItems: [], recentTransactions: [], totalPages: 0, totalItems: 0 }));
 
   const totalPendingQty = pendingItems.reduce((acc, item) => acc + (item.quantityOrdered - item.quantityReceived), 0);
   const todayInwardCount = recentTransactions.filter(t => new Date(t.createdAt).getTime() > Date.now() - 86400000).length;
@@ -228,6 +241,8 @@ export default async function SupplyInwardsPage({
         currentStartDate={startDate}
         currentEndDate={endDate}
         searchQuery={q}
+        currentPage={page}
+        totalPages={totalPages}
       />
 
       {/* Recent Audit Log - Moved to Bottom */}

@@ -9,6 +9,8 @@ import {
   CheckCircle2,
   CheckSquare,
   Clock,
+  ChevronLeft,
+  ChevronRight,
   Loader2,
   SlidersHorizontal,
   Square,
@@ -30,6 +32,8 @@ interface SupplyInwardsListProps {
   currentPONumber: string;
   currentStartDate: string;
   currentEndDate: string;
+  currentPage: number;
+  totalPages: number;
 }
 
 function cn(...inputs: ClassValue[]) {
@@ -51,7 +55,9 @@ export default function SupplyInwardsList({
   currentVendorId,
   currentPONumber,
   currentStartDate,
-  currentEndDate
+  currentEndDate,
+  currentPage,
+  totalPages
 }: SupplyInwardsListProps) {
   const router = useRouter();
   const confirm = useConfirm();
@@ -62,10 +68,12 @@ export default function SupplyInwardsList({
   const [reviewValues, setReviewValues] = useState<Record<string, number>>({});
 
   const toggleAll = () => {
-    if (selectedIds.size === items.length) {
+    if (selectedIds.size >= items.length && items.length > 0) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(items.map(i => `${i.poId}|${i.itemId}`)));
+      const next = new Set(selectedIds);
+      items.forEach(i => next.add(`${i.poId}|${i.itemId}`));
+      setSelectedIds(next);
     }
   };
 
@@ -233,7 +241,35 @@ export default function SupplyInwardsList({
             </div>
             Pending Item Arrivals
           </h3>
-          <Link href="/orders/purchase" className="btn btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest">Full Purchase List</Link>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mr-4 opacity-40">
+              Page {currentPage} of {totalPages || 1}
+            </span>
+            <button
+              onClick={() => {
+                const params = new URLSearchParams(window.location.search);
+                const nextPage = Math.max(1, currentPage - 1);
+                params.set('page', nextPage.toString());
+                router.push(`/orders/supply-inwards?${params.toString()}`);
+              }}
+              disabled={currentPage <= 1}
+              className="btn btn-ghost h-10 w-10 !p-0 disabled:opacity-20"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => {
+                const params = new URLSearchParams(window.location.search);
+                const nextPage = currentPage + 1;
+                params.set('page', nextPage.toString());
+                router.push(`/orders/supply-inwards?${params.toString()}`);
+              }}
+              disabled={currentPage >= totalPages}
+              className="btn btn-ghost h-10 w-10 !p-0 disabled:opacity-20"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
  
         <div className="table-container">
