@@ -1,43 +1,30 @@
-"use client";
 
-import { useEffect, useState, use } from "react";
-import { Loader2, Printer, Download } from "lucide-react";
-import { showToast } from "@/lib/toast";
+import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
+import { redirect, notFound } from "next/navigation";
+import { Download } from "lucide-react";
+import PrintButton from "@/components/PrintButton";
 
-export default function PurchaseBillPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const [order, setOrder] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchOrder() {
-      try {
-        const res = await fetch("/api/purchase-orders");
-        if (res.ok) {
-          const orders = await res.json();
-          const found = orders.find((o: any) => o.id === id);
-          if (found) {
-            setOrder(found);
-          }
-        }
-      } catch (err) {
-        showToast("Failed to load bill data.", "error");
-      } finally {
-        setLoading(false);
+async function getOrder(id: string, companyId: string) {
+  return await prisma.purchaseOrder.findUnique({
+    where: { id, companyId },
+    include: {
+      vendor: true,
+      items: {
+        include: { item: true }
       }
     }
-    fetchOrder();
-  }, [id]);
+  });
+}
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
-      </div>
-    );
-  }
+export default async function PurchaseBillPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
 
-  if (!order) return <div className="p-20 text-center">Order not found</div>;
+  const { id } = await params;
+  const order = await getOrder(id, session.companyId);
+
+  if (!order) notFound();
 
   const subTotal = order.items.reduce((acc: number, item: any) => acc + (item.costPrice * item.quantityOrdered), 0);
   const tax = subTotal * 0.05; // Sample 5% tax
@@ -48,13 +35,7 @@ export default function PurchaseBillPage({ params }: { params: Promise<{ id: str
       <div className="max-w-[1000px] mx-auto bg-white shadow-2xl p-16 print:shadow-none print:max-w-full">
         {/* Header Controls */}
         <div className="flex justify-end gap-4 mb-8 print:hidden">
-          <button 
-            onClick={() => window.print()}
-            className="btn btn-primary h-12 px-6 rounded-xl flex items-center gap-2"
-          >
-            <Printer className="w-4 h-4" />
-            Print Bill
-          </button>
+          <PrintButton />
         </div>
 
         {/* Bill Content */}

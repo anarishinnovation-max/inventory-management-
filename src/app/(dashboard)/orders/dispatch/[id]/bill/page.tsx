@@ -1,43 +1,29 @@
-"use client";
 
-import { useEffect, useState, use } from "react";
-import { Loader2, Printer } from "lucide-react";
-import { showToast } from "@/lib/toast";
+import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
+import { redirect, notFound } from "next/navigation";
+import PrintButton from "@/components/PrintButton";
 
-export default function SaleBillPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const [order, setOrder] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchOrder() {
-      try {
-        const res = await fetch("/api/dispatch-orders");
-        if (res.ok) {
-          const orders = await res.json();
-          const found = orders.find((o: any) => o.id === id);
-          if (found) {
-            setOrder(found);
-          }
-        }
-      } catch (err) {
-        showToast("Failed to load sale bill data.", "error");
-      } finally {
-        setLoading(false);
+async function getOrder(id: string, companyId: string) {
+  return await prisma.dispatchOrder.findUnique({
+    where: { id, companyId },
+    include: {
+      customer: true,
+      items: {
+        include: { item: true }
       }
     }
-    fetchOrder();
-  }, [id]);
+  });
+}
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
-      </div>
-    );
-  }
+export default async function SaleBillPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await getSession();
+  if (!session) redirect("/login");
 
-  if (!order) return <div className="p-20 text-center">Order not found</div>;
+  const { id } = await params;
+  const order = await getOrder(id, session.companyId);
+
+  if (!order) notFound();
 
   const subTotal = order.items.reduce((acc: number, item: any) => acc + (item.sellingPrice * item.quantity), 0);
   const tax = subTotal * 0.12; // Sample 12% GST
@@ -48,13 +34,7 @@ export default function SaleBillPage({ params }: { params: Promise<{ id: string 
       <div className="max-w-[1000px] mx-auto bg-white shadow-2xl p-16 print:shadow-none print:max-w-full">
         {/* Header Controls */}
         <div className="flex justify-end gap-4 mb-8 print:hidden">
-          <button 
-            onClick={() => window.print()}
-            className="btn btn-primary h-12 px-6 rounded-xl flex items-center gap-2"
-          >
-            <Printer className="w-4 h-4" />
-            Print Sale Bill
-          </button>
+          <PrintButton label="Print Sale Bill" />
         </div>
 
         {/* Bill Content */}
