@@ -71,6 +71,7 @@ export async function GET(
           quantity: remaining,
           status: line.purchaseOrder.status,
           expectedDelivery: line.purchaseOrder.expectedDelivery,
+          costPrice: Number(line.costPrice || 0),
         };
       })
       .filter((entry): entry is NonNullable<typeof entry> => entry !== null);

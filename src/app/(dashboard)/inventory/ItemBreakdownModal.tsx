@@ -54,6 +54,7 @@ interface IncomingPOEntry {
   quantity: number;
   status: string;
   expectedDelivery: string | null;
+  costPerUnit: number;
 }
 
 interface CustomerOrderEntry {
@@ -130,6 +131,7 @@ export function ItemBreakdownModal({
                 quantity: po.quantity,
                 status: po.status,
                 expectedDelivery: po.expectedDelivery,
+                costPerUnit: po.costPrice || 0,
               }))
             );
             setCustomerOrders(
@@ -178,10 +180,17 @@ export function ItemBreakdownModal({
                     <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>
                     <span className="text-[11px] font-black">
                       ₹{(() => {
-                        const totalRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
-                        if (totalRemaining === 0) return "0";
-                        const weightedSum = breakdown.reduce((acc, b) => acc + (b.quantity * b.costPerUnit), 0);
-                        return (weightedSum / totalRemaining).toLocaleString(undefined, { maximumFractionDigits: 0 });
+                        const stockRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
+                        const pipelineRemaining = incomingPOs.reduce((acc, p) => acc + p.quantity, 0);
+                        const totalUnits = stockRemaining + pipelineRemaining;
+                        
+                        if (totalUnits === 0) return "0";
+                        
+                        const stockValue = breakdown.reduce((acc, b) => acc + (b.quantity * b.costPerUnit), 0);
+                        const pipelineValue = incomingPOs.reduce((acc, p) => acc + (p.quantity * p.costPerUnit), 0);
+                        const totalValue = stockValue + pipelineValue;
+
+                        return (totalValue / totalUnits).toLocaleString(undefined, { maximumFractionDigits: 0 });
                       })()}
                     </span>
                   </div>
