@@ -75,10 +75,7 @@ export default function InventoryList({
           aVal = a.totalStock;
           bVal = b.totalStock;
           break;
-        case 'avgPrice':
-          aVal = a.avgPrice;
-          bVal = b.avgPrice;
-          break;
+
         case 'updatedAt':
           aVal = new Date(a.updatedAt).getTime();
           bVal = new Date(b.updatedAt).getTime();
@@ -304,15 +301,7 @@ export default function InventoryList({
                     <SortIcon column="category" />
                   </button>
                 </th>
-                <th className="table-cell-header text-right">
-                  <button
-                    onClick={() => requestSort('avgPrice')}
-                    className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
-                  >
-                    Avg Price
-                    <SortIcon column="avgPrice" />
-                  </button>
-                </th>
+
                 <th className="table-cell-header text-right">
                   <button
                     onClick={() => requestSort('units')}
@@ -378,7 +367,7 @@ export default function InventoryList({
                       </button>
                     </td>
                     <td className="table-cell cursor-pointer" onClick={() => toggleOne(item.id)}>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <div className="flex flex-col min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
@@ -397,11 +386,7 @@ export default function InventoryList({
                         {item.category}
                       </span>
                     </td>
-                    <td className="table-cell text-right font-mono">
-                      <span className="text-sm font-black text-primary">
-                        ₹{item.avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </span>
-                    </td>
+
                     <td className="table-cell text-right font-mono">
                       <div className="flex flex-col items-end">
                         <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
@@ -434,8 +419,8 @@ export default function InventoryList({
                     </td>
                     <td className="table-cell">
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Calendar className="w-3.5 h-3.5 opacity-40" />
-                        <span className="text-[11px] font-bold">
+                        <Calendar className="w-3 h-3 opacity-40" />
+                        <span className="text-[10px] font-bold">
                           {formatDate(item.updatedAt)}
                         </span>
                       </div>

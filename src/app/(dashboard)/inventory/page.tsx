@@ -30,8 +30,7 @@ export interface MappedItem {
   minStockLevel: number;
   isCritical: boolean;
   totalStock: number;
-  avgPrice: number;
-  incomingQty: number;
+  avgPrice: number;  incomingQty: number;
   quantityReserved: number;
   quantityInTransit: number;
   stocks: MappedStock[];
@@ -95,6 +94,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
       minStockLevel: item.minStockLevel ?? 0,
       totalStock: total,
       avgPrice,
+
       netAvailable,
       incomingQty: item.inventory?.incomingQty ?? 0,
       quantityReserved: reserved,

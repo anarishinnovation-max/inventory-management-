@@ -67,14 +67,14 @@ export default function InventoryTableActions({
     <div className="flex justify-end gap-1">
       <Link 
         href={`/orders/purchase/new?itemId=${itemId}&quantity=${neededAmount}`}
-        className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-success hover:bg-success/5 border-success/10"
+        className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-success hover:bg-success/5 border-success/10"
         title={`Shop ${neededAmount} more`}
       >
         <ShoppingCart className="w-4 h-4" />
       </Link>
       <button
         onClick={() => setShowBreakdown(true)}
-        className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-primary hover:bg-primary/5 border-primary/10"
+        className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-primary hover:bg-primary/5 border-primary/10"
         suppressHydrationWarning
       >
         <Eye className="w-4 h-4" />
@@ -83,7 +83,7 @@ export default function InventoryTableActions({
       <button
         onClick={() => router.push(`/inventory/${itemId}/edit`)}
         className={cn(
-          "btn h-9 w-9 !p-0 rounded-xl",
+          "btn h-8 w-8 !p-0 rounded-xl",
           userRole === 'EMPLOYEE' ? "btn-primary bg-primary/5 text-primary border-primary/10" : "btn-neutral"
         )}
         title={userRole === 'EMPLOYEE' ? "Manage Stock & Rack" : "Edit Item"}
@@ -93,7 +93,7 @@ export default function InventoryTableActions({
 
       <button
         onClick={() => setShowScrap(true)}
-        className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
+        className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
         title="Scrap Item"
       >
         <Flame className="w-4 h-4" />
@@ -103,7 +103,7 @@ export default function InventoryTableActions({
         <button
           onClick={handleDelete}
           disabled={isDeleting}
-          className="btn btn-ghost h-9 w-9 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
+          className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
           title="Delete Item"
         >
           {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}

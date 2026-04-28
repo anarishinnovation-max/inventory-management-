@@ -214,8 +214,8 @@ exports.Prisma.InventoryBatchScalarFieldEnum = {
   costPerUnit: 'costPerUnit',
   purchaseDate: 'purchaseDate',
   purchaseOrderId: 'purchaseOrderId',
-  receivedById: 'receivedById',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  receivedById: 'receivedById'
 };
 
 exports.Prisma.POLineItemScalarFieldEnum = {

@@ -2161,28 +2161,28 @@ export namespace Prisma {
     categories: number
     customers: number
     dispatches: number
+    inventory: number
     transactions: number
     items: number
     pos: number
     racks: number
+    stocks: number
     users: number
     vendors: number
-    stocks: number
-    inventory: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     categories?: boolean | CompanyCountOutputTypeCountCategoriesArgs
     customers?: boolean | CompanyCountOutputTypeCountCustomersArgs
     dispatches?: boolean | CompanyCountOutputTypeCountDispatchesArgs
+    inventory?: boolean | CompanyCountOutputTypeCountInventoryArgs
     transactions?: boolean | CompanyCountOutputTypeCountTransactionsArgs
     items?: boolean | CompanyCountOutputTypeCountItemsArgs
     pos?: boolean | CompanyCountOutputTypeCountPosArgs
     racks?: boolean | CompanyCountOutputTypeCountRacksArgs
+    stocks?: boolean | CompanyCountOutputTypeCountStocksArgs
     users?: boolean | CompanyCountOutputTypeCountUsersArgs
     vendors?: boolean | CompanyCountOutputTypeCountVendorsArgs
-    stocks?: boolean | CompanyCountOutputTypeCountStocksArgs
-    inventory?: boolean | CompanyCountOutputTypeCountInventoryArgs
   }
 
   // Custom InputTypes
@@ -2220,6 +2220,13 @@ export namespace Prisma {
   /**
    * CompanyCountOutputType without action
    */
+  export type CompanyCountOutputTypeCountInventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
   export type CompanyCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InventoryTransactionWhereInput
   }
@@ -2248,6 +2255,13 @@ export namespace Prisma {
   /**
    * CompanyCountOutputType without action
    */
+  export type CompanyCountOutputTypeCountStocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
   export type CompanyCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
   }
@@ -2259,33 +2273,19 @@ export namespace Prisma {
     where?: VendorWhereInput
   }
 
-  /**
-   * CompanyCountOutputType without action
-   */
-  export type CompanyCountOutputTypeCountStocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: StockWhereInput
-  }
-
-  /**
-   * CompanyCountOutputType without action
-   */
-  export type CompanyCountOutputTypeCountInventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InventoryWhereInput
-  }
-
 
   /**
    * Count Type UserCountOutputType
    */
 
   export type UserCountOutputType = {
-    transactions: number
     batches: number
+    transactions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
     batches?: boolean | UserCountOutputTypeCountBatchesArgs
+    transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
   }
 
   // Custom InputTypes
@@ -2302,15 +2302,15 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InventoryTransactionWhereInput
+  export type UserCountOutputTypeCountBatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryBatchWhereInput
   }
 
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountBatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InventoryBatchWhereInput
+  export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryTransactionWhereInput
   }
 
 
@@ -2793,14 +2793,14 @@ export namespace Prisma {
     categories?: boolean | Company$categoriesArgs<ExtArgs>
     customers?: boolean | Company$customersArgs<ExtArgs>
     dispatches?: boolean | Company$dispatchesArgs<ExtArgs>
+    inventory?: boolean | Company$inventoryArgs<ExtArgs>
     transactions?: boolean | Company$transactionsArgs<ExtArgs>
     items?: boolean | Company$itemsArgs<ExtArgs>
     pos?: boolean | Company$posArgs<ExtArgs>
     racks?: boolean | Company$racksArgs<ExtArgs>
+    stocks?: boolean | Company$stocksArgs<ExtArgs>
     users?: boolean | Company$usersArgs<ExtArgs>
     vendors?: boolean | Company$vendorsArgs<ExtArgs>
-    stocks?: boolean | Company$stocksArgs<ExtArgs>
-    inventory?: boolean | Company$inventoryArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -2830,14 +2830,14 @@ export namespace Prisma {
     categories?: boolean | Company$categoriesArgs<ExtArgs>
     customers?: boolean | Company$customersArgs<ExtArgs>
     dispatches?: boolean | Company$dispatchesArgs<ExtArgs>
+    inventory?: boolean | Company$inventoryArgs<ExtArgs>
     transactions?: boolean | Company$transactionsArgs<ExtArgs>
     items?: boolean | Company$itemsArgs<ExtArgs>
     pos?: boolean | Company$posArgs<ExtArgs>
     racks?: boolean | Company$racksArgs<ExtArgs>
+    stocks?: boolean | Company$stocksArgs<ExtArgs>
     users?: boolean | Company$usersArgs<ExtArgs>
     vendors?: boolean | Company$vendorsArgs<ExtArgs>
-    stocks?: boolean | Company$stocksArgs<ExtArgs>
-    inventory?: boolean | Company$inventoryArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2849,14 +2849,14 @@ export namespace Prisma {
       categories: Prisma.$CategoryPayload<ExtArgs>[]
       customers: Prisma.$CustomerPayload<ExtArgs>[]
       dispatches: Prisma.$DispatchOrderPayload<ExtArgs>[]
+      inventory: Prisma.$InventoryPayload<ExtArgs>[]
       transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
       items: Prisma.$ItemPayload<ExtArgs>[]
       pos: Prisma.$PurchaseOrderPayload<ExtArgs>[]
       racks: Prisma.$RackPayload<ExtArgs>[]
+      stocks: Prisma.$StockPayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
       vendors: Prisma.$VendorPayload<ExtArgs>[]
-      stocks: Prisma.$StockPayload<ExtArgs>[]
-      inventory: Prisma.$InventoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3260,14 +3260,14 @@ export namespace Prisma {
     categories<T extends Company$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Company$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customers<T extends Company$customersArgs<ExtArgs> = {}>(args?: Subset<T, Company$customersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dispatches<T extends Company$dispatchesArgs<ExtArgs> = {}>(args?: Subset<T, Company$dispatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inventory<T extends Company$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Company$inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends Company$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     items<T extends Company$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Company$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pos<T extends Company$posArgs<ExtArgs> = {}>(args?: Subset<T, Company$posArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     racks<T extends Company$racksArgs<ExtArgs> = {}>(args?: Subset<T, Company$racksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stocks<T extends Company$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Company$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     users<T extends Company$usersArgs<ExtArgs> = {}>(args?: Subset<T, Company$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     vendors<T extends Company$vendorsArgs<ExtArgs> = {}>(args?: Subset<T, Company$vendorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    stocks<T extends Company$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Company$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    inventory<T extends Company$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Company$inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3766,6 +3766,30 @@ export namespace Prisma {
   }
 
   /**
+   * Company.inventory
+   */
+  export type Company$inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inventory
+     */
+    select?: InventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inventory
+     */
+    omit?: InventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryInclude<ExtArgs> | null
+    where?: InventoryWhereInput
+    orderBy?: InventoryOrderByWithRelationInput | InventoryOrderByWithRelationInput[]
+    cursor?: InventoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryScalarFieldEnum | InventoryScalarFieldEnum[]
+  }
+
+  /**
    * Company.transactions
    */
   export type Company$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3862,6 +3886,30 @@ export namespace Prisma {
   }
 
   /**
+   * Company.stocks
+   */
+  export type Company$stocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Stock
+     */
+    select?: StockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Stock
+     */
+    omit?: StockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockInclude<ExtArgs> | null
+    where?: StockWhereInput
+    orderBy?: StockOrderByWithRelationInput | StockOrderByWithRelationInput[]
+    cursor?: StockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockScalarFieldEnum | StockScalarFieldEnum[]
+  }
+
+  /**
    * Company.users
    */
   export type Company$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3907,54 +3955,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: VendorScalarFieldEnum | VendorScalarFieldEnum[]
-  }
-
-  /**
-   * Company.stocks
-   */
-  export type Company$stocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Stock
-     */
-    select?: StockSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Stock
-     */
-    omit?: StockOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StockInclude<ExtArgs> | null
-    where?: StockWhereInput
-    orderBy?: StockOrderByWithRelationInput | StockOrderByWithRelationInput[]
-    cursor?: StockWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: StockScalarFieldEnum | StockScalarFieldEnum[]
-  }
-
-  /**
-   * Company.inventory
-   */
-  export type Company$inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inventory
-     */
-    select?: InventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Inventory
-     */
-    omit?: InventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InventoryInclude<ExtArgs> | null
-    where?: InventoryWhereInput
-    orderBy?: InventoryOrderByWithRelationInput | InventoryOrderByWithRelationInput[]
-    cursor?: InventoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InventoryScalarFieldEnum | InventoryScalarFieldEnum[]
   }
 
   /**
@@ -4172,8 +4172,8 @@ export namespace Prisma {
     createdAt?: boolean
     companyId?: boolean
     role?: boolean
-    transactions?: boolean | User$transactionsArgs<ExtArgs>
     batches?: boolean | User$batchesArgs<ExtArgs>
+    transactions?: boolean | User$transactionsArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -4218,8 +4218,8 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "name" | "emailAlerts" | "twoFactorEnabled" | "createdAt" | "companyId" | "role", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    transactions?: boolean | User$transactionsArgs<ExtArgs>
     batches?: boolean | User$batchesArgs<ExtArgs>
+    transactions?: boolean | User$transactionsArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -4233,8 +4233,8 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
       batches: Prisma.$InventoryBatchPayload<ExtArgs>[]
+      transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
       company: Prisma.$CompanyPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -4641,8 +4641,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     batches<T extends User$batchesArgs<ExtArgs> = {}>(args?: Subset<T, User$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5083,30 +5083,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.transactions
-   */
-  export type User$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InventoryTransaction
-     */
-    select?: InventoryTransactionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InventoryTransaction
-     */
-    omit?: InventoryTransactionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InventoryTransactionInclude<ExtArgs> | null
-    where?: InventoryTransactionWhereInput
-    orderBy?: InventoryTransactionOrderByWithRelationInput | InventoryTransactionOrderByWithRelationInput[]
-    cursor?: InventoryTransactionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InventoryTransactionScalarFieldEnum | InventoryTransactionScalarFieldEnum[]
-  }
-
-  /**
    * User.batches
    */
   export type User$batchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5128,6 +5104,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: InventoryBatchScalarFieldEnum | InventoryBatchScalarFieldEnum[]
+  }
+
+  /**
+   * User.transactions
+   */
+  export type User$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryTransaction
+     */
+    select?: InventoryTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryTransaction
+     */
+    omit?: InventoryTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryTransactionInclude<ExtArgs> | null
+    where?: InventoryTransactionWhereInput
+    orderBy?: InventoryTransactionOrderByWithRelationInput | InventoryTransactionOrderByWithRelationInput[]
+    cursor?: InventoryTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryTransactionScalarFieldEnum | InventoryTransactionScalarFieldEnum[]
   }
 
   /**
@@ -8824,9 +8824,9 @@ export namespace Prisma {
     quantity?: boolean
     updatedAt?: boolean
     companyId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stock"]>
 
   export type StockSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8836,9 +8836,9 @@ export namespace Prisma {
     quantity?: boolean
     updatedAt?: boolean
     companyId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stock"]>
 
   export type StockSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8848,9 +8848,9 @@ export namespace Prisma {
     quantity?: boolean
     updatedAt?: boolean
     companyId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stock"]>
 
   export type StockSelectScalar = {
@@ -8864,27 +8864,27 @@ export namespace Prisma {
 
   export type StockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "rackId" | "quantity" | "updatedAt" | "companyId", ExtArgs["result"]["stock"]>
   export type StockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
   }
   export type StockIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
   }
   export type StockIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     rack?: boolean | RackDefaultArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
   }
 
   export type $StockPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Stock"
     objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
       item: Prisma.$ItemPayload<ExtArgs>
       rack: Prisma.$RackPayload<ExtArgs>
-      company: Prisma.$CompanyPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9287,9 +9287,9 @@ export namespace Prisma {
    */
   export interface Prisma__StockClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     item<T extends ItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemDefaultArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     rack<T extends RackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RackDefaultArgs<ExtArgs>>): Prisma__RackClient<$Result.GetResult<Prisma.$RackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9978,9 +9978,9 @@ export namespace Prisma {
     quantityInTransit?: boolean
     updatedAt?: boolean
     companyId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     batches?: boolean | Inventory$batchesArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
     _count?: boolean | InventoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
@@ -9993,8 +9993,8 @@ export namespace Prisma {
     quantityInTransit?: boolean
     updatedAt?: boolean
     companyId?: boolean
-    item?: boolean | ItemDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    item?: boolean | ItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10006,8 +10006,8 @@ export namespace Prisma {
     quantityInTransit?: boolean
     updatedAt?: boolean
     companyId?: boolean
-    item?: boolean | ItemDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    item?: boolean | ItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectScalar = {
@@ -10023,26 +10023,26 @@ export namespace Prisma {
 
   export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantityAvailable" | "incomingQty" | "quantityReserved" | "quantityInTransit" | "updatedAt" | "companyId", ExtArgs["result"]["inventory"]>
   export type InventoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
     batches?: boolean | Inventory$batchesArgs<ExtArgs>
-    company?: boolean | CompanyDefaultArgs<ExtArgs>
     _count?: boolean | InventoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InventoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    item?: boolean | ItemDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    item?: boolean | ItemDefaultArgs<ExtArgs>
   }
   export type InventoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    item?: boolean | ItemDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    item?: boolean | ItemDefaultArgs<ExtArgs>
   }
 
   export type $InventoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Inventory"
     objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
       item: Prisma.$ItemPayload<ExtArgs>
       batches: Prisma.$InventoryBatchPayload<ExtArgs>[]
-      company: Prisma.$CompanyPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10447,9 +10447,9 @@ export namespace Prisma {
    */
   export interface Prisma__InventoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     item<T extends ItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemDefaultArgs<ExtArgs>>): Prisma__ItemClient<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     batches<T extends Inventory$batchesArgs<ExtArgs> = {}>(args?: Subset<T, Inventory$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13306,8 +13306,8 @@ export namespace Prisma {
     costPerUnit: number | null
     purchaseDate: Date | null
     purchaseOrderId: string | null
-    receivedById: string | null
     createdAt: Date | null
+    receivedById: string | null
   }
 
   export type InventoryBatchMaxAggregateOutputType = {
@@ -13319,8 +13319,8 @@ export namespace Prisma {
     costPerUnit: number | null
     purchaseDate: Date | null
     purchaseOrderId: string | null
-    receivedById: string | null
     createdAt: Date | null
+    receivedById: string | null
   }
 
   export type InventoryBatchCountAggregateOutputType = {
@@ -13332,8 +13332,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: number
     purchaseOrderId: number
-    receivedById: number
     createdAt: number
+    receivedById: number
     _all: number
   }
 
@@ -13359,8 +13359,8 @@ export namespace Prisma {
     costPerUnit?: true
     purchaseDate?: true
     purchaseOrderId?: true
-    receivedById?: true
     createdAt?: true
+    receivedById?: true
   }
 
   export type InventoryBatchMaxAggregateInputType = {
@@ -13372,8 +13372,8 @@ export namespace Prisma {
     costPerUnit?: true
     purchaseDate?: true
     purchaseOrderId?: true
-    receivedById?: true
     createdAt?: true
+    receivedById?: true
   }
 
   export type InventoryBatchCountAggregateInputType = {
@@ -13385,8 +13385,8 @@ export namespace Prisma {
     costPerUnit?: true
     purchaseDate?: true
     purchaseOrderId?: true
-    receivedById?: true
     createdAt?: true
+    receivedById?: true
     _all?: true
   }
 
@@ -13485,8 +13485,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: Date
     purchaseOrderId: string | null
-    receivedById: string | null
     createdAt: Date
+    receivedById: string | null
     _count: InventoryBatchCountAggregateOutputType | null
     _avg: InventoryBatchAvgAggregateOutputType | null
     _sum: InventoryBatchSumAggregateOutputType | null
@@ -13517,12 +13517,12 @@ export namespace Prisma {
     costPerUnit?: boolean
     purchaseDate?: boolean
     purchaseOrderId?: boolean
-    receivedById?: boolean
     createdAt?: boolean
+    receivedById?: boolean
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     receivedBy?: boolean | InventoryBatch$receivedByArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryBatch"]>
 
   export type InventoryBatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13534,12 +13534,12 @@ export namespace Prisma {
     costPerUnit?: boolean
     purchaseDate?: boolean
     purchaseOrderId?: boolean
-    receivedById?: boolean
     createdAt?: boolean
+    receivedById?: boolean
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     receivedBy?: boolean | InventoryBatch$receivedByArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryBatch"]>
 
   export type InventoryBatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13551,12 +13551,12 @@ export namespace Prisma {
     costPerUnit?: boolean
     purchaseDate?: boolean
     purchaseOrderId?: boolean
-    receivedById?: boolean
     createdAt?: boolean
+    receivedById?: boolean
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     receivedBy?: boolean | InventoryBatch$receivedByArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventoryBatch"]>
 
   export type InventoryBatchSelectScalar = {
@@ -13568,28 +13568,28 @@ export namespace Prisma {
     costPerUnit?: boolean
     purchaseDate?: boolean
     purchaseOrderId?: boolean
-    receivedById?: boolean
     createdAt?: boolean
+    receivedById?: boolean
   }
 
-  export type InventoryBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "inventoryId" | "vendorId" | "quantity" | "remainingQty" | "costPerUnit" | "purchaseDate" | "purchaseOrderId" | "receivedById" | "createdAt", ExtArgs["result"]["inventoryBatch"]>
+  export type InventoryBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "inventoryId" | "vendorId" | "quantity" | "remainingQty" | "costPerUnit" | "purchaseDate" | "purchaseOrderId" | "createdAt" | "receivedById", ExtArgs["result"]["inventoryBatch"]>
   export type InventoryBatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     receivedBy?: boolean | InventoryBatch$receivedByArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
   }
   export type InventoryBatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     receivedBy?: boolean | InventoryBatch$receivedByArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
   }
   export type InventoryBatchIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | InventoryDefaultArgs<ExtArgs>
     purchaseOrder?: boolean | InventoryBatch$purchaseOrderArgs<ExtArgs>
-    vendor?: boolean | VendorDefaultArgs<ExtArgs>
     receivedBy?: boolean | InventoryBatch$receivedByArgs<ExtArgs>
+    vendor?: boolean | VendorDefaultArgs<ExtArgs>
   }
 
   export type $InventoryBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13597,8 +13597,8 @@ export namespace Prisma {
     objects: {
       inventory: Prisma.$InventoryPayload<ExtArgs>
       purchaseOrder: Prisma.$PurchaseOrderPayload<ExtArgs> | null
-      vendor: Prisma.$VendorPayload<ExtArgs>
       receivedBy: Prisma.$UserPayload<ExtArgs> | null
+      vendor: Prisma.$VendorPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13609,8 +13609,8 @@ export namespace Prisma {
       costPerUnit: number
       purchaseDate: Date
       purchaseOrderId: string | null
-      receivedById: string | null
       createdAt: Date
+      receivedById: string | null
     }, ExtArgs["result"]["inventoryBatch"]>
     composites: {}
   }
@@ -14007,8 +14007,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     inventory<T extends InventoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryDefaultArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     purchaseOrder<T extends InventoryBatch$purchaseOrderArgs<ExtArgs> = {}>(args?: Subset<T, InventoryBatch$purchaseOrderArgs<ExtArgs>>): Prisma__PurchaseOrderClient<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    vendor<T extends VendorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VendorDefaultArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     receivedBy<T extends InventoryBatch$receivedByArgs<ExtArgs> = {}>(args?: Subset<T, InventoryBatch$receivedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    vendor<T extends VendorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VendorDefaultArgs<ExtArgs>>): Prisma__VendorClient<$Result.GetResult<Prisma.$VendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14046,8 +14046,8 @@ export namespace Prisma {
     readonly costPerUnit: FieldRef<"InventoryBatch", 'Float'>
     readonly purchaseDate: FieldRef<"InventoryBatch", 'DateTime'>
     readonly purchaseOrderId: FieldRef<"InventoryBatch", 'String'>
-    readonly receivedById: FieldRef<"InventoryBatch", 'String'>
     readonly createdAt: FieldRef<"InventoryBatch", 'DateTime'>
+    readonly receivedById: FieldRef<"InventoryBatch", 'String'>
   }
     
 
@@ -20505,8 +20505,8 @@ export namespace Prisma {
     costPerUnit: 'costPerUnit',
     purchaseDate: 'purchaseDate',
     purchaseOrderId: 'purchaseOrderId',
-    receivedById: 'receivedById',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    receivedById: 'receivedById'
   };
 
   export type InventoryBatchScalarFieldEnum = (typeof InventoryBatchScalarFieldEnum)[keyof typeof InventoryBatchScalarFieldEnum]
@@ -20734,14 +20734,14 @@ export namespace Prisma {
     categories?: CategoryListRelationFilter
     customers?: CustomerListRelationFilter
     dispatches?: DispatchOrderListRelationFilter
+    inventory?: InventoryListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
     items?: ItemListRelationFilter
     pos?: PurchaseOrderListRelationFilter
     racks?: RackListRelationFilter
+    stocks?: StockListRelationFilter
     users?: UserListRelationFilter
     vendors?: VendorListRelationFilter
-    stocks?: StockListRelationFilter
-    inventory?: InventoryListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -20752,14 +20752,14 @@ export namespace Prisma {
     categories?: CategoryOrderByRelationAggregateInput
     customers?: CustomerOrderByRelationAggregateInput
     dispatches?: DispatchOrderOrderByRelationAggregateInput
+    inventory?: InventoryOrderByRelationAggregateInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
     items?: ItemOrderByRelationAggregateInput
     pos?: PurchaseOrderOrderByRelationAggregateInput
     racks?: RackOrderByRelationAggregateInput
+    stocks?: StockOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
     vendors?: VendorOrderByRelationAggregateInput
-    stocks?: StockOrderByRelationAggregateInput
-    inventory?: InventoryOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -20773,14 +20773,14 @@ export namespace Prisma {
     categories?: CategoryListRelationFilter
     customers?: CustomerListRelationFilter
     dispatches?: DispatchOrderListRelationFilter
+    inventory?: InventoryListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
     items?: ItemListRelationFilter
     pos?: PurchaseOrderListRelationFilter
     racks?: RackListRelationFilter
+    stocks?: StockListRelationFilter
     users?: UserListRelationFilter
     vendors?: VendorListRelationFilter
-    stocks?: StockListRelationFilter
-    inventory?: InventoryListRelationFilter
   }, "id">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -20816,8 +20816,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     companyId?: StringFilter<"User"> | string
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    transactions?: InventoryTransactionListRelationFilter
     batches?: InventoryBatchListRelationFilter
+    transactions?: InventoryTransactionListRelationFilter
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
   }
 
@@ -20831,8 +20831,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     companyId?: SortOrder
     role?: SortOrder
-    transactions?: InventoryTransactionOrderByRelationAggregateInput
     batches?: InventoryBatchOrderByRelationAggregateInput
+    transactions?: InventoryTransactionOrderByRelationAggregateInput
     company?: CompanyOrderByWithRelationInput
   }
 
@@ -20849,8 +20849,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     companyId?: StringFilter<"User"> | string
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    transactions?: InventoryTransactionListRelationFilter
     batches?: InventoryBatchListRelationFilter
+    transactions?: InventoryTransactionListRelationFilter
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
   }, "id" | "username">
 
@@ -21096,9 +21096,9 @@ export namespace Prisma {
     quantity?: FloatFilter<"Stock"> | number
     updatedAt?: DateTimeFilter<"Stock"> | Date | string
     companyId?: StringFilter<"Stock"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     rack?: XOR<RackScalarRelationFilter, RackWhereInput>
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
   }
 
   export type StockOrderByWithRelationInput = {
@@ -21108,9 +21108,9 @@ export namespace Prisma {
     quantity?: SortOrder
     updatedAt?: SortOrder
     companyId?: SortOrder
+    company?: CompanyOrderByWithRelationInput
     item?: ItemOrderByWithRelationInput
     rack?: RackOrderByWithRelationInput
-    company?: CompanyOrderByWithRelationInput
   }
 
   export type StockWhereUniqueInput = Prisma.AtLeast<{
@@ -21123,9 +21123,9 @@ export namespace Prisma {
     quantity?: FloatFilter<"Stock"> | number
     updatedAt?: DateTimeFilter<"Stock"> | Date | string
     companyId?: StringFilter<"Stock"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     rack?: XOR<RackScalarRelationFilter, RackWhereInput>
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
   }, "id">
 
   export type StockOrderByWithAggregationInput = {
@@ -21166,9 +21166,9 @@ export namespace Prisma {
     quantityInTransit?: FloatFilter<"Inventory"> | number
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
     companyId?: StringFilter<"Inventory"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     batches?: InventoryBatchListRelationFilter
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
   }
 
   export type InventoryOrderByWithRelationInput = {
@@ -21180,9 +21180,9 @@ export namespace Prisma {
     quantityInTransit?: SortOrder
     updatedAt?: SortOrder
     companyId?: SortOrder
+    company?: CompanyOrderByWithRelationInput
     item?: ItemOrderByWithRelationInput
     batches?: InventoryBatchOrderByRelationAggregateInput
-    company?: CompanyOrderByWithRelationInput
   }
 
   export type InventoryWhereUniqueInput = Prisma.AtLeast<{
@@ -21197,9 +21197,9 @@ export namespace Prisma {
     quantityInTransit?: FloatFilter<"Inventory"> | number
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
     companyId?: StringFilter<"Inventory"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     batches?: InventoryBatchListRelationFilter
-    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
   }, "id" | "itemId">
 
   export type InventoryOrderByWithAggregationInput = {
@@ -21398,12 +21398,12 @@ export namespace Prisma {
     costPerUnit?: FloatFilter<"InventoryBatch"> | number
     purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
-    receivedById?: StringNullableFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
+    receivedById?: StringNullableFilter<"InventoryBatch"> | string | null
     inventory?: XOR<InventoryScalarRelationFilter, InventoryWhereInput>
     purchaseOrder?: XOR<PurchaseOrderNullableScalarRelationFilter, PurchaseOrderWhereInput> | null
-    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     receivedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
   }
 
   export type InventoryBatchOrderByWithRelationInput = {
@@ -21415,12 +21415,12 @@ export namespace Prisma {
     costPerUnit?: SortOrder
     purchaseDate?: SortOrder
     purchaseOrderId?: SortOrderInput | SortOrder
-    receivedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    receivedById?: SortOrderInput | SortOrder
     inventory?: InventoryOrderByWithRelationInput
     purchaseOrder?: PurchaseOrderOrderByWithRelationInput
-    vendor?: VendorOrderByWithRelationInput
     receivedBy?: UserOrderByWithRelationInput
+    vendor?: VendorOrderByWithRelationInput
   }
 
   export type InventoryBatchWhereUniqueInput = Prisma.AtLeast<{
@@ -21435,12 +21435,12 @@ export namespace Prisma {
     costPerUnit?: FloatFilter<"InventoryBatch"> | number
     purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
-    receivedById?: StringNullableFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
+    receivedById?: StringNullableFilter<"InventoryBatch"> | string | null
     inventory?: XOR<InventoryScalarRelationFilter, InventoryWhereInput>
     purchaseOrder?: XOR<PurchaseOrderNullableScalarRelationFilter, PurchaseOrderWhereInput> | null
-    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
     receivedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    vendor?: XOR<VendorScalarRelationFilter, VendorWhereInput>
   }, "id">
 
   export type InventoryBatchOrderByWithAggregationInput = {
@@ -21452,8 +21452,8 @@ export namespace Prisma {
     costPerUnit?: SortOrder
     purchaseDate?: SortOrder
     purchaseOrderId?: SortOrderInput | SortOrder
-    receivedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    receivedById?: SortOrderInput | SortOrder
     _count?: InventoryBatchCountOrderByAggregateInput
     _avg?: InventoryBatchAvgOrderByAggregateInput
     _max?: InventoryBatchMaxOrderByAggregateInput
@@ -21473,8 +21473,8 @@ export namespace Prisma {
     costPerUnit?: FloatWithAggregatesFilter<"InventoryBatch"> | number
     purchaseDate?: DateTimeWithAggregatesFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableWithAggregatesFilter<"InventoryBatch"> | string | null
-    receivedById?: StringNullableWithAggregatesFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"InventoryBatch"> | Date | string
+    receivedById?: StringNullableWithAggregatesFilter<"InventoryBatch"> | string | null
   }
 
   export type POLineItemWhereInput = {
@@ -21880,14 +21880,14 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -21898,14 +21898,14 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -21916,14 +21916,14 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -21934,14 +21934,14 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -21974,8 +21974,8 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
-    transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
     batches?: InventoryBatchCreateNestedManyWithoutReceivedByInput
+    transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
     company: CompanyCreateNestedOneWithoutUsersInput
   }
 
@@ -21989,8 +21989,8 @@ export namespace Prisma {
     createdAt?: Date | string
     companyId: string
     role?: $Enums.UserRole
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutReceivedByInput
+    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -22002,8 +22002,8 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
     batches?: InventoryBatchUpdateManyWithoutReceivedByNestedInput
+    transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -22017,8 +22017,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
     batches?: InventoryBatchUncheckedUpdateManyWithoutReceivedByNestedInput
+    transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -22263,9 +22263,9 @@ export namespace Prisma {
     id?: string
     quantity?: number
     updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutStocksInput
     item: ItemCreateNestedOneWithoutStocksInput
     rack: RackCreateNestedOneWithoutStocksInput
-    company: CompanyCreateNestedOneWithoutStocksInput
   }
 
   export type StockUncheckedCreateInput = {
@@ -22281,9 +22281,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutStocksNestedInput
     item?: ItemUpdateOneRequiredWithoutStocksNestedInput
     rack?: RackUpdateOneRequiredWithoutStocksNestedInput
-    company?: CompanyUpdateOneRequiredWithoutStocksNestedInput
   }
 
   export type StockUncheckedUpdateInput = {
@@ -22326,9 +22326,9 @@ export namespace Prisma {
     quantityReserved?: number
     quantityInTransit?: number
     updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutInventoryInput
     item: ItemCreateNestedOneWithoutInventoryInput
     batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
-    company: CompanyCreateNestedOneWithoutInventoryInput
   }
 
   export type InventoryUncheckedCreateInput = {
@@ -22350,9 +22350,9 @@ export namespace Prisma {
     quantityReserved?: FloatFieldUpdateOperationsInput | number
     quantityInTransit?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutInventoryNestedInput
     item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
     batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
-    company?: CompanyUpdateOneRequiredWithoutInventoryNestedInput
   }
 
   export type InventoryUncheckedUpdateInput = {
@@ -22571,8 +22571,8 @@ export namespace Prisma {
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
-    vendor: VendorCreateNestedOneWithoutBatchesInput
     receivedBy?: UserCreateNestedOneWithoutBatchesInput
+    vendor: VendorCreateNestedOneWithoutBatchesInput
   }
 
   export type InventoryBatchUncheckedCreateInput = {
@@ -22584,8 +22584,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: Date | string
     purchaseOrderId?: string | null
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type InventoryBatchUpdateInput = {
@@ -22597,8 +22597,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
-    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
     receivedBy?: UserUpdateOneWithoutBatchesNestedInput
+    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
   }
 
   export type InventoryBatchUncheckedUpdateInput = {
@@ -22610,8 +22610,8 @@ export namespace Prisma {
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryBatchCreateManyInput = {
@@ -22623,8 +22623,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: Date | string
     purchaseOrderId?: string | null
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type InventoryBatchUpdateManyMutationInput = {
@@ -22645,8 +22645,8 @@ export namespace Prisma {
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type POLineItemCreateInput = {
@@ -23107,6 +23107,12 @@ export namespace Prisma {
     none?: DispatchOrderWhereInput
   }
 
+  export type InventoryListRelationFilter = {
+    every?: InventoryWhereInput
+    some?: InventoryWhereInput
+    none?: InventoryWhereInput
+  }
+
   export type InventoryTransactionListRelationFilter = {
     every?: InventoryTransactionWhereInput
     some?: InventoryTransactionWhereInput
@@ -23131,6 +23137,12 @@ export namespace Prisma {
     none?: RackWhereInput
   }
 
+  export type StockListRelationFilter = {
+    every?: StockWhereInput
+    some?: StockWhereInput
+    none?: StockWhereInput
+  }
+
   export type UserListRelationFilter = {
     every?: UserWhereInput
     some?: UserWhereInput
@@ -23141,18 +23153,6 @@ export namespace Prisma {
     every?: VendorWhereInput
     some?: VendorWhereInput
     none?: VendorWhereInput
-  }
-
-  export type StockListRelationFilter = {
-    every?: StockWhereInput
-    some?: StockWhereInput
-    none?: StockWhereInput
-  }
-
-  export type InventoryListRelationFilter = {
-    every?: InventoryWhereInput
-    some?: InventoryWhereInput
-    none?: InventoryWhereInput
   }
 
   export type SortOrderInput = {
@@ -23172,6 +23172,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type InventoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type InventoryTransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -23188,19 +23192,15 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type StockOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type VendorOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type StockOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InventoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23764,8 +23764,8 @@ export namespace Prisma {
     costPerUnit?: SortOrder
     purchaseDate?: SortOrder
     purchaseOrderId?: SortOrder
-    receivedById?: SortOrder
     createdAt?: SortOrder
+    receivedById?: SortOrder
   }
 
   export type InventoryBatchAvgOrderByAggregateInput = {
@@ -23783,8 +23783,8 @@ export namespace Prisma {
     costPerUnit?: SortOrder
     purchaseDate?: SortOrder
     purchaseOrderId?: SortOrder
-    receivedById?: SortOrder
     createdAt?: SortOrder
+    receivedById?: SortOrder
   }
 
   export type InventoryBatchMinOrderByAggregateInput = {
@@ -23796,8 +23796,8 @@ export namespace Prisma {
     costPerUnit?: SortOrder
     purchaseDate?: SortOrder
     purchaseOrderId?: SortOrder
-    receivedById?: SortOrder
     createdAt?: SortOrder
+    receivedById?: SortOrder
   }
 
   export type InventoryBatchSumOrderByAggregateInput = {
@@ -24060,6 +24060,13 @@ export namespace Prisma {
     connect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
   }
 
+  export type InventoryCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
+    createMany?: InventoryCreateManyCompanyInputEnvelope
+    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+  }
+
   export type InventoryTransactionCreateNestedManyWithoutCompanyInput = {
     create?: XOR<InventoryTransactionCreateWithoutCompanyInput, InventoryTransactionUncheckedCreateWithoutCompanyInput> | InventoryTransactionCreateWithoutCompanyInput[] | InventoryTransactionUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: InventoryTransactionCreateOrConnectWithoutCompanyInput | InventoryTransactionCreateOrConnectWithoutCompanyInput[]
@@ -24088,6 +24095,13 @@ export namespace Prisma {
     connect?: RackWhereUniqueInput | RackWhereUniqueInput[]
   }
 
+  export type StockCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
+    createMany?: StockCreateManyCompanyInputEnvelope
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+  }
+
   export type UserCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -24100,20 +24114,6 @@ export namespace Prisma {
     connectOrCreate?: VendorCreateOrConnectWithoutCompanyInput | VendorCreateOrConnectWithoutCompanyInput[]
     createMany?: VendorCreateManyCompanyInputEnvelope
     connect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-  }
-
-  export type StockCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
-    createMany?: StockCreateManyCompanyInputEnvelope
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-  }
-
-  export type InventoryCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
-    createMany?: InventoryCreateManyCompanyInputEnvelope
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
   }
 
   export type CategoryUncheckedCreateNestedManyWithoutCompanyInput = {
@@ -24135,6 +24135,13 @@ export namespace Prisma {
     connectOrCreate?: DispatchOrderCreateOrConnectWithoutCompanyInput | DispatchOrderCreateOrConnectWithoutCompanyInput[]
     createMany?: DispatchOrderCreateManyCompanyInputEnvelope
     connect?: DispatchOrderWhereUniqueInput | DispatchOrderWhereUniqueInput[]
+  }
+
+  export type InventoryUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
+    createMany?: InventoryCreateManyCompanyInputEnvelope
+    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
   }
 
   export type InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput = {
@@ -24165,6 +24172,13 @@ export namespace Prisma {
     connect?: RackWhereUniqueInput | RackWhereUniqueInput[]
   }
 
+  export type StockUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
+    createMany?: StockCreateManyCompanyInputEnvelope
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -24177,20 +24191,6 @@ export namespace Prisma {
     connectOrCreate?: VendorCreateOrConnectWithoutCompanyInput | VendorCreateOrConnectWithoutCompanyInput[]
     createMany?: VendorCreateManyCompanyInputEnvelope
     connect?: VendorWhereUniqueInput | VendorWhereUniqueInput[]
-  }
-
-  export type StockUncheckedCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
-    createMany?: StockCreateManyCompanyInputEnvelope
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-  }
-
-  export type InventoryUncheckedCreateNestedManyWithoutCompanyInput = {
-    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
-    createMany?: InventoryCreateManyCompanyInputEnvelope
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -24241,6 +24241,20 @@ export namespace Prisma {
     update?: DispatchOrderUpdateWithWhereUniqueWithoutCompanyInput | DispatchOrderUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: DispatchOrderUpdateManyWithWhereWithoutCompanyInput | DispatchOrderUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
+  }
+
+  export type InventoryUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
+    upsert?: InventoryUpsertWithWhereUniqueWithoutCompanyInput | InventoryUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: InventoryCreateManyCompanyInputEnvelope
+    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    update?: InventoryUpdateWithWhereUniqueWithoutCompanyInput | InventoryUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: InventoryUpdateManyWithWhereWithoutCompanyInput | InventoryUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
   }
 
   export type InventoryTransactionUpdateManyWithoutCompanyNestedInput = {
@@ -24299,6 +24313,20 @@ export namespace Prisma {
     deleteMany?: RackScalarWhereInput | RackScalarWhereInput[]
   }
 
+  export type StockUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
+    upsert?: StockUpsertWithWhereUniqueWithoutCompanyInput | StockUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: StockCreateManyCompanyInputEnvelope
+    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    update?: StockUpdateWithWhereUniqueWithoutCompanyInput | StockUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: StockUpdateManyWithWhereWithoutCompanyInput | StockUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
+  }
+
   export type UserUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -24325,34 +24353,6 @@ export namespace Prisma {
     update?: VendorUpdateWithWhereUniqueWithoutCompanyInput | VendorUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: VendorUpdateManyWithWhereWithoutCompanyInput | VendorUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: VendorScalarWhereInput | VendorScalarWhereInput[]
-  }
-
-  export type StockUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
-    upsert?: StockUpsertWithWhereUniqueWithoutCompanyInput | StockUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: StockCreateManyCompanyInputEnvelope
-    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    update?: StockUpdateWithWhereUniqueWithoutCompanyInput | StockUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: StockUpdateManyWithWhereWithoutCompanyInput | StockUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
-  }
-
-  export type InventoryUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
-    upsert?: InventoryUpsertWithWhereUniqueWithoutCompanyInput | InventoryUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: InventoryCreateManyCompanyInputEnvelope
-    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    update?: InventoryUpdateWithWhereUniqueWithoutCompanyInput | InventoryUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: InventoryUpdateManyWithWhereWithoutCompanyInput | InventoryUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
   }
 
   export type CategoryUncheckedUpdateManyWithoutCompanyNestedInput = {
@@ -24395,6 +24395,20 @@ export namespace Prisma {
     update?: DispatchOrderUpdateWithWhereUniqueWithoutCompanyInput | DispatchOrderUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: DispatchOrderUpdateManyWithWhereWithoutCompanyInput | DispatchOrderUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: DispatchOrderScalarWhereInput | DispatchOrderScalarWhereInput[]
+  }
+
+  export type InventoryUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
+    upsert?: InventoryUpsertWithWhereUniqueWithoutCompanyInput | InventoryUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: InventoryCreateManyCompanyInputEnvelope
+    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
+    update?: InventoryUpdateWithWhereUniqueWithoutCompanyInput | InventoryUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: InventoryUpdateManyWithWhereWithoutCompanyInput | InventoryUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
   }
 
   export type InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput = {
@@ -24453,6 +24467,20 @@ export namespace Prisma {
     deleteMany?: RackScalarWhereInput | RackScalarWhereInput[]
   }
 
+  export type StockUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
+    upsert?: StockUpsertWithWhereUniqueWithoutCompanyInput | StockUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: StockCreateManyCompanyInputEnvelope
+    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
+    update?: StockUpdateWithWhereUniqueWithoutCompanyInput | StockUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: StockUpdateManyWithWhereWithoutCompanyInput | StockUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -24481,32 +24509,11 @@ export namespace Prisma {
     deleteMany?: VendorScalarWhereInput | VendorScalarWhereInput[]
   }
 
-  export type StockUncheckedUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput> | StockCreateWithoutCompanyInput[] | StockUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: StockCreateOrConnectWithoutCompanyInput | StockCreateOrConnectWithoutCompanyInput[]
-    upsert?: StockUpsertWithWhereUniqueWithoutCompanyInput | StockUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: StockCreateManyCompanyInputEnvelope
-    set?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    disconnect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    delete?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
-    update?: StockUpdateWithWhereUniqueWithoutCompanyInput | StockUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: StockUpdateManyWithWhereWithoutCompanyInput | StockUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
-  }
-
-  export type InventoryUncheckedUpdateManyWithoutCompanyNestedInput = {
-    create?: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput> | InventoryCreateWithoutCompanyInput[] | InventoryUncheckedCreateWithoutCompanyInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutCompanyInput | InventoryCreateOrConnectWithoutCompanyInput[]
-    upsert?: InventoryUpsertWithWhereUniqueWithoutCompanyInput | InventoryUpsertWithWhereUniqueWithoutCompanyInput[]
-    createMany?: InventoryCreateManyCompanyInputEnvelope
-    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    update?: InventoryUpdateWithWhereUniqueWithoutCompanyInput | InventoryUpdateWithWhereUniqueWithoutCompanyInput[]
-    updateMany?: InventoryUpdateManyWithWhereWithoutCompanyInput | InventoryUpdateManyWithWhereWithoutCompanyInput[]
-    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
+  export type InventoryBatchCreateNestedManyWithoutReceivedByInput = {
+    create?: XOR<InventoryBatchCreateWithoutReceivedByInput, InventoryBatchUncheckedCreateWithoutReceivedByInput> | InventoryBatchCreateWithoutReceivedByInput[] | InventoryBatchUncheckedCreateWithoutReceivedByInput[]
+    connectOrCreate?: InventoryBatchCreateOrConnectWithoutReceivedByInput | InventoryBatchCreateOrConnectWithoutReceivedByInput[]
+    createMany?: InventoryBatchCreateManyReceivedByInputEnvelope
+    connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
   }
 
   export type InventoryTransactionCreateNestedManyWithoutUserInput = {
@@ -24516,24 +24523,10 @@ export namespace Prisma {
     connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
   }
 
-  export type InventoryBatchCreateNestedManyWithoutReceivedByInput = {
-    create?: XOR<InventoryBatchCreateWithoutReceivedByInput, InventoryBatchUncheckedCreateWithoutReceivedByInput> | InventoryBatchCreateWithoutReceivedByInput[] | InventoryBatchUncheckedCreateWithoutReceivedByInput[]
-    connectOrCreate?: InventoryBatchCreateOrConnectWithoutReceivedByInput | InventoryBatchCreateOrConnectWithoutReceivedByInput[]
-    createMany?: InventoryBatchCreateManyReceivedByInputEnvelope
-    connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
-  }
-
   export type CompanyCreateNestedOneWithoutUsersInput = {
     create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
     connect?: CompanyWhereUniqueInput
-  }
-
-  export type InventoryTransactionUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput> | InventoryTransactionCreateWithoutUserInput[] | InventoryTransactionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutUserInput | InventoryTransactionCreateOrConnectWithoutUserInput[]
-    createMany?: InventoryTransactionCreateManyUserInputEnvelope
-    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
   }
 
   export type InventoryBatchUncheckedCreateNestedManyWithoutReceivedByInput = {
@@ -24543,26 +24536,19 @@ export namespace Prisma {
     connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
   }
 
+  export type InventoryTransactionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput> | InventoryTransactionCreateWithoutUserInput[] | InventoryTransactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutUserInput | InventoryTransactionCreateOrConnectWithoutUserInput[]
+    createMany?: InventoryTransactionCreateManyUserInputEnvelope
+    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
     set?: $Enums.UserRole
-  }
-
-  export type InventoryTransactionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput> | InventoryTransactionCreateWithoutUserInput[] | InventoryTransactionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutUserInput | InventoryTransactionCreateOrConnectWithoutUserInput[]
-    upsert?: InventoryTransactionUpsertWithWhereUniqueWithoutUserInput | InventoryTransactionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: InventoryTransactionCreateManyUserInputEnvelope
-    set?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    disconnect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    delete?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
-    update?: InventoryTransactionUpdateWithWhereUniqueWithoutUserInput | InventoryTransactionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: InventoryTransactionUpdateManyWithWhereWithoutUserInput | InventoryTransactionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
   }
 
   export type InventoryBatchUpdateManyWithoutReceivedByNestedInput = {
@@ -24579,15 +24565,7 @@ export namespace Prisma {
     deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
   }
 
-  export type CompanyUpdateOneRequiredWithoutUsersNestedInput = {
-    create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
-    upsert?: CompanyUpsertWithoutUsersInput
-    connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutUsersInput, CompanyUpdateWithoutUsersInput>, CompanyUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput = {
+  export type InventoryTransactionUpdateManyWithoutUserNestedInput = {
     create?: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput> | InventoryTransactionCreateWithoutUserInput[] | InventoryTransactionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: InventoryTransactionCreateOrConnectWithoutUserInput | InventoryTransactionCreateOrConnectWithoutUserInput[]
     upsert?: InventoryTransactionUpsertWithWhereUniqueWithoutUserInput | InventoryTransactionUpsertWithWhereUniqueWithoutUserInput[]
@@ -24599,6 +24577,14 @@ export namespace Prisma {
     update?: InventoryTransactionUpdateWithWhereUniqueWithoutUserInput | InventoryTransactionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: InventoryTransactionUpdateManyWithWhereWithoutUserInput | InventoryTransactionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutUsersNestedInput = {
+    create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
+    upsert?: CompanyUpsertWithoutUsersInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutUsersInput, CompanyUpdateWithoutUsersInput>, CompanyUncheckedUpdateWithoutUsersInput>
   }
 
   export type InventoryBatchUncheckedUpdateManyWithoutReceivedByNestedInput = {
@@ -24613,6 +24599,20 @@ export namespace Prisma {
     update?: InventoryBatchUpdateWithWhereUniqueWithoutReceivedByInput | InventoryBatchUpdateWithWhereUniqueWithoutReceivedByInput[]
     updateMany?: InventoryBatchUpdateManyWithWhereWithoutReceivedByInput | InventoryBatchUpdateManyWithWhereWithoutReceivedByInput[]
     deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
+  }
+
+  export type InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput> | InventoryTransactionCreateWithoutUserInput[] | InventoryTransactionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InventoryTransactionCreateOrConnectWithoutUserInput | InventoryTransactionCreateOrConnectWithoutUserInput[]
+    upsert?: InventoryTransactionUpsertWithWhereUniqueWithoutUserInput | InventoryTransactionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: InventoryTransactionCreateManyUserInputEnvelope
+    set?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+    disconnect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+    delete?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+    connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+    update?: InventoryTransactionUpdateWithWhereUniqueWithoutUserInput | InventoryTransactionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: InventoryTransactionUpdateManyWithWhereWithoutUserInput | InventoryTransactionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
   }
 
   export type CompanyCreateNestedOneWithoutCategoriesInput = {
@@ -25009,6 +25009,12 @@ export namespace Prisma {
     deleteMany?: StockScalarWhereInput | StockScalarWhereInput[]
   }
 
+  export type CompanyCreateNestedOneWithoutStocksInput = {
+    create?: XOR<CompanyCreateWithoutStocksInput, CompanyUncheckedCreateWithoutStocksInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutStocksInput
+    connect?: CompanyWhereUniqueInput
+  }
+
   export type ItemCreateNestedOneWithoutStocksInput = {
     create?: XOR<ItemCreateWithoutStocksInput, ItemUncheckedCreateWithoutStocksInput>
     connectOrCreate?: ItemCreateOrConnectWithoutStocksInput
@@ -25021,10 +25027,12 @@ export namespace Prisma {
     connect?: RackWhereUniqueInput
   }
 
-  export type CompanyCreateNestedOneWithoutStocksInput = {
+  export type CompanyUpdateOneRequiredWithoutStocksNestedInput = {
     create?: XOR<CompanyCreateWithoutStocksInput, CompanyUncheckedCreateWithoutStocksInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutStocksInput
+    upsert?: CompanyUpsertWithoutStocksInput
     connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutStocksInput, CompanyUpdateWithoutStocksInput>, CompanyUncheckedUpdateWithoutStocksInput>
   }
 
   export type ItemUpdateOneRequiredWithoutStocksNestedInput = {
@@ -25043,12 +25051,10 @@ export namespace Prisma {
     update?: XOR<XOR<RackUpdateToOneWithWhereWithoutStocksInput, RackUpdateWithoutStocksInput>, RackUncheckedUpdateWithoutStocksInput>
   }
 
-  export type CompanyUpdateOneRequiredWithoutStocksNestedInput = {
-    create?: XOR<CompanyCreateWithoutStocksInput, CompanyUncheckedCreateWithoutStocksInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutStocksInput
-    upsert?: CompanyUpsertWithoutStocksInput
+  export type CompanyCreateNestedOneWithoutInventoryInput = {
+    create?: XOR<CompanyCreateWithoutInventoryInput, CompanyUncheckedCreateWithoutInventoryInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutInventoryInput
     connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutStocksInput, CompanyUpdateWithoutStocksInput>, CompanyUncheckedUpdateWithoutStocksInput>
   }
 
   export type ItemCreateNestedOneWithoutInventoryInput = {
@@ -25064,17 +25070,19 @@ export namespace Prisma {
     connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
   }
 
-  export type CompanyCreateNestedOneWithoutInventoryInput = {
-    create?: XOR<CompanyCreateWithoutInventoryInput, CompanyUncheckedCreateWithoutInventoryInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutInventoryInput
-    connect?: CompanyWhereUniqueInput
-  }
-
   export type InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput = {
     create?: XOR<InventoryBatchCreateWithoutInventoryInput, InventoryBatchUncheckedCreateWithoutInventoryInput> | InventoryBatchCreateWithoutInventoryInput[] | InventoryBatchUncheckedCreateWithoutInventoryInput[]
     connectOrCreate?: InventoryBatchCreateOrConnectWithoutInventoryInput | InventoryBatchCreateOrConnectWithoutInventoryInput[]
     createMany?: InventoryBatchCreateManyInventoryInputEnvelope
     connect?: InventoryBatchWhereUniqueInput | InventoryBatchWhereUniqueInput[]
+  }
+
+  export type CompanyUpdateOneRequiredWithoutInventoryNestedInput = {
+    create?: XOR<CompanyCreateWithoutInventoryInput, CompanyUncheckedCreateWithoutInventoryInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutInventoryInput
+    upsert?: CompanyUpsertWithoutInventoryInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutInventoryInput, CompanyUpdateWithoutInventoryInput>, CompanyUncheckedUpdateWithoutInventoryInput>
   }
 
   export type ItemUpdateOneRequiredWithoutInventoryNestedInput = {
@@ -25097,14 +25105,6 @@ export namespace Prisma {
     update?: InventoryBatchUpdateWithWhereUniqueWithoutInventoryInput | InventoryBatchUpdateWithWhereUniqueWithoutInventoryInput[]
     updateMany?: InventoryBatchUpdateManyWithWhereWithoutInventoryInput | InventoryBatchUpdateManyWithWhereWithoutInventoryInput[]
     deleteMany?: InventoryBatchScalarWhereInput | InventoryBatchScalarWhereInput[]
-  }
-
-  export type CompanyUpdateOneRequiredWithoutInventoryNestedInput = {
-    create?: XOR<CompanyCreateWithoutInventoryInput, CompanyUncheckedCreateWithoutInventoryInput>
-    connectOrCreate?: CompanyCreateOrConnectWithoutInventoryInput
-    upsert?: CompanyUpsertWithoutInventoryInput
-    connect?: CompanyWhereUniqueInput
-    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutInventoryInput, CompanyUpdateWithoutInventoryInput>, CompanyUncheckedUpdateWithoutInventoryInput>
   }
 
   export type InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput = {
@@ -25389,16 +25389,16 @@ export namespace Prisma {
     connect?: PurchaseOrderWhereUniqueInput
   }
 
-  export type VendorCreateNestedOneWithoutBatchesInput = {
-    create?: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
-    connectOrCreate?: VendorCreateOrConnectWithoutBatchesInput
-    connect?: VendorWhereUniqueInput
-  }
-
   export type UserCreateNestedOneWithoutBatchesInput = {
     create?: XOR<UserCreateWithoutBatchesInput, UserUncheckedCreateWithoutBatchesInput>
     connectOrCreate?: UserCreateOrConnectWithoutBatchesInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type VendorCreateNestedOneWithoutBatchesInput = {
+    create?: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
+    connectOrCreate?: VendorCreateOrConnectWithoutBatchesInput
+    connect?: VendorWhereUniqueInput
   }
 
   export type InventoryUpdateOneRequiredWithoutBatchesNestedInput = {
@@ -25419,14 +25419,6 @@ export namespace Prisma {
     update?: XOR<XOR<PurchaseOrderUpdateToOneWithWhereWithoutBatchesInput, PurchaseOrderUpdateWithoutBatchesInput>, PurchaseOrderUncheckedUpdateWithoutBatchesInput>
   }
 
-  export type VendorUpdateOneRequiredWithoutBatchesNestedInput = {
-    create?: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
-    connectOrCreate?: VendorCreateOrConnectWithoutBatchesInput
-    upsert?: VendorUpsertWithoutBatchesInput
-    connect?: VendorWhereUniqueInput
-    update?: XOR<XOR<VendorUpdateToOneWithWhereWithoutBatchesInput, VendorUpdateWithoutBatchesInput>, VendorUncheckedUpdateWithoutBatchesInput>
-  }
-
   export type UserUpdateOneWithoutBatchesNestedInput = {
     create?: XOR<UserCreateWithoutBatchesInput, UserUncheckedCreateWithoutBatchesInput>
     connectOrCreate?: UserCreateOrConnectWithoutBatchesInput
@@ -25435,6 +25427,14 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBatchesInput, UserUpdateWithoutBatchesInput>, UserUncheckedUpdateWithoutBatchesInput>
+  }
+
+  export type VendorUpdateOneRequiredWithoutBatchesNestedInput = {
+    create?: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
+    connectOrCreate?: VendorCreateOrConnectWithoutBatchesInput
+    upsert?: VendorUpsertWithoutBatchesInput
+    connect?: VendorWhereUniqueInput
+    update?: XOR<XOR<VendorUpdateToOneWithWhereWithoutBatchesInput, VendorUpdateWithoutBatchesInput>, VendorUncheckedUpdateWithoutBatchesInput>
   }
 
   export type ItemCreateNestedOneWithoutPoItemsInput = {
@@ -26059,6 +26059,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type InventoryCreateWithoutCompanyInput = {
+    id?: string
+    quantityAvailable?: number
+    incomingQty?: number
+    quantityReserved?: number
+    quantityInTransit?: number
+    updatedAt?: Date | string
+    item: ItemCreateNestedOneWithoutInventoryInput
+    batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
+  }
+
+  export type InventoryUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    itemId: string
+    quantityAvailable?: number
+    incomingQty?: number
+    quantityReserved?: number
+    quantityInTransit?: number
+    updatedAt?: Date | string
+    batches?: InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput
+  }
+
+  export type InventoryCreateOrConnectWithoutCompanyInput = {
+    where: InventoryWhereUniqueInput
+    create: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type InventoryCreateManyCompanyInputEnvelope = {
+    data: InventoryCreateManyCompanyInput | InventoryCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type InventoryTransactionCreateWithoutCompanyInput = {
     id?: string
     type: string
@@ -26201,6 +26233,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StockCreateWithoutCompanyInput = {
+    id?: string
+    quantity?: number
+    updatedAt?: Date | string
+    item: ItemCreateNestedOneWithoutStocksInput
+    rack: RackCreateNestedOneWithoutStocksInput
+  }
+
+  export type StockUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    itemId: string
+    rackId: string
+    quantity?: number
+    updatedAt?: Date | string
+  }
+
+  export type StockCreateOrConnectWithoutCompanyInput = {
+    where: StockWhereUniqueInput
+    create: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type StockCreateManyCompanyInputEnvelope = {
+    data: StockCreateManyCompanyInput | StockCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserCreateWithoutCompanyInput = {
     id?: string
     username: string
@@ -26210,8 +26268,8 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
-    transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
     batches?: InventoryBatchCreateNestedManyWithoutReceivedByInput
+    transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompanyInput = {
@@ -26223,8 +26281,8 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutReceivedByInput
+    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompanyInput = {
@@ -26266,64 +26324,6 @@ export namespace Prisma {
 
   export type VendorCreateManyCompanyInputEnvelope = {
     data: VendorCreateManyCompanyInput | VendorCreateManyCompanyInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type StockCreateWithoutCompanyInput = {
-    id?: string
-    quantity?: number
-    updatedAt?: Date | string
-    item: ItemCreateNestedOneWithoutStocksInput
-    rack: RackCreateNestedOneWithoutStocksInput
-  }
-
-  export type StockUncheckedCreateWithoutCompanyInput = {
-    id?: string
-    itemId: string
-    rackId: string
-    quantity?: number
-    updatedAt?: Date | string
-  }
-
-  export type StockCreateOrConnectWithoutCompanyInput = {
-    where: StockWhereUniqueInput
-    create: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput>
-  }
-
-  export type StockCreateManyCompanyInputEnvelope = {
-    data: StockCreateManyCompanyInput | StockCreateManyCompanyInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InventoryCreateWithoutCompanyInput = {
-    id?: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
-    updatedAt?: Date | string
-    item: ItemCreateNestedOneWithoutInventoryInput
-    batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
-  }
-
-  export type InventoryUncheckedCreateWithoutCompanyInput = {
-    id?: string
-    itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
-    updatedAt?: Date | string
-    batches?: InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput
-  }
-
-  export type InventoryCreateOrConnectWithoutCompanyInput = {
-    where: InventoryWhereUniqueInput
-    create: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput>
-  }
-
-  export type InventoryCreateManyCompanyInputEnvelope = {
-    data: InventoryCreateManyCompanyInput | InventoryCreateManyCompanyInput[]
     skipDuplicates?: boolean
   }
 
@@ -26412,6 +26412,36 @@ export namespace Prisma {
     collectedBy?: StringNullableFilter<"DispatchOrder"> | string | null
     dispatchedBy?: StringNullableFilter<"DispatchOrder"> | string | null
     transportMode?: StringNullableFilter<"DispatchOrder"> | string | null
+  }
+
+  export type InventoryUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: InventoryWhereUniqueInput
+    update: XOR<InventoryUpdateWithoutCompanyInput, InventoryUncheckedUpdateWithoutCompanyInput>
+    create: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type InventoryUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: InventoryWhereUniqueInput
+    data: XOR<InventoryUpdateWithoutCompanyInput, InventoryUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type InventoryUpdateManyWithWhereWithoutCompanyInput = {
+    where: InventoryScalarWhereInput
+    data: XOR<InventoryUpdateManyMutationInput, InventoryUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type InventoryScalarWhereInput = {
+    AND?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
+    OR?: InventoryScalarWhereInput[]
+    NOT?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
+    id?: StringFilter<"Inventory"> | string
+    itemId?: StringFilter<"Inventory"> | string
+    quantityAvailable?: FloatFilter<"Inventory"> | number
+    incomingQty?: FloatFilter<"Inventory"> | number
+    quantityReserved?: FloatFilter<"Inventory"> | number
+    quantityInTransit?: FloatFilter<"Inventory"> | number
+    updatedAt?: DateTimeFilter<"Inventory"> | Date | string
+    companyId?: StringFilter<"Inventory"> | string
   }
 
   export type InventoryTransactionUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -26536,6 +26566,34 @@ export namespace Prisma {
     companyId?: StringFilter<"Rack"> | string
   }
 
+  export type StockUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: StockWhereUniqueInput
+    update: XOR<StockUpdateWithoutCompanyInput, StockUncheckedUpdateWithoutCompanyInput>
+    create: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type StockUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: StockWhereUniqueInput
+    data: XOR<StockUpdateWithoutCompanyInput, StockUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type StockUpdateManyWithWhereWithoutCompanyInput = {
+    where: StockScalarWhereInput
+    data: XOR<StockUpdateManyMutationInput, StockUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type StockScalarWhereInput = {
+    AND?: StockScalarWhereInput | StockScalarWhereInput[]
+    OR?: StockScalarWhereInput[]
+    NOT?: StockScalarWhereInput | StockScalarWhereInput[]
+    id?: StringFilter<"Stock"> | string
+    itemId?: StringFilter<"Stock"> | string
+    rackId?: StringFilter<"Stock"> | string
+    quantity?: FloatFilter<"Stock"> | number
+    updatedAt?: DateTimeFilter<"Stock"> | Date | string
+    companyId?: StringFilter<"Stock"> | string
+  }
+
   export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutCompanyInput, UserUncheckedUpdateWithoutCompanyInput>
@@ -26595,62 +26653,38 @@ export namespace Prisma {
     companyId?: StringFilter<"Vendor"> | string
   }
 
-  export type StockUpsertWithWhereUniqueWithoutCompanyInput = {
-    where: StockWhereUniqueInput
-    update: XOR<StockUpdateWithoutCompanyInput, StockUncheckedUpdateWithoutCompanyInput>
-    create: XOR<StockCreateWithoutCompanyInput, StockUncheckedCreateWithoutCompanyInput>
+  export type InventoryBatchCreateWithoutReceivedByInput = {
+    id?: string
+    quantity: number
+    remainingQty: number
+    costPerUnit: number
+    purchaseDate: Date | string
+    createdAt?: Date | string
+    inventory: InventoryCreateNestedOneWithoutBatchesInput
+    purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
+    vendor: VendorCreateNestedOneWithoutBatchesInput
   }
 
-  export type StockUpdateWithWhereUniqueWithoutCompanyInput = {
-    where: StockWhereUniqueInput
-    data: XOR<StockUpdateWithoutCompanyInput, StockUncheckedUpdateWithoutCompanyInput>
+  export type InventoryBatchUncheckedCreateWithoutReceivedByInput = {
+    id?: string
+    inventoryId: string
+    vendorId: string
+    quantity: number
+    remainingQty: number
+    costPerUnit: number
+    purchaseDate: Date | string
+    purchaseOrderId?: string | null
+    createdAt?: Date | string
   }
 
-  export type StockUpdateManyWithWhereWithoutCompanyInput = {
-    where: StockScalarWhereInput
-    data: XOR<StockUpdateManyMutationInput, StockUncheckedUpdateManyWithoutCompanyInput>
+  export type InventoryBatchCreateOrConnectWithoutReceivedByInput = {
+    where: InventoryBatchWhereUniqueInput
+    create: XOR<InventoryBatchCreateWithoutReceivedByInput, InventoryBatchUncheckedCreateWithoutReceivedByInput>
   }
 
-  export type StockScalarWhereInput = {
-    AND?: StockScalarWhereInput | StockScalarWhereInput[]
-    OR?: StockScalarWhereInput[]
-    NOT?: StockScalarWhereInput | StockScalarWhereInput[]
-    id?: StringFilter<"Stock"> | string
-    itemId?: StringFilter<"Stock"> | string
-    rackId?: StringFilter<"Stock"> | string
-    quantity?: FloatFilter<"Stock"> | number
-    updatedAt?: DateTimeFilter<"Stock"> | Date | string
-    companyId?: StringFilter<"Stock"> | string
-  }
-
-  export type InventoryUpsertWithWhereUniqueWithoutCompanyInput = {
-    where: InventoryWhereUniqueInput
-    update: XOR<InventoryUpdateWithoutCompanyInput, InventoryUncheckedUpdateWithoutCompanyInput>
-    create: XOR<InventoryCreateWithoutCompanyInput, InventoryUncheckedCreateWithoutCompanyInput>
-  }
-
-  export type InventoryUpdateWithWhereUniqueWithoutCompanyInput = {
-    where: InventoryWhereUniqueInput
-    data: XOR<InventoryUpdateWithoutCompanyInput, InventoryUncheckedUpdateWithoutCompanyInput>
-  }
-
-  export type InventoryUpdateManyWithWhereWithoutCompanyInput = {
-    where: InventoryScalarWhereInput
-    data: XOR<InventoryUpdateManyMutationInput, InventoryUncheckedUpdateManyWithoutCompanyInput>
-  }
-
-  export type InventoryScalarWhereInput = {
-    AND?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
-    OR?: InventoryScalarWhereInput[]
-    NOT?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
-    id?: StringFilter<"Inventory"> | string
-    itemId?: StringFilter<"Inventory"> | string
-    quantityAvailable?: FloatFilter<"Inventory"> | number
-    incomingQty?: FloatFilter<"Inventory"> | number
-    quantityReserved?: FloatFilter<"Inventory"> | number
-    quantityInTransit?: FloatFilter<"Inventory"> | number
-    updatedAt?: DateTimeFilter<"Inventory"> | Date | string
-    companyId?: StringFilter<"Inventory"> | string
+  export type InventoryBatchCreateManyReceivedByInputEnvelope = {
+    data: InventoryBatchCreateManyReceivedByInput | InventoryBatchCreateManyReceivedByInput[]
+    skipDuplicates?: boolean
   }
 
   export type InventoryTransactionCreateWithoutUserInput = {
@@ -26691,40 +26725,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type InventoryBatchCreateWithoutReceivedByInput = {
-    id?: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
-    purchaseDate: Date | string
-    createdAt?: Date | string
-    inventory: InventoryCreateNestedOneWithoutBatchesInput
-    purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
-    vendor: VendorCreateNestedOneWithoutBatchesInput
-  }
-
-  export type InventoryBatchUncheckedCreateWithoutReceivedByInput = {
-    id?: string
-    inventoryId: string
-    vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
-    purchaseDate: Date | string
-    purchaseOrderId?: string | null
-    createdAt?: Date | string
-  }
-
-  export type InventoryBatchCreateOrConnectWithoutReceivedByInput = {
-    where: InventoryBatchWhereUniqueInput
-    create: XOR<InventoryBatchCreateWithoutReceivedByInput, InventoryBatchUncheckedCreateWithoutReceivedByInput>
-  }
-
-  export type InventoryBatchCreateManyReceivedByInputEnvelope = {
-    data: InventoryBatchCreateManyReceivedByInput | InventoryBatchCreateManyReceivedByInput[]
-    skipDuplicates?: boolean
-  }
-
   export type CompanyCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -26733,13 +26733,13 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
-    vendors?: VendorCreateNestedManyWithoutCompanyInput
     stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
+    vendors?: VendorCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -26750,34 +26750,18 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
     stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
+    vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
     where: CompanyWhereUniqueInput
     create: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
-  }
-
-  export type InventoryTransactionUpsertWithWhereUniqueWithoutUserInput = {
-    where: InventoryTransactionWhereUniqueInput
-    update: XOR<InventoryTransactionUpdateWithoutUserInput, InventoryTransactionUncheckedUpdateWithoutUserInput>
-    create: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput>
-  }
-
-  export type InventoryTransactionUpdateWithWhereUniqueWithoutUserInput = {
-    where: InventoryTransactionWhereUniqueInput
-    data: XOR<InventoryTransactionUpdateWithoutUserInput, InventoryTransactionUncheckedUpdateWithoutUserInput>
-  }
-
-  export type InventoryTransactionUpdateManyWithWhereWithoutUserInput = {
-    where: InventoryTransactionScalarWhereInput
-    data: XOR<InventoryTransactionUpdateManyMutationInput, InventoryTransactionUncheckedUpdateManyWithoutUserInput>
   }
 
   export type InventoryBatchUpsertWithWhereUniqueWithoutReceivedByInput = {
@@ -26808,8 +26792,24 @@ export namespace Prisma {
     costPerUnit?: FloatFilter<"InventoryBatch"> | number
     purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
-    receivedById?: StringNullableFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
+    receivedById?: StringNullableFilter<"InventoryBatch"> | string | null
+  }
+
+  export type InventoryTransactionUpsertWithWhereUniqueWithoutUserInput = {
+    where: InventoryTransactionWhereUniqueInput
+    update: XOR<InventoryTransactionUpdateWithoutUserInput, InventoryTransactionUncheckedUpdateWithoutUserInput>
+    create: XOR<InventoryTransactionCreateWithoutUserInput, InventoryTransactionUncheckedCreateWithoutUserInput>
+  }
+
+  export type InventoryTransactionUpdateWithWhereUniqueWithoutUserInput = {
+    where: InventoryTransactionWhereUniqueInput
+    data: XOR<InventoryTransactionUpdateWithoutUserInput, InventoryTransactionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type InventoryTransactionUpdateManyWithWhereWithoutUserInput = {
+    where: InventoryTransactionScalarWhereInput
+    data: XOR<InventoryTransactionUpdateManyMutationInput, InventoryTransactionUncheckedUpdateManyWithoutUserInput>
   }
 
   export type CompanyUpsertWithoutUsersInput = {
@@ -26831,13 +26831,13 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
-    vendors?: VendorUpdateManyWithoutCompanyNestedInput
     stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -26848,13 +26848,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
     stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateWithoutCategoriesInput = {
@@ -26864,14 +26864,14 @@ export namespace Prisma {
     createdAt?: Date | string
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCategoriesInput = {
@@ -26881,14 +26881,14 @@ export namespace Prisma {
     createdAt?: Date | string
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCategoriesInput = {
@@ -26956,14 +26956,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCategoriesInput = {
@@ -26973,14 +26973,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ItemUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -27030,8 +27030,8 @@ export namespace Prisma {
     quantityReserved?: number
     quantityInTransit?: number
     updatedAt?: Date | string
-    batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
     company: CompanyCreateNestedOneWithoutInventoryInput
+    batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
   }
 
   export type InventoryUncheckedCreateWithoutItemInput = {
@@ -27113,13 +27113,13 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutItemsInput = {
@@ -27130,13 +27130,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutItemsInput = {
@@ -27174,8 +27174,8 @@ export namespace Prisma {
     id?: string
     quantity?: number
     updatedAt?: Date | string
-    rack: RackCreateNestedOneWithoutStocksInput
     company: CompanyCreateNestedOneWithoutStocksInput
+    rack: RackCreateNestedOneWithoutStocksInput
   }
 
   export type StockUncheckedCreateWithoutItemInput = {
@@ -27241,8 +27241,8 @@ export namespace Prisma {
     quantityReserved?: FloatFieldUpdateOperationsInput | number
     quantityInTransit?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
     company?: CompanyUpdateOneRequiredWithoutInventoryNestedInput
+    batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
   }
 
   export type InventoryUncheckedUpdateWithoutItemInput = {
@@ -27314,13 +27314,13 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutItemsInput = {
@@ -27331,13 +27331,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type POLineItemUpsertWithWhereUniqueWithoutItemInput = {
@@ -27430,13 +27430,13 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutRacksInput = {
@@ -27447,13 +27447,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutRacksInput = {
@@ -27465,8 +27465,8 @@ export namespace Prisma {
     id?: string
     quantity?: number
     updatedAt?: Date | string
-    item: ItemCreateNestedOneWithoutStocksInput
     company: CompanyCreateNestedOneWithoutStocksInput
+    item: ItemCreateNestedOneWithoutStocksInput
   }
 
   export type StockUncheckedCreateWithoutRackInput = {
@@ -27522,13 +27522,13 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutRacksInput = {
@@ -27539,13 +27539,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type StockUpsertWithWhereUniqueWithoutRackInput = {
@@ -27562,6 +27562,45 @@ export namespace Prisma {
   export type StockUpdateManyWithWhereWithoutRackInput = {
     where: StockScalarWhereInput
     data: XOR<StockUpdateManyMutationInput, StockUncheckedUpdateManyWithoutRackInput>
+  }
+
+  export type CompanyCreateWithoutStocksInput = {
+    id?: string
+    name: string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    categories?: CategoryCreateNestedManyWithoutCompanyInput
+    customers?: CustomerCreateNestedManyWithoutCompanyInput
+    dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
+    transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    items?: ItemCreateNestedManyWithoutCompanyInput
+    pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
+    racks?: RackCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+    vendors?: VendorCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutStocksInput = {
+    id?: string
+    name: string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
+    dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
+    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
+    pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
+    racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutStocksInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutStocksInput, CompanyUncheckedCreateWithoutStocksInput>
   }
 
   export type ItemCreateWithoutStocksInput = {
@@ -27622,43 +27661,49 @@ export namespace Prisma {
     create: XOR<RackCreateWithoutStocksInput, RackUncheckedCreateWithoutStocksInput>
   }
 
-  export type CompanyCreateWithoutStocksInput = {
-    id?: string
-    name: string
-    settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    categories?: CategoryCreateNestedManyWithoutCompanyInput
-    customers?: CustomerCreateNestedManyWithoutCompanyInput
-    dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
-    transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
-    items?: ItemCreateNestedManyWithoutCompanyInput
-    pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
-    racks?: RackCreateNestedManyWithoutCompanyInput
-    users?: UserCreateNestedManyWithoutCompanyInput
-    vendors?: VendorCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyUncheckedCreateWithoutStocksInput = {
-    id?: string
-    name: string
-    settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
-    dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
-    items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
-    pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
-    racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
-    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyCreateOrConnectWithoutStocksInput = {
-    where: CompanyWhereUniqueInput
+  export type CompanyUpsertWithoutStocksInput = {
+    update: XOR<CompanyUpdateWithoutStocksInput, CompanyUncheckedUpdateWithoutStocksInput>
     create: XOR<CompanyCreateWithoutStocksInput, CompanyUncheckedCreateWithoutStocksInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutStocksInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutStocksInput, CompanyUncheckedUpdateWithoutStocksInput>
+  }
+
+  export type CompanyUpdateWithoutStocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: CategoryUpdateManyWithoutCompanyNestedInput
+    customers?: CustomerUpdateManyWithoutCompanyNestedInput
+    dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
+    transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    items?: ItemUpdateManyWithoutCompanyNestedInput
+    pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
+    racks?: RackUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutStocksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+    dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
+    transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
+    pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ItemUpsertWithoutStocksInput = {
@@ -27731,49 +27776,43 @@ export namespace Prisma {
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutRackNestedInput
   }
 
-  export type CompanyUpsertWithoutStocksInput = {
-    update: XOR<CompanyUpdateWithoutStocksInput, CompanyUncheckedUpdateWithoutStocksInput>
-    create: XOR<CompanyCreateWithoutStocksInput, CompanyUncheckedCreateWithoutStocksInput>
-    where?: CompanyWhereInput
-  }
-
-  export type CompanyUpdateToOneWithWhereWithoutStocksInput = {
-    where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutStocksInput, CompanyUncheckedUpdateWithoutStocksInput>
-  }
-
-  export type CompanyUpdateWithoutStocksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+  export type CompanyCreateWithoutInventoryInput = {
+    id?: string
+    name: string
     settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categories?: CategoryUpdateManyWithoutCompanyNestedInput
-    customers?: CustomerUpdateManyWithoutCompanyNestedInput
-    dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
-    transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
-    items?: ItemUpdateManyWithoutCompanyNestedInput
-    pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
-    racks?: RackUpdateManyWithoutCompanyNestedInput
-    users?: UserUpdateManyWithoutCompanyNestedInput
-    vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
+    createdAt?: Date | string
+    categories?: CategoryCreateNestedManyWithoutCompanyInput
+    customers?: CustomerCreateNestedManyWithoutCompanyInput
+    dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    items?: ItemCreateNestedManyWithoutCompanyInput
+    pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
+    racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+    vendors?: VendorCreateNestedManyWithoutCompanyInput
   }
 
-  export type CompanyUncheckedUpdateWithoutStocksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+  export type CompanyUncheckedCreateWithoutInventoryInput = {
+    id?: string
+    name: string
     settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
-    dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
-    items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
-    pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
-    racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
-    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
+    createdAt?: Date | string
+    categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
+    dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
+    pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
+    racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutInventoryInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutInventoryInput, CompanyUncheckedCreateWithoutInventoryInput>
   }
 
   export type ItemCreateWithoutInventoryInput = {
@@ -27821,8 +27860,8 @@ export namespace Prisma {
     purchaseDate: Date | string
     createdAt?: Date | string
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
-    vendor: VendorCreateNestedOneWithoutBatchesInput
     receivedBy?: UserCreateNestedOneWithoutBatchesInput
+    vendor: VendorCreateNestedOneWithoutBatchesInput
   }
 
   export type InventoryBatchUncheckedCreateWithoutInventoryInput = {
@@ -27833,8 +27872,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: Date | string
     purchaseOrderId?: string | null
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type InventoryBatchCreateOrConnectWithoutInventoryInput = {
@@ -27847,43 +27886,49 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type CompanyCreateWithoutInventoryInput = {
-    id?: string
-    name: string
-    settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    categories?: CategoryCreateNestedManyWithoutCompanyInput
-    customers?: CustomerCreateNestedManyWithoutCompanyInput
-    dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
-    transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
-    items?: ItemCreateNestedManyWithoutCompanyInput
-    pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
-    racks?: RackCreateNestedManyWithoutCompanyInput
-    users?: UserCreateNestedManyWithoutCompanyInput
-    vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyUncheckedCreateWithoutInventoryInput = {
-    id?: string
-    name: string
-    settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
-    dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
-    items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
-    pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
-    racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
-    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
-    vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-  }
-
-  export type CompanyCreateOrConnectWithoutInventoryInput = {
-    where: CompanyWhereUniqueInput
+  export type CompanyUpsertWithoutInventoryInput = {
+    update: XOR<CompanyUpdateWithoutInventoryInput, CompanyUncheckedUpdateWithoutInventoryInput>
     create: XOR<CompanyCreateWithoutInventoryInput, CompanyUncheckedCreateWithoutInventoryInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutInventoryInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutInventoryInput, CompanyUncheckedUpdateWithoutInventoryInput>
+  }
+
+  export type CompanyUpdateWithoutInventoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: CategoryUpdateManyWithoutCompanyNestedInput
+    customers?: CustomerUpdateManyWithoutCompanyNestedInput
+    dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    items?: ItemUpdateManyWithoutCompanyNestedInput
+    pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
+    racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutInventoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+    dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
+    pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type ItemUpsertWithoutInventoryInput = {
@@ -27945,51 +27990,6 @@ export namespace Prisma {
     data: XOR<InventoryBatchUpdateManyMutationInput, InventoryBatchUncheckedUpdateManyWithoutInventoryInput>
   }
 
-  export type CompanyUpsertWithoutInventoryInput = {
-    update: XOR<CompanyUpdateWithoutInventoryInput, CompanyUncheckedUpdateWithoutInventoryInput>
-    create: XOR<CompanyCreateWithoutInventoryInput, CompanyUncheckedCreateWithoutInventoryInput>
-    where?: CompanyWhereInput
-  }
-
-  export type CompanyUpdateToOneWithWhereWithoutInventoryInput = {
-    where?: CompanyWhereInput
-    data: XOR<CompanyUpdateWithoutInventoryInput, CompanyUncheckedUpdateWithoutInventoryInput>
-  }
-
-  export type CompanyUpdateWithoutInventoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categories?: CategoryUpdateManyWithoutCompanyNestedInput
-    customers?: CustomerUpdateManyWithoutCompanyNestedInput
-    dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
-    transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
-    items?: ItemUpdateManyWithoutCompanyNestedInput
-    pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
-    racks?: RackUpdateManyWithoutCompanyNestedInput
-    users?: UserUpdateManyWithoutCompanyNestedInput
-    vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-  }
-
-  export type CompanyUncheckedUpdateWithoutInventoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    settings?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
-    dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
-    items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
-    pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
-    racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
-    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
-    vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-  }
-
   export type InventoryBatchCreateWithoutVendorInput = {
     id?: string
     quantity: number
@@ -28010,8 +28010,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: Date | string
     purchaseOrderId?: string | null
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type InventoryBatchCreateOrConnectWithoutVendorInput = {
@@ -28106,13 +28106,13 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
-    users?: UserCreateNestedManyWithoutCompanyInput
     stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutVendorsInput = {
@@ -28123,13 +28123,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
-    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutVendorsInput = {
@@ -28204,13 +28204,13 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
-    users?: UserUpdateManyWithoutCompanyNestedInput
     stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutVendorsInput = {
@@ -28221,13 +28221,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
-    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type InventoryBatchCreateWithoutPurchaseOrderInput = {
@@ -28238,8 +28238,8 @@ export namespace Prisma {
     purchaseDate: Date | string
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
-    vendor: VendorCreateNestedOneWithoutBatchesInput
     receivedBy?: UserCreateNestedOneWithoutBatchesInput
+    vendor: VendorCreateNestedOneWithoutBatchesInput
   }
 
   export type InventoryBatchUncheckedCreateWithoutPurchaseOrderInput = {
@@ -28250,8 +28250,8 @@ export namespace Prisma {
     remainingQty: number
     costPerUnit: number
     purchaseDate: Date | string
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type InventoryBatchCreateOrConnectWithoutPurchaseOrderInput = {
@@ -28298,13 +28298,13 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutPosInput = {
@@ -28315,13 +28315,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutPosInput = {
@@ -28407,13 +28407,13 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutPosInput = {
@@ -28424,13 +28424,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type VendorUpsertWithoutPurchaseOrdersInput = {
@@ -28473,8 +28473,8 @@ export namespace Prisma {
     quantityReserved?: number
     quantityInTransit?: number
     updatedAt?: Date | string
-    item: ItemCreateNestedOneWithoutInventoryInput
     company: CompanyCreateNestedOneWithoutInventoryInput
+    item: ItemCreateNestedOneWithoutInventoryInput
   }
 
   export type InventoryUncheckedCreateWithoutBatchesInput = {
@@ -28524,33 +28524,6 @@ export namespace Prisma {
     create: XOR<PurchaseOrderCreateWithoutBatchesInput, PurchaseOrderUncheckedCreateWithoutBatchesInput>
   }
 
-  export type VendorCreateWithoutBatchesInput = {
-    id?: string
-    name: string
-    contact?: string | null
-    email?: string | null
-    preferredPaymentMode?: string | null
-    transactions?: InventoryTransactionCreateNestedManyWithoutVendorInput
-    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutVendorInput
-    company: CompanyCreateNestedOneWithoutVendorsInput
-  }
-
-  export type VendorUncheckedCreateWithoutBatchesInput = {
-    id?: string
-    name: string
-    contact?: string | null
-    email?: string | null
-    preferredPaymentMode?: string | null
-    companyId: string
-    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutVendorInput
-    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutVendorInput
-  }
-
-  export type VendorCreateOrConnectWithoutBatchesInput = {
-    where: VendorWhereUniqueInput
-    create: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
-  }
-
   export type UserCreateWithoutBatchesInput = {
     id?: string
     username: string
@@ -28582,6 +28555,33 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutBatchesInput, UserUncheckedCreateWithoutBatchesInput>
   }
 
+  export type VendorCreateWithoutBatchesInput = {
+    id?: string
+    name: string
+    contact?: string | null
+    email?: string | null
+    preferredPaymentMode?: string | null
+    transactions?: InventoryTransactionCreateNestedManyWithoutVendorInput
+    purchaseOrders?: PurchaseOrderCreateNestedManyWithoutVendorInput
+    company: CompanyCreateNestedOneWithoutVendorsInput
+  }
+
+  export type VendorUncheckedCreateWithoutBatchesInput = {
+    id?: string
+    name: string
+    contact?: string | null
+    email?: string | null
+    preferredPaymentMode?: string | null
+    companyId: string
+    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutVendorInput
+    purchaseOrders?: PurchaseOrderUncheckedCreateNestedManyWithoutVendorInput
+  }
+
+  export type VendorCreateOrConnectWithoutBatchesInput = {
+    where: VendorWhereUniqueInput
+    create: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
+  }
+
   export type InventoryUpsertWithoutBatchesInput = {
     update: XOR<InventoryUpdateWithoutBatchesInput, InventoryUncheckedUpdateWithoutBatchesInput>
     create: XOR<InventoryCreateWithoutBatchesInput, InventoryUncheckedCreateWithoutBatchesInput>
@@ -28600,8 +28600,8 @@ export namespace Prisma {
     quantityReserved?: FloatFieldUpdateOperationsInput | number
     quantityInTransit?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
     company?: CompanyUpdateOneRequiredWithoutInventoryNestedInput
+    item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
   }
 
   export type InventoryUncheckedUpdateWithoutBatchesInput = {
@@ -28652,39 +28652,6 @@ export namespace Prisma {
     items?: POLineItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput
   }
 
-  export type VendorUpsertWithoutBatchesInput = {
-    update: XOR<VendorUpdateWithoutBatchesInput, VendorUncheckedUpdateWithoutBatchesInput>
-    create: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
-    where?: VendorWhereInput
-  }
-
-  export type VendorUpdateToOneWithWhereWithoutBatchesInput = {
-    where?: VendorWhereInput
-    data: XOR<VendorUpdateWithoutBatchesInput, VendorUncheckedUpdateWithoutBatchesInput>
-  }
-
-  export type VendorUpdateWithoutBatchesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    transactions?: InventoryTransactionUpdateManyWithoutVendorNestedInput
-    purchaseOrders?: PurchaseOrderUpdateManyWithoutVendorNestedInput
-    company?: CompanyUpdateOneRequiredWithoutVendorsNestedInput
-  }
-
-  export type VendorUncheckedUpdateWithoutBatchesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    contact?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
-    companyId?: StringFieldUpdateOperationsInput | string
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutVendorNestedInput
-    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutVendorNestedInput
-  }
-
   export type UserUpsertWithoutBatchesInput = {
     update: XOR<UserUpdateWithoutBatchesInput, UserUncheckedUpdateWithoutBatchesInput>
     create: XOR<UserCreateWithoutBatchesInput, UserUncheckedCreateWithoutBatchesInput>
@@ -28720,6 +28687,39 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type VendorUpsertWithoutBatchesInput = {
+    update: XOR<VendorUpdateWithoutBatchesInput, VendorUncheckedUpdateWithoutBatchesInput>
+    create: XOR<VendorCreateWithoutBatchesInput, VendorUncheckedCreateWithoutBatchesInput>
+    where?: VendorWhereInput
+  }
+
+  export type VendorUpdateToOneWithWhereWithoutBatchesInput = {
+    where?: VendorWhereInput
+    data: XOR<VendorUpdateWithoutBatchesInput, VendorUncheckedUpdateWithoutBatchesInput>
+  }
+
+  export type VendorUpdateWithoutBatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    contact?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    transactions?: InventoryTransactionUpdateManyWithoutVendorNestedInput
+    purchaseOrders?: PurchaseOrderUpdateManyWithoutVendorNestedInput
+    company?: CompanyUpdateOneRequiredWithoutVendorsNestedInput
+  }
+
+  export type VendorUncheckedUpdateWithoutBatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    contact?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
+    companyId?: StringFieldUpdateOperationsInput | string
+    transactions?: InventoryTransactionUncheckedUpdateManyWithoutVendorNestedInput
+    purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutVendorNestedInput
   }
 
   export type ItemCreateWithoutPoItemsInput = {
@@ -28877,14 +28877,14 @@ export namespace Prisma {
     createdAt?: Date | string
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutCustomersInput = {
@@ -28894,14 +28894,14 @@ export namespace Prisma {
     createdAt?: Date | string
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutCustomersInput = {
@@ -29003,14 +29003,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutCustomersInput = {
@@ -29020,14 +29020,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type DispatchOrderUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -29093,14 +29093,14 @@ export namespace Prisma {
     createdAt?: Date | string
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutDispatchesInput = {
@@ -29110,14 +29110,14 @@ export namespace Prisma {
     createdAt?: Date | string
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutDispatchesInput = {
@@ -29186,14 +29186,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutDispatchesInput = {
@@ -29203,14 +29203,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CustomerUpsertWithoutDispatchOrdersInput = {
@@ -29406,13 +29406,13 @@ export namespace Prisma {
     categories?: CategoryCreateNestedManyWithoutCompanyInput
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
     users?: UserCreateNestedManyWithoutCompanyInput
     vendors?: VendorCreateNestedManyWithoutCompanyInput
-    stocks?: StockCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutTransactionsInput = {
@@ -29423,13 +29423,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
     vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
-    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
-    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutTransactionsInput = {
@@ -29599,13 +29599,13 @@ export namespace Prisma {
     categories?: CategoryUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
     users?: UserUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutTransactionsInput = {
@@ -29616,13 +29616,13 @@ export namespace Prisma {
     categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
     vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
-    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CustomerUpsertWithoutTransactionsInput = {
@@ -29825,6 +29825,16 @@ export namespace Prisma {
     transportMode?: string | null
   }
 
+  export type InventoryCreateManyCompanyInput = {
+    id?: string
+    itemId: string
+    quantityAvailable?: number
+    incomingQty?: number
+    quantityReserved?: number
+    quantityInTransit?: number
+    updatedAt?: Date | string
+  }
+
   export type InventoryTransactionCreateManyCompanyInput = {
     id?: string
     itemId: string
@@ -29867,6 +29877,14 @@ export namespace Prisma {
     zone?: string | null
   }
 
+  export type StockCreateManyCompanyInput = {
+    id?: string
+    itemId: string
+    rackId: string
+    quantity?: number
+    updatedAt?: Date | string
+  }
+
   export type UserCreateManyCompanyInput = {
     id?: string
     username: string
@@ -29884,24 +29902,6 @@ export namespace Prisma {
     contact?: string | null
     email?: string | null
     preferredPaymentMode?: string | null
-  }
-
-  export type StockCreateManyCompanyInput = {
-    id?: string
-    itemId: string
-    rackId: string
-    quantity?: number
-    updatedAt?: Date | string
-  }
-
-  export type InventoryCreateManyCompanyInput = {
-    id?: string
-    itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
-    updatedAt?: Date | string
   }
 
   export type CategoryUpdateWithoutCompanyInput = {
@@ -29991,6 +29991,38 @@ export namespace Prisma {
     collectedBy?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedBy?: NullableStringFieldUpdateOperationsInput | string | null
     transportMode?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantityAvailable?: FloatFieldUpdateOperationsInput | number
+    incomingQty?: FloatFieldUpdateOperationsInput | number
+    quantityReserved?: FloatFieldUpdateOperationsInput | number
+    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
+    batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
+  }
+
+  export type InventoryUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    quantityAvailable?: FloatFieldUpdateOperationsInput | number
+    incomingQty?: FloatFieldUpdateOperationsInput | number
+    quantityReserved?: FloatFieldUpdateOperationsInput | number
+    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    batches?: InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput
+  }
+
+  export type InventoryUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    quantityAvailable?: FloatFieldUpdateOperationsInput | number
+    incomingQty?: FloatFieldUpdateOperationsInput | number
+    quantityReserved?: FloatFieldUpdateOperationsInput | number
+    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryTransactionUpdateWithoutCompanyInput = {
@@ -30137,6 +30169,30 @@ export namespace Prisma {
     zone?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type StockUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: FloatFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: ItemUpdateOneRequiredWithoutStocksNestedInput
+    rack?: RackUpdateOneRequiredWithoutStocksNestedInput
+  }
+
+  export type StockUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    rackId?: StringFieldUpdateOperationsInput | string
+    quantity?: FloatFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    rackId?: StringFieldUpdateOperationsInput | string
+    quantity?: FloatFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
@@ -30146,8 +30202,8 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
     batches?: InventoryBatchUpdateManyWithoutReceivedByNestedInput
+    transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -30159,8 +30215,8 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
     batches?: InventoryBatchUncheckedUpdateManyWithoutReceivedByNestedInput
+    transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -30204,60 +30260,16 @@ export namespace Prisma {
     preferredPaymentMode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type StockUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: ItemUpdateOneRequiredWithoutStocksNestedInput
-    rack?: RackUpdateOneRequiredWithoutStocksNestedInput
-  }
-
-  export type StockUncheckedUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type StockUncheckedUpdateManyWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InventoryUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
-    batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
-  }
-
-  export type InventoryUncheckedUpdateWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    batches?: InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput
-  }
-
-  export type InventoryUncheckedUpdateManyWithoutCompanyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type InventoryBatchCreateManyReceivedByInput = {
+    id?: string
+    inventoryId: string
+    vendorId: string
+    quantity: number
+    remainingQty: number
+    costPerUnit: number
+    purchaseDate: Date | string
+    purchaseOrderId?: string | null
+    createdAt?: Date | string
   }
 
   export type InventoryTransactionCreateManyUserInput = {
@@ -30274,16 +30286,40 @@ export namespace Prisma {
     companyId: string
   }
 
-  export type InventoryBatchCreateManyReceivedByInput = {
-    id?: string
-    inventoryId: string
-    vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
-    purchaseDate: Date | string
-    purchaseOrderId?: string | null
-    createdAt?: Date | string
+  export type InventoryBatchUpdateWithoutReceivedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: FloatFieldUpdateOperationsInput | number
+    remainingQty?: FloatFieldUpdateOperationsInput | number
+    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
+    purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
+    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
+  }
+
+  export type InventoryBatchUncheckedUpdateWithoutReceivedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inventoryId?: StringFieldUpdateOperationsInput | string
+    vendorId?: StringFieldUpdateOperationsInput | string
+    quantity?: FloatFieldUpdateOperationsInput | number
+    remainingQty?: FloatFieldUpdateOperationsInput | number
+    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InventoryBatchUncheckedUpdateManyWithoutReceivedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inventoryId?: StringFieldUpdateOperationsInput | string
+    vendorId?: StringFieldUpdateOperationsInput | string
+    quantity?: FloatFieldUpdateOperationsInput | number
+    remainingQty?: FloatFieldUpdateOperationsInput | number
+    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryTransactionUpdateWithoutUserInput = {
@@ -30326,42 +30362,6 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type InventoryBatchUpdateWithoutReceivedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
-    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
-    purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
-    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
-  }
-
-  export type InventoryBatchUncheckedUpdateWithoutReceivedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    inventoryId?: StringFieldUpdateOperationsInput | string
-    vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
-    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InventoryBatchUncheckedUpdateManyWithoutReceivedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    inventoryId?: StringFieldUpdateOperationsInput | string
-    vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
-    purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ItemCreateManyCategoryInput = {
@@ -30546,8 +30546,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    rack?: RackUpdateOneRequiredWithoutStocksNestedInput
     company?: CompanyUpdateOneRequiredWithoutStocksNestedInput
+    rack?: RackUpdateOneRequiredWithoutStocksNestedInput
   }
 
   export type StockUncheckedUpdateWithoutItemInput = {
@@ -30634,8 +30634,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: ItemUpdateOneRequiredWithoutStocksNestedInput
     company?: CompanyUpdateOneRequiredWithoutStocksNestedInput
+    item?: ItemUpdateOneRequiredWithoutStocksNestedInput
   }
 
   export type StockUncheckedUpdateWithoutRackInput = {
@@ -30662,8 +30662,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: Date | string
     purchaseOrderId?: string | null
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type InventoryBatchUpdateWithoutInventoryInput = {
@@ -30674,8 +30674,8 @@ export namespace Prisma {
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
-    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
     receivedBy?: UserUpdateOneWithoutBatchesNestedInput
+    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
   }
 
   export type InventoryBatchUncheckedUpdateWithoutInventoryInput = {
@@ -30686,8 +30686,8 @@ export namespace Prisma {
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryBatchUncheckedUpdateManyWithoutInventoryInput = {
@@ -30698,8 +30698,8 @@ export namespace Prisma {
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryBatchCreateManyVendorInput = {
@@ -30710,8 +30710,8 @@ export namespace Prisma {
     costPerUnit: number
     purchaseDate: Date | string
     purchaseOrderId?: string | null
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type InventoryTransactionCreateManyVendorInput = {
@@ -30759,8 +30759,8 @@ export namespace Prisma {
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryBatchUncheckedUpdateManyWithoutVendorInput = {
@@ -30771,8 +30771,8 @@ export namespace Prisma {
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryTransactionUpdateWithoutVendorInput = {
@@ -30862,8 +30862,8 @@ export namespace Prisma {
     remainingQty: number
     costPerUnit: number
     purchaseDate: Date | string
-    receivedById?: string | null
     createdAt?: Date | string
+    receivedById?: string | null
   }
 
   export type POLineItemCreateManyPurchaseOrderInput = {
@@ -30882,8 +30882,8 @@ export namespace Prisma {
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
-    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
     receivedBy?: UserUpdateOneWithoutBatchesNestedInput
+    vendor?: VendorUpdateOneRequiredWithoutBatchesNestedInput
   }
 
   export type InventoryBatchUncheckedUpdateWithoutPurchaseOrderInput = {
@@ -30894,8 +30894,8 @@ export namespace Prisma {
     remainingQty?: FloatFieldUpdateOperationsInput | number
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryBatchUncheckedUpdateManyWithoutPurchaseOrderInput = {
@@ -30906,8 +30906,8 @@ export namespace Prisma {
     remainingQty?: FloatFieldUpdateOperationsInput | number
     costPerUnit?: FloatFieldUpdateOperationsInput | number
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receivedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type POLineItemUpdateWithoutPurchaseOrderInput = {

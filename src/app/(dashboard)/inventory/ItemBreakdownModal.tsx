@@ -250,64 +250,7 @@ export function ItemBreakdownModal({
                   {activeTab === "buying" && (
                     <div className="space-y-16">
                       {/* Section 1: Inward Journal */}
-                      <section className="space-y-8">
-                        <div className="flex items-end justify-between border-b border-border-ghost pb-6 px-2">
-                          <div>
-                            <h3 className="heading-md flex items-center gap-3">
-                               <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
-                                 <ArrowDownLeft className="w-5 h-5" />
-                                </div>
-                               Inward Journal
-                            </h3>
-                            <p className="text-xs font-bold text-muted-foreground mt-2 tracking-tight">Tracking all purchase receipts and batch distributions.</p>
-                          </div>
-                          <span className="badge badge-neutral opacity-40">COMPLETED RECEIPTS</span>
-                        </div>
 
-                        <div className="grid grid-cols-1 gap-4">
-                          {purchaseHistory.length > 0 ? purchaseHistory.map((entry, idx) => (
-                            <div key={idx} className="group bg-surface-lowest p-6 rounded-[2rem] border border-border-ghost shadow-ambient transition-all duration-500">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                <div className="flex items-center gap-5">
-                                  <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center font-black text-primary text-lg border border-primary/10 transition-all duration-500">
-                                    {entry.vendor?.[0] || "V"}
-                                  </div>
-                                  <div>
-                                    <span className="font-black text-foreground text-lg tracking-tight block">{entry.vendor}</span>
-                                    <div className="flex items-center gap-3 mt-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                                       <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 opacity-40" /> {new Date(entry.date).toLocaleDateString('en-IN', { month: "short", day: "2-digit", year: "numeric" })}</span>
-                                       <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                                       <span>Recieved by {entry.receivedBy}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div className="flex flex-wrap items-center gap-6 md:gap-12">
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-50">Volume</span>
-                                    <span className="text-lg font-black text-foreground tabular-nums">+{entry.quantity}</span>
-                                  </div>
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-50">Available</span>
-                                    <span className={`badge ${entry.remainingQty > 0 ? 'badge-success' : 'badge-neutral opacity-40'}`}>
-                                        {entry.remainingQty > 0 ? `${entry.remainingQty} Left` : 'Sold Out'}
-                                    </span>
-                                  </div>
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-50">Unit Rate</span>
-                                    <span className="text-lg font-black text-primary tabular-nums">₹{Number(entry.costPerUnit || 0).toLocaleString()}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )) : (
-                            <div className="bg-surface-low/30 rounded-[2.5rem] border border-border-ghost border-dashed py-16 text-center">
-                               <ArrowDownLeft className="w-12 h-12 text-muted-foreground opacity-10 mx-auto mb-4" />
-                               <p className="text-xs font-bold text-muted-foreground italic tracking-tight">No inward history recorded.</p>
-                            </div>
-                          )}
-                        </div>
-                      </section>
 
                       {/* Section 2: Supply Pipeline (Incoming POs) */}
                       <section className="space-y-8">
