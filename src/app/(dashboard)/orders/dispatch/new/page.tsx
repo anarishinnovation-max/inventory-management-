@@ -249,9 +249,6 @@ export default function NewDispatchOrderPage() {
   const [paymentMode, setPaymentMode] = useState("Cash");
   const [orderDate, setOrderDate] = useState(new Date().toISOString());
   const [expectedDelivery, setExpectedDelivery] = useState("");
-  const [collectedBy, setCollectedBy] = useState("");
-  const [dispatchedBy, setDispatchedBy] = useState("");
-  const [transportMode, setTransportMode] = useState("");
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantity: 1, sellingPrice: 0 }
   ]);
@@ -274,11 +271,6 @@ export default function NewDispatchOrderPage() {
         if (cRes.ok && iRes.ok && invRes.ok) {
           setCustomers(await cRes.json());
           setItems(await iRes.json());
-          
-          if (userRes.ok) {
-            const userData = await userRes.json();
-            setDispatchedBy(userData.name);
-          }
 
           // Build inventory map for quick lookup
           const inventoryData = await invRes.json();
@@ -423,9 +415,6 @@ export default function NewDispatchOrderPage() {
           paymentMode: paymentMode,
           orderDate: orderDate,
           expectedDelivery: expectedDelivery || null,
-          collectedBy: collectedBy,
-          dispatchedBy: dispatchedBy,
-          transportMode: transportMode,
           items: lineItems,
           status: customStatus || "pending"
         }),
@@ -685,37 +674,6 @@ export default function NewDispatchOrderPage() {
                      value={paymentMode}
                      onChange={(val) => setPaymentMode(val)}
                      placeholder="Select Method"
-                   />
-                </div>
-
-                <div>
-                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Collected By</label>
-                   <input 
-                     type="text"
-                     value={collectedBy}
-                     onChange={(e) => setCollectedBy(e.target.value)}
-                     placeholder="Pick-up person name"
-                     className="input-field !h-12"
-                   />
-                </div>
-
-                <div>
-                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Dispatched By</label>
-                   <input 
-                     type="text"
-                     value={dispatchedBy}
-                     readOnly
-                     className="input-field !h-12 bg-surface-low opacity-60 cursor-not-allowed"
-                   />
-                </div>
-
-                <div>
-                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Transport Mode</label>
-                   <SearchableSelect 
-                     items={["Self Pickup", "Delivery Truck", "Courier", "Rickshaw", "Bike", "Other"].map(m => ({ id: m, name: m }))}
-                     value={transportMode}
-                     onChange={(val) => setTransportMode(val)}
-                     placeholder="Select Transport"
                    />
                 </div>
 

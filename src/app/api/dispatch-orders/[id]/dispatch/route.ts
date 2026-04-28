@@ -7,7 +7,12 @@ export async function POST(
 ) {
   try {
     const { id: dispatchId } = await params;
-    const order = await InventoryService.dispatchGoods(dispatchId);
+    const body = await request.json().catch(() => ({}));
+    const order = await InventoryService.dispatchGoods(dispatchId, {
+      collectedBy: body.collectedBy,
+      dispatchedBy: body.dispatchedBy,
+      transportMode: body.transportMode
+    });
 
     return NextResponse.json(order);
   } catch (error: any) {

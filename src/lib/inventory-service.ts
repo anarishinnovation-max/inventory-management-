@@ -240,7 +240,7 @@ export const InventoryService = {
   /**
    * Dispatches a sales order.
    */
-  async dispatchGoods(dispatchId: string) {
+  async dispatchGoods(dispatchId: string, details?: { collectedBy?: string, dispatchedBy?: string, transportMode?: string }) {
     return await (prisma as any).$transaction(async (tx: any) => {
       const order = await tx.dispatchOrder.findFirst({
         where: { id: dispatchId },
@@ -315,7 +315,12 @@ export const InventoryService = {
 
       return await tx.dispatchOrder.update({
         where: { id: dispatchId },
-        data: { status: "dispatched" },
+        data: { 
+          status: "dispatched",
+          collectedBy: details?.collectedBy,
+          dispatchedBy: details?.dispatchedBy,
+          transportMode: details?.transportMode
+        },
       });
     });
   },

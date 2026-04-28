@@ -29,19 +29,42 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [shippingDetails, setShippingDetails] = useState({
+    collectedBy: "",
+    dispatchedBy: "",
+    transportMode: ""
+  });
 
   useEffect(() => {
-    async function fetchOrder() {
+    async function fetchInitialData() {
       try {
-        const res = await fetch("/api/dispatch-orders");
-        if (res.ok) {
-          const orders = await res.json();
+        // Fetch order
+        const orderRes = await fetch("/api/dispatch-orders");
+        if (orderRes.ok) {
+          const orders = await orderRes.json();
           const found = orders.find((o: any) => o.id === id);
           if (found) {
             setOrder(found);
+            if (found.status === "dispatched") {
+               setShippingDetails({
+                  collectedBy: found.collectedBy || "",
+                  dispatchedBy: found.dispatchedBy || "",
+                  transportMode: found.transportMode || ""
+               });
+            }
           } else {
             showToast("Dispatch order record not found.", "error");
           }
+        }
+
+        // Fetch user for dispatchedBy default
+        const userRes = await fetch("/api/auth/me");
+        if (userRes.ok) {
+           const userData = await userRes.json();
+           setShippingDetails(prev => ({
+              ...prev,
+              dispatchedBy: prev.dispatchedBy || userData.name
+           }));
         }
       } catch (err) {
         showToast("Failed to load dispatch details.", "error");
@@ -49,7 +72,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
         setLoading(false);
       }
     }
-    fetchOrder();
+    fetchInitialData();
   }, [id]);
 
   const handleDispatch = async () => {
@@ -58,6 +81,8 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
     try {
       const res = await fetch(`/api/dispatch-orders/${id}/dispatch`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(shippingDetails),
       });
 
       if (res.ok) {
@@ -186,49 +211,91 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                     <p className="text-xl font-black text-blue-900 tracking-tight">{order.paymentMode || "Cash"}</p>
                  </div>
 
-                 {order.collectedBy && (
-                   <div className="p-8 rounded-[2rem] bg-purple-50 border border-purple-100 shadow-sm">
-                      <p className="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-3">Collected By (Customer)</p>
-                      <p className="text-xl font-black text-purple-900 tracking-tight">{order.collectedBy}</p>
-                   </div>
-                 )}
+                  {isDispatched ? (
+                     <div className="space-y-6">
+                        <div className="p-8 rounded-[2rem] bg-emerald-50 border border-emerald-100 flex items-center gap-5">
+                           <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 border border-emerald-200">
+                              <CheckCircle2 className="w-6 h-6" />
+                           </div>
+                           <p className="text-sm font-black text-emerald-900 leading-tight">Shipment confirmed and issued.</p>
+                        </div>
 
-                 {order.dispatchedBy && (
-                   <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 shadow-sm">
-                      <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] mb-3">Dispatched By (Our Staff)</p>
-                      <p className="text-xl font-black text-slate-900 tracking-tight">{order.dispatchedBy}</p>
-                   </div>
-                 )}
+                        {shippingDetails.collectedBy && (
+                          <div className="p-8 rounded-[2rem] bg-purple-50 border border-purple-100 shadow-sm">
+                             <p className="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-3">Collected By (Customer)</p>
+                             <p className="text-xl font-black text-purple-900 tracking-tight">{shippingDetails.collectedBy}</p>
+                          </div>
+                        )}
 
-                 {order.transportMode && (
-                   <div className="p-8 rounded-[2rem] bg-amber-50 border border-amber-100 shadow-sm">
-                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">Transport Mode</p>
-                      <p className="text-xl font-black text-amber-900 tracking-tight">{order.transportMode}</p>
-                   </div>
-                 )}
+                        {shippingDetails.dispatchedBy && (
+                          <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 shadow-sm">
+                             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] mb-3">Dispatched By (Our Staff)</p>
+                             <p className="text-xl font-black text-slate-900 tracking-tight">{shippingDetails.dispatchedBy}</p>
+                          </div>
+                        )}
 
-                 {isDispatched ? (
-                    <div className="p-8 rounded-[2rem] bg-emerald-50 border border-emerald-100 flex items-center gap-5">
-                       <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 border border-emerald-200">
-                          <CheckCircle2 className="w-6 h-6" />
-                       </div>
-                       <p className="text-sm font-black text-emerald-900 leading-tight">Shipment confirmed and issued.</p>
-                    </div>
-                 ) : (
-                    <div className="space-y-6 pt-4">
-                       <button 
-                         onClick={handleDispatch}
-                         disabled={submitting}
-                         className="btn btn-primary w-full h-16 shadow-glow-primary !text-[15px] !rounded-[1.5rem]"
-                       >
-                         {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Send className="w-6 h-6" />}
-                         {submitting ? "Processing..." : "Confirm Outward Dispatch"}
-                       </button>
-                       <p className="text-[10px] text-center text-muted-foreground font-black uppercase tracking-[0.2em] px-4 leading-relaxed opacity-70">
-                          Final action: This will permanently deduct stock from active inventory batches.
-                       </p>
-                    </div>
-                 )}
+                        {shippingDetails.transportMode && (
+                          <div className="p-8 rounded-[2rem] bg-amber-50 border border-amber-100 shadow-sm">
+                             <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">Transport Mode</p>
+                             <p className="text-xl font-black text-amber-900 tracking-tight">{shippingDetails.transportMode}</p>
+                          </div>
+                        )}
+                     </div>
+                  ) : (
+                     <div className="space-y-6 pt-4">
+                        <div className="space-y-4 mb-8">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Collected By (Pick-up Person)</label>
+                              <input 
+                                type="text"
+                                placeholder="Enter name..."
+                                className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                value={shippingDetails.collectedBy}
+                                onChange={(e) => setShippingDetails(prev => ({ ...prev, collectedBy: e.target.value }))}
+                              />
+                           </div>
+
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Dispatched By</label>
+                              <input 
+                                type="text"
+                                placeholder="System Admin"
+                                className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                value={shippingDetails.dispatchedBy}
+                                onChange={(e) => setShippingDetails(prev => ({ ...prev, dispatchedBy: e.target.value }))}
+                              />
+                           </div>
+
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Transport Mode</label>
+                              <select 
+                                className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none appearance-none transition-all"
+                                value={shippingDetails.transportMode}
+                                onChange={(e) => setShippingDetails(prev => ({ ...prev, transportMode: e.target.value }))}
+                              >
+                                <option value="">Select Transport</option>
+                                <option value="Direct Pick-up">Direct Pick-up</option>
+                                <option value="Courier/Speed Post">Courier/Speed Post</option>
+                                <option value="Delivery Truck">Delivery Truck</option>
+                                <option value="Rickshaw/Auto">Rickshaw/Auto</option>
+                                <option value="Other">Other</option>
+                              </select>
+                           </div>
+                        </div>
+
+                        <button 
+                          onClick={handleDispatch}
+                          disabled={submitting}
+                          className="btn btn-primary w-full h-16 shadow-glow-primary !text-[15px] !rounded-[1.5rem]"
+                        >
+                          {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Send className="w-6 h-6" />}
+                          {submitting ? "Processing..." : "Confirm Outward Dispatch"}
+                        </button>
+                        <p className="text-[10px] text-center text-muted-foreground font-black uppercase tracking-[0.2em] px-4 leading-relaxed opacity-70">
+                           Final action: This will permanently deduct stock from active inventory batches.
+                        </p>
+                     </div>
+                  )}
               </div>
            </div>
 
