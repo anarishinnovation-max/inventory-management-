@@ -16,20 +16,22 @@ async function getReportData() {
          by: ["itemId"],
          _sum: { quantity: true },
          where: { type: "SALE" },
-         orderBy: { _sum: { quantity: "asc" } },
-         take: 3,
       });
 
-      const validSalesIds = salesTx
-         .map((t: { itemId: string | null }) => t.itemId)
-         .filter(Boolean) as string[];
+      // Sort and take in-memory to avoid potential groupBy orderBy/take issues
+      salesTx.sort((a, b) => (a._sum.quantity || 0) - (b._sum.quantity || 0));
+      const top3Sales = salesTx.slice(0, 3);
+
+      const validSalesIds = top3Sales
+         .map((t: { itemId: string }) => t.itemId)
+         .filter(Boolean);
 
       const saleItems = await prisma.item.findMany({
          where: { id: { in: validSalesIds } }
       });
 
-      let topSkus = salesTx.map((t: {
-         itemId: string | null;
+      let topSkus = top3Sales.map((t: {
+         itemId: string;
          _sum: { quantity: number | null };
       }) => {
          const item = saleItems.find(i => i.id === t.itemId);
@@ -60,14 +62,16 @@ async function getReportData() {
       const poStats = await prisma.purchaseOrder.groupBy({
          by: ["vendorId"],
          _count: { id: true },
-         orderBy: { _count: { id: "desc" } },
-         take: 3,
       });
 
-      const vendorIds = poStats.map(p => p.vendorId).filter(Boolean) as string[];
+      // Sort and take in-memory
+      poStats.sort((a, b) => (b._count.id || 0) - (a._count.id || 0));
+      const top3Vendors = poStats.slice(0, 3);
+
+      const vendorIds = top3Vendors.map(p => p.vendorId).filter(Boolean) as string[];
       const vendorData = await prisma.vendor.findMany({ where: { id: { in: vendorIds } } });
 
-      let vendorEfficiency = poStats.map(p => {
+      let vendorEfficiency = top3Vendors.map(p => {
          const v = vendorData.find(vd => vd.id === p.vendorId);
          return {
             name: v?.name || "Unknown Vendor",
