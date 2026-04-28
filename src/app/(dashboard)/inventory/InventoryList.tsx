@@ -222,50 +222,50 @@ export default function InventoryList({
             placeholder="Search items, SKU, or Rack..."
           />
         </div>
+      </div>
 
-        {/* Bulk Action Bar - Now placed next to Search Bar */}
-        {selectedIds.size > 0 && userRole !== 'EMPLOYEE' && (
-          <div className="animate-in fade-in slide-in-from-left-4 duration-300">
-            <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1.5 pr-4 pl-5">
-              <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
-              </div>
+      {/* Bulk Action Bar - Moved below search and right-aligned */}
+      {selectedIds.size > 0 && userRole !== 'EMPLOYEE' && (
+        <div className="flex justify-end animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1.5 pr-4 pl-5">
+            <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
+            </div>
 
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={handleBulkCreatePO}
-                  disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group"
-                  title="Create Bulk PO"
-                  suppressHydrationWarning
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleBulkCreatePO}
+                disabled={isProcessing}
+                className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group"
+                title="Create Bulk PO"
+                suppressHydrationWarning
+              >
+                <ShoppingCart className="w-4 h-4" />
+              </button>
 
-                <button
-                  onClick={handleBulkScrap}
-                  disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-error/5 text-error transition-all group"
-                  title="Scrap All"
-                  suppressHydrationWarning
-                >
-                  <Flame className="w-4 h-4" />
-                </button>
+              <button
+                onClick={handleBulkScrap}
+                disabled={isProcessing}
+                className="p-2.5 rounded-xl hover:bg-error/5 text-error transition-all group"
+                title="Scrap All"
+                suppressHydrationWarning
+              >
+                <Flame className="w-4 h-4" />
+              </button>
 
-                <button
-                  onClick={handleBulkDelete}
-                  disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-error/5 text-error transition-all group"
-                  title="Delete Selected"
-                  suppressHydrationWarning
-                >
-                  {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                </button>
-              </div>
+              <button
+                onClick={handleBulkDelete}
+                disabled={isProcessing}
+                className="p-2.5 rounded-xl hover:bg-error/5 text-error transition-all group"
+                title="Delete Selected"
+                suppressHydrationWarning
+              >
+                {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="table-container">
         <div className="overflow-x-auto">
