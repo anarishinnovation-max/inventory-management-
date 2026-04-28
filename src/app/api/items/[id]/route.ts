@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac-utils";
 import { revalidatePath } from "next/cache";
+import { createActivityLog } from "@/lib/logger";
 
 export async function GET(
   request: Request,
@@ -103,6 +104,9 @@ export async function PUT(
         }
     }
 
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const userAgent = request.headers.get("user-agent") || "unknown";
+
     const updatedItem = await (prisma as any).item.update({
       where: { id },
       data: {
@@ -113,6 +117,20 @@ export async function PUT(
         minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
         isCritical: isCritical !== undefined ? !!isCritical : undefined,
       },
+    });
+
+    // Log update
+    await createActivityLog({
+      actionType: "UPDATE",
+      entityType: "ITEM",
+      entityId: id,
+      performedBy: session.userId,
+      performedByName: session.name,
+      oldValue: existingItem,
+      newValue: updatedItem,
+      companyId: session.companyId,
+      ipAddress: ip,
+      userAgent: userAgent
     });
 
     // Clear caches for related pages
@@ -154,6 +172,9 @@ export async function DELETE(
       }, { status: 400 });
     }
 
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const userAgent = request.headers.get("user-agent") || "unknown";
+
     await (prisma as any).$transaction([
         (prisma as any).inventoryBatch.deleteMany({ where: { inventory: { itemId: id } } }),
         (prisma as any).inventory.deleteMany({ where: { itemId: id } }),
@@ -163,6 +184,19 @@ export async function DELETE(
         (prisma as any).dispatchItem.deleteMany({ where: { itemId: id } }),
         (prisma as any).item.delete({ where: { id } })
     ]);
+
+    // Log deletion
+    await createActivityLog({
+      actionType: "DELETE",
+      entityType: "ITEM",
+      entityId: id,
+      performedBy: session.userId,
+      performedByName: session.name,
+      oldValue: existingItem,
+      companyId: session.companyId,
+      ipAddress: ip,
+      userAgent: userAgent
+    });
 
     return NextResponse.json({ message: "Item deleted successfully" });
   } catch (error: any) {

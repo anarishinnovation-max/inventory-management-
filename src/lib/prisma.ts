@@ -32,15 +32,14 @@ const pool = globalForPrisma.pool ?? new Pool(poolConfig);
 const adapter = new PrismaPg(pool);
 
 // Return a clean Prisma instance without multi-tenant extensions
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
+// FORCING NEW CLIENT TO PICK UP NEW SCHEMA
+export const prisma = new PrismaClient({
   adapter,
   log: ["error"],
 });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-  globalForPrisma.pool = pool;
-}
+globalForPrisma.prisma = prisma;
+globalForPrisma.pool = pool;
 
 export default prisma;
 // Keeping basePrisma export to avoid breaking imports in the short term, but mapping it to the standard client

@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { login } from "@/lib/auth";
 import { UserRole } from "@/lib/types";
+import { createActivityLog } from "@/lib/logger";
 
 export async function POST(request: Request) {
   try {
@@ -32,6 +33,23 @@ export async function POST(request: Request) {
 
     // Login with company context and Role enum
     await login(user.id, user.username, user.role as UserRole, user.companyId);
+
+    // Log action (if not super admin)
+    if (user.companyId) {
+      const ip = request.headers.get("x-forwarded-for") || "unknown";
+      const userAgent = request.headers.get("user-agent") || "unknown";
+      
+      await createActivityLog({
+        actionType: "LOGIN",
+        entityType: "USER",
+        entityId: user.id,
+        performedBy: user.id,
+        performedByName: user.name,
+        companyId: user.companyId,
+        ipAddress: ip,
+        userAgent: userAgent
+      });
+    }
 
     return NextResponse.json({
       success: true,

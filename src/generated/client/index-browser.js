@@ -274,6 +274,22 @@ exports.Prisma.InventoryTransactionScalarFieldEnum = {
   companyId: 'companyId'
 };
 
+exports.Prisma.ActivityLogScalarFieldEnum = {
+  id: 'id',
+  actionType: 'actionType',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  performedBy: 'performedBy',
+  performedByName: 'performedByName',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  changedFields: 'changedFields',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  companyId: 'companyId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -321,7 +337,8 @@ exports.Prisma.ModelName = {
   Customer: 'Customer',
   DispatchOrder: 'DispatchOrder',
   DispatchItem: 'DispatchItem',
-  InventoryTransaction: 'InventoryTransaction'
+  InventoryTransaction: 'InventoryTransaction',
+  ActivityLog: 'ActivityLog'
 };
 
 /**

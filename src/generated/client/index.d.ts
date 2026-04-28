@@ -88,6 +88,11 @@ export type DispatchItem = $Result.DefaultSelection<Prisma.$DispatchItemPayload>
  * 
  */
 export type InventoryTransaction = $Result.DefaultSelection<Prisma.$InventoryTransactionPayload>
+/**
+ * Model ActivityLog
+ * 
+ */
+export type ActivityLog = $Result.DefaultSelection<Prisma.$ActivityLogPayload>
 
 /**
  * Enums
@@ -378,6 +383,16 @@ export class PrismaClient<
     * ```
     */
   get inventoryTransaction(): Prisma.InventoryTransactionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.activityLog`: Exposes CRUD operations for the **ActivityLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ActivityLogs
+    * const activityLogs = await prisma.activityLog.findMany()
+    * ```
+    */
+  get activityLog(): Prisma.ActivityLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -826,7 +841,8 @@ export namespace Prisma {
     Customer: 'Customer',
     DispatchOrder: 'DispatchOrder',
     DispatchItem: 'DispatchItem',
-    InventoryTransaction: 'InventoryTransaction'
+    InventoryTransaction: 'InventoryTransaction',
+    ActivityLog: 'ActivityLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -842,7 +858,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "company" | "user" | "category" | "item" | "rack" | "stock" | "inventory" | "vendor" | "purchaseOrder" | "inventoryBatch" | "pOLineItem" | "customer" | "dispatchOrder" | "dispatchItem" | "inventoryTransaction"
+      modelProps: "company" | "user" | "category" | "item" | "rack" | "stock" | "inventory" | "vendor" | "purchaseOrder" | "inventoryBatch" | "pOLineItem" | "customer" | "dispatchOrder" | "dispatchItem" | "inventoryTransaction" | "activityLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1956,6 +1972,80 @@ export namespace Prisma {
           }
         }
       }
+      ActivityLog: {
+        payload: Prisma.$ActivityLogPayload<ExtArgs>
+        fields: Prisma.ActivityLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ActivityLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ActivityLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>
+          }
+          findFirst: {
+            args: Prisma.ActivityLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ActivityLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>
+          }
+          findMany: {
+            args: Prisma.ActivityLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>[]
+          }
+          create: {
+            args: Prisma.ActivityLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>
+          }
+          createMany: {
+            args: Prisma.ActivityLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ActivityLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>[]
+          }
+          delete: {
+            args: Prisma.ActivityLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>
+          }
+          update: {
+            args: Prisma.ActivityLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.ActivityLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ActivityLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ActivityLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.ActivityLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityLogPayload>
+          }
+          aggregate: {
+            args: Prisma.ActivityLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateActivityLog>
+          }
+          groupBy: {
+            args: Prisma.ActivityLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ActivityLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ActivityLogCountArgs<ExtArgs>
+            result: $Utils.Optional<ActivityLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2079,6 +2169,7 @@ export namespace Prisma {
     dispatchOrder?: DispatchOrderOmit
     dispatchItem?: DispatchItemOmit
     inventoryTransaction?: InventoryTransactionOmit
+    activityLog?: ActivityLogOmit
   }
 
   /* Types for Logging */
@@ -2164,6 +2255,7 @@ export namespace Prisma {
     dispatches: number
     inventory: number
     transactions: number
+    activityLogs: number
     items: number
     pos: number
     racks: number
@@ -2178,6 +2270,7 @@ export namespace Prisma {
     dispatches?: boolean | CompanyCountOutputTypeCountDispatchesArgs
     inventory?: boolean | CompanyCountOutputTypeCountInventoryArgs
     transactions?: boolean | CompanyCountOutputTypeCountTransactionsArgs
+    activityLogs?: boolean | CompanyCountOutputTypeCountActivityLogsArgs
     items?: boolean | CompanyCountOutputTypeCountItemsArgs
     pos?: boolean | CompanyCountOutputTypeCountPosArgs
     racks?: boolean | CompanyCountOutputTypeCountRacksArgs
@@ -2230,6 +2323,13 @@ export namespace Prisma {
    */
   export type CompanyCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InventoryTransactionWhereInput
+  }
+
+  /**
+   * CompanyCountOutputType without action
+   */
+  export type CompanyCountOutputTypeCountActivityLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActivityLogWhereInput
   }
 
   /**
@@ -2796,6 +2896,7 @@ export namespace Prisma {
     dispatches?: boolean | Company$dispatchesArgs<ExtArgs>
     inventory?: boolean | Company$inventoryArgs<ExtArgs>
     transactions?: boolean | Company$transactionsArgs<ExtArgs>
+    activityLogs?: boolean | Company$activityLogsArgs<ExtArgs>
     items?: boolean | Company$itemsArgs<ExtArgs>
     pos?: boolean | Company$posArgs<ExtArgs>
     racks?: boolean | Company$racksArgs<ExtArgs>
@@ -2833,6 +2934,7 @@ export namespace Prisma {
     dispatches?: boolean | Company$dispatchesArgs<ExtArgs>
     inventory?: boolean | Company$inventoryArgs<ExtArgs>
     transactions?: boolean | Company$transactionsArgs<ExtArgs>
+    activityLogs?: boolean | Company$activityLogsArgs<ExtArgs>
     items?: boolean | Company$itemsArgs<ExtArgs>
     pos?: boolean | Company$posArgs<ExtArgs>
     racks?: boolean | Company$racksArgs<ExtArgs>
@@ -2852,6 +2954,7 @@ export namespace Prisma {
       dispatches: Prisma.$DispatchOrderPayload<ExtArgs>[]
       inventory: Prisma.$InventoryPayload<ExtArgs>[]
       transactions: Prisma.$InventoryTransactionPayload<ExtArgs>[]
+      activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
       items: Prisma.$ItemPayload<ExtArgs>[]
       pos: Prisma.$PurchaseOrderPayload<ExtArgs>[]
       racks: Prisma.$RackPayload<ExtArgs>[]
@@ -3263,6 +3366,7 @@ export namespace Prisma {
     dispatches<T extends Company$dispatchesArgs<ExtArgs> = {}>(args?: Subset<T, Company$dispatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DispatchOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventory<T extends Company$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Company$inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends Company$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Company$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    activityLogs<T extends Company$activityLogsArgs<ExtArgs> = {}>(args?: Subset<T, Company$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     items<T extends Company$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Company$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pos<T extends Company$posArgs<ExtArgs> = {}>(args?: Subset<T, Company$posArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     racks<T extends Company$racksArgs<ExtArgs> = {}>(args?: Subset<T, Company$racksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3812,6 +3916,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: InventoryTransactionScalarFieldEnum | InventoryTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Company.activityLogs
+   */
+  export type Company$activityLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    where?: ActivityLogWhereInput
+    orderBy?: ActivityLogOrderByWithRelationInput | ActivityLogOrderByWithRelationInput[]
+    cursor?: ActivityLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ActivityLogScalarFieldEnum | ActivityLogScalarFieldEnum[]
   }
 
   /**
@@ -20391,6 +20519,1161 @@ export namespace Prisma {
 
 
   /**
+   * Model ActivityLog
+   */
+
+  export type AggregateActivityLog = {
+    _count: ActivityLogCountAggregateOutputType | null
+    _min: ActivityLogMinAggregateOutputType | null
+    _max: ActivityLogMaxAggregateOutputType | null
+  }
+
+  export type ActivityLogMinAggregateOutputType = {
+    id: string | null
+    actionType: string | null
+    entityType: string | null
+    entityId: string | null
+    performedBy: string | null
+    performedByName: string | null
+    ipAddress: string | null
+    userAgent: string | null
+    createdAt: Date | null
+    companyId: string | null
+  }
+
+  export type ActivityLogMaxAggregateOutputType = {
+    id: string | null
+    actionType: string | null
+    entityType: string | null
+    entityId: string | null
+    performedBy: string | null
+    performedByName: string | null
+    ipAddress: string | null
+    userAgent: string | null
+    createdAt: Date | null
+    companyId: string | null
+  }
+
+  export type ActivityLogCountAggregateOutputType = {
+    id: number
+    actionType: number
+    entityType: number
+    entityId: number
+    performedBy: number
+    performedByName: number
+    oldValue: number
+    newValue: number
+    changedFields: number
+    ipAddress: number
+    userAgent: number
+    createdAt: number
+    companyId: number
+    _all: number
+  }
+
+
+  export type ActivityLogMinAggregateInputType = {
+    id?: true
+    actionType?: true
+    entityType?: true
+    entityId?: true
+    performedBy?: true
+    performedByName?: true
+    ipAddress?: true
+    userAgent?: true
+    createdAt?: true
+    companyId?: true
+  }
+
+  export type ActivityLogMaxAggregateInputType = {
+    id?: true
+    actionType?: true
+    entityType?: true
+    entityId?: true
+    performedBy?: true
+    performedByName?: true
+    ipAddress?: true
+    userAgent?: true
+    createdAt?: true
+    companyId?: true
+  }
+
+  export type ActivityLogCountAggregateInputType = {
+    id?: true
+    actionType?: true
+    entityType?: true
+    entityId?: true
+    performedBy?: true
+    performedByName?: true
+    oldValue?: true
+    newValue?: true
+    changedFields?: true
+    ipAddress?: true
+    userAgent?: true
+    createdAt?: true
+    companyId?: true
+    _all?: true
+  }
+
+  export type ActivityLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ActivityLog to aggregate.
+     */
+    where?: ActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ActivityLogs to fetch.
+     */
+    orderBy?: ActivityLogOrderByWithRelationInput | ActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ActivityLogs
+    **/
+    _count?: true | ActivityLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ActivityLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ActivityLogMaxAggregateInputType
+  }
+
+  export type GetActivityLogAggregateType<T extends ActivityLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateActivityLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateActivityLog[P]>
+      : GetScalarType<T[P], AggregateActivityLog[P]>
+  }
+
+
+
+
+  export type ActivityLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActivityLogWhereInput
+    orderBy?: ActivityLogOrderByWithAggregationInput | ActivityLogOrderByWithAggregationInput[]
+    by: ActivityLogScalarFieldEnum[] | ActivityLogScalarFieldEnum
+    having?: ActivityLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ActivityLogCountAggregateInputType | true
+    _min?: ActivityLogMinAggregateInputType
+    _max?: ActivityLogMaxAggregateInputType
+  }
+
+  export type ActivityLogGroupByOutputType = {
+    id: string
+    actionType: string
+    entityType: string
+    entityId: string | null
+    performedBy: string
+    performedByName: string
+    oldValue: JsonValue | null
+    newValue: JsonValue | null
+    changedFields: JsonValue | null
+    ipAddress: string | null
+    userAgent: string | null
+    createdAt: Date
+    companyId: string
+    _count: ActivityLogCountAggregateOutputType | null
+    _min: ActivityLogMinAggregateOutputType | null
+    _max: ActivityLogMaxAggregateOutputType | null
+  }
+
+  type GetActivityLogGroupByPayload<T extends ActivityLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ActivityLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ActivityLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ActivityLogGroupByOutputType[P]>
+            : GetScalarType<T[P], ActivityLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ActivityLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actionType?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    performedBy?: boolean
+    performedByName?: boolean
+    oldValue?: boolean
+    newValue?: boolean
+    changedFields?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    companyId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["activityLog"]>
+
+  export type ActivityLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actionType?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    performedBy?: boolean
+    performedByName?: boolean
+    oldValue?: boolean
+    newValue?: boolean
+    changedFields?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    companyId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["activityLog"]>
+
+  export type ActivityLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    actionType?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    performedBy?: boolean
+    performedByName?: boolean
+    oldValue?: boolean
+    newValue?: boolean
+    changedFields?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    companyId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["activityLog"]>
+
+  export type ActivityLogSelectScalar = {
+    id?: boolean
+    actionType?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    performedBy?: boolean
+    performedByName?: boolean
+    oldValue?: boolean
+    newValue?: boolean
+    changedFields?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    companyId?: boolean
+  }
+
+  export type ActivityLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "actionType" | "entityType" | "entityId" | "performedBy" | "performedByName" | "oldValue" | "newValue" | "changedFields" | "ipAddress" | "userAgent" | "createdAt" | "companyId", ExtArgs["result"]["activityLog"]>
+  export type ActivityLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type ActivityLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+  export type ActivityLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+  }
+
+  export type $ActivityLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ActivityLog"
+    objects: {
+      company: Prisma.$CompanyPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      actionType: string
+      entityType: string
+      entityId: string | null
+      performedBy: string
+      performedByName: string
+      oldValue: Prisma.JsonValue | null
+      newValue: Prisma.JsonValue | null
+      changedFields: Prisma.JsonValue | null
+      ipAddress: string | null
+      userAgent: string | null
+      createdAt: Date
+      companyId: string
+    }, ExtArgs["result"]["activityLog"]>
+    composites: {}
+  }
+
+  type ActivityLogGetPayload<S extends boolean | null | undefined | ActivityLogDefaultArgs> = $Result.GetResult<Prisma.$ActivityLogPayload, S>
+
+  type ActivityLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ActivityLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ActivityLogCountAggregateInputType | true
+    }
+
+  export interface ActivityLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ActivityLog'], meta: { name: 'ActivityLog' } }
+    /**
+     * Find zero or one ActivityLog that matches the filter.
+     * @param {ActivityLogFindUniqueArgs} args - Arguments to find a ActivityLog
+     * @example
+     * // Get one ActivityLog
+     * const activityLog = await prisma.activityLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ActivityLogFindUniqueArgs>(args: SelectSubset<T, ActivityLogFindUniqueArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ActivityLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ActivityLogFindUniqueOrThrowArgs} args - Arguments to find a ActivityLog
+     * @example
+     * // Get one ActivityLog
+     * const activityLog = await prisma.activityLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ActivityLogFindUniqueOrThrowArgs>(args: SelectSubset<T, ActivityLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ActivityLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ActivityLogFindFirstArgs} args - Arguments to find a ActivityLog
+     * @example
+     * // Get one ActivityLog
+     * const activityLog = await prisma.activityLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ActivityLogFindFirstArgs>(args?: SelectSubset<T, ActivityLogFindFirstArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ActivityLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ActivityLogFindFirstOrThrowArgs} args - Arguments to find a ActivityLog
+     * @example
+     * // Get one ActivityLog
+     * const activityLog = await prisma.activityLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ActivityLogFindFirstOrThrowArgs>(args?: SelectSubset<T, ActivityLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ActivityLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ActivityLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ActivityLogs
+     * const activityLogs = await prisma.activityLog.findMany()
+     * 
+     * // Get first 10 ActivityLogs
+     * const activityLogs = await prisma.activityLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const activityLogWithIdOnly = await prisma.activityLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ActivityLogFindManyArgs>(args?: SelectSubset<T, ActivityLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ActivityLog.
+     * @param {ActivityLogCreateArgs} args - Arguments to create a ActivityLog.
+     * @example
+     * // Create one ActivityLog
+     * const ActivityLog = await prisma.activityLog.create({
+     *   data: {
+     *     // ... data to create a ActivityLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends ActivityLogCreateArgs>(args: SelectSubset<T, ActivityLogCreateArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ActivityLogs.
+     * @param {ActivityLogCreateManyArgs} args - Arguments to create many ActivityLogs.
+     * @example
+     * // Create many ActivityLogs
+     * const activityLog = await prisma.activityLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ActivityLogCreateManyArgs>(args?: SelectSubset<T, ActivityLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ActivityLogs and returns the data saved in the database.
+     * @param {ActivityLogCreateManyAndReturnArgs} args - Arguments to create many ActivityLogs.
+     * @example
+     * // Create many ActivityLogs
+     * const activityLog = await prisma.activityLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ActivityLogs and only return the `id`
+     * const activityLogWithIdOnly = await prisma.activityLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ActivityLogCreateManyAndReturnArgs>(args?: SelectSubset<T, ActivityLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ActivityLog.
+     * @param {ActivityLogDeleteArgs} args - Arguments to delete one ActivityLog.
+     * @example
+     * // Delete one ActivityLog
+     * const ActivityLog = await prisma.activityLog.delete({
+     *   where: {
+     *     // ... filter to delete one ActivityLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ActivityLogDeleteArgs>(args: SelectSubset<T, ActivityLogDeleteArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ActivityLog.
+     * @param {ActivityLogUpdateArgs} args - Arguments to update one ActivityLog.
+     * @example
+     * // Update one ActivityLog
+     * const activityLog = await prisma.activityLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ActivityLogUpdateArgs>(args: SelectSubset<T, ActivityLogUpdateArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ActivityLogs.
+     * @param {ActivityLogDeleteManyArgs} args - Arguments to filter ActivityLogs to delete.
+     * @example
+     * // Delete a few ActivityLogs
+     * const { count } = await prisma.activityLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ActivityLogDeleteManyArgs>(args?: SelectSubset<T, ActivityLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ActivityLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ActivityLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ActivityLogs
+     * const activityLog = await prisma.activityLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ActivityLogUpdateManyArgs>(args: SelectSubset<T, ActivityLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ActivityLogs and returns the data updated in the database.
+     * @param {ActivityLogUpdateManyAndReturnArgs} args - Arguments to update many ActivityLogs.
+     * @example
+     * // Update many ActivityLogs
+     * const activityLog = await prisma.activityLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ActivityLogs and only return the `id`
+     * const activityLogWithIdOnly = await prisma.activityLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ActivityLogUpdateManyAndReturnArgs>(args: SelectSubset<T, ActivityLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ActivityLog.
+     * @param {ActivityLogUpsertArgs} args - Arguments to update or create a ActivityLog.
+     * @example
+     * // Update or create a ActivityLog
+     * const activityLog = await prisma.activityLog.upsert({
+     *   create: {
+     *     // ... data to create a ActivityLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ActivityLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ActivityLogUpsertArgs>(args: SelectSubset<T, ActivityLogUpsertArgs<ExtArgs>>): Prisma__ActivityLogClient<$Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ActivityLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ActivityLogCountArgs} args - Arguments to filter ActivityLogs to count.
+     * @example
+     * // Count the number of ActivityLogs
+     * const count = await prisma.activityLog.count({
+     *   where: {
+     *     // ... the filter for the ActivityLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ActivityLogCountArgs>(
+      args?: Subset<T, ActivityLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ActivityLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ActivityLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ActivityLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ActivityLogAggregateArgs>(args: Subset<T, ActivityLogAggregateArgs>): Prisma.PrismaPromise<GetActivityLogAggregateType<T>>
+
+    /**
+     * Group by ActivityLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ActivityLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ActivityLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ActivityLogGroupByArgs['orderBy'] }
+        : { orderBy?: ActivityLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ActivityLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetActivityLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ActivityLog model
+   */
+  readonly fields: ActivityLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ActivityLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ActivityLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ActivityLog model
+   */
+  interface ActivityLogFieldRefs {
+    readonly id: FieldRef<"ActivityLog", 'String'>
+    readonly actionType: FieldRef<"ActivityLog", 'String'>
+    readonly entityType: FieldRef<"ActivityLog", 'String'>
+    readonly entityId: FieldRef<"ActivityLog", 'String'>
+    readonly performedBy: FieldRef<"ActivityLog", 'String'>
+    readonly performedByName: FieldRef<"ActivityLog", 'String'>
+    readonly oldValue: FieldRef<"ActivityLog", 'Json'>
+    readonly newValue: FieldRef<"ActivityLog", 'Json'>
+    readonly changedFields: FieldRef<"ActivityLog", 'Json'>
+    readonly ipAddress: FieldRef<"ActivityLog", 'String'>
+    readonly userAgent: FieldRef<"ActivityLog", 'String'>
+    readonly createdAt: FieldRef<"ActivityLog", 'DateTime'>
+    readonly companyId: FieldRef<"ActivityLog", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ActivityLog findUnique
+   */
+  export type ActivityLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ActivityLog to fetch.
+     */
+    where: ActivityLogWhereUniqueInput
+  }
+
+  /**
+   * ActivityLog findUniqueOrThrow
+   */
+  export type ActivityLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ActivityLog to fetch.
+     */
+    where: ActivityLogWhereUniqueInput
+  }
+
+  /**
+   * ActivityLog findFirst
+   */
+  export type ActivityLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ActivityLog to fetch.
+     */
+    where?: ActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ActivityLogs to fetch.
+     */
+    orderBy?: ActivityLogOrderByWithRelationInput | ActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ActivityLogs.
+     */
+    cursor?: ActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ActivityLogs.
+     */
+    distinct?: ActivityLogScalarFieldEnum | ActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * ActivityLog findFirstOrThrow
+   */
+  export type ActivityLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ActivityLog to fetch.
+     */
+    where?: ActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ActivityLogs to fetch.
+     */
+    orderBy?: ActivityLogOrderByWithRelationInput | ActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ActivityLogs.
+     */
+    cursor?: ActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ActivityLogs.
+     */
+    distinct?: ActivityLogScalarFieldEnum | ActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * ActivityLog findMany
+   */
+  export type ActivityLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ActivityLogs to fetch.
+     */
+    where?: ActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ActivityLogs to fetch.
+     */
+    orderBy?: ActivityLogOrderByWithRelationInput | ActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ActivityLogs.
+     */
+    cursor?: ActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ActivityLogs.
+     */
+    distinct?: ActivityLogScalarFieldEnum | ActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * ActivityLog create
+   */
+  export type ActivityLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ActivityLog.
+     */
+    data: XOR<ActivityLogCreateInput, ActivityLogUncheckedCreateInput>
+  }
+
+  /**
+   * ActivityLog createMany
+   */
+  export type ActivityLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ActivityLogs.
+     */
+    data: ActivityLogCreateManyInput | ActivityLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ActivityLog createManyAndReturn
+   */
+  export type ActivityLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many ActivityLogs.
+     */
+    data: ActivityLogCreateManyInput | ActivityLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ActivityLog update
+   */
+  export type ActivityLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ActivityLog.
+     */
+    data: XOR<ActivityLogUpdateInput, ActivityLogUncheckedUpdateInput>
+    /**
+     * Choose, which ActivityLog to update.
+     */
+    where: ActivityLogWhereUniqueInput
+  }
+
+  /**
+   * ActivityLog updateMany
+   */
+  export type ActivityLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ActivityLogs.
+     */
+    data: XOR<ActivityLogUpdateManyMutationInput, ActivityLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ActivityLogs to update
+     */
+    where?: ActivityLogWhereInput
+    /**
+     * Limit how many ActivityLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ActivityLog updateManyAndReturn
+   */
+  export type ActivityLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * The data used to update ActivityLogs.
+     */
+    data: XOR<ActivityLogUpdateManyMutationInput, ActivityLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ActivityLogs to update
+     */
+    where?: ActivityLogWhereInput
+    /**
+     * Limit how many ActivityLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ActivityLog upsert
+   */
+  export type ActivityLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ActivityLog to update in case it exists.
+     */
+    where: ActivityLogWhereUniqueInput
+    /**
+     * In case the ActivityLog found by the `where` argument doesn't exist, create a new ActivityLog with this data.
+     */
+    create: XOR<ActivityLogCreateInput, ActivityLogUncheckedCreateInput>
+    /**
+     * In case the ActivityLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ActivityLogUpdateInput, ActivityLogUncheckedUpdateInput>
+  }
+
+  /**
+   * ActivityLog delete
+   */
+  export type ActivityLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+    /**
+     * Filter which ActivityLog to delete.
+     */
+    where: ActivityLogWhereUniqueInput
+  }
+
+  /**
+   * ActivityLog deleteMany
+   */
+  export type ActivityLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ActivityLogs to delete
+     */
+    where?: ActivityLogWhereInput
+    /**
+     * Limit how many ActivityLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ActivityLog without action
+   */
+  export type ActivityLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityLog
+     */
+    select?: ActivityLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityLog
+     */
+    omit?: ActivityLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -20603,6 +21886,25 @@ export namespace Prisma {
   export type InventoryTransactionScalarFieldEnum = (typeof InventoryTransactionScalarFieldEnum)[keyof typeof InventoryTransactionScalarFieldEnum]
 
 
+  export const ActivityLogScalarFieldEnum: {
+    id: 'id',
+    actionType: 'actionType',
+    entityType: 'entityType',
+    entityId: 'entityId',
+    performedBy: 'performedBy',
+    performedByName: 'performedByName',
+    oldValue: 'oldValue',
+    newValue: 'newValue',
+    changedFields: 'changedFields',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    createdAt: 'createdAt',
+    companyId: 'companyId'
+  };
+
+  export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -20756,6 +22058,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderListRelationFilter
     inventory?: InventoryListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
+    activityLogs?: ActivityLogListRelationFilter
     items?: ItemListRelationFilter
     pos?: PurchaseOrderListRelationFilter
     racks?: RackListRelationFilter
@@ -20774,6 +22077,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderOrderByRelationAggregateInput
     inventory?: InventoryOrderByRelationAggregateInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
+    activityLogs?: ActivityLogOrderByRelationAggregateInput
     items?: ItemOrderByRelationAggregateInput
     pos?: PurchaseOrderOrderByRelationAggregateInput
     racks?: RackOrderByRelationAggregateInput
@@ -20795,6 +22099,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderListRelationFilter
     inventory?: InventoryListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
+    activityLogs?: ActivityLogListRelationFilter
     items?: ItemListRelationFilter
     pos?: PurchaseOrderListRelationFilter
     racks?: RackListRelationFilter
@@ -21892,6 +23197,101 @@ export namespace Prisma {
     companyId?: StringWithAggregatesFilter<"InventoryTransaction"> | string
   }
 
+  export type ActivityLogWhereInput = {
+    AND?: ActivityLogWhereInput | ActivityLogWhereInput[]
+    OR?: ActivityLogWhereInput[]
+    NOT?: ActivityLogWhereInput | ActivityLogWhereInput[]
+    id?: StringFilter<"ActivityLog"> | string
+    actionType?: StringFilter<"ActivityLog"> | string
+    entityType?: StringFilter<"ActivityLog"> | string
+    entityId?: StringNullableFilter<"ActivityLog"> | string | null
+    performedBy?: StringFilter<"ActivityLog"> | string
+    performedByName?: StringFilter<"ActivityLog"> | string
+    oldValue?: JsonNullableFilter<"ActivityLog">
+    newValue?: JsonNullableFilter<"ActivityLog">
+    changedFields?: JsonNullableFilter<"ActivityLog">
+    ipAddress?: StringNullableFilter<"ActivityLog"> | string | null
+    userAgent?: StringNullableFilter<"ActivityLog"> | string | null
+    createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
+    companyId?: StringFilter<"ActivityLog"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }
+
+  export type ActivityLogOrderByWithRelationInput = {
+    id?: SortOrder
+    actionType?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrderInput | SortOrder
+    performedBy?: SortOrder
+    performedByName?: SortOrder
+    oldValue?: SortOrderInput | SortOrder
+    newValue?: SortOrderInput | SortOrder
+    changedFields?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    companyId?: SortOrder
+    company?: CompanyOrderByWithRelationInput
+  }
+
+  export type ActivityLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ActivityLogWhereInput | ActivityLogWhereInput[]
+    OR?: ActivityLogWhereInput[]
+    NOT?: ActivityLogWhereInput | ActivityLogWhereInput[]
+    actionType?: StringFilter<"ActivityLog"> | string
+    entityType?: StringFilter<"ActivityLog"> | string
+    entityId?: StringNullableFilter<"ActivityLog"> | string | null
+    performedBy?: StringFilter<"ActivityLog"> | string
+    performedByName?: StringFilter<"ActivityLog"> | string
+    oldValue?: JsonNullableFilter<"ActivityLog">
+    newValue?: JsonNullableFilter<"ActivityLog">
+    changedFields?: JsonNullableFilter<"ActivityLog">
+    ipAddress?: StringNullableFilter<"ActivityLog"> | string | null
+    userAgent?: StringNullableFilter<"ActivityLog"> | string | null
+    createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
+    companyId?: StringFilter<"ActivityLog"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+  }, "id">
+
+  export type ActivityLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    actionType?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrderInput | SortOrder
+    performedBy?: SortOrder
+    performedByName?: SortOrder
+    oldValue?: SortOrderInput | SortOrder
+    newValue?: SortOrderInput | SortOrder
+    changedFields?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    companyId?: SortOrder
+    _count?: ActivityLogCountOrderByAggregateInput
+    _max?: ActivityLogMaxOrderByAggregateInput
+    _min?: ActivityLogMinOrderByAggregateInput
+  }
+
+  export type ActivityLogScalarWhereWithAggregatesInput = {
+    AND?: ActivityLogScalarWhereWithAggregatesInput | ActivityLogScalarWhereWithAggregatesInput[]
+    OR?: ActivityLogScalarWhereWithAggregatesInput[]
+    NOT?: ActivityLogScalarWhereWithAggregatesInput | ActivityLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ActivityLog"> | string
+    actionType?: StringWithAggregatesFilter<"ActivityLog"> | string
+    entityType?: StringWithAggregatesFilter<"ActivityLog"> | string
+    entityId?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
+    performedBy?: StringWithAggregatesFilter<"ActivityLog"> | string
+    performedByName?: StringWithAggregatesFilter<"ActivityLog"> | string
+    oldValue?: JsonNullableWithAggregatesFilter<"ActivityLog">
+    newValue?: JsonNullableWithAggregatesFilter<"ActivityLog">
+    changedFields?: JsonNullableWithAggregatesFilter<"ActivityLog">
+    ipAddress?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ActivityLog"> | Date | string
+    companyId?: StringWithAggregatesFilter<"ActivityLog"> | string
+  }
+
   export type CompanyCreateInput = {
     id?: string
     name: string
@@ -21902,6 +23302,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -21920,6 +23321,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -21938,6 +23340,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -21956,6 +23359,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -23060,6 +24464,117 @@ export namespace Prisma {
     companyId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ActivityLogCreateInput = {
+    id?: string
+    actionType: string
+    entityType: string
+    entityId?: string | null
+    performedBy: string
+    performedByName: string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    company: CompanyCreateNestedOneWithoutActivityLogsInput
+  }
+
+  export type ActivityLogUncheckedCreateInput = {
+    id?: string
+    actionType: string
+    entityType: string
+    entityId?: string | null
+    performedBy: string
+    performedByName: string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    companyId: string
+  }
+
+  export type ActivityLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actionType?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: NullableStringFieldUpdateOperationsInput | string | null
+    performedBy?: StringFieldUpdateOperationsInput | string
+    performedByName?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutActivityLogsNestedInput
+  }
+
+  export type ActivityLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actionType?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: NullableStringFieldUpdateOperationsInput | string | null
+    performedBy?: StringFieldUpdateOperationsInput | string
+    performedByName?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    companyId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ActivityLogCreateManyInput = {
+    id?: string
+    actionType: string
+    entityType: string
+    entityId?: string | null
+    performedBy: string
+    performedByName: string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    companyId: string
+  }
+
+  export type ActivityLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actionType?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: NullableStringFieldUpdateOperationsInput | string | null
+    performedBy?: StringFieldUpdateOperationsInput | string
+    performedByName?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actionType?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: NullableStringFieldUpdateOperationsInput | string | null
+    performedBy?: StringFieldUpdateOperationsInput | string
+    performedByName?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    companyId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -23139,6 +24654,12 @@ export namespace Prisma {
     none?: InventoryTransactionWhereInput
   }
 
+  export type ActivityLogListRelationFilter = {
+    every?: ActivityLogWhereInput
+    some?: ActivityLogWhereInput
+    none?: ActivityLogWhereInput
+  }
+
   export type ItemListRelationFilter = {
     every?: ItemWhereInput
     some?: ItemWhereInput
@@ -23197,6 +24718,10 @@ export namespace Prisma {
   }
 
   export type InventoryTransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ActivityLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24064,6 +25589,48 @@ export namespace Prisma {
     quantity?: SortOrder
   }
 
+  export type ActivityLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    actionType?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    performedBy?: SortOrder
+    performedByName?: SortOrder
+    oldValue?: SortOrder
+    newValue?: SortOrder
+    changedFields?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+    companyId?: SortOrder
+  }
+
+  export type ActivityLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    actionType?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    performedBy?: SortOrder
+    performedByName?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+    companyId?: SortOrder
+  }
+
+  export type ActivityLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    actionType?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    performedBy?: SortOrder
+    performedByName?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+    companyId?: SortOrder
+  }
+
   export type CategoryCreateNestedManyWithoutCompanyInput = {
     create?: XOR<CategoryCreateWithoutCompanyInput, CategoryUncheckedCreateWithoutCompanyInput> | CategoryCreateWithoutCompanyInput[] | CategoryUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: CategoryCreateOrConnectWithoutCompanyInput | CategoryCreateOrConnectWithoutCompanyInput[]
@@ -24097,6 +25664,13 @@ export namespace Prisma {
     connectOrCreate?: InventoryTransactionCreateOrConnectWithoutCompanyInput | InventoryTransactionCreateOrConnectWithoutCompanyInput[]
     createMany?: InventoryTransactionCreateManyCompanyInputEnvelope
     connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+  }
+
+  export type ActivityLogCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ActivityLogCreateWithoutCompanyInput, ActivityLogUncheckedCreateWithoutCompanyInput> | ActivityLogCreateWithoutCompanyInput[] | ActivityLogUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutCompanyInput | ActivityLogCreateOrConnectWithoutCompanyInput[]
+    createMany?: ActivityLogCreateManyCompanyInputEnvelope
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
   }
 
   export type ItemCreateNestedManyWithoutCompanyInput = {
@@ -24174,6 +25748,13 @@ export namespace Prisma {
     connectOrCreate?: InventoryTransactionCreateOrConnectWithoutCompanyInput | InventoryTransactionCreateOrConnectWithoutCompanyInput[]
     createMany?: InventoryTransactionCreateManyCompanyInputEnvelope
     connect?: InventoryTransactionWhereUniqueInput | InventoryTransactionWhereUniqueInput[]
+  }
+
+  export type ActivityLogUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<ActivityLogCreateWithoutCompanyInput, ActivityLogUncheckedCreateWithoutCompanyInput> | ActivityLogCreateWithoutCompanyInput[] | ActivityLogUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutCompanyInput | ActivityLogCreateOrConnectWithoutCompanyInput[]
+    createMany?: ActivityLogCreateManyCompanyInputEnvelope
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
   }
 
   export type ItemUncheckedCreateNestedManyWithoutCompanyInput = {
@@ -24294,6 +25875,20 @@ export namespace Prisma {
     update?: InventoryTransactionUpdateWithWhereUniqueWithoutCompanyInput | InventoryTransactionUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: InventoryTransactionUpdateManyWithWhereWithoutCompanyInput | InventoryTransactionUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
+  }
+
+  export type ActivityLogUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ActivityLogCreateWithoutCompanyInput, ActivityLogUncheckedCreateWithoutCompanyInput> | ActivityLogCreateWithoutCompanyInput[] | ActivityLogUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutCompanyInput | ActivityLogCreateOrConnectWithoutCompanyInput[]
+    upsert?: ActivityLogUpsertWithWhereUniqueWithoutCompanyInput | ActivityLogUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ActivityLogCreateManyCompanyInputEnvelope
+    set?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    disconnect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    delete?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    update?: ActivityLogUpdateWithWhereUniqueWithoutCompanyInput | ActivityLogUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ActivityLogUpdateManyWithWhereWithoutCompanyInput | ActivityLogUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
   }
 
   export type ItemUpdateManyWithoutCompanyNestedInput = {
@@ -24448,6 +26043,20 @@ export namespace Prisma {
     update?: InventoryTransactionUpdateWithWhereUniqueWithoutCompanyInput | InventoryTransactionUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: InventoryTransactionUpdateManyWithWhereWithoutCompanyInput | InventoryTransactionUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: InventoryTransactionScalarWhereInput | InventoryTransactionScalarWhereInput[]
+  }
+
+  export type ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<ActivityLogCreateWithoutCompanyInput, ActivityLogUncheckedCreateWithoutCompanyInput> | ActivityLogCreateWithoutCompanyInput[] | ActivityLogUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: ActivityLogCreateOrConnectWithoutCompanyInput | ActivityLogCreateOrConnectWithoutCompanyInput[]
+    upsert?: ActivityLogUpsertWithWhereUniqueWithoutCompanyInput | ActivityLogUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: ActivityLogCreateManyCompanyInputEnvelope
+    set?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    disconnect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    delete?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    connect?: ActivityLogWhereUniqueInput | ActivityLogWhereUniqueInput[]
+    update?: ActivityLogUpdateWithWhereUniqueWithoutCompanyInput | ActivityLogUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: ActivityLogUpdateManyWithWhereWithoutCompanyInput | ActivityLogUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
   }
 
   export type ItemUncheckedUpdateManyWithoutCompanyNestedInput = {
@@ -25780,6 +27389,20 @@ export namespace Prisma {
     update?: XOR<XOR<VendorUpdateToOneWithWhereWithoutTransactionsInput, VendorUpdateWithoutTransactionsInput>, VendorUncheckedUpdateWithoutTransactionsInput>
   }
 
+  export type CompanyCreateNestedOneWithoutActivityLogsInput = {
+    create?: XOR<CompanyCreateWithoutActivityLogsInput, CompanyUncheckedCreateWithoutActivityLogsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutActivityLogsInput
+    connect?: CompanyWhereUniqueInput
+  }
+
+  export type CompanyUpdateOneRequiredWithoutActivityLogsNestedInput = {
+    create?: XOR<CompanyCreateWithoutActivityLogsInput, CompanyUncheckedCreateWithoutActivityLogsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutActivityLogsInput
+    upsert?: CompanyUpsertWithoutActivityLogsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutActivityLogsInput, CompanyUpdateWithoutActivityLogsInput>, CompanyUncheckedUpdateWithoutActivityLogsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -26156,6 +27779,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ActivityLogCreateWithoutCompanyInput = {
+    id?: string
+    actionType: string
+    entityType: string
+    entityId?: string | null
+    performedBy: string
+    performedByName: string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ActivityLogUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    actionType: string
+    entityType: string
+    entityId?: string | null
+    performedBy: string
+    performedByName: string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ActivityLogCreateOrConnectWithoutCompanyInput = {
+    where: ActivityLogWhereUniqueInput
+    create: XOR<ActivityLogCreateWithoutCompanyInput, ActivityLogUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ActivityLogCreateManyCompanyInputEnvelope = {
+    data: ActivityLogCreateManyCompanyInput | ActivityLogCreateManyCompanyInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ItemCreateWithoutCompanyInput = {
     id?: string
     name: string
@@ -26505,6 +28168,41 @@ export namespace Prisma {
     companyId?: StringFilter<"InventoryTransaction"> | string
   }
 
+  export type ActivityLogUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: ActivityLogWhereUniqueInput
+    update: XOR<ActivityLogUpdateWithoutCompanyInput, ActivityLogUncheckedUpdateWithoutCompanyInput>
+    create: XOR<ActivityLogCreateWithoutCompanyInput, ActivityLogUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type ActivityLogUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: ActivityLogWhereUniqueInput
+    data: XOR<ActivityLogUpdateWithoutCompanyInput, ActivityLogUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type ActivityLogUpdateManyWithWhereWithoutCompanyInput = {
+    where: ActivityLogScalarWhereInput
+    data: XOR<ActivityLogUpdateManyMutationInput, ActivityLogUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type ActivityLogScalarWhereInput = {
+    AND?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
+    OR?: ActivityLogScalarWhereInput[]
+    NOT?: ActivityLogScalarWhereInput | ActivityLogScalarWhereInput[]
+    id?: StringFilter<"ActivityLog"> | string
+    actionType?: StringFilter<"ActivityLog"> | string
+    entityType?: StringFilter<"ActivityLog"> | string
+    entityId?: StringNullableFilter<"ActivityLog"> | string | null
+    performedBy?: StringFilter<"ActivityLog"> | string
+    performedByName?: StringFilter<"ActivityLog"> | string
+    oldValue?: JsonNullableFilter<"ActivityLog">
+    newValue?: JsonNullableFilter<"ActivityLog">
+    changedFields?: JsonNullableFilter<"ActivityLog">
+    ipAddress?: StringNullableFilter<"ActivityLog"> | string | null
+    userAgent?: StringNullableFilter<"ActivityLog"> | string | null
+    createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
+    companyId?: StringFilter<"ActivityLog"> | string
+  }
+
   export type ItemUpsertWithWhereUniqueWithoutCompanyInput = {
     where: ItemWhereUniqueInput
     update: XOR<ItemUpdateWithoutCompanyInput, ItemUncheckedUpdateWithoutCompanyInput>
@@ -26762,6 +28460,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -26779,6 +28478,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -26860,6 +28560,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -26877,6 +28578,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -26893,6 +28595,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -26910,6 +28613,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -26985,6 +28689,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -27002,6 +28707,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -27142,6 +28848,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
     stocks?: StockCreateNestedManyWithoutCompanyInput
@@ -27159,6 +28866,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
     stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
@@ -27343,6 +29051,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
     stocks?: StockUpdateManyWithoutCompanyNestedInput
@@ -27360,6 +29069,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
     stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
@@ -27459,6 +29169,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     stocks?: StockCreateNestedManyWithoutCompanyInput
@@ -27476,6 +29187,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
@@ -27551,6 +29263,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     stocks?: StockUpdateManyWithoutCompanyNestedInput
@@ -27568,6 +29281,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
@@ -27601,6 +29315,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -27618,6 +29333,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -27709,6 +29425,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -27726,6 +29443,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -27812,6 +29530,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -27829,6 +29548,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -27933,6 +29653,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -27950,6 +29671,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -28135,6 +29857,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -28152,6 +29875,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -28233,6 +29957,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -28250,6 +29975,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -28327,6 +30053,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
     stocks?: StockCreateNestedManyWithoutCompanyInput
@@ -28344,6 +30071,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
     stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
@@ -28436,6 +30164,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
     stocks?: StockUpdateManyWithoutCompanyNestedInput
@@ -28453,6 +30182,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
     stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
@@ -28906,6 +30636,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -28923,6 +30654,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -29032,6 +30764,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -29049,6 +30782,7 @@ export namespace Prisma {
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -29122,6 +30856,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -29139,6 +30874,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -29215,6 +30951,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -29232,6 +30969,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -29434,6 +31172,7 @@ export namespace Prisma {
     customers?: CustomerCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
     inventory?: InventoryCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogCreateNestedManyWithoutCompanyInput
     items?: ItemCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
     racks?: RackCreateNestedManyWithoutCompanyInput
@@ -29451,6 +31190,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
     dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
+    activityLogs?: ActivityLogUncheckedCreateNestedManyWithoutCompanyInput
     items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
     pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
     racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
@@ -29627,6 +31367,7 @@ export namespace Prisma {
     customers?: CustomerUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUpdateManyWithoutCompanyNestedInput
     items?: ItemUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
     racks?: RackUpdateManyWithoutCompanyNestedInput
@@ -29644,6 +31385,7 @@ export namespace Prisma {
     customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
     dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
+    activityLogs?: ActivityLogUncheckedUpdateManyWithoutCompanyNestedInput
     items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
     pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
     racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
@@ -29825,6 +31567,94 @@ export namespace Prisma {
     purchaseOrders?: PurchaseOrderUncheckedUpdateManyWithoutVendorNestedInput
   }
 
+  export type CompanyCreateWithoutActivityLogsInput = {
+    id?: string
+    name: string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    categories?: CategoryCreateNestedManyWithoutCompanyInput
+    customers?: CustomerCreateNestedManyWithoutCompanyInput
+    dispatches?: DispatchOrderCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryCreateNestedManyWithoutCompanyInput
+    transactions?: InventoryTransactionCreateNestedManyWithoutCompanyInput
+    items?: ItemCreateNestedManyWithoutCompanyInput
+    pos?: PurchaseOrderCreateNestedManyWithoutCompanyInput
+    racks?: RackCreateNestedManyWithoutCompanyInput
+    stocks?: StockCreateNestedManyWithoutCompanyInput
+    users?: UserCreateNestedManyWithoutCompanyInput
+    vendors?: VendorCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutActivityLogsInput = {
+    id?: string
+    name: string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    categories?: CategoryUncheckedCreateNestedManyWithoutCompanyInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutCompanyInput
+    dispatches?: DispatchOrderUncheckedCreateNestedManyWithoutCompanyInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutCompanyInput
+    transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutCompanyInput
+    items?: ItemUncheckedCreateNestedManyWithoutCompanyInput
+    pos?: PurchaseOrderUncheckedCreateNestedManyWithoutCompanyInput
+    racks?: RackUncheckedCreateNestedManyWithoutCompanyInput
+    stocks?: StockUncheckedCreateNestedManyWithoutCompanyInput
+    users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    vendors?: VendorUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutActivityLogsInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutActivityLogsInput, CompanyUncheckedCreateWithoutActivityLogsInput>
+  }
+
+  export type CompanyUpsertWithoutActivityLogsInput = {
+    update: XOR<CompanyUpdateWithoutActivityLogsInput, CompanyUncheckedUpdateWithoutActivityLogsInput>
+    create: XOR<CompanyCreateWithoutActivityLogsInput, CompanyUncheckedCreateWithoutActivityLogsInput>
+    where?: CompanyWhereInput
+  }
+
+  export type CompanyUpdateToOneWithWhereWithoutActivityLogsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutActivityLogsInput, CompanyUncheckedUpdateWithoutActivityLogsInput>
+  }
+
+  export type CompanyUpdateWithoutActivityLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: CategoryUpdateManyWithoutCompanyNestedInput
+    customers?: CustomerUpdateManyWithoutCompanyNestedInput
+    dispatches?: DispatchOrderUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUpdateManyWithoutCompanyNestedInput
+    transactions?: InventoryTransactionUpdateManyWithoutCompanyNestedInput
+    items?: ItemUpdateManyWithoutCompanyNestedInput
+    pos?: PurchaseOrderUpdateManyWithoutCompanyNestedInput
+    racks?: RackUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUpdateManyWithoutCompanyNestedInput
+    users?: UserUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutActivityLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: CategoryUncheckedUpdateManyWithoutCompanyNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+    dispatches?: DispatchOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutCompanyNestedInput
+    transactions?: InventoryTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+    items?: ItemUncheckedUpdateManyWithoutCompanyNestedInput
+    pos?: PurchaseOrderUncheckedUpdateManyWithoutCompanyNestedInput
+    racks?: RackUncheckedUpdateManyWithoutCompanyNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutCompanyNestedInput
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    vendors?: VendorUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
   export type CategoryCreateManyCompanyInput = {
     id?: string
     name: string
@@ -29873,6 +31703,21 @@ export namespace Prisma {
     quantity: number
     referenceType?: string | null
     referenceId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ActivityLogCreateManyCompanyInput = {
+    id?: string
+    actionType: string
+    entityType: string
+    entityId?: string | null
+    performedBy: string
+    performedByName: string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
+    userAgent?: string | null
     createdAt?: Date | string
   }
 
@@ -30091,6 +31936,51 @@ export namespace Prisma {
     quantity?: FloatFieldUpdateOperationsInput | number
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityLogUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actionType?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: NullableStringFieldUpdateOperationsInput | string | null
+    performedBy?: StringFieldUpdateOperationsInput | string
+    performedByName?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityLogUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actionType?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: NullableStringFieldUpdateOperationsInput | string | null
+    performedBy?: StringFieldUpdateOperationsInput | string
+    performedByName?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityLogUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    actionType?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: NullableStringFieldUpdateOperationsInput | string | null
+    performedBy?: StringFieldUpdateOperationsInput | string
+    performedByName?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableJsonNullValueInput | InputJsonValue
+    newValue?: NullableJsonNullValueInput | InputJsonValue
+    changedFields?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

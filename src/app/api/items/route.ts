@@ -69,6 +69,8 @@ export async function GET(request: Request) {
   }
 }
 
+import { createActivityLog } from "@/lib/logger";
+
 export async function POST(request: Request) {
   try {
     const session = await getSession();
@@ -76,6 +78,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     await requirePermission("items:create");
+
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const userAgent = request.headers.get("user-agent") || "unknown";
 
     const data = await request.json();
     const { name, sku, categoryId, unit, minStockLevel, isCritical, rackId } = data;
@@ -93,6 +98,19 @@ export async function POST(request: Request) {
       minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
       isCritical: !!isCritical,
       rackId
+    });
+
+    // Log action
+    await createActivityLog({
+      actionType: "CREATE",
+      entityType: "ITEM",
+      entityId: item.id,
+      performedBy: session.userId,
+      performedByName: session.name,
+      newValue: item,
+      companyId: session.companyId,
+      ipAddress: ip,
+      userAgent: userAgent
     });
 
     return NextResponse.json(item, { status: 201 });

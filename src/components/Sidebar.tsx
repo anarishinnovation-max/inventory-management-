@@ -71,7 +71,7 @@ const menuSections: MenuSection[] = [
   {
     title: "More",
     items: [
-      { name: "Activity Log", icon: History, href: "/transactions", roles: ["OWNER", "MANAGER"] },
+      { name: "Activity Log", icon: History, href: "/activity", roles: ["OWNER", "MANAGER"] },
       { name: "Admin Control", icon: ShieldCheck, href: "/admin", roles: ["OWNER"] },
       { name: "Settings", icon: Settings, href: "/settings", roles: ["OWNER", "MANAGER"] },
     ]

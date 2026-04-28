@@ -17,6 +17,7 @@ model Company {
   dispatches   DispatchOrder[]
   inventory    Inventory[]            @relation("CompanyToInventory")
   transactions InventoryTransaction[]
+  activityLogs ActivityLog[]
   items        Item[]
   pos          PurchaseOrder[]
   racks        Rack[]
@@ -259,4 +260,26 @@ enum UserRole {
   OWNER
   MANAGER
   EMPLOYEE
+}
+
+model ActivityLog {
+  id              String   @id @default(uuid())
+  actionType      String // CREATE, UPDATE, DELETE, LOGIN, etc.
+  entityType      String // Item, Vendor, PO, User, etc.
+  entityId        String?
+  performedBy     String // User ID
+  performedByName String
+  oldValue        Json?    @default("{}")
+  newValue        Json?    @default("{}")
+  changedFields   Json?    @default("[]")
+  ipAddress       String?
+  userAgent       String?
+  createdAt       DateTime @default(now())
+  companyId       String
+  company         Company  @relation(fields: [companyId], references: [id])
+
+  @@index([createdAt])
+  @@index([entityId])
+  @@index([performedBy])
+  @@index([companyId])
 }
