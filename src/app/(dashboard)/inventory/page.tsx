@@ -221,9 +221,12 @@ export default async function InventoryPage({
         </div>
         <div className="flex items-center gap-3">
             {(session.role === 'OWNER' || session.role === 'MANAGER') && (
-              <Link href="/inventory/new" className="btn btn-primary h-12">
+              <Link href="/inventory/new" className="btn btn-primary h-12 group/btn">
                 <PlusCircle className="w-4 h-4" />
                 <span>Add New Item</span>
+                <span className="text-[10px] font-black opacity-40 ml-2 group-hover/btn:opacity-100 transition-opacity uppercase tracking-widest hidden md:inline-block">
+                  ALT + N
+                </span>
               </Link>
             )}
         </div>

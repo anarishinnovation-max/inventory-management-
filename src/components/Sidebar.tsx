@@ -157,6 +157,25 @@ export default function Sidebar() {
                           <span className={cn("font-bold text-sm flex-1", isActive ? "text-foreground" : "")}>
                             {item.name}
                           </span>
+                          <span className={cn(
+                            "text-[8px] font-black opacity-0 group-hover:opacity-40 transition-opacity uppercase tracking-widest mr-2",
+                            isActive ? "text-primary opacity-30" : "text-muted-foreground"
+                          )}>
+                            ALT + {
+                              item.name === "Home" ? "H" : 
+                              item.name === "Inventory" ? "I" : 
+                              item.name === "Rack List" ? "R" : 
+                              item.name === "Purchase Bills" ? "P" : 
+                              item.name === "Supply Inwards" ? "J" : 
+                              item.name === "Sell Bills" ? "S" : 
+                              item.name === "Supply Outwards" ? "O" : 
+                              item.name === "Customers" ? "C" : 
+                              item.name === "Vendors" ? "V" : 
+                              item.name === "Activity Log" ? "L" : 
+                              item.name === "Admin Control" ? "A" : 
+                              item.name === "Settings" ? "," : ""
+                            }
+                          </span>
                           {item.badge && (
                             <span className="px-1.5 py-0.5 rounded-md bg-success/10 text-success text-[8px] font-black uppercase tracking-wider border border-success/20">
                               {item.badge}

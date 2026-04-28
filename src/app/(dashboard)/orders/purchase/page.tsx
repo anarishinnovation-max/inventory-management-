@@ -204,9 +204,12 @@ export default async function PurchaseOrdersPage({
           <p className="text-muted-foreground mt-2 font-medium">Manage procurement, payments, and vendor tracking.</p>
         </div>
         {(session.role === 'OWNER' || session.role === 'MANAGER') && (
-          <Link href="/orders/purchase/new" className="btn btn-primary h-14 px-8 shadow-glow-primary">
+          <Link href="/orders/purchase/new" className="btn btn-primary h-14 px-8 shadow-glow-primary group/btn">
             <Plus className="w-5 h-5" />
             <span>New Purchase Order</span>
+            <span className="text-[10px] font-black opacity-40 ml-2 group-hover/btn:opacity-100 transition-opacity uppercase tracking-widest hidden md:inline-block">
+              ALT + B
+            </span>
           </Link>
         )}
       </header>
