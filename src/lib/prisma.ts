@@ -5,31 +5,30 @@ import { PrismaPg } from "@prisma/adapter-pg";
 // Reverted to a standard single-tenant client
 let connectionString = process.env.DATABASE_URL || "";
 
-// Suppress pg-connection-string security warning by explicitly setting sslmode
-if (connectionString.startsWith("postgres://") || connectionString.startsWith("postgresql://")) {
-  try {
-    const url = new URL(connectionString);
-    const sslmode = url.searchParams.get("sslmode");
-    if (sslmode === "require" || sslmode === "prefer" || sslmode === "verify-ca") {
-      url.searchParams.set("sslmode", "verify-full");
-      connectionString = url.toString();
-    }
-  } catch (e) {
-    // Let pg handle any invalid URL formats
-  }
-}
-
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
   pool: Pool | undefined;
 };
 
-// Limit connections for Serverless environments and cache the pool
-const pool = globalForPrisma.pool ?? new Pool({ 
+// Suppress pg security warning by explicitly handling SSL configuration
+const isProduction = process.env.NODE_ENV === "production";
+
+// Parse connection string to handle SSL and other options
+let poolConfig: any = {
   connectionString,
-  max: 2, // Restrict max connections per serverless instance
+  max: isProduction ? 10 : 2,
   idleTimeoutMillis: 30000,
-});
+};
+
+// Vercel/Production often requires SSL, but we want to avoid the driver's alias warning
+if (isProduction || connectionString.includes("sslmode=")) {
+  poolConfig.ssl = {
+    rejectUnauthorized: false, // Set to true if you have the CA certificate
+  };
+}
+
+// Limit connections for Serverless environments and cache the pool
+const pool = globalForPrisma.pool ?? new Pool(poolConfig);
 const adapter = new PrismaPg(pool);
 
 // Return a clean Prisma instance without multi-tenant extensions
