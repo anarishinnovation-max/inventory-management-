@@ -136,7 +136,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                 "badge !px-4 !py-1.5",
                 isDispatched ? "badge-success" : "badge-warning"
              )}>
-                {order.status}
+                {order.status === "pending" ? "Pending Delivery" : "Fully Dispatched"}
              </span>
           </div>
           <p className="text-muted-foreground text-lg font-medium">Customer Recipient: <span className="text-foreground font-black">{order.customer.name}</span></p>
@@ -288,8 +288,8 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                           disabled={submitting}
                           className="btn btn-primary w-full h-16 shadow-glow-primary !text-[15px] !rounded-[1.5rem]"
                         >
-                          {submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Send className="w-6 h-6" />}
-                          {submitting ? "Processing..." : "Confirm Outward Dispatch"}
+                          {submitting ? "Processing..." : <Send className="w-6 h-6" />}
+                          {submitting ? "Processing..." : "Complete Customer Delivery"}
                         </button>
                         <p className="text-[10px] text-center text-muted-foreground font-black uppercase tracking-[0.2em] px-4 leading-relaxed opacity-70">
                            Final action: This will permanently deduct stock from active inventory batches.

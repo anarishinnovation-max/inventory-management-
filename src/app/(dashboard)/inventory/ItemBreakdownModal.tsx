@@ -385,7 +385,10 @@ export function ItemBreakdownModal({
 
                       {/* Section 2: Open Reservations (Customer Orders) */}
                       <section className="space-y-6">
-                        <div className="border-b border-border-ghost mb-4" />
+                        <div className="flex items-center justify-between mb-4 px-1">
+                           <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Pending Customer Deliveries</h4>
+                           <div className="h-px flex-1 bg-border-ghost ml-4" />
+                        </div>
                         <div className="grid grid-cols-1 gap-3">
                           {customerOrders.length > 0 ? customerOrders.map((order) => (
                             <div key={order.orderId} className="group bg-surface-lowest p-4 rounded-2xl border border-border-ghost shadow-ambient transition-all duration-500 relative overflow-hidden">
