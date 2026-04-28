@@ -222,7 +222,14 @@ export default function Sidebar() {
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-xs font-bold truncate">{userData?.name || "User"}</span>
-              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{userData?.role || "Admin"}</span>
+              <span className={cn(
+                "text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg w-fit mt-0.5 transition-all shadow-sm",
+                userData?.role === "OWNER" ? "bg-primary text-white shadow-primary/20" : 
+                userData?.role === "SUPER_ADMIN" ? "bg-error text-white shadow-error/20" :
+                "bg-surface-muted text-muted-foreground border border-border-ghost"
+              )}>
+                {userData?.role || "Admin"}
+              </span>
             </div>
           </div>
         )}

@@ -89,7 +89,7 @@ export default function InventoryTableActions({
         <div className="absolute right-0 top-10 w-48 bg-white rounded-2xl shadow-premium border border-border-ghost z-[100] py-1 animate-in fade-in zoom-in-95 duration-200">
           <Link 
             href={`/orders/purchase/new?itemId=${itemId}&quantity=${neededAmount}`}
-            className="flex items-center gap-3 px-4 py-2.5 text-xs font-black text-success hover:bg-surface-low transition-colors"
+            className="flex items-center gap-3 px-4 py-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
             onClick={() => setShowDropdown(false)}
           >
             <ShoppingCart className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export default function InventoryTableActions({
               onViewBreakdown();
               setShowDropdown(false);
             }}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-primary hover:bg-primary/5 transition-colors text-left"
+            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors text-left"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>View Breakdown</span>
@@ -112,16 +112,16 @@ export default function InventoryTableActions({
               router.push(`/inventory/${itemId}/edit`);
               setShowDropdown(false);
             }}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-foreground hover:bg-surface-low transition-colors text-left border-t border-border-ghost/50"
+            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors text-left border-t border-border-ghost/50"
           >
             {userRole === 'EMPLOYEE' ? (
               <>
-                <MapPin className="w-3.5 h-3.5 text-primary" />
+                <MapPin className="w-3.5 h-3.5" />
                 <span>Manage Stock</span>
               </>
             ) : (
               <>
-                <Edit className="w-3.5 h-3.5 text-muted-foreground" />
+                <Edit className="w-3.5 h-3.5" />
                 <span>Edit Item</span>
               </>
             )}
@@ -132,7 +132,7 @@ export default function InventoryTableActions({
               setShowScrap(true);
               setShowDropdown(false);
             }}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-error hover:bg-error/5 transition-colors text-left"
+            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors text-left"
           >
             <Flame className="w-3.5 h-3.5" />
             <span>Scrap Items</span>
@@ -142,7 +142,7 @@ export default function InventoryTableActions({
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-error hover:bg-error/5 transition-colors text-left border-t border-border-ghost/50"
+              className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-primary hover:bg-primary/5 transition-colors text-left border-t border-border-ghost/50"
             >
               {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
               <span>Delete Item</span>
