@@ -10,7 +10,7 @@ import {
   Phone, 
   Mail, 
   Calendar,
-  DollarSign,
+  IndianRupee,
   Package,
   ExternalLink,
   ChevronRight
@@ -117,7 +117,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          <div className="card-premium p-6 flex flex-col justify-between border-primary/5">
             <div className="p-2 w-fit rounded-lg bg-primary/5 text-primary">
-                <DollarSign className="w-4 h-4" />
+                <IndianRupee className="w-4 h-4" />
             </div>
             <div className="mt-4">
                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total Revenue</p>
