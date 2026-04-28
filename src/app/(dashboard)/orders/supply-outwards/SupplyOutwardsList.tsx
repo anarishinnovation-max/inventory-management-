@@ -187,7 +187,7 @@ export default function SupplyOutwardsList({
             <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center text-warning border border-warning/10">
                <Clock className="w-5 h-5" />
             </div>
-            Pending Dispatch Items
+            Pending Customer Deliveries
           </h3>
           <Link href="/orders/dispatch" className="btn btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest">Full Sale List</Link>
         </div>
@@ -270,7 +270,7 @@ export default function SupplyOutwardsList({
                       <td className="table-cell text-right">
                         <Link href={`/orders/dispatch/${item.orderId}`} className="btn btn-primary h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl">
                           <ArrowUpRight className="w-3.5 h-3.5" />
-                          Send
+                          Dispatch Now
                         </Link>
                       </td>
                     </tr>

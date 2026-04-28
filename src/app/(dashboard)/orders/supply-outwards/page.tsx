@@ -181,7 +181,7 @@ export default async function SupplyOutwardsPage({
                 <Clock className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Units to Send</p>
+              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Units Pending Delivery</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{totalPendingUnits}</h2>
             </div>
         </div>

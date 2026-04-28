@@ -423,7 +423,7 @@ export function ItemBreakdownModal({
                           )) : (
                             <div className="bg-surface-low/30 rounded-3xl border border-border-ghost border-dashed py-10 text-center">
                                <ShoppingCart className="w-10 h-10 text-muted-foreground opacity-10 mx-auto mb-3" />
-                               <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No active reservations.</p>
+                               <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No pending customer deliveries.</p>
                             </div>
                           )}
                         </div>
