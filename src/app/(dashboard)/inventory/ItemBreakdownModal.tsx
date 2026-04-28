@@ -1,22 +1,20 @@
 "use client";
 
+import { clsx, type ClassValue } from "clsx";
 import {
-    ArrowDownLeft,
-    ArrowUpRight,
-    Calendar,
-    History,
-    Layers,
-    Loader2,
-    Package,
-    ShieldCheck,
-    Truck,
-    X,
-    XCircle,
-    ShoppingCart
+  ArrowDownLeft,
+  ArrowUpRight,
+  Calendar,
+  History,
+  Layers,
+  Package,
+  ShieldCheck,
+  ShoppingCart,
+  Truck,
+  X
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
@@ -65,22 +63,22 @@ interface CustomerOrderEntry {
   orderDate: string;
 }
 
-export function ItemBreakdownModal({ 
-  itemId, 
-  itemName, 
+export function ItemBreakdownModal({
+  itemId,
+  itemName,
   totalStock,
   incomingQty,
   minStockLevel,
-  isOpen, 
-  onClose 
-}: { 
-  itemId: string; 
-  itemName: string; 
+  isOpen,
+  onClose
+}: {
+  itemId: string;
+  itemName: string;
   totalStock: number;
   incomingQty: number;
   minStockLevel: number;
-  isOpen: boolean; 
-  onClose: () => void; 
+  isOpen: boolean;
+  onClose: () => void;
 }) {
   const [loading, setLoading] = useState(true);
   const [breakdown, setBreakdown] = useState<BreakdownEntry[]>([]);
@@ -162,317 +160,372 @@ export function ItemBreakdownModal({
         <header className="px-8 py-6 bg-white border-b border-border-ghost sticky top-0 z-20 flex items-start justify-between shrink-0">
           <div className="flex gap-6">
             <div className="w-14 h-14 rounded-2xl bg-foreground text-white flex items-center justify-center shadow-lg shrink-0">
-               <Layers className="w-7 h-7" />
+              <Layers className="w-7 h-7" />
             </div>
             <div>
-                <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
-                  <span className="opacity-50">Stock</span>
-                  <div className="w-1 h-1 rounded-full bg-primary/40" />
-                  <span className="text-primary/80">Asset Breakdown</span>
-                </nav>
-                <h2 className="text-2xl font-black leading-tight mb-2">{itemName}</h2>
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm">
-                    <Package className="w-3.5 h-3.5" />
-                    <span className="text-[11px] font-black">{totalStock} Units In Stock</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 text-primary rounded-xl shadow-sm">
-                    <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>
-                    <span className="text-[11px] font-black">
-                      ₹{(() => {
-                        const stockRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
-                        const pipelineRemaining = incomingPOs.reduce((acc, p) => acc + p.quantity, 0);
-                        const totalUnits = stockRemaining + pipelineRemaining;
-                        
-                        if (totalUnits === 0) return "0";
-                        
-                        const stockValue = breakdown.reduce((acc, b) => acc + (b.quantity * b.costPerUnit), 0);
-                        const pipelineValue = incomingPOs.reduce((acc, p) => acc + (p.quantity * p.costPerUnit), 0);
-                        const totalValue = stockValue + pipelineValue;
-
-                        return (totalValue / totalUnits).toLocaleString(undefined, { maximumFractionDigits: 0 });
-                      })()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm">
-                    <Truck className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-[11px] font-black text-muted-foreground">{incomingQty} Pipeline</span>
-                  </div>
+              <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
+                <span className="opacity-50">Stock</span>
+                <div className="w-1 h-1 rounded-full bg-primary/40" />
+                <span className="text-primary/80">Asset Breakdown</span>
+              </nav>
+              <h2 className="text-2xl font-black leading-tight mb-2">{itemName}</h2>
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm">
+                  <Package className="w-3.5 h-3.5" />
+                  <span className="text-[11px] font-black">{totalStock} Units In Stock</span>
                 </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 text-primary rounded-xl shadow-sm">
+                  <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>
+                  <span className="text-[11px] font-black">
+                    ₹{(() => {
+                      const stockRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
+                      const pipelineRemaining = incomingPOs.reduce((acc, p) => acc + p.quantity, 0);
+                      const totalUnits = stockRemaining + pipelineRemaining;
+
+                      if (totalUnits === 0) return "0";
+
+                      const stockValue = breakdown.reduce((acc, b) => acc + (b.quantity * b.costPerUnit), 0);
+                      const pipelineValue = incomingPOs.reduce((acc, p) => acc + (p.quantity * p.costPerUnit), 0);
+                      const totalValue = stockValue + pipelineValue;
+
+                      return (totalValue / totalUnits).toLocaleString(undefined, { maximumFractionDigits: 0 });
+                    })()}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm">
+                  <Truck className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-[11px] font-black text-muted-foreground">{incomingQty} Pipeline</span>
+                </div>
+              </div>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="btn btn-ghost h-10 w-10 !p-0 rounded-xl group"
           >
-             <X className="w-5 h-5 transition-colors" />
+            <X className="w-5 h-5 transition-colors" />
           </button>
         </header>
 
         <div className="flex-1 overflow-y-auto p-8 no-scrollbar bg-surface-lowest/50">
-           {loading ? (
-             <div className="py-20 flex flex-col items-center justify-center gap-4">
-                <div className="relative">
-                   <div className="w-12 h-12 rounded-full border-4 border-primary/10 border-t-primary animate-spin" />
-                   <Layers className="w-5 h-5 text-primary absolute inset-0 m-auto" />
-                </div>
-                <p className="text-sm font-black text-muted-foreground animate-pulse tracking-tight">Synchronizing data...</p>
-             </div>
-           ) : (breakdown.length > 0 || incomingPOs.length > 0 || customerOrders.length > 0 || purchaseHistory.length > 0 || sellingHistory.length > 0) ? (
-             <div className="space-y-8">
-                {/* Modern Tab System */}
-                <div className="flex items-center gap-1.5 bg-surface-low/30 p-1 rounded-2xl border border-border-ghost w-fit mx-auto sm:mx-0">
-                   <button 
-                     onClick={() => setActiveTab("buying")}
-                     className={cn(
-                       "flex items-center gap-2.5 px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all",
-                       activeTab === "buying" 
-                         ? "bg-white text-primary shadow-lg shadow-primary/5 border border-border-ghost" 
-                         : "text-muted-foreground hover:text-foreground hover:bg-white/50"
-                     )}
-                   >
-                     <ArrowDownLeft className="w-3.5 h-3.5" />
-                     <span>Buying</span>
-                     <span className={`badge ${activeTab === "buying" ? "badge-primary" : "badge-neutral"}`}>
-                        {purchaseHistory.length + incomingPOs.length}
-                     </span>
-                   </button>
-
-                   <button 
-                     onClick={() => setActiveTab("selling")}
-                     className={cn(
-                       "flex items-center gap-2.5 px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all",
-                       activeTab === "selling" 
-                         ? "bg-white text-error shadow-lg shadow-error/5 border border-border-ghost" 
-                         : "text-muted-foreground hover:text-foreground hover:bg-white/50"
-                     )}
-                   >
-                     <ArrowUpRight className="w-3.5 h-3.5" />
-                     <span>Selling</span>
-                     <span className={`badge ${activeTab === "selling" ? "badge-error" : "badge-neutral"}`}>
-                        {sellingHistory.length + customerOrders.length}
-                     </span>
-                   </button>
-                </div>
-
-                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                  {activeTab === "buying" && (
-                    <div className="space-y-8">
-                      {/* Section 1: Inward Journal */}
-                      <section className="space-y-6">
-                        <div className="border-b border-border-ghost mb-4" />
-
-                        <div className="grid grid-cols-1 gap-3">
-                          {breakdown.length > 0 ? breakdown.map((entry, idx) => (
-                            <div key={idx} className="group bg-surface-lowest p-4 rounded-2xl border border-border-ghost shadow-ambient transition-all duration-500">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center font-black text-primary text-base border border-primary/10 transition-all duration-500">
-                                    {entry.vendor?.[0] || "V"}
-                                  </div>
-                                  <div>
-                                    <span className="font-black text-foreground text-base tracking-tight block">{entry.vendor}</span>
-                                    <div className="flex items-center gap-2 mt-0.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                       <span className="flex items-center gap-1"><Calendar className="w-3 h-3 opacity-40" /> {new Date(entry.purchaseDate).toLocaleDateString('en-IN', { month: "short", day: "2-digit" })}</span>
-                                       <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                                       <span className="flex items-center gap-1.5"><History className="w-3.5 h-3.5 opacity-30" /> Received by {entry.receivedBy}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div className="flex flex-wrap items-center gap-4 md:gap-8">
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-0.5 opacity-50">Remaining</span>
-                                    <span className="text-base font-black text-primary tabular-nums">+{entry.quantity}</span>
-                                  </div>
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-0.5 opacity-50">Cost</span>
-                                    <span className="text-base font-black text-foreground tabular-nums">₹{Number(entry.costPerUnit || 0).toLocaleString()}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )) : (
-                            <div className="bg-surface-low/30 rounded-3xl border border-border-ghost border-dashed py-10 text-center">
-                               <ArrowDownLeft className="w-10 h-10 text-muted-foreground opacity-10 mx-auto mb-3" />
-                               <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No active stock batches found.</p>
-                            </div>
-                          )}
-                        </div>
-                      </section>
-
-                      {/* Section 2: Supply Pipeline (Incoming POs) */}
-                      <section className="space-y-6">
-                        <div className="border-b border-border-ghost mb-4" />
-                        <div className="grid grid-cols-1 gap-3">
-                          {incomingPOs.length > 0 ? incomingPOs.map((po) => (
-                            <div key={po.poId} className="group bg-surface-lowest p-4 rounded-2xl border border-border-ghost shadow-ambient transition-all duration-500 relative overflow-hidden">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-xl bg-emerald-500/5 flex items-center justify-center font-black text-emerald-600 text-base border border-emerald-500/10">
-                                    {po.vendor?.[0] || "V"}
-                                  </div>
-                                  <div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="font-black text-foreground text-base tracking-tight">{po.vendor}</span>
-                                      <span className="badge badge-primary text-[8px]">PO #{po.poId.split("-")[0].toUpperCase()}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 mt-0.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                       <span className="flex items-center gap-1.5"><Calendar className="w-3 h-3 opacity-40" /> ETA: {po.expectedDelivery ? new Date(po.expectedDelivery).toLocaleDateString('en-IN', { month: "short", day: "2-digit" }) : 'CONFIRMING'}</span>
-                                       <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                                       <span className="flex items-center gap-1.5 font-black text-emerald-600">{po.status}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div className="flex flex-wrap items-center gap-4 md:gap-8">
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-0.5 opacity-50">Expected</span>
-                                    <span className="text-base font-black text-emerald-600 tabular-nums">+{po.quantity}</span>
-                                  </div>
-                                  <div className="flex items-center justify-center w-10 h-10">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )) : (
-                            <div className="bg-surface-low/30 rounded-3xl border border-border-ghost border-dashed py-10 text-center">
-                               <Truck className="w-10 h-10 text-muted-foreground opacity-10 mx-auto mb-3" />
-                               <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No incoming shipments scheduled.</p>
-                            </div>
-                          )}
-                        </div>
-                      </section>
-                    </div>
+          {loading ? (
+            <div className="py-20 flex flex-col items-center justify-center gap-4">
+              <div className="relative">
+                <div className="w-12 h-12 rounded-full border-4 border-primary/10 border-t-primary animate-spin" />
+                <Layers className="w-5 h-5 text-primary absolute inset-0 m-auto" />
+              </div>
+              <p className="text-sm font-black text-muted-foreground animate-pulse tracking-tight">Synchronizing data...</p>
+            </div>
+          ) : (breakdown.length > 0 || incomingPOs.length > 0 || customerOrders.length > 0 || purchaseHistory.length > 0 || sellingHistory.length > 0) ? (
+            <div className="space-y-8">
+              {/* Modern Tab System */}
+              <div className="flex items-center gap-1.5 bg-surface-low/30 p-1 rounded-2xl border border-border-ghost w-fit mx-auto sm:mx-0">
+                <button
+                  onClick={() => setActiveTab("buying")}
+                  className={cn(
+                    "flex items-center gap-2.5 px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all",
+                    activeTab === "buying"
+                      ? "bg-white text-primary shadow-lg shadow-primary/5 border border-border-ghost"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/50"
                   )}
+                >
+                  <ArrowDownLeft className="w-3.5 h-3.5" />
+                  <span>Buying</span>
+                  <span className={`badge ${activeTab === "buying" ? "badge-primary" : "badge-neutral"}`}>
+                    {purchaseHistory.length + incomingPOs.length}
+                  </span>
+                </button>
 
-                  {activeTab === "selling" && (
-                    <div className="space-y-8">
-                      {/* Section 1: Outward Journal */}
-                      <section className="space-y-8">
-                        <div className="border-b border-border-ghost mb-4" />
-
-                        <div className="grid grid-cols-1 gap-3">
-                          {sellingHistory.length > 0 ? sellingHistory.map((entry, idx) => (
-                            <div key={idx} className="group bg-surface-lowest p-4 rounded-2xl border border-border-ghost shadow-ambient transition-all duration-500">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-xl bg-error/5 flex items-center justify-center font-black text-error text-base border border-error/10 transition-all duration-500">
-                                    {entry.customer?.[0] || "C"}
-                                  </div>
-                                  <div>
-                                    <span className="font-black text-foreground text-base tracking-tight block">{entry.customer}</span>
-                                    <div className="flex items-center gap-2 mt-0.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                       <span className="flex items-center gap-1"><Calendar className="w-3 h-3 opacity-40" /> {new Date(entry.date).toLocaleDateString('en-IN', { month: "short", day: "2-digit" })}</span>
-                                       <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                                       <span className="badge badge-success text-[8px]">Verified</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div className="flex flex-wrap items-center gap-4 md:gap-8">
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-0.5 opacity-50">Quantity</span>
-                                    <span className="text-base font-black text-error tabular-nums">-{entry.quantity}</span>
-                                  </div>
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-0.5 opacity-50">Price</span>
-                                    <span className="text-base font-black text-foreground tabular-nums">₹{Number(entry.price || 0).toLocaleString()}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )) : (
-                            <div className="bg-surface-low/30 rounded-[2.5rem] border border-border-ghost border-dashed py-16 text-center">
-                               <ArrowUpRight className="w-12 h-12 text-muted-foreground opacity-10 mx-auto mb-4" />
-                               <p className="text-xs font-bold text-muted-foreground italic tracking-tight">No outward history recorded.</p>
-                            </div>
-                          )}
-                        </div>
-                      </section>
-
-                      {/* Section 2: Open Reservations (Customer Orders) */}
-                      <section className="space-y-6">
-                        <div className="flex items-center justify-between mb-4 px-1">
-                           <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Pending Customer Deliveries</h4>
-                           <div className="h-px flex-1 bg-border-ghost ml-4" />
-                        </div>
-                        <div className="grid grid-cols-1 gap-3">
-                          {customerOrders.length > 0 ? customerOrders.map((order) => (
-                            <div key={order.orderId} className="group bg-surface-lowest p-4 rounded-2xl border border-border-ghost shadow-ambient transition-all duration-500 relative overflow-hidden">
-                              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div className="flex items-center gap-4">
-                                  <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center font-black text-primary text-base border border-primary/10">
-                                    {order.customer?.[0] || "C"}
-                                  </div>
-                                  <div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="font-black text-foreground text-base tracking-tight">{order.customer}</span>
-                                      <span className="badge badge-primary text-[8px]">ORDER #{order.orderId.split("-")[0].toUpperCase()}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 mt-0.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                       <span className="flex items-center gap-1.5"><Calendar className="w-3 h-3 opacity-40" /> Booked {new Date(order.orderDate).toLocaleDateString('en-IN', { month: "short", day: "2-digit" })}</span>
-                                       <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                                       <span className={`font-black uppercase tracking-widest text-[9px] ${order.status === 'pending' ? 'text-warning' : 'text-primary'}`}>
-                                         {order.status}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                <div className="flex flex-wrap items-center gap-4 md:gap-8">
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-0.5 opacity-50">Reserved</span>
-                                    <span className="text-base font-black text-foreground tabular-nums">{order.quantity} Units</span>
-                                  </div>
-                                  <div className="flex items-center justify-center w-10 h-10">
-                                    <ShoppingCart className="w-4 h-4 text-primary/20" />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )) : (
-                            <div className="bg-surface-low/30 rounded-3xl border border-border-ghost border-dashed py-10 text-center">
-                               <ShoppingCart className="w-10 h-10 text-muted-foreground opacity-10 mx-auto mb-3" />
-                               <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No pending customer deliveries.</p>
-                            </div>
-                          )}
-                        </div>
-                      </section>
-                    </div>
+                <button
+                  onClick={() => setActiveTab("selling")}
+                  className={cn(
+                    "flex items-center gap-2.5 px-8 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all",
+                    activeTab === "selling"
+                      ? "bg-white text-error shadow-lg shadow-error/5 border border-border-ghost"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/50"
                   )}
-                </div>
-             </div>
-           ) : (
-              <div className="py-32 flex flex-col items-center justify-center text-center gap-8 group">
-                <div className="w-24 h-24 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center transition-all duration-700">
-                  <Layers className="w-12 h-12 opacity-20" />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black text-foreground tracking-tight">Digital Vault Empty</h3>
-                  <p className="text-sm font-bold mt-3 text-muted-foreground max-w-xs mx-auto leading-relaxed">No transactional footprints detected for this asset. Start by adding stock or creating a purchase order.</p>
-                </div>
-             </div>
-           )}
-        </div>
-  
-        <footer className="px-8 py-6 bg-white border-t border-border-ghost shrink-0 flex flex-col sm:flex-row justify-between items-center gap-4">
-           <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center text-success border border-success/10">
-                 <ShieldCheck className="w-4 h-4" />
+                >
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                  <span>Selling</span>
+                  <span className={`badge ${activeTab === "selling" ? "badge-error" : "badge-neutral"}`}>
+                    {sellingHistory.length + customerOrders.length}
+                  </span>
+                </button>
+              </div>
+
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                {activeTab === "buying" && (
+                  <div className="space-y-8">
+                    {/* Section 1: Inward Journal */}
+                    <section className="space-y-6">
+                      <div className="border-b border-border-ghost mb-4" />
+
+                      <div className="table-container !bg-transparent !shadow-none !border-none">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left border-collapse">
+                            <thead>
+                              <tr className="table-header !bg-transparent">
+                                <th className="table-cell-header !py-3">Vendor</th>
+                                <th className="table-cell-header !py-3">Date & Time</th>
+                                <th className="table-cell-header !py-3">Logistics</th>
+                                <th className="table-cell-header !py-3 text-right">Remaining</th>
+                                <th className="table-cell-header !py-3 text-right">Unit Cost</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-border-ghost/50">
+                              {breakdown.length > 0 ? breakdown.map((entry, idx) => (
+                                <tr key={idx} className="group hover:bg-white/50 transition-colors">
+                                  <td className="table-cell !py-3">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center font-black text-primary text-xs border border-primary/10">
+                                        {entry.vendor?.[0] || "V"}
+                                      </div>
+                                      <span className="font-bold text-foreground text-xs">{entry.vendor}</span>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3">
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-bold text-foreground">{new Date(entry.purchaseDate).toLocaleDateString('en-IN', { month: "short", day: "2-digit", year: 'numeric' })}</span>
+                                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{new Date(entry.purchaseDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3">
+                                    <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                                      <History className="w-3.5 h-3.5 opacity-30" />
+                                      <span>By {entry.receivedBy}</span>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-primary tabular-nums">+{entry.quantity}</span>
+                                  </td>
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-foreground tabular-nums">₹{Number(entry.costPerUnit || 0).toLocaleString()}</span>
+                                  </td>
+                                </tr>
+                              )) : (
+                                <tr>
+                                  <td colSpan={5} className="py-10 text-center">
+                                    <ArrowDownLeft className="w-8 h-8 text-muted-foreground opacity-10 mx-auto mb-2" />
+                                    <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No active stock batches found.</p>
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </section>
+
+                    {/* Section 2: Supply Pipeline (Incoming POs) */}
+                    <section className="space-y-6">
+                      <div className="border-b border-border-ghost mb-4" />
+                      <div className="table-container !bg-transparent !shadow-none !border-none">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left border-collapse">
+                            <thead>
+                              <tr className="table-header !bg-transparent">
+                                <th className="table-cell-header !py-3">Pipeline Asset</th>
+                                <th className="table-cell-header !py-3">ETA & Status</th>
+                                <th className="table-cell-header !py-3 text-right">Expected</th>
+                                <th className="table-cell-header !py-3 text-center">Tracking</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-border-ghost/50">
+                              {incomingPOs.length > 0 ? incomingPOs.map((po) => (
+                                <tr key={po.poId} className="group hover:bg-white/50 transition-colors">
+                                  <td className="table-cell !py-3">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-8 h-8 rounded-lg bg-emerald-500/5 flex items-center justify-center font-black text-emerald-600 text-xs border border-emerald-500/10">
+                                        {po.vendor?.[0] || "V"}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="font-bold text-foreground text-xs leading-tight">{po.vendor}</span>
+                                        <span className="text-[9px] font-black text-primary uppercase tracking-widest mt-0.5">PO #{po.poId.split("-")[0].toUpperCase()}</span>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3">
+                                    <div className="flex flex-col">
+                                      <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                                        <Calendar className="w-3 h-3 opacity-40" />
+                                        <span>{po.expectedDelivery ? new Date(po.expectedDelivery).toLocaleDateString('en-IN', { month: "short", day: "2-digit" }) : 'CONFIRMING'}</span>
+                                      </div>
+                                      <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mt-0.5">{po.status}</span>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-emerald-600 tabular-nums">+{po.quantity}</span>
+                                  </td>
+                                  <td className="table-cell !py-3 text-center">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mx-auto" />
+                                  </td>
+                                </tr>
+                              )) : (
+                                <tr>
+                                  <td colSpan={4} className="py-10 text-center">
+                                    <Truck className="w-8 h-8 text-muted-foreground opacity-10 mx-auto mb-2" />
+                                    <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No incoming shipments scheduled.</p>
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                )}
+
+                {activeTab === "selling" && (
+                  <div className="space-y-8">
+                    {/* Section 1: Outward Journal */}
+                    <section className="space-y-8">
+                      <div className="border-b border-border-ghost mb-4" />
+
+                      <div className="table-container !bg-transparent !shadow-none !border-none">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left border-collapse">
+                            <thead>
+                              <tr className="table-header !bg-transparent">
+                                <th className="table-cell-header !py-3">Customer</th>
+                                <th className="table-cell-header !py-3">Date & Time</th>
+                                <th className="table-cell-header !py-3 text-right">Quantity</th>
+                                <th className="table-cell-header !py-3 text-right">Selling Price</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-border-ghost/50">
+                              {sellingHistory.length > 0 ? sellingHistory.map((entry, idx) => (
+                                <tr key={idx} className="group hover:bg-white/50 transition-colors">
+                                  <td className="table-cell !py-3">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-8 h-8 rounded-lg bg-error/5 flex items-center justify-center font-black text-error text-xs border border-error/10">
+                                        {entry.customer?.[0] || "C"}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="font-bold text-foreground text-xs leading-tight">{entry.customer}</span>
+                                        <span className="badge badge-success !text-[7px] !px-1.5 !py-0 w-fit mt-1">Verified</span>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3">
+                                    <div className="flex flex-col">
+                                      <span className="text-xs font-bold text-foreground">{new Date(entry.date).toLocaleDateString('en-IN', { month: "short", day: "2-digit", year: 'numeric' })}</span>
+                                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{new Date(entry.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-error tabular-nums">-{entry.quantity}</span>
+                                  </td>
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-foreground tabular-nums">₹{Number(entry.price || 0).toLocaleString()}</span>
+                                  </td>
+                                </tr>
+                              )) : (
+                                <tr>
+                                  <td colSpan={4} className="py-10 text-center">
+                                    <ArrowUpRight className="w-8 h-8 text-muted-foreground opacity-10 mx-auto mb-2" />
+                                    <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No outward history recorded.</p>
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </section>
+
+                    {/* Section 2: Open Reservations (Customer Orders) */}
+                    <section className="space-y-6">
+                      <div className="flex items-center justify-between mb-4 px-1">
+                        <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Pending Customer Deliveries</h4>
+                        <div className="h-px flex-1 bg-border-ghost ml-4" />
+                      </div>
+                      <div className="table-container !bg-transparent !shadow-none !border-none">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left border-collapse">
+                            <thead>
+                              <tr className="table-header !bg-transparent">
+                                <th className="table-cell-header !py-3">Customer Order</th>
+                                <th className="table-cell-header !py-3">Booking Date</th>
+                                <th className="table-cell-header !py-3 text-right">Reserved</th>
+                                <th className="table-cell-header !py-3 text-center">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-border-ghost/50">
+                              {customerOrders.length > 0 ? customerOrders.map((order) => (
+                                <tr key={order.orderId} className="group hover:bg-white/50 transition-colors">
+                                  <td className="table-cell !py-3">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center font-black text-primary text-xs border border-primary/10">
+                                        {order.customer?.[0] || "C"}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="font-bold text-foreground text-xs leading-tight">{order.customer}</span>
+                                        <span className="text-[9px] font-black text-primary uppercase tracking-widest mt-0.5">ORDER #{order.orderId.split("-")[0].toUpperCase()}</span>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                                      <Calendar className="w-3 h-3 opacity-40" />
+                                      <span>{new Date(order.orderDate).toLocaleDateString('en-IN', { month: "short", day: "2-digit" })}</span>
+                                    </div>
+                                  </td>
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-foreground tabular-nums">{order.quantity} Units</span>
+                                  </td>
+                                  <td className="table-cell !py-3 text-center">
+                                    <span className={`badge !text-[8px] !px-2 !py-0.5 ${order.status === 'pending' ? 'badge-warning' : 'badge-primary'}`}>
+                                      {order.status}
+                                    </span>
+                                  </td>
+                                </tr>
+                              )) : (
+                                <tr>
+                                  <td colSpan={4} className="py-10 text-center">
+                                    <ShoppingCart className="w-8 h-8 text-muted-foreground opacity-10 mx-auto mb-2" />
+                                    <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No pending customer deliveries.</p>
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="py-32 flex flex-col items-center justify-center text-center gap-8 group">
+              <div className="w-24 h-24 rounded-[2rem] bg-surface-low border border-border-ghost flex items-center justify-center transition-all duration-700">
+                <Layers className="w-12 h-12 opacity-20" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-foreground uppercase tracking-wider">Blockchain Verified</p>
-                <p className="text-[9px] font-bold text-muted-foreground mt-0.5 italic leading-none">Real-time inventory ledger active</p>
+                <h3 className="text-3xl font-black text-foreground tracking-tight">Digital Vault Empty</h3>
+                <p className="text-sm font-bold mt-3 text-muted-foreground max-w-xs mx-auto leading-relaxed">No transactional footprints detected for this asset. Start by adding stock or creating a purchase order.</p>
               </div>
-           </div>
-           <button 
-             onClick={onClose}
-             className="btn btn-primary px-8 h-10 text-xs"
-           >
-              Dismiss Breakdown
-           </button>
+            </div>
+          )}
+        </div>
+
+        <footer className="px-8 py-6 bg-white border-t border-border-ghost shrink-0 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center text-success border border-success/10">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-foreground uppercase tracking-wider">Blockchain Verified</p>
+              <p className="text-[9px] font-bold text-muted-foreground mt-0.5 italic leading-none">Real-time inventory ledger active</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="btn btn-primary px-8 h-10 text-xs"
+          >
+            Dismiss Breakdown
+          </button>
         </footer>
       </div>
     </div>,

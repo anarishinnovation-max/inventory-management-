@@ -121,8 +121,8 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
             <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Action Type</label>
             <SearchableSelect
               items={ACTION_TYPES}
-              selectedId={searchParams.get('actionType') || 'all'}
-              onSelect={(item) => updateFilters({ actionType: item.id })}
+              value={searchParams.get('actionType') || 'all'}
+              onChange={(val) => updateFilters({ actionType: val })}
               placeholder="Select Action..."
             />
           </div>
@@ -131,8 +131,8 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
             <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Entity Category</label>
             <SearchableSelect
               items={ENTITY_TYPES}
-              selectedId={searchParams.get('entityType') || 'all'}
-              onSelect={(item) => updateFilters({ entityType: item.id })}
+              value={searchParams.get('entityType') || 'all'}
+              onChange={(val) => updateFilters({ entityType: val })}
               placeholder="Select Entity..."
             />
           </div>
@@ -144,8 +144,8 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
                 { id: "all", name: "All Users", icon: <User className="w-4 h-4" /> },
                 ...users.map(u => ({ id: u.id, name: u.name, icon: <User className="w-4 h-4" /> }))
               ]}
-              selectedId={searchParams.get('performedBy') || 'all'}
-              onSelect={(item) => updateFilters({ performedBy: item.id })}
+              value={searchParams.get('performedBy') || 'all'}
+              onChange={(val) => updateFilters({ performedBy: val })}
               placeholder="Select User..."
             />
           </div>
