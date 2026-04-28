@@ -220,61 +220,6 @@ export default async function SupplyOutwardsPage({
         currentEndDate={endDate}
       />
 
-      {/* Recent Audit Log - Moved to Bottom */}
-      <div className="space-y-6 pt-10 border-t border-border-ghost">
-        <h3 className="heading-md uppercase tracking-widest flex items-center gap-2 px-2">
-          <CheckCircle2 className="w-4 h-4 text-success" />
-          Audit: Recently Dispatched
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {transactions.length > 0 ? transactions.map((tx: any) => (
-            <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group">
-              <div className="flex items-start gap-4">
-                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 transition-colors">
-                    <ArrowUpRight className="w-6 h-6" />
-                 </div>
-                 <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
-                       <p className="text-sm font-black text-foreground truncate">{tx.item.name}</p>
-                       <span className="text-sm font-black text-error">-{Math.abs(tx.quantity)}</span>
-                    </div>
-                    <div className="flex items-center gap-3 mt-2">
-                      <div className="flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 text-muted-foreground" />
-                        <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.customer?.name || 'Guest'}</p>
-                      </div>
-                      {tx.referenceType === "DISPATCH" && (
-                         <div className="badge badge-primary">
-                            DO #{tx.referenceId.split('-')[0]}
-                         </div>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border-ghost">
-                       <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60">
-                         {formatDate(tx.createdAt)}
-                       </span>
-                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-tighter opacity-60">
-                         {new Date(tx.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                       </span>
-                    </div>
-                 </div>
-              </div>
-            </div>
-          )) : (
-            <div className="col-span-full card-premium p-10 text-center">
-               <p className="text-xs text-muted-foreground font-medium">No recent dispatch activity.</p>
-            </div>
-          )}
-        </div>
-        
-        <div className="flex justify-center">
-          <Link href="/transactions" className="btn btn-ghost h-12 px-6">
-             View Full Audit Log
-             <ChevronRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }

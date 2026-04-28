@@ -245,50 +245,6 @@ export default async function SupplyInwardsPage({
         totalPages={totalPages}
       />
 
-      {/* Recent Audit Log - Moved to Bottom */}
-      <div className="space-y-6 pt-10 border-t border-border-ghost">
-        <h3 className="heading-md uppercase tracking-widest flex items-center gap-2 px-2">
-          <CheckCircle2 className="w-4 h-4 text-success" />
-          Audit: Recently Received
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recentTransactions.length > 0 ? recentTransactions.map((tx: any) => (
-            <div key={tx.id} className="card-premium p-6 hover:shadow-md transition-all group border-success/10">
-              <div className="flex items-start gap-4">
-                 <div className="w-12 h-12 rounded-2xl bg-success/5 border border-success/10 flex items-center justify-center text-success shrink-0 transition-colors">
-                    <ArrowDownLeft className="w-6 h-6" />
-                 </div>
-                 <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
-                       <p className="text-sm font-black text-foreground truncate">{tx.item.name}</p>
-                       <span className="text-sm font-black text-success">+{tx.quantity}</span>
-                    </div>
-                    <div className="flex items-center gap-3 mt-2">
-                      <div className="flex items-center gap-1.5">
-                        <Users className="w-3.5 h-3.5 text-muted-foreground" />
-                        <p className="text-[10px] font-bold text-muted-foreground truncate">{tx.vendor?.name || 'Unknown'}</p>
-                      </div>
-                      <div className="badge badge-primary">
-                        PO #{tx.referenceId.split('-')[0].toUpperCase()}
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border-ghost">
-                       <span className="text-[10px] font-black text-muted-foreground uppercase opacity-60">
-                         {formatDate(tx.createdAt)}
-                       </span>
-                    </div>
-                 </div>
-              </div>
-            </div>
-          )) : (
-            <div className="col-span-full card-premium p-10 text-center">
-               <p className="text-xs text-muted-foreground font-medium">No recent inward activity.</p>
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 }
-
