@@ -1,14 +1,13 @@
 "use client";
 
 import { clsx, type ClassValue } from "clsx";
-import { Edit, Eye, Flame, Loader2, MapPin, ShoppingCart, Trash2 } from "lucide-react";
+import { Edit, Eye, Flame, Loader2, MapPin, MoreVertical, ShoppingCart, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { showToast } from "@/lib/toast";
 import { useConfirm } from "@/hooks/use-confirm";
-import { ItemBreakdownModal } from "./ItemBreakdownModal";
 import { ScrapModal } from "./ScrapModal";
 
 function cn(...inputs: ClassValue[]) {
@@ -21,7 +20,8 @@ export default function InventoryTableActions({
   totalStock,
   incomingQty,
   minStockLevel,
-  userRole
+  userRole,
+  onViewBreakdown
 }: {
   itemId: string;
   itemName: string;
@@ -29,16 +29,29 @@ export default function InventoryTableActions({
   incomingQty: number;
   minStockLevel: number;
   userRole: string;
+  onViewBreakdown: () => void;
 }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(false);
   const [showScrap, setShowScrap] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const confirm = useConfirm();
   const neededAmount = Math.max(1, minStockLevel - totalStock);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleDelete = async () => {
+    setShowDropdown(false);
     if (!(await confirm("Delete Item", "Are you sure you want to delete this item? This action cannot be undone and only works if there is no remaining stock."))) {
       return;
     }
@@ -64,61 +77,79 @@ export default function InventoryTableActions({
   };
 
   return (
-    <div className="flex justify-end gap-1">
-      <Link 
-        href={`/orders/purchase/new?itemId=${itemId}&quantity=${neededAmount}`}
-        className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-success hover:bg-success/5 border-success/10"
-        title={`Shop ${neededAmount} more`}
-      >
-        <ShoppingCart className="w-4 h-4" />
-      </Link>
+    <div className="relative flex justify-end" ref={dropdownRef}>
       <button
-        onClick={() => setShowBreakdown(true)}
-        className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-primary hover:bg-primary/5 border-primary/10"
-        suppressHydrationWarning
+        onClick={() => setShowDropdown(!showDropdown)}
+        className="btn btn-ghost h-8 w-8 !p-0 rounded-xl hover:bg-surface-low transition-colors"
       >
-        <Eye className="w-4 h-4" />
+        <MoreVertical className="w-4 h-4 text-muted-foreground" />
       </button>
 
-      <button
-        onClick={() => router.push(`/inventory/${itemId}/edit`)}
-        className={cn(
-          "btn h-8 w-8 !p-0 rounded-xl",
-          userRole === 'EMPLOYEE' ? "btn-primary bg-primary/5 text-primary border-primary/10" : "btn-neutral"
-        )}
-        title={userRole === 'EMPLOYEE' ? "Manage Stock & Rack" : "Edit Item"}
-      >
-        {userRole === 'EMPLOYEE' ? <MapPin className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
-      </button>
+      {showDropdown && (
+        <div className="absolute right-0 top-10 w-48 bg-white rounded-2xl shadow-premium border border-border-ghost z-[100] py-1 animate-in fade-in zoom-in-95 duration-200">
+          <Link 
+            href={`/orders/purchase/new?itemId=${itemId}&quantity=${neededAmount}`}
+            className="flex items-center gap-3 px-4 py-2.5 text-xs font-black text-success hover:bg-surface-low transition-colors"
+            onClick={() => setShowDropdown(false)}
+          >
+            <ShoppingCart className="w-3.5 h-3.5" />
+            <span>Order Units</span>
+          </Link>
+          
+          <button
+            onClick={() => {
+              onViewBreakdown();
+              setShowDropdown(false);
+            }}
+            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-primary hover:bg-primary/5 transition-colors text-left"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>View Breakdown</span>
+          </button>
 
-      <button
-        onClick={() => setShowScrap(true)}
-        className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
-        title="Scrap Item"
-      >
-        <Flame className="w-4 h-4" />
-      </button>
+          <button
+            onClick={() => {
+              router.push(`/inventory/${itemId}/edit`);
+              setShowDropdown(false);
+            }}
+            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-foreground hover:bg-surface-low transition-colors text-left border-t border-border-ghost/50"
+          >
+            {userRole === 'EMPLOYEE' ? (
+              <>
+                <MapPin className="w-3.5 h-3.5 text-primary" />
+                <span>Manage Stock</span>
+              </>
+            ) : (
+              <>
+                <Edit className="w-3.5 h-3.5 text-muted-foreground" />
+                <span>Edit Item</span>
+              </>
+            )}
+          </button>
 
-      {userRole !== 'EMPLOYEE' && (
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className="btn btn-ghost h-8 w-8 !p-0 rounded-xl text-error hover:bg-error/5 border-error/10"
-          title="Delete Item"
-        >
-          {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-        </button>
+          <button
+            onClick={() => {
+              setShowScrap(true);
+              setShowDropdown(false);
+            }}
+            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-error hover:bg-error/5 transition-colors text-left"
+          >
+            <Flame className="w-3.5 h-3.5" />
+            <span>Scrap Items</span>
+          </button>
+
+          {userRole !== 'EMPLOYEE' && (
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-black text-error hover:bg-error/5 transition-colors text-left border-t border-border-ghost/50"
+            >
+              {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+              <span>Delete Item</span>
+            </button>
+          )}
+        </div>
       )}
-
-      <ItemBreakdownModal
-        isOpen={showBreakdown}
-        onClose={() => setShowBreakdown(false)}
-        itemId={itemId}
-        itemName={itemName}
-        totalStock={totalStock}
-        incomingQty={incomingQty}
-        minStockLevel={minStockLevel}
-      />
 
       <ScrapModal 
         isOpen={showScrap}

@@ -21,6 +21,7 @@ import { showToast } from "@/lib/toast";
 import { useConfirm } from "@/hooks/use-confirm";
 import InventoryTableActions from "./InventoryTableActions";
 import { MappedItem } from "./page";
+import { ItemBreakdownModal } from "./ItemBreakdownModal";
 
 function formatDate(date: Date) {
   return new Date(date).toLocaleString('en-IN', {
@@ -50,6 +51,7 @@ export default function InventoryList({
     key: 'name',
     direction: null
   });
+  const [breakdownItem, setBreakdownItem] = useState<MappedItem | null>(null);
 
   const sortedItems = useMemo(() => {
     if (!sortConfig.direction || !sortConfig.key) return items;
@@ -292,7 +294,7 @@ export default function InventoryList({
                     <SortIcon column="name" />
                   </button>
                 </th>
-                <th className="table-cell-header">
+                <th className="table-cell-header hidden lg:table-cell">
                   <button
                     onClick={() => requestSort('category')}
                     className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
@@ -311,8 +313,8 @@ export default function InventoryList({
                     <SortIcon column="units" />
                   </button>
                 </th>
-                <th className="table-cell-header">Rack</th>
-                <th className="table-cell-header">
+                <th className="table-cell-header hidden md:table-cell">Rack</th>
+                <th className="table-cell-header hidden sm:table-cell">
                   <button
                     onClick={() => requestSort('status')}
                     className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
@@ -321,7 +323,7 @@ export default function InventoryList({
                     <SortIcon column="status" />
                   </button>
                 </th>
-                <th className="table-cell-header">
+                <th className="table-cell-header hidden xl:table-cell">
                   <button
                     onClick={() => requestSort('updatedAt')}
                     className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
@@ -366,7 +368,10 @@ export default function InventoryList({
                         )}
                       </button>
                     </td>
-                    <td className="table-cell cursor-pointer" onClick={() => toggleOne(item.id)}>
+                    <td 
+                      className="table-cell cursor-pointer group/name" 
+                      onClick={() => setBreakdownItem(item)}
+                    >
                       <div className="flex items-center gap-2">
                         <div className="flex flex-col min-w-0">
                           <div className="flex items-center gap-2">
@@ -381,13 +386,13 @@ export default function InventoryList({
                         </div>
                       </div>
                     </td>
-                    <td className="table-cell">
+                    <td className="table-cell cursor-pointer hidden lg:table-cell" onClick={() => setBreakdownItem(item)}>
                       <span className="badge badge-primary">
                         {item.category}
                       </span>
                     </td>
 
-                    <td className="table-cell text-right font-mono">
+                    <td className="table-cell text-right font-mono cursor-pointer" onClick={() => setBreakdownItem(item)}>
                       <div className="flex flex-col items-end">
                         <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
                           {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
@@ -399,12 +404,12 @@ export default function InventoryList({
                         )}
                       </div>
                     </td>
-                    <td className="table-cell">
+                    <td className="table-cell cursor-pointer hidden md:table-cell" onClick={() => setBreakdownItem(item)}>
                       <span className="text-[10px] font-black text-muted-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost uppercase tracking-widest">
                         {rackLocations || "N/A"}
                       </span>
                     </td>
-                    <td className="table-cell">
+                    <td className="table-cell cursor-pointer hidden sm:table-cell" onClick={() => setBreakdownItem(item)}>
                       {isUrgent ? (
                         <span className="badge badge-error">Urgent</span>
                       ) : isShortage ? (
@@ -417,7 +422,7 @@ export default function InventoryList({
                         <span className="badge badge-success">In Stock</span>
                       )}
                     </td>
-                    <td className="table-cell">
+                    <td className="table-cell hidden xl:table-cell">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="w-3 h-3 opacity-40" />
                         <span className="text-[10px] font-bold">
@@ -433,6 +438,7 @@ export default function InventoryList({
                         incomingQty={incomingQty}
                         minStockLevel={item.minStockLevel || 0}
                         userRole={userRole}
+                        onViewBreakdown={() => setBreakdownItem(item)}
                       />
                     </td>
                   </tr>
@@ -454,7 +460,18 @@ export default function InventoryList({
           </div>
         </div>
 
-      </div>
-    );
+      {breakdownItem && (
+        <ItemBreakdownModal
+          isOpen={!!breakdownItem}
+          onClose={() => setBreakdownItem(null)}
+          itemId={breakdownItem.id}
+          itemName={breakdownItem.name}
+          totalStock={breakdownItem.totalStock}
+          incomingQty={breakdownItem.incomingQty}
+          minStockLevel={breakdownItem.minStockLevel || 0}
+        />
+      )}
+    </div>
+  );
 }
 
