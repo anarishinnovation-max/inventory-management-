@@ -79,7 +79,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
             <div className="grid grid-cols-2 gap-6">
                {/* Name */}
               <div className="flex flex-col gap-2 col-span-2">
-                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                <label className="text-xs font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
                   <User className="w-3.5 h-3.5 text-primary" />
                   Full Name
                 </label>
@@ -95,7 +95,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
 
               {/* Username */}
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                <label className="text-xs font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
                   <Mail className="w-3.5 h-3.5 text-primary" />
                   Username
                 </label>
@@ -111,7 +111,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
 
               {/* Role */}
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                <label className="text-xs font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
                   <ShieldCheck className="w-3.5 h-3.5 text-primary" />
                   Role
                 </label>
@@ -128,7 +128,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
 
               {/* Password */}
               <div className="flex flex-col gap-2 col-span-2">
-                <label className="text-[10px] font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
+                <label className="text-xs font-black uppercase tracking-widest ml-1 flex items-center gap-2 text-muted-foreground">
                   <Lock className="w-3.5 h-3.5 text-primary" />
                   Initial Password
                 </label>
@@ -172,4 +172,5 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
     </div>
   );
 }
+
 

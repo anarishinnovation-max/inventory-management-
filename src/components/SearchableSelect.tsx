@@ -82,11 +82,11 @@ export function SearchableSelect({
           {icon && <div className="shrink-0">{icon}</div>}
           <div className="flex items-center gap-1.5 min-w-0">
             {label && (
-              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest shrink-0 opacity-60">
+              <span className="text-xs font-black text-muted-foreground uppercase tracking-widest shrink-0 opacity-60">
                 {label}
               </span>
             )}
-            <span className={cn("truncate font-black text-[10px] uppercase tracking-widest text-foreground")}>
+            <span className={cn("truncate font-black text-xs uppercase tracking-widest text-foreground")}>
               {getDisplayValue()}
             </span>
           </div>
@@ -133,12 +133,12 @@ export function SearchableSelect({
                     <div className="flex-1 min-w-0">
                       {renderItem ? renderItem(item) : (
                         typeof item === 'string' ? (
-                          <p className="text-[11px] font-black uppercase tracking-widest truncate">{item}</p>
+                          <p className="text-xs font-black uppercase tracking-widest truncate">{item}</p>
                         ) : (
                           <div className="flex flex-col">
-                            <p className="text-[11px] font-black uppercase tracking-widest truncate">{item.name || item.label}</p>
+                            <p className="text-xs font-black uppercase tracking-widest truncate">{item.name || item.label}</p>
                             {item.quantity !== undefined && (
-                              <p className="text-[9px] font-bold text-muted-foreground uppercase mt-0.5">
+                              <p className="text-xs font-bold text-muted-foreground uppercase mt-0.5">
                                 Stock: {item.quantity} {item.unit || ''}
                               </p>
                             )}
@@ -161,3 +161,4 @@ export function SearchableSelect({
     </div>
   );
 }
+

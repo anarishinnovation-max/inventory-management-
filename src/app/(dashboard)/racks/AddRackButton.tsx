@@ -65,7 +65,7 @@ export default function AddRackButton() {
               <div className="flex justify-between items-start mb-10">
                 <div className="space-y-2">
                   <h3 className="heading-md">Setup New Rack</h3>
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Initialize storage location</p>
+                  <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Initialize storage location</p>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
@@ -77,7 +77,7 @@ export default function AddRackButton() {
 
               <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">
+                  <label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">
                     Rack Identifier
                   </label>
                   <input
@@ -91,7 +91,7 @@ export default function AddRackButton() {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">
+                  <label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">
                     Zone / Area (Optional)
                   </label>
                   <div className="relative">
@@ -135,4 +135,5 @@ export default function AddRackButton() {
     </>
   );
 }
+
 

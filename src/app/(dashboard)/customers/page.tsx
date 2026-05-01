@@ -71,7 +71,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Home</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">CRM</span>
@@ -92,7 +92,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1 space-y-4">
-          <h2 className="heading-md uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 mb-2">
+          <h2 className="heading-md uppercase text-xs tracking-[0.2em] flex items-center gap-2 mb-2">
             <Users className="w-4 h-4 text-primary" />
             Active Clients
           </h2>
@@ -106,7 +106,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-bold text-foreground text-sm truncate">{customer.name}</p>
-                    <p className="text-[9px] font-black text-muted-foreground uppercase mt-1 tracking-widest truncate">{customer.email || customer.contact || "No contact"}</p>
+                    <p className="text-xs font-black text-muted-foreground uppercase mt-1 tracking-widest truncate">{customer.email || customer.contact || "No contact"}</p>
                   </div>
                   <div className="w-8 h-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center font-black text-xs text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
                     {customer.name[0]}
@@ -120,7 +120,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 </div>
               </Link>
             ))}
-            {customers.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No customers found.</p>}
+            {customers.length === 0 && <p className="text-center py-10 text-xs font-black text-muted-foreground uppercase tracking-widest">No customers found.</p>}
           </div>
         </div>
 
@@ -158,7 +158,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                           </div>
                           <div>
                             <p className="font-bold text-foreground text-sm leading-tight group-hover:text-primary transition-colors">{c.name}</p>
-                            <p className="text-[9px] font-black text-muted-foreground mt-0.5 uppercase tracking-widest">IDX-{c.id.slice(0, 4).toUpperCase()}</p>
+                            <p className="text-xs font-black text-muted-foreground mt-0.5 uppercase tracking-widest">IDX-{c.id.slice(0, 4).toUpperCase()}</p>
                           </div>
                         </div>
                       </td>
@@ -174,13 +174,13 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                       <td className="table-cell">
                         <div className="flex flex-col">
                           <span className="text-xs font-black text-foreground">{c.totalTransactions} Orders</span>
-                          <span className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter">Lifetime value</span>
+                          <span className="text-xs font-black text-muted-foreground uppercase tracking-tighter">Lifetime value</span>
                         </div>
                       </td>
                       <td className="table-cell text-right">
                         <Link
                           href={`/customers/${c.id}`}
-                          className="btn btn-neutral h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
+                          className="btn btn-neutral h-9 px-4 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
                         >
                           View History
                         </Link>
@@ -208,7 +208,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
               </div>
               <div>
                 <p className="text-3xl font-black text-foreground tracking-tighter">{customers.length}</p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Customers</p>
+                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Total Customers</p>
               </div>
             </div>
             <div className="card-premium flex items-center gap-5 group border-success/5">
@@ -219,7 +219,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                 <p className="text-3xl font-black text-foreground tracking-tighter">
                   {customers.filter((c: any) => c.totalTransactions > 0).length}
                 </p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Active Customers</p>
+                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Active Customers</p>
               </div>
             </div>
             <div className="card-premium bg-error/[0.02] border-error/5 flex items-center gap-5 group">
@@ -236,7 +236,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                     return last < thirtyDaysAgo;
                   }).length}
                 </p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-error/60 mt-1">Not visited recently</p>
+                <p className="text-xs font-black uppercase tracking-widest text-error/60 mt-1">Not visited recently</p>
               </div>
             </div>
           </div>
@@ -245,4 +245,5 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
     </div>
   );
 }
+
 

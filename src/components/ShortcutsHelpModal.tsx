@@ -46,7 +46,7 @@ export default function ShortcutsHelpModal() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {categories.map((cat) => (
               <div key={cat} className="space-y-6">
-                <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2 pb-4 border-b border-border-ghost">
+                <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2 pb-4 border-b border-border-ghost">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                   {cat}
                 </h3>
@@ -59,7 +59,7 @@ export default function ShortcutsHelpModal() {
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
                         {item.keys.map((k, idx) => (
-                          <kbd key={idx} className="px-2 py-1 rounded-lg bg-surface-low border border-border-ghost text-[9px] font-black shadow-sm text-muted-foreground uppercase min-w-[28px] text-center">
+                          <kbd key={idx} className="px-2 py-1 rounded-lg bg-surface-low border border-border-ghost text-xs font-black shadow-sm text-muted-foreground uppercase min-w-[28px] text-center">
                             {k === "meta" ? "CMD" : k.toUpperCase()}
                           </kbd>
                         ))}
@@ -74,13 +74,14 @@ export default function ShortcutsHelpModal() {
 
         {/* Footer */}
         <div className="px-10 py-6 bg-surface-low/30 border-t border-border-ghost flex items-center justify-between">
-           <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+           <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">
               <HelpCircle className="w-3.5 h-3.5" />
               Tip: Open the Command Palette with <kbd className="px-1 py-0.5 rounded bg-white border border-border-ghost ml-1">CTRL + K</kbd>
            </div>
-           <p className="text-[10px] font-black text-primary uppercase tracking-widest opacity-50">Keyboard Protocol V1.0</p>
+           <p className="text-xs font-black text-primary uppercase tracking-widest opacity-50">Keyboard Protocol V1.0</p>
         </div>
       </div>
     </div>
   );
 }
+

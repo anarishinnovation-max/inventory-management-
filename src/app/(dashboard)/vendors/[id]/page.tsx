@@ -98,19 +98,19 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
         <div className="space-y-3">
           <Link 
             href="/vendors"
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors w-fit"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors w-fit"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Partners
           </Link>
           <div className="flex items-center gap-4">
             <h1 className="heading-xl tracking-tighter">{vendor.name}</h1>
-            <span className="badge badge-primary !text-[10px] py-1 px-3">
+            <span className="badge badge-primary !text-xs py-1 px-3">
               Verified Partner
             </span>
           </div>
           <p className="text-muted-foreground font-medium flex items-center gap-2">
-            <span className="text-primary font-black uppercase text-[10px] tracking-widest">Partner ID:</span>
+            <span className="text-primary font-black uppercase text-xs tracking-widest">Partner ID:</span>
             <span className="font-mono text-xs">VND-{vendor.id.slice(0, 8).toUpperCase()}</span>
           </p>
         </div>
@@ -133,7 +133,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                 <DollarSign className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Procurement Value</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Procurement Value</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter">₹{totalPurchasedValue.toLocaleString('en-IN')}</h3>
             </div>
          </div>
@@ -142,7 +142,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                 <Truck className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Batches Supplied</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Batches Supplied</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter">{totalBatchesReceived}</h3>
             </div>
          </div>
@@ -151,7 +151,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                 <Box className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Active Orders</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Active Orders</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter">{pendingOrders}</h3>
             </div>
          </div>
@@ -160,7 +160,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                 <CreditCard className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Payment Terms</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Payment Terms</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter uppercase">{vendor.preferredPaymentMode || "Standard"}</h3>
             </div>
          </div>
@@ -170,7 +170,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
         {/* Contact & Profile */}
         <div className="lg:col-span-1 space-y-8">
            <div className="card-premium !p-8 bg-white/50 space-y-8">
-              <h3 className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-4">Partner Profile</h3>
+              <h3 className="text-xs font-black text-foreground uppercase tracking-[0.2em] mb-4">Partner Profile</h3>
               
               <div className="space-y-6">
                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-surface-low/30 border border-border-ghost">
@@ -178,7 +178,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                         <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Business Email</p>
+                        <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Business Email</p>
                         <p className="text-sm font-bold text-foreground mt-0.5">{vendor.email || "No email provided"}</p>
                     </div>
                  </div>
@@ -188,7 +188,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                         <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Primary Contact</p>
+                        <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Primary Contact</p>
                         <p className="text-sm font-bold text-foreground mt-0.5">{vendor.contact || "No contact provided"}</p>
                     </div>
                  </div>
@@ -198,7 +198,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                         <MapPin className="w-5 h-5" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Registered Office</p>
+                        <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Registered Office</p>
                         <p className="text-sm font-bold text-foreground mt-0.5 leading-relaxed">India (Registry Pending)</p>
                     </div>
                  </div>
@@ -206,14 +206,14 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
            </div>
 
            <div className="card-premium !p-8 bg-surface-low border-dashed border-2">
-              <h3 className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-4">Supply Reliability</h3>
+              <h3 className="text-xs font-black text-foreground uppercase tracking-[0.2em] mb-4">Supply Reliability</h3>
               <div className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-border-ghost">
                  <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
                     <Star className="w-5 h-5 text-success fill-current" />
                  </div>
                  <div>
                     <p className="text-xs font-black text-foreground">A-Grade Supplier</p>
-                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter mt-0.5">Consistent Lead Times</p>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-tighter mt-0.5">Consistent Lead Times</p>
                  </div>
               </div>
            </div>
@@ -230,17 +230,17 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                     </div>
                     <h3 className="heading-md">Purchase History</h3>
                  </div>
-                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{vendor.purchaseOrders.length} Orders Issued</p>
+                 <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">{vendor.purchaseOrders.length} Orders Issued</p>
               </div>
 
               <div className="overflow-x-auto">
                  <table className="w-full text-left border-collapse">
                     <thead className="bg-surface-low/50">
                        <tr>
-                          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">PO Number</th>
-                          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</th>
-                          <th className="px-8 py-4 text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Amount</th>
-                          <th className="px-8 py-4 text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Action</th>
+                          <th className="px-8 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">PO Number</th>
+                          <th className="px-8 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Status</th>
+                          <th className="px-8 py-4 text-right text-xs font-black uppercase tracking-widest text-muted-foreground">Amount</th>
+                          <th className="px-8 py-4 text-right text-xs font-black uppercase tracking-widest text-muted-foreground">Action</th>
                        </tr>
                     </thead>
                     <tbody className="divide-y divide-border-ghost">
@@ -248,11 +248,11 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                           <tr key={order.id} className="group hover:bg-surface-low/30 transition-all">
                              <td className="px-8 py-6">
                                 <p className="font-mono font-black text-foreground text-sm tracking-tighter">#PO-{order.id.slice(0, 8).toUpperCase()}</p>
-                                <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase">{new Date(order.createdAt).toLocaleDateString()}</p>
+                                <p className="text-xs font-bold text-muted-foreground mt-1 uppercase">{new Date(order.createdAt).toLocaleDateString()}</p>
                              </td>
                              <td className="px-8 py-6">
                                 <span className={cn(
-                                  "badge !text-[9px] !px-3 !py-1",
+                                  "badge !text-xs !px-3 !py-1",
                                   order.status === "PENDING" ? "badge-warning" : "badge-success"
                                 )}>
                                    {order.status}
@@ -288,10 +288,10 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                  <table className="w-full text-left border-collapse">
                     <thead className="bg-surface-low/50">
                        <tr>
-                          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Arrival Date</th>
-                          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Item Received</th>
-                          <th className="px-8 py-4 text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Qty</th>
-                          <th className="px-8 py-4 text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Remaining</th>
+                          <th className="px-8 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Arrival Date</th>
+                          <th className="px-8 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Item Received</th>
+                          <th className="px-8 py-4 text-right text-xs font-black uppercase tracking-widest text-muted-foreground">Qty</th>
+                          <th className="px-8 py-4 text-right text-xs font-black uppercase tracking-widest text-muted-foreground">Remaining</th>
                        </tr>
                     </thead>
                     <tbody className="divide-y divide-border-ghost">
@@ -302,7 +302,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                              </td>
                              <td className="px-8 py-6">
                                 <p className="text-xs font-bold text-foreground">{batch.inventory.item.name}</p>
-                                <p className="text-[9px] font-black text-muted-foreground uppercase mt-0.5 tracking-widest">{batch.inventory.item.sku}</p>
+                                <p className="text-xs font-black text-muted-foreground uppercase mt-0.5 tracking-widest">{batch.inventory.item.sku}</p>
                              </td>
                              <td className="px-8 py-6 text-right font-black text-foreground text-sm tabular-nums">
                                 {batch.quantity}

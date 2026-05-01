@@ -85,19 +85,19 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
         <div className="space-y-3">
           <Link 
             href="/customers"
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors w-fit"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors w-fit"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Registry
           </Link>
           <div className="flex items-center gap-4">
             <h1 className="heading-xl tracking-tighter">{customer.name}</h1>
-            <span className="badge badge-success !text-[10px] py-1 px-3">
+            <span className="badge badge-success !text-xs py-1 px-3">
               Active Client
             </span>
           </div>
           <p className="text-muted-foreground font-medium flex items-center gap-2">
-            <span className="text-primary font-black uppercase text-[10px] tracking-widest">Customer ID:</span>
+            <span className="text-primary font-black uppercase text-xs tracking-widest">Customer ID:</span>
             <span className="font-mono text-xs">IDX-{customer.id.slice(0, 8).toUpperCase()}</span>
           </p>
         </div>
@@ -120,7 +120,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                 <IndianRupee className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total Revenue</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Total Revenue</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter">₹{totalSpent.toLocaleString('en-IN')}</h3>
             </div>
          </div>
@@ -129,7 +129,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                 <ShoppingBag className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Orders Count</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Orders Count</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter">{customer.dispatchOrders.length}</h3>
             </div>
          </div>
@@ -138,7 +138,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                 <Package className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total Items</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Total Items</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter">{totalItemsBought} U</h3>
             </div>
          </div>
@@ -147,7 +147,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                 <Calendar className="w-4 h-4" />
             </div>
             <div className="mt-4">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Member Since</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Member Since</p>
                 <h3 className="text-2xl font-black text-foreground tabular-nums tracking-tighter">{new Date(customer.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</h3>
             </div>
          </div>
@@ -157,7 +157,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
         {/* Contact & Profile */}
         <div className="lg:col-span-1 space-y-8">
            <div className="card-premium !p-8 bg-white/50 space-y-8">
-              <h3 className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-4">Contact Profile</h3>
+              <h3 className="text-xs font-black text-foreground uppercase tracking-[0.2em] mb-4">Contact Profile</h3>
               
               <div className="space-y-6">
                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-surface-low/30 border border-border-ghost">
@@ -165,7 +165,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                         <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Email Address</p>
+                        <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Email Address</p>
                         <p className="text-sm font-bold text-foreground mt-0.5">{customer.email || "No email provided"}</p>
                     </div>
                  </div>
@@ -175,7 +175,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                         <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Phone Contact</p>
+                        <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Phone Contact</p>
                         <p className="text-sm font-bold text-foreground mt-0.5">{customer.contact || "No contact provided"}</p>
                     </div>
                  </div>
@@ -185,7 +185,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                         <MapPin className="w-5 h-5" />
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Postal Address</p>
+                        <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Postal Address</p>
                         <p className="text-sm font-bold text-foreground mt-0.5 leading-relaxed">{customer.address || "No address on file"}</p>
                     </div>
                  </div>
@@ -193,14 +193,14 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
            </div>
 
            <div className="card-premium !p-8 bg-surface-low border-dashed border-2">
-              <h3 className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-4">Account Health</h3>
+              <h3 className="text-xs font-black text-foreground uppercase tracking-[0.2em] mb-4">Account Health</h3>
               <div className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-border-ghost">
                  <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
                     <div className="w-3 h-3 rounded-full bg-success animate-pulse" />
                  </div>
                  <div>
                     <p className="text-xs font-black text-foreground">Verified & Active</p>
-                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter mt-0.5">Regular Procurement</p>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-tighter mt-0.5">Regular Procurement</p>
                  </div>
               </div>
            </div>
@@ -217,17 +217,17 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                     </div>
                     <h3 className="heading-md">Sale History</h3>
                  </div>
-                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{customer.dispatchOrders.length} Sales Issued</p>
+                 <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">{customer.dispatchOrders.length} Sales Issued</p>
               </div>
 
               <div className="overflow-x-auto">
                  <table className="w-full text-left border-collapse">
                     <thead className="bg-surface-low/50">
                        <tr>
-                          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Order ID</th>
-                          <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Items</th>
-                          <th className="px-8 py-4 text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Value</th>
-                          <th className="px-8 py-4 text-right text-[10px] font-black uppercase tracking-widest text-muted-foreground">Action</th>
+                          <th className="px-8 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Order ID</th>
+                          <th className="px-8 py-4 text-xs font-black uppercase tracking-widest text-muted-foreground">Items</th>
+                          <th className="px-8 py-4 text-right text-xs font-black uppercase tracking-widest text-muted-foreground">Total Value</th>
+                          <th className="px-8 py-4 text-right text-xs font-black uppercase tracking-widest text-muted-foreground">Action</th>
                        </tr>
                     </thead>
                     <tbody className="divide-y divide-border-ghost">
@@ -235,17 +235,17 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                           <tr key={order.id} className="group hover:bg-surface-low/30 transition-all">
                              <td className="px-8 py-6">
                                 <p className="font-mono font-black text-foreground text-sm tracking-tighter">#DO-{order.id.slice(0, 8).toUpperCase()}</p>
-                                <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase">{new Date(order.createdAt).toLocaleDateString()}</p>
+                                <p className="text-xs font-bold text-muted-foreground mt-1 uppercase">{new Date(order.createdAt).toLocaleDateString()}</p>
                              </td>
                              <td className="px-8 py-6">
                                 <div className="flex -space-x-2 overflow-hidden">
                                    {order.items.slice(0, 3).map((item: any, i: number) => (
-                                      <div key={i} className="w-8 h-8 rounded-full bg-white border-2 border-surface-low flex items-center justify-center text-[8px] font-black text-primary shadow-sm" title={item.item.name}>
+                                      <div key={i} className="w-8 h-8 rounded-full bg-white border-2 border-surface-low flex items-center justify-center text-xs font-black text-primary shadow-sm" title={item.item.name}>
                                          {item.item.name[0]}
                                       </div>
                                    ))}
                                    {order.items.length > 3 && (
-                                      <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-surface-low flex items-center justify-center text-[8px] font-black text-primary shadow-sm">
+                                      <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-surface-low flex items-center justify-center text-xs font-black text-primary shadow-sm">
                                          +{order.items.length - 3}
                                       </div>
                                    )}
@@ -296,11 +296,11 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                        </div>
                        <div className="flex-1 pb-6 border-b border-border-ghost last:border-0 last:pb-0">
                           <div className="flex items-center justify-between mb-2">
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+                             <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">
                                 {new Date(tx.createdAt).toLocaleDateString()} at {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                              </p>
                              <span className={cn(
-                               "text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest",
+                               "text-xs font-black px-2 py-0.5 rounded-md uppercase tracking-widest",
                                tx.type === "dispatch" ? "bg-error/10 text-error" : "bg-primary/10 text-primary"
                              )}>
                                 {tx.type}
@@ -310,7 +310,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                              {tx.type === "dispatch" ? "Deducted" : "Adjusted"} {tx.quantity} units of {tx.item.name}
                           </p>
                           {tx.rack && (
-                             <p className="text-[10px] font-bold text-muted-foreground mt-1 flex items-center gap-1">
+                             <p className="text-xs font-bold text-muted-foreground mt-1 flex items-center gap-1">
                                 <MapPin className="w-3 h-3 opacity-30" /> Location: Rack {tx.rack.rackNumber}
                              </p>
                           )}

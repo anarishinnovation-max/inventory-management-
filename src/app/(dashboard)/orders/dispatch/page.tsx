@@ -75,7 +75,7 @@ export default async function DispatchPage({
     <div className="space-y-12 pb-12">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">
             <span>Selling</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Outgoing items</span>
@@ -99,7 +99,7 @@ export default async function DispatchPage({
                 <Clock className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Waiting to Send</p>
+              <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Waiting to Send</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{pendingCount}</h2>
             </div>
         </div>
@@ -109,7 +109,7 @@ export default async function DispatchPage({
                 <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Items Sent</p>
+              <p className="text-xs font-black text-success uppercase tracking-[0.15em]">Items Sent</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{dispatchedCount}</h2>
             </div>
         </div>
@@ -119,14 +119,14 @@ export default async function DispatchPage({
             <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
                 <Plus className="w-5 h-5" />
             </div>
-            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em]">Growth Track</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.15em]">Growth Track</p>
         </div>
 
         <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/5 bg-white shadow-ambient opacity-40 border-dashed">
             <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
                 <Plus className="w-5 h-5" />
             </div>
-            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em]">Revenue Flow</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.15em]">Revenue Flow</p>
         </div>
       </div>
 
@@ -156,15 +156,15 @@ export default async function DispatchPage({
                   <tr key={order.id} className="table-row">
                     <td className="table-cell">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 shrink-0 rounded-xl bg-surface-low flex items-center justify-center border border-border-ghost text-[10px] font-black text-muted-foreground group-hover:border-primary/20 transition-all">SO</div>
+                            <div className="w-12 h-12 shrink-0 rounded-xl bg-surface-low flex items-center justify-center border border-border-ghost text-xs font-black text-muted-foreground group-hover:border-primary/20 transition-all">SO</div>
                             <div className="flex flex-col">
                                 <span className="font-mono font-black text-foreground text-sm tracking-tight">#{order.id.split('-')[0].toUpperCase()}</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString('en-IN')}</span>
+                                    <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString('en-IN')}</span>
                                     {order.expectedDelivery && (
                                         <>
                                             <div className="w-1 h-1 rounded-full bg-border-ghost" />
-                                            <span className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1">
+                                            <span className="text-xs font-black text-primary uppercase tracking-widest flex items-center gap-1">
                                                 <Clock className="w-2.5 h-2.5" />
                                                 ETA: {new Date(order.expectedDelivery).toLocaleDateString('en-IN')}
                                             </span>
@@ -177,11 +177,11 @@ export default async function DispatchPage({
                     <td className="table-cell">
                        <div className="flex flex-col">
                           <span className="font-black text-foreground text-sm group-hover:text-primary transition-colors">{order.customer.name}</span>
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight mt-0.5">{order.customer.email || "Guest account"}</span>
+                          <span className="text-xs font-bold text-muted-foreground uppercase tracking-tight mt-0.5">{order.customer.email || "Guest account"}</span>
                        </div>
                     </td>
                     <td className="table-cell">
-                       <span className="badge badge-neutral !text-[9px] !px-2.5 !py-1">{order.items.length} Units</span>
+                       <span className="badge badge-neutral !text-xs !px-2.5 !py-1">{order.items.length} Units</span>
                     </td>
                     <td className="table-cell">
                        <span className="text-sm font-black text-foreground tabular-nums">
@@ -189,11 +189,11 @@ export default async function DispatchPage({
                        </span>
                     </td>
                     <td className="table-cell">
-                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{order.paymentMode || "Cash"}</span>
+                       <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">{order.paymentMode || "Cash"}</span>
                     </td>
                     <td className="table-cell">
                        <span className={cn(
-                         "badge !text-[9px] !px-3 !py-1",
+                         "badge !text-xs !px-3 !py-1",
                          order.status === "pending" ? "badge-warning" : "badge-success"
                        )}>
                           {order.status}
@@ -204,12 +204,12 @@ export default async function DispatchPage({
                           <Link 
                             href={`/orders/dispatch/${order.id}/bill`} 
                             target="_blank"
-                            className="btn btn-neutral h-10 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-success/5 hover:text-success transition-all"
+                            className="btn btn-neutral h-10 px-4 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-success/5 hover:text-success transition-all"
                           >
                             <Download className="w-4 h-4" />
                             Bill
                           </Link>
-                          <Link href={`/orders/dispatch/${order.id}`} className="btn btn-primary h-10 px-5 text-[9px] font-black uppercase tracking-widest rounded-xl">
+                          <Link href={`/orders/dispatch/${order.id}`} className="btn btn-primary h-10 px-5 text-xs font-black uppercase tracking-widest rounded-xl">
                              <Eye className="w-4 h-4" />
                              View
                           </Link>
@@ -234,4 +234,5 @@ export default async function DispatchPage({
     </div>
   );
 }
+
 

@@ -237,9 +237,9 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Total Items</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Total Items</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.totalItems}</h2>
-            <p className="text-[10px] text-muted-foreground mt-2 font-medium">+3 new this week</p>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">+3 new this week</p>
           </div>
         </div>
 
@@ -253,9 +253,9 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Value</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Value</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">₹{Number(data.kpis.stockValue).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
-            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Money in inventory</p>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">Money in inventory</p>
           </div>
         </div>
 
@@ -269,16 +269,16 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Alerts</p>             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.urgentCount + data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Alerts</p>             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.urgentCount + data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
             <div className="flex flex-wrap items-center gap-2 mt-2">
-               <Link href="/inventory?status=outofstock" className="text-[10px] text-error font-black tracking-tight hover:underline bg-error/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-error/10">
+               <Link href="/inventory?status=outofstock" className="text-xs text-error font-black tracking-tight hover:underline bg-error/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-error/10">
                  {data.kpis.urgentCount + data.kpis.outOfStockCount} Out of Stock
                  {data.kpis.urgentCount > 0 && (
                    <span className="ml-1.5 opacity-60 font-medium">({data.kpis.urgentCount} Urgent)</span>
                  )}
                </Link>
                <span className="w-1 h-1 rounded-full bg-border-ghost"></span>
-               <Link href="/inventory?status=low" className="text-[10px] text-warning font-black tracking-tight hover:underline bg-warning/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-warning/10">
+               <Link href="/inventory?status=low" className="text-xs text-warning font-black tracking-tight hover:underline bg-warning/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-warning/10">
                  {data.kpis.lowStockCount} Low Stock
                </Link>
             </div>
@@ -296,9 +296,9 @@ export default async function DashboardPage() {
             </div>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Monthly Sales</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Monthly Sales</p>
             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">₹{Number(data.kpis.monthlyRevenue).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h2>
-            <p className="text-[10px] text-muted-foreground mt-2 font-medium">Revenue this month</p>
+            <p className="text-xs text-muted-foreground mt-2 font-medium">Revenue this month</p>
           </div>
         </div>
       </div>
@@ -310,17 +310,17 @@ export default async function DashboardPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h3 className="heading-md">FIFO Inventory Priority</h3>
-              <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Clear oldest stock first</p>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Clear oldest stock first</p>
             </div>
             <div className="hidden sm:flex gap-4">
-              <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-warning">
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-warning">
                 <span className="w-2 h-2 rounded-full bg-warning shadow-[0_0_8px_oklch(0.7_0.2_80)]"></span> High Age
               </div>
             </div>
           </div>
 
           <div className="flex-1 mt-4">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-6">Priority Fulfillment Queue</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-6">Priority Fulfillment Queue</p>
             <div className="space-y-4">
               {data.fifoQueue.map((batch: any, idx: number) => (
                 <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-surface-low/30 border border-border-ghost group hover:border-primary/20 transition-all shadow-sm">
@@ -330,12 +330,12 @@ export default async function DashboardPage() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs font-bold text-foreground truncate max-w-[150px] sm:max-w-[200px]">{batch.inventory.item.name}</p>
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{batch.inventory.item.sku}</p>
+                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mt-0.5">{batch.inventory.item.sku}</p>
                     </div>
                   </div>
                   <div className="sm:text-right border-t sm:border-t-0 border-border-ghost/50 pt-3 sm:pt-0">
-                    <p className="text-sm font-black text-foreground">{batch.remainingQty} <span className="text-[10px] font-medium text-muted-foreground uppercase">Units</span></p>
-                    <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-wider">
+                    <p className="text-sm font-black text-foreground">{batch.remainingQty} <span className="text-xs font-medium text-muted-foreground uppercase">Units</span></p>
+                    <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-wider">
                       Stock Date: {new Date(batch.purchaseDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                     </p>
                   </div>
@@ -344,7 +344,7 @@ export default async function DashboardPage() {
               {data.fifoQueue.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
                   <Activity className="w-8 h-8 opacity-10 mb-4" />
-                  <p className="text-[10px] uppercase font-black tracking-widest">No aging stock found</p>
+                  <p className="text-xs uppercase font-black tracking-widest">No aging stock found</p>
                 </div>
               )}
             </div>
@@ -370,9 +370,9 @@ export default async function DashboardPage() {
                     </div>
                     <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
+                          <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
                           {item.reserved_qty > 0 && (
-                            <span className="px-1.5 py-0.5 bg-blue-500/10 text-blue-600 rounded text-[8px] font-black tracking-tighter animate-pulse">
+                            <span className="px-1.5 py-0.5 bg-blue-500/10 text-blue-600 rounded text-xs font-black tracking-tighter animate-pulse">
                               +{item.reserved_qty} BOOKED
                             </span>
                           )}
@@ -383,11 +383,11 @@ export default async function DashboardPage() {
                 <div className="flex items-center justify-between sm:justify-end gap-6 border-t sm:border-t-0 border-error/5 pt-3 sm:pt-0">
                   <div className="sm:text-right">
                     <p className="text-xs font-black text-error">{item.current_qty} Units</p>
-                    <p className="text-[9px] text-muted-foreground font-bold italic">Min: {item.minStockLevel}</p>
+                    <p className="text-xs text-muted-foreground font-bold italic">Min: {item.minStockLevel}</p>
                   </div>
                   <Link 
                     href={`/orders/purchase/new?itemId=${item.id}&quantity=${Math.max(1, item.minStockLevel - item.current_qty)}`}
-                    className="flex items-center gap-2 px-4 py-2 bg-error/5 text-error hover:bg-error hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm hover:shadow-md border border-error/10 "
+                    className="flex items-center gap-2 px-4 py-2 bg-error/5 text-error hover:bg-error hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-sm hover:shadow-md border border-error/10 "
                   >
                     <ShoppingCart className="w-3.5 h-3.5" />
                     Buy
@@ -397,7 +397,7 @@ export default async function DashboardPage() {
             )) : (
               <div className="flex flex-col items-center justify-center h-48 text-muted-foreground font-medium text-center">
                 <Activity className="w-8 h-8 opacity-10 mb-2" />
-                <p className="text-[10px] uppercase font-black tracking-widest">Inventory is Good</p>
+                <p className="text-xs uppercase font-black tracking-widest">Inventory is Good</p>
               </div>
             )}
           </div>
@@ -422,11 +422,11 @@ export default async function DashboardPage() {
               
               {/* Simple Toggle - could be expanded to real tabs */}
               <nav className="flex items-center gap-4 border-l border-border-ghost pl-6">
-                <button className="text-[10px] font-black uppercase tracking-widest text-primary border-b-2 border-primary pb-1">Stock</button>
-                <Link href="/activity" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors pb-1 border-b-2 border-transparent">Audit</Link>
+                <button className="text-xs font-black uppercase tracking-widest text-primary border-b-2 border-primary pb-1">Stock</button>
+                <Link href="/activity" className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors pb-1 border-b-2 border-transparent">Audit</Link>
               </nav>
             </div>
-            <Link href="/activity" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity" suppressHydrationWarning>View Full Audit Log</Link>
+            <Link href="/activity" className="text-primary text-xs font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity" suppressHydrationWarning>View Full Audit Log</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -454,14 +454,14 @@ export default async function DashboardPage() {
                     <td className="table-cell">
                       <div className="flex flex-col">
                         <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">{tx.item_name}</span>
-                        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">{tx.sku}</span>
+                        <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mt-0.5">{tx.sku}</span>
                       </div>
                     </td>
                     <td className="table-cell">
                       <span className="text-sm font-black text-foreground">{tx.type.includes('IN') || tx.type === 'PURCHASE' ? '+' : '-'}{tx.quantity}</span>
                     </td>
                     <td className="table-cell text-right">
-                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                       <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                           <TimeDisplay date={tx.createdAt} />
                        </span>
                     </td>
@@ -493,7 +493,7 @@ export default async function DashboardPage() {
                   <div className="flex justify-between items-end mb-2">
                     <div>
                       <p className="text-xs font-bold text-foreground">{item.name}</p>
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Selling Fast</p>
+                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">Selling Fast</p>
                     </div>
                     <span className="text-xs font-black text-primary">{item.units}U</span>
                   </div>
@@ -516,11 +516,11 @@ export default async function DashboardPage() {
                 <TrendingUp className="w-4 h-4 text-primary" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Tips</p>
-                <p className="text-[11px] font-bold text-muted-foreground mt-1.5 leading-relaxed">
+                <p className="text-xs font-black text-primary uppercase tracking-[0.2em]">Tips</p>
+                <p className="text-xs font-bold text-muted-foreground mt-1.5 leading-relaxed">
                   You might run out of these <span className="text-foreground">very soon</span> (top 2 items).
                 </p>
-                <button className="text-[10px] font-black text-primary uppercase tracking-widest mt-3 flex items-center gap-1 hover:gap-2 transition-all" suppressHydrationWarning>Re-order <ChevronRight className="w-3 h-3" /></button>
+                <button className="text-xs font-black text-primary uppercase tracking-widest mt-3 flex items-center gap-1 hover:gap-2 transition-all" suppressHydrationWarning>Re-order <ChevronRight className="w-3 h-3" /></button>
               </div>
             </div>
           </div>
@@ -532,4 +532,5 @@ export default async function DashboardPage() {
     </div>
   );
 }
+
 

@@ -64,8 +64,6 @@ export default function SupplyInwardsList({
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [showReview, setShowReview] = useState(false);
-  const [reviewValues, setReviewValues] = useState<Record<string, number>>({});
 
   const toggleAll = () => {
     if (selectedIds.size >= items.length && items.length > 0) {
@@ -86,84 +84,10 @@ export default function SupplyInwardsList({
     }
     setSelectedIds(next);
   };
-
-  const handleBulkReceive = async () => {
+  const handleBulkReceiveRedirect = () => {
     if (selectedIds.size === 0) return;
-
-    if (!(await confirm("Bulk Receipt", `Are you sure you want to receive ${selectedIds.size} selected items? This will update your inventory immediately.`))) {
-      return;
-    }
-
-    setIsProcessing(true);
-    try {
-      const selections = Array.from(selectedIds).map(id => {
-        const [poId, itemId] = id.split('|');
-        const item = items.find(i => i.poId === poId && i.itemId === itemId);
-        return {
-          poId,
-          itemId,
-          receivedQty: item ? (item.quantityOrdered - item.quantityReceived) : 0
-        };
-      }).filter(s => s.receivedQty > 0);
-
-      const res = await fetch("/api/purchase-orders/bulk-receive", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ selections }),
-      });
-
-      if (res.ok) {
-        showToast(`Successfully received ${selectedIds.size} items`, "success");
-        setSelectedIds(new Set());
-        startTransition(() => {
-          router.refresh();
-        });
-      } else {
-        const data = await res.json();
-        showToast(data.error || "Failed to receive items.", "error");
-      }
-    } catch (err) {
-      showToast("Network error.", "error");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handlePartialReceive = async () => {
-    if (Object.keys(reviewValues).length === 0) return;
-
-    setIsProcessing(true);
-    try {
-      const selections = Object.entries(reviewValues).map(([id, qty]) => {
-        const [poId, itemId] = id.split('|');
-        return {
-          poId,
-          itemId,
-          receivedQty: qty
-        };
-      }).filter(s => s.receivedQty > 0);
-
-      const res = await fetch("/api/purchase-orders/bulk-receive", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ selections }),
-      });
-
-      if (res.ok) {
-        showToast(`Receipt recorded successfully`, "success");
-        setShowReview(false);
-        startTransition(() => {
-          router.refresh();
-        });
-      } else {
-        const data = await res.json();
-        showToast(data.error || "Failed to receive items.", "error");
-      }
-    } catch (err) {
-      showToast("Network error.", "error");
-    } finally {
-      setIsProcessing(false);
-    }
+    const ids = Array.from(selectedIds).join(',');
+    router.push(`/orders/supply-inwards/receive?ids=${ids}`);
   };
 
   return (
@@ -175,48 +99,6 @@ export default function SupplyInwardsList({
             placeholder="Search Item, Vendor or PO..."
           />
         </div>
-
-        {selectedIds.size > 0 && (
-          <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1 pr-4 pl-5">
-              <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <button 
-                  onClick={() => {
-                    const initial: Record<string, number> = {};
-                    selectedIds.forEach(id => {
-                      const [poId, itemId] = id.split('|');
-                      const item = items.find(i => i.poId === poId && i.itemId === itemId);
-                      initial[id] = item ? (item.quantityOrdered - item.quantityReceived) : 0;
-                    });
-                    setReviewValues(initial);
-                    setShowReview(true);
-                  }}
-                  disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-primary/5 text-primary transition-all group"
-                  title="Review & Partial"
-                >
-                  <SlidersHorizontal className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={handleBulkReceive}
-                  disabled={isProcessing}
-                  className="p-2.5 rounded-xl hover:bg-success/5 text-success transition-all group"
-                  title="Confirm Full Receipt"
-                >
-                  {isProcessing ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <ArrowDownToLine className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="ml-auto">
           <SupplyInwardsFilters
@@ -235,10 +117,20 @@ export default function SupplyInwardsList({
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
                <Clock className="w-5 h-5" />
             </div>
-            Pending Item Arrivals
+             Pending Item Arrivals
+             {selectedIds.size > 0 && (
+               <button 
+                 onClick={handleBulkReceiveRedirect}
+                 className="badge badge-primary animate-in fade-in zoom-in duration-300 ml-3 flex items-center gap-2 hover:shadow-glow-primary transition-all group py-1.5"
+               >
+                 <span>{selectedIds.size} Items Selected</span>
+                 <div className="w-px h-3 bg-primary/20"></div>
+                 <CheckCircle2 className="w-3.5 h-3.5 group-hover:translate-y-0 transition-transform" />
+               </button>
+             )}
           </h3>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mr-4 opacity-40">
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mr-4 opacity-40">
               Page {currentPage} of {totalPages || 1}
             </span>
             <button
@@ -313,7 +205,7 @@ export default function SupplyInwardsList({
                           </div>
                           <div className="flex flex-col min-w-0">
                             <span className="font-black text-foreground text-sm truncate">{item.item.name}</span>
-                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1 font-mono">SKU: {item.item.sku}</span>
+                            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mt-1 font-mono">SKU: {item.item.sku}</span>
                           </div>
                         </div>
                       </td>
@@ -321,36 +213,31 @@ export default function SupplyInwardsList({
                         <div className="flex flex-col gap-2">
                           <span className="text-xs font-black text-foreground truncate">{item.vendor.name}</span>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="badge badge-primary !text-[9px] !px-2 !py-0.5">PO #{item.poId.split('-')[0]}</span>
+                            <span className="badge badge-primary !text-xs !px-2 !py-0.5">PO #{item.poId.split('-')[0]}</span>
                           </div>
                         </div>
                       </td>
                       <td className="table-cell">
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-muted-foreground opacity-30" />
-                          <span className="text-[11px] font-black text-foreground">{formatDate(item.orderDate)}</span>
+                          <span className="text-xs font-black text-foreground">{formatDate(item.orderDate)}</span>
                         </div>
                       </td>
                       <td className="table-cell text-right">
                         <div className="flex flex-col items-end">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">PENDING:</span>
+                            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">PENDING:</span>
                             <span className="text-sm font-black text-warning tabular-nums">{remaining}</span>
                           </div>
-                          <div className="text-[9px] font-bold text-muted-foreground uppercase mt-1 tracking-widest tabular-nums">
+                          <div className="text-xs font-bold text-muted-foreground uppercase mt-1 tracking-widest tabular-nums">
                             Ordered: {item.quantityOrdered}
                           </div>
                         </div>
                       </td>
                       <td className="table-cell text-right">
                         <button 
-                          onClick={() => {
-                            const initial: Record<string, number> = {};
-                            initial[compositeId] = remaining;
-                            setReviewValues(initial);
-                            setShowReview(true);
-                          }}
-                          className="btn btn-primary h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl"
+                          onClick={() => router.push(`/orders/supply-inwards/receive?ids=${compositeId}`)}
+                          className="btn btn-primary h-9 px-4 text-xs font-black uppercase tracking-widest rounded-xl"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           Receive
@@ -373,108 +260,8 @@ export default function SupplyInwardsList({
           </div>
         </div>
       </div>
-
-      {/* Review Modal */}
-      {showReview && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-foreground/30 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="bg-white w-full max-w-4xl max-h-[85vh] rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
-            {/* Modal Header */}
-            <div className="p-10 border-b border-border-ghost flex items-center justify-between bg-surface-low/30">
-              <div className="flex items-center gap-6">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/10">
-                  <SlidersHorizontal className="w-7 h-7" />
-                </div>
-                <div>
-                  <h2 className="heading-lg">Asset Receipt Review</h2>
-                  <div className="flex items-center gap-4 mt-2">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Adjusting {Object.keys(reviewValues).length} line items</p>
-
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowReview(false)}
-                className="btn btn-ghost h-12 w-12 !p-0 rounded-2xl"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="flex-1 overflow-y-auto p-10 space-y-6 no-scrollbar bg-surface-low/5">
-              {Object.keys(reviewValues).map(id => {
-                const [poId, itemId] = id.split('|');
-                const item = items.find(i => i.poId === poId && i.itemId === itemId);
-                if (!item) return null;
-                const pending = item.quantityOrdered - item.quantityReceived;
-
-                return (
-                  <div key={id} className="p-6 bg-white rounded-[2rem] border border-border-ghost flex flex-col md:flex-row items-center justify-between gap-8 hover:border-primary/20 transition-all group shadow-sm">
-                    <div className="flex items-center gap-5 flex-1 min-w-0">
-                      <div className="w-14 h-14 rounded-2xl bg-surface-low border border-border-ghost flex items-center justify-center font-black text-primary shrink-0 group-hover:border-primary/20 transition-all">
-                        {item.item.sku[0]}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-black text-foreground text-base truncate">{item.item.name}</p>
-                        <div className="flex flex-wrap items-center gap-3 mt-2">
-                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest font-mono">SKU: {item.item.sku}</span>
-                          <span className="badge badge-primary !text-[9px]">PO #{poId.split('-')[0]}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-10 shrink-0">
-                      <div className="text-right">
-                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Awaiting Receipt</p>
-                        <p className="text-lg font-black text-warning tabular-nums">{pending} <span className="text-[11px] opacity-40 uppercase ml-1">{item.item.unit}</span></p>
-                      </div>
-                      <div className="w-px h-12 bg-border-ghost"></div>
-                      <div className="space-y-2">
-                        <p className="text-[10px] font-black text-primary uppercase tracking-widest ml-1">Actual Delivered</p>
-                        <input
-                          type="number"
-                          value={reviewValues[id] || 0}
-                          onChange={(e) => setReviewValues(prev => ({ ...prev, [id]: parseFloat(e.target.value) || 0 }))}
-                          max={pending}
-                          min={0}
-                          className="input-field w-36 h-12 text-center text-lg tabular-nums"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-10 border-t border-border-ghost bg-surface-low/30 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4 text-muted-foreground max-w-md">
-                <AlertCircle className="w-5 h-5 shrink-0 opacity-40" />
-                <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed italic opacity-70">
-                  Quantities not recorded here will remain as outstanding arrivals in the purchase records.
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setShowReview(false)}
-                  className="btn btn-neutral h-14 px-8 rounded-[1.5rem]"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handlePartialReceive}
-                  disabled={isProcessing}
-                  className="btn btn-primary h-14 px-10 rounded-[1.5rem]"
-                >
-                  {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
-                  Finalize Receipt
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+
 

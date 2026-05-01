@@ -71,7 +71,7 @@ export function CustomerModal() {
                 
                 <div className="space-y-4">
                     <div className="group">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Customer Name</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Customer Name</label>
                         <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input 
@@ -85,7 +85,7 @@ export function CustomerModal() {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="group">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Email</label>
+                            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Email</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                 <input 
@@ -97,7 +97,7 @@ export function CustomerModal() {
                             </div>
                         </div>
                         <div className="group">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Phone Number</label>
+                            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Phone Number</label>
                             <div className="relative">
                                 <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                 <input 
@@ -110,7 +110,7 @@ export function CustomerModal() {
                     </div>
 
                     <div className="group">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Address</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Address</label>
                         <div className="relative">
                             <MapPin className="absolute left-4 top-5 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <textarea 
@@ -146,4 +146,5 @@ export function CustomerModal() {
     </>
   );
 }
+
 

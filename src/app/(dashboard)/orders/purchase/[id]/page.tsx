@@ -100,15 +100,15 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
         <div className="space-y-3">
           <Link 
             href="/orders/purchase"
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors w-fit"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors w-fit"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Procurement
           </Link>
           <div className="flex items-center gap-4">
-            <h1 className="heading-xl tracking-tighter">PO #{order.poNumber}</h1>
+            <h1 className="heading-xl tracking-tighter">PO #{order.id.split('-')[0].toUpperCase()}</h1>
             <span className={cn(
-              "badge text-[10px] py-1 px-3",
+              "badge text-xs py-1 px-3",
               isFullyReceived ? "badge-success" : "badge-warning"
             )}>
               {isFullyReceived ? "Inbound Complete" : "Partial Receipt"}
@@ -144,10 +144,10 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
             <div className="flex items-center justify-between mb-10">
                <div className="space-y-1">
                  <h2 className="heading-md">Inbound Line Items</h2>
-                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Verified stock arrivals</p>
+                 <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Verified stock arrivals</p>
                </div>
                <div className="text-right">
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">Total Fulfillment</p>
+                  <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">Total Fulfillment</p>
                   <p className="text-xl font-black text-primary tabular-nums">{progressPercent}%</p>
                </div>
             </div>
@@ -163,10 +163,10 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-border-ghost">
-                    <th className="py-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Item Specification</th>
-                    <th className="py-4 text-right text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Ordered</th>
-                    <th className="py-4 text-right text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Received</th>
-                    <th className="py-4 text-right text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Status</th>
+                    <th className="py-4 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Item Specification</th>
+                    <th className="py-4 text-right text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Ordered</th>
+                    <th className="py-4 text-right text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Received</th>
+                    <th className="py-4 text-right text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border-ghost/50">
@@ -183,19 +183,19 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                               </div>
                               <div>
                                 <p className="font-black text-foreground text-sm tracking-tight">{item.item.name}</p>
-                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{item.item.sku}</p>
+                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{item.item.sku}</p>
                               </div>
                            </div>
                         </td>
                         <td className="py-6 text-right font-black text-foreground tabular-nums">
-                          {item.quantityOrdered} <span className="text-[10px] text-muted-foreground font-bold ml-1">{item.item.unit}</span>
+                          {item.quantityOrdered} <span className="text-xs text-muted-foreground font-bold ml-1">{item.item.unit}</span>
                         </td>
                         <td className="py-6 text-right font-black text-primary tabular-nums">
                           {item.quantityReceived}
                         </td>
                         <td className="py-6 text-right">
                           <span className={cn(
-                            "badge !py-0.5 !px-2 !text-[9px]",
+                            "badge !py-0.5 !px-2 !text-xs",
                             isItemFulfilled ? "badge-success" : "badge-warning"
                           )}>
                             {isItemFulfilled ? "Completed" : `${itemPercent}%`}
@@ -220,12 +220,12 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
             <div className="space-y-8">
               <div className="p-6 rounded-[2.5rem] bg-surface-low/30 border border-border-ghost space-y-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">Procurement Vendor</p>
+                  <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Procurement Vendor</p>
                   <ChevronRight className="w-3 h-3 text-muted-foreground opacity-30" />
                 </div>
                 <div>
                   <p className="text-base font-black text-foreground tracking-tight">{order.vendor?.name}</p>
-                  <p className="text-[10px] font-bold text-muted-foreground mt-1">{order.vendor?.email || "No contact info"}</p>
+                  <p className="text-xs font-bold text-muted-foreground mt-1">{order.vendor?.email || "No contact info"}</p>
                 </div>
               </div>
 
@@ -235,7 +235,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                     <Clock className="w-6 h-6 text-muted-foreground opacity-60" />
                   </div>
                   <div>
-                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1.5">Expected Delivery</p>
+                    <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-1.5">Expected Delivery</p>
                     <p className="text-sm font-black text-foreground tracking-tight">{formatDateTime(order.expectedDelivery)}</p>
                   </div>
                 </div>
@@ -244,7 +244,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                     <CreditCard className="w-6 h-6 text-muted-foreground opacity-60" />
                   </div>
                   <div>
-                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1.5">Payment Method</p>
+                    <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-1.5">Payment Method</p>
                     <p className="text-sm font-black text-foreground tracking-tight">{order.paymentMode || "Standard Net"}</p>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
                 <div className="w-10 h-10 rounded-xl bg-white border border-border-ghost flex items-center justify-center text-primary shadow-sm">
                   <AlertCircle className="w-5 h-5" />
                 </div>
-                <p className="text-[10px] font-black text-foreground uppercase tracking-[0.2em]">Fulfillment Note</p>
+                <p className="text-xs font-black text-foreground uppercase tracking-[0.2em]">Fulfillment Note</p>
              </div>
              <p className="text-[13px] font-medium leading-relaxed text-muted-foreground italic">
                {isFullyReceived 

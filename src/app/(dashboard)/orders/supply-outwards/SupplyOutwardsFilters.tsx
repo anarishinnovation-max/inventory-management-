@@ -103,7 +103,7 @@ export function SupplyOutwardsFilters({
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className={cn(
-              "flex items-center gap-2 px-6 h-11 rounded-full font-bold text-[11px] uppercase tracking-widest transition-all border shadow-sm",
+              "flex items-center gap-2 px-6 h-11 rounded-full font-bold text-xs uppercase tracking-widest transition-all border shadow-sm",
               isExpanded
                 ? "bg-primary/10 text-primary border-primary/20"
                 : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/20"
@@ -120,7 +120,7 @@ export function SupplyOutwardsFilters({
         <div className="card-premium grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
           {/* Date Range */}
           <div className="space-y-3">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Calendar className="w-3 h-3" /> Date Range
             </label>
             <div className="flex items-center gap-2">
@@ -130,7 +130,7 @@ export function SupplyOutwardsFilters({
                 onChange={(e) => setStartDate(e.target.value)}
                 className="w-full h-12 px-4 bg-surface-low border border-border-ghost rounded-xl text-xs font-bold focus:ring-1 focus:ring-primary outline-none"
               />
-              <span className="text-[10px] font-black text-muted-foreground opacity-30">TO</span>
+              <span className="text-xs font-black text-muted-foreground opacity-30">TO</span>
               <input 
                 type="date"
                 value={endDate}
@@ -157,20 +157,20 @@ export function SupplyOutwardsFilters({
 
           {/* Actions Column */}
           <div className="space-y-3 flex flex-col justify-end">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest">
               Actions
             </label>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="btn btn-error h-12 w-full text-[10px] bg-error/5 text-error border-error/10 font-black uppercase tracking-widest hover:bg-error/10 transition-all"
+                className="btn btn-error h-12 w-full text-xs bg-error/5 text-error border-error/10 font-black uppercase tracking-widest hover:bg-error/10 transition-all"
               >
                 <X className="w-3.5 h-3.5" />
                 Reset All Filters
               </button>
             )}
             {!hasActiveFilters && (
-               <div className="h-12 flex items-center justify-center border border-dashed border-border-ghost rounded-xl text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-50">
+               <div className="h-12 flex items-center justify-center border border-dashed border-border-ghost rounded-xl text-xs font-bold text-muted-foreground uppercase tracking-widest opacity-50">
                   No Active Filters
                </div>
             )}
@@ -180,4 +180,5 @@ export function SupplyOutwardsFilters({
     </div>
   );
 }
+
 

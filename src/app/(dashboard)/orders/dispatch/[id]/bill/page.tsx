@@ -46,7 +46,7 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
                  <div className="w-12 h-12 bg-success rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-glow-success">A</div>
                  <div>
                     <h1 className="text-2xl font-black tracking-tight text-slate-900">Anarish IMS</h1>
-                    <p className="text-[10px] font-bold text-success uppercase tracking-[0.2em]">Tax Invoice / Sale Bill</p>
+                    <p className="text-xs font-bold text-success uppercase tracking-[0.2em]">Tax Invoice / Sale Bill</p>
                  </div>
               </div>
               <div className="text-sm text-slate-500 font-medium leading-relaxed max-w-[300px]">
@@ -66,7 +66,7 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
           {/* Parties Section */}
           <div className="grid grid-cols-2 gap-12 mb-12">
             <div className="space-y-4">
-              <h3 className="bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-lg">Billed From</h3>
+              <h3 className="bg-slate-900 text-white text-xs font-black uppercase tracking-[0.2em] px-4 py-2 rounded-lg">Billed From</h3>
               <div className="px-4 space-y-2">
                 <p className="text-base font-black text-slate-900">Anarish IMS Private Ltd</p>
                 <p className="text-sm text-slate-500 font-medium">GSTIN: 33AAACX9911B1Z2</p>
@@ -74,7 +74,7 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
               </div>
             </div>
             <div className="space-y-4">
-              <h3 className="bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-lg">Billed To</h3>
+              <h3 className="bg-slate-900 text-white text-xs font-black uppercase tracking-[0.2em] px-4 py-2 rounded-lg">Billed To</h3>
               <div className="px-4 space-y-2">
                 <p className="text-base font-black text-slate-900">{order.customer.name}</p>
                 <p className="text-sm text-slate-500 font-medium">{order.customer.email || "No email provided"}</p>
@@ -92,7 +92,7 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
               { label: "Transport", value: order.transportMode || "Direct Collection" }
             ].map((col, idx) => (
               <div key={idx} className={idx !== 2 ? "border-r border-slate-200" : ""}>
-                <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 text-[9px] font-black uppercase tracking-widest text-slate-400">
+                <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 text-xs font-black uppercase tracking-widest text-slate-400">
                   {col.label}
                 </div>
                 <div className="px-4 py-3 text-sm font-black text-slate-700">
@@ -106,12 +106,12 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
           <table className="w-full mb-12">
             <thead>
               <tr className="bg-slate-900 text-white">
-                <th className="px-6 py-3 text-left text-[10px] font-black uppercase tracking-widest rounded-tl-xl">S.No</th>
-                <th className="px-6 py-3 text-left text-[10px] font-black uppercase tracking-widest">SKU</th>
-                <th className="px-6 py-3 text-left text-[10px] font-black uppercase tracking-widest">Item Description</th>
-                <th className="px-6 py-3 text-right text-[10px] font-black uppercase tracking-widest">Quantity</th>
-                <th className="px-6 py-3 text-right text-[10px] font-black uppercase tracking-widest">Price</th>
-                <th className="px-6 py-3 text-right text-[10px] font-black uppercase tracking-widest rounded-tr-xl">Total</th>
+                <th className="px-6 py-3 text-left text-xs font-black uppercase tracking-widest rounded-tl-xl">S.No</th>
+                <th className="px-6 py-3 text-left text-xs font-black uppercase tracking-widest">SKU</th>
+                <th className="px-6 py-3 text-left text-xs font-black uppercase tracking-widest">Item Description</th>
+                <th className="px-6 py-3 text-right text-xs font-black uppercase tracking-widest">Quantity</th>
+                <th className="px-6 py-3 text-right text-xs font-black uppercase tracking-widest">Price</th>
+                <th className="px-6 py-3 text-right text-xs font-black uppercase tracking-widest rounded-tr-xl">Total</th>
               </tr>
             </thead>
             <tbody className="border-x border-b border-slate-200 divide-y divide-slate-100">
@@ -121,7 +121,7 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
                   <td className="px-6 py-4 text-sm font-black text-slate-700">{item.item.sku}</td>
                   <td className="px-6 py-4 text-sm font-black text-slate-900">{item.item.name}</td>
                   <td className="px-6 py-4 text-right text-sm font-black text-slate-700 tabular-nums">
-                    {item.quantity} <span className="text-[10px] text-slate-400 font-bold ml-1">{item.item.unit}</span>
+                    {item.quantity} <span className="text-xs text-slate-400 font-bold ml-1">{item.item.unit}</span>
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-black text-slate-700 tabular-nums">₹{item.sellingPrice.toLocaleString()}</td>
                   <td className="px-6 py-4 text-right text-sm font-black text-success tabular-nums">₹{(item.sellingPrice * item.quantity).toLocaleString()}</td>
@@ -152,14 +152,14 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
           {/* Footer Section */}
           <div className="flex justify-between items-end border-t border-slate-200 pt-12">
             <div className="max-w-[400px]">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 mb-4">Note:</h4>
-              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-4">Note:</h4>
+              <p className="text-xs text-slate-400 font-medium leading-relaxed">
                 This is a computer generated invoice and does not require a physical signature under the Information Technology Act, 2000. All disputes are subject to Chennai jurisdiction.
               </p>
             </div>
             <div className="text-center space-y-4">
                <div className="w-48 h-12 border-b border-slate-200 mx-auto" />
-               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Authorized signatory</p>
+               <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-900">Authorized signatory</p>
             </div>
           </div>
         </div>

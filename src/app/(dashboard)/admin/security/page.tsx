@@ -68,13 +68,13 @@ export default function SecurityPage() {
                 {ROLE_PERMISSIONS[role].map((permission) => (
                   <span 
                     key={permission}
-                    className="px-3 py-1.5 bg-surface-muted border border-border-ghost rounded-xl text-[10px] font-bold uppercase tracking-wider text-foreground"
+                    className="px-3 py-1.5 bg-surface-muted border border-border-ghost rounded-xl text-xs font-bold uppercase tracking-wider text-foreground"
                   >
                     {permission}
                   </span>
                 ))}
                 {ROLE_PERMISSIONS[role].includes("*") && (
-                  <span className="px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-xl text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <span className="px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-xl text-xs font-bold uppercase tracking-wider text-primary">
                     Full Access (Superuser)
                   </span>
                 )}
@@ -99,3 +99,4 @@ export default function SecurityPage() {
     </div>
   );
 }
+

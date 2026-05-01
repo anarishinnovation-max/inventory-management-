@@ -237,7 +237,7 @@ export default async function InventoryPage({
     <div className="space-y-8 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Home</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Inventory</span>
@@ -250,7 +250,7 @@ export default async function InventoryPage({
             <Link href="/inventory/new" className="btn btn-primary h-12 group/btn">
               <PlusCircle className="w-4 h-4" />
               <span>Add New Item</span>
-              <span className="text-[10px] font-black opacity-40 ml-2 group-hover/btn:opacity-100 transition-opacity uppercase tracking-widest hidden md:inline-block">
+              <span className="text-xs font-black opacity-40 ml-2 group-hover/btn:opacity-100 transition-opacity uppercase tracking-widest hidden md:inline-block">
                 ALT + N
               </span>
             </Link>
@@ -265,7 +265,7 @@ export default async function InventoryPage({
             <Package className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
+            <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
             <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{absoluteTotal}</h2>
           </div>
         </div>
@@ -275,7 +275,7 @@ export default async function InventoryPage({
             <CheckCircle2 className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">In Stock</p>
+            <p className="text-xs font-black text-success uppercase tracking-[0.15em]">In Stock</p>
             <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{inStockCount}</h2>
           </div>
         </div>
@@ -285,7 +285,7 @@ export default async function InventoryPage({
             <TrendingUp className="w-4 h-4" />
           </div>
           <div>
-            <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
+            <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
             <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{lowCount}</h2>
           </div>
         </div>
@@ -297,7 +297,7 @@ export default async function InventoryPage({
               <Package className="w-4 h-4" />
             </div>
 
-            <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">
+            <p className="text-xs font-black text-error uppercase tracking-[0.15em]">
               Out of Stock
             </p>
 
@@ -315,7 +315,7 @@ export default async function InventoryPage({
               <Package className="w-4 h-4" />
             </div>
 
-            <p className="text-[9px] font-black text-error/40 uppercase tracking-[0.15em]">
+            <p className="text-xs font-black text-error/40 uppercase tracking-[0.15em]">
               Urgent
             </p>
 
@@ -348,4 +348,5 @@ export default async function InventoryPage({
     </div>
   );
 }
+
 

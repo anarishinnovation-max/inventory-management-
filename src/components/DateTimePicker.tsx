@@ -119,7 +119,7 @@ export function PremiumDateTimePicker({
         </div>
         <div className="grid grid-cols-7 gap-1 text-center">
           {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-            <div key={day} className="text-[10px] font-black text-muted-foreground uppercase py-2">{day}</div>
+            <div key={day} className="text-xs font-black text-muted-foreground uppercase py-2">{day}</div>
           ))}
           {calendarDays}
         </div>
@@ -156,7 +156,7 @@ export function PremiumDateTimePicker({
         <button 
           type="button"
           onClick={() => setIsOpen(false)}
-          className="px-4 py-2 bg-foreground text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg   transition-all"
+          className="px-4 py-2 bg-foreground text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg   transition-all"
         >
           Set
         </button>
@@ -208,7 +208,7 @@ export function PremiumDateTimePicker({
             </div>
             <div className="grid grid-cols-7 gap-1 text-center">
               {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                <div key={day} className="text-[10px] font-black text-muted-foreground uppercase py-2">{day}</div>
+                <div key={day} className="text-xs font-black text-muted-foreground uppercase py-2">{day}</div>
               ))}
               {(() => {
                 const year = viewDate.getFullYear();
@@ -269,7 +269,7 @@ export function PremiumDateTimePicker({
             <button 
               type="button"
               onClick={() => setIsOpen(false)}
-              className="btn btn-primary h-10 px-4 text-[10px] uppercase tracking-widest"
+              className="btn btn-primary h-10 px-4 text-xs uppercase tracking-widest"
             >
               Set
             </button>
@@ -279,4 +279,5 @@ export function PremiumDateTimePicker({
     </div>
   );
 }
+
 

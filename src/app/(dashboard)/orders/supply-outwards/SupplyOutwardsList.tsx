@@ -142,7 +142,7 @@ export default function SupplyOutwardsList({
           <div className="absolute -top-14 right-0 animate-in fade-in slide-in-from-top-2 duration-300 z-10">
             <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1 pr-4 pl-5">
               <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
+                <span className="text-xs font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
               </div>
 
               <div className="flex items-center gap-1">
@@ -179,7 +179,7 @@ export default function SupplyOutwardsList({
             </div>
             Pending Customer Deliveries
           </h3>
-          <Link href="/orders/dispatch" className="btn btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest">Full Sale List</Link>
+          <Link href="/orders/dispatch" className="btn btn-ghost h-10 px-4 text-xs font-black uppercase tracking-widest">Full Sale List</Link>
         </div>
  
         <div className="table-container">
@@ -227,7 +227,7 @@ export default function SupplyOutwardsList({
                           </div>
                           <div className="flex flex-col min-w-0">
                             <span className="font-black text-foreground text-sm truncate">{item.item.name}</span>
-                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1 font-mono">SKU: {item.item.sku}</span>
+                            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mt-1 font-mono">SKU: {item.item.sku}</span>
                           </div>
                         </div>
                       </td>
@@ -235,12 +235,12 @@ export default function SupplyOutwardsList({
                         <div className="flex flex-col gap-2">
                           <span className="text-xs font-black text-foreground truncate">{item.customer.name}</span>
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="badge badge-primary !text-[9px] !px-2 !py-0.5">DO #{item.orderId.split('-')[0]}</span>
+                            <span className="badge badge-primary !text-xs !px-2 !py-0.5">DO #{item.orderId.split('-')[0]}</span>
                             {item.collectedBy && (
-                               <span className="badge badge-neutral !text-[9px] !px-2 !py-0.5">COL: {item.collectedBy}</span>
+                               <span className="badge badge-neutral !text-xs !px-2 !py-0.5">COL: {item.collectedBy}</span>
                             )}
                             {item.transportMode && (
-                               <span className="badge badge-warning !text-[9px] !px-2 !py-0.5">{item.transportMode}</span>
+                               <span className="badge badge-warning !text-xs !px-2 !py-0.5">{item.transportMode}</span>
                             )}
                           </div>
                         </div>
@@ -248,17 +248,17 @@ export default function SupplyOutwardsList({
                       <td className="table-cell">
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-muted-foreground opacity-30" />
-                          <span className="text-[11px] font-black text-foreground">{formatDate(item.createdAt)}</span>
+                          <span className="text-xs font-black text-foreground">{formatDate(item.createdAt)}</span>
                         </div>
                       </td>
                       <td className="table-cell text-right">
                         <div className="flex flex-col items-end">
                           <span className="text-sm font-black text-warning tabular-nums">{item.quantity}</span>
-                          <span className="text-[9px] font-bold text-muted-foreground uppercase mt-1 tracking-widest">Units Booked</span>
+                          <span className="text-xs font-bold text-muted-foreground uppercase mt-1 tracking-widest">Units Booked</span>
                         </div>
                       </td>
                       <td className="table-cell text-right">
-                        <Link href={`/orders/dispatch/${item.orderId}`} className="btn btn-primary h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl">
+                        <Link href={`/orders/dispatch/${item.orderId}`} className="btn btn-primary h-9 px-4 text-xs font-black uppercase tracking-widest rounded-xl">
                           <ArrowUpRight className="w-3.5 h-3.5" />
                           Dispatch Now
                         </Link>
@@ -283,4 +283,5 @@ export default function SupplyOutwardsList({
     </div>
   );
 }
+
 

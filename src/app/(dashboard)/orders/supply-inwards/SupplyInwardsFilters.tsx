@@ -105,7 +105,7 @@ export function SupplyInwardsFilters({
         <div className="bg-white p-10 rounded-[2.5rem] border border-border-ghost shadow-ambient animate-in fade-in slide-in-from-top-4 duration-300">
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2.5">
+                <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2.5">
                   <User className="w-3.5 h-3.5 opacity-40" /> Vendor
                 </label>
                 <div className="relative">
@@ -122,7 +122,7 @@ export function SupplyInwardsFilters({
               </div>
 
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2.5">
+                <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2.5">
                   <Hash className="w-3.5 h-3.5 opacity-40" /> PO Number
                 </label>
                 <input
@@ -135,7 +135,7 @@ export function SupplyInwardsFilters({
               </div>
 
               <div className="space-y-4 lg:col-span-2">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2.5">
+                <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2.5">
                   <Calendar className="w-3.5 h-3.5 opacity-40" /> Date Range
                 </label>
                 <div className="flex items-center gap-4">
@@ -144,16 +144,16 @@ export function SupplyInwardsFilters({
                       type="date"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full h-14 px-6 bg-surface-low/50 border border-border-ghost rounded-2xl text-[11px] font-black uppercase focus:ring-2 focus:ring-primary outline-none transition-all tabular-nums"
+                      className="w-full h-14 px-6 bg-surface-low/50 border border-border-ghost rounded-2xl text-xs font-black uppercase focus:ring-2 focus:ring-primary outline-none transition-all tabular-nums"
                     />
                   </div>
-                  <span className="text-[10px] font-black text-muted-foreground px-2 opacity-30">TO</span>
+                  <span className="text-xs font-black text-muted-foreground px-2 opacity-30">TO</span>
                   <div className="relative flex-1">
                     <input
                       type="date"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="w-full h-14 px-6 bg-surface-low/50 border border-border-ghost rounded-2xl text-[11px] font-black uppercase focus:ring-2 focus:ring-primary outline-none transition-all tabular-nums"
+                      className="w-full h-14 px-6 bg-surface-low/50 border border-border-ghost rounded-2xl text-xs font-black uppercase focus:ring-2 focus:ring-primary outline-none transition-all tabular-nums"
                     />
                   </div>
                   <button
@@ -171,4 +171,5 @@ export function SupplyInwardsFilters({
     </div>
   );
 }
+
 

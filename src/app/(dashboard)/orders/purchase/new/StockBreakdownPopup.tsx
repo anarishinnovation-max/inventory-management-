@@ -59,7 +59,7 @@ export function StockBreakdownPopup({
             </div>
             <div>
               <h3 className="text-2xl font-black text-foreground tracking-tighter leading-none">Buying Details</h3>
-              <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1.5 opacity-60 line-clamp-1">{itemName}</p>
+              <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mt-1.5 opacity-60 line-clamp-1">{itemName}</p>
             </div>
           </div>
           <button 
@@ -75,21 +75,21 @@ export function StockBreakdownPopup({
             <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6">
               <div className="flex items-center gap-3 mb-2">
                 <Package className="w-4 h-4 text-primary" />
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total Stock</span>
+                <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Total Stock</span>
               </div>
               <p className="text-3xl font-black text-primary tracking-tighter">{totalStock.toLocaleString()} <span className="text-sm font-bold opacity-60">Units</span></p>
             </div>
             <div className="bg-indigo-600/5 border border-indigo-600/10 rounded-3xl p-6">
               <div className="flex items-center gap-3 mb-2">
                 <Layers className="w-4 h-4 text-indigo-600" />
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Active Batches</span>
+                <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Active Batches</span>
               </div>
               <p className="text-3xl font-black text-indigo-600 tracking-tighter">{activeBatches.length} <span className="text-sm font-bold opacity-60">Entries</span></p>
             </div>
           </div>
 
           <div className="space-y-4">
-            <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.3em] px-2 flex items-center justify-between">
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.3em] px-2 flex items-center justify-between">
               <span>Vendor & Cost Breakdown</span>
               <span className="opacity-40 italic">Sorted by Date</span>
             </p>
@@ -107,7 +107,7 @@ export function StockBreakdownPopup({
                       <div>
                         <p className="text-lg font-black text-foreground group-hover:text-indigo-600 transition-colors leading-tight">{batch.vendor.name}</p>
                         <div className="flex items-center gap-3 mt-1">
-                           <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase">
+                           <div className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground uppercase">
                               <Calendar className="w-3 h-3 opacity-40" />
                               {new Date(batch.purchaseDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                            </div>
@@ -117,7 +117,7 @@ export function StockBreakdownPopup({
                     
                     <div className="flex items-center gap-8 md:text-right">
                        <div className="space-y-0.5">
-                          <div className="flex items-center gap-1.5 text-[9px] font-black text-muted-foreground uppercase tracking-widest md:justify-end">
+                          <div className="flex items-center gap-1.5 text-xs font-black text-muted-foreground uppercase tracking-widest md:justify-end">
                              <BadgeCent className="w-3 h-3 text-emerald-600" />
                              Unit Cost
                           </div>
@@ -127,10 +127,10 @@ export function StockBreakdownPopup({
                        </div>
                        <div className="w-px h-10 bg-border-ghost hidden md:block" />
                        <div className="space-y-0.5">
-                          <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest md:justify-end">Available</p>
+                          <p className="text-xs font-black text-muted-foreground uppercase tracking-widest md:justify-end">Available</p>
                           <div className="flex items-center gap-2 md:justify-end">
                              <span className="text-xl font-black text-indigo-600 tracking-tighter">{batch.remainingQty.toLocaleString()}</span>
-                             <span className="text-[10px] font-bold text-muted-foreground">Units</span>
+                             <span className="text-xs font-bold text-muted-foreground">Units</span>
                           </div>
                        </div>
                     </div>
@@ -162,4 +162,5 @@ export function StockBreakdownPopup({
     document.body
   );
 }
+
 

@@ -95,9 +95,9 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
             )}
           >
             <FilterIcon className="w-4 h-4" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Filters</span>
+            <span className="text-xs font-black uppercase tracking-widest">Filters</span>
             {hasActiveFilters && (
-              <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+              <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">
                 {Array.from(searchParams.keys()).filter(k => k !== 'q' && k !== 'page').length}
               </span>
             )}
@@ -118,7 +118,7 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
       {isFilterVisible && (
         <div className="bg-white border border-border-ghost p-8 rounded-[2.5rem] shadow-premium animate-in fade-in slide-in-from-top-4 duration-500 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-3">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Action Type</label>
+            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Action Type</label>
             <SearchableSelect
               items={ACTION_TYPES}
               value={searchParams.get('actionType') || 'all'}
@@ -128,7 +128,7 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Entity Category</label>
+            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Entity Category</label>
             <SearchableSelect
               items={ENTITY_TYPES}
               value={searchParams.get('entityType') || 'all'}
@@ -138,7 +138,7 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Performed By</label>
+            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Performed By</label>
             <SearchableSelect
               items={[
                 { id: "all", name: "All Users", icon: <User className="w-4 h-4" /> },
@@ -154,3 +154,4 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
     </div>
   );
 }
+

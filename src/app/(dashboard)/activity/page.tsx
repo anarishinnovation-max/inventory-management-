@@ -67,7 +67,7 @@ export default async function ActivityLogPage({
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Audit</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Full Activity Log</span>
@@ -84,7 +84,7 @@ export default async function ActivityLogPage({
                 <Activity className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Total Operations</p>
+              <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Total Operations</p>
               <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter">{total}</h2>
             </div>
         </div>
@@ -94,7 +94,7 @@ export default async function ActivityLogPage({
                 <ArrowUpRight className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">System Health</p>
+              <p className="text-xs font-black text-success uppercase tracking-[0.15em]">System Health</p>
               <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter">100%</h2>
             </div>
         </div>
@@ -104,8 +104,8 @@ export default async function ActivityLogPage({
                 <Clock className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Last Action</p>
-              <h2 className="text-[11px] font-black text-foreground mt-1 uppercase tracking-widest truncate">
+              <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Last Action</p>
+              <h2 className="text-xs font-black text-foreground mt-1 uppercase tracking-widest truncate">
                 {logs[0] ? new Date(logs[0].createdAt).toLocaleTimeString() : 'N/A'}
               </h2>
             </div>
@@ -116,7 +116,7 @@ export default async function ActivityLogPage({
                 <User className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.15em]">Active Actors</p>
+              <p className="text-xs font-black text-indigo-500 uppercase tracking-[0.15em]">Active Actors</p>
               <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter">{users.length}</h2>
             </div>
         </div>
@@ -135,3 +135,4 @@ export default async function ActivityLogPage({
     </div>
   );
 }
+

@@ -85,7 +85,7 @@ export function ScrapModal({
                <Flame className="w-7 h-7" />
             </div>
             <div>
-               <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-error/60 mb-2">
+               <nav className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-error/60 mb-2">
                   <span>Inventory</span>
                   <span className="opacity-30">/</span>
                   <span className="text-muted-foreground">Scrap Record</span>
@@ -104,7 +104,7 @@ export function ScrapModal({
   
         <form onSubmit={handleSubmit} className="p-10 space-y-8">
            {error && (
-             <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
+             <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-xs font-black uppercase tracking-widest flex items-center gap-3">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 {error}
              </div>
@@ -113,7 +113,7 @@ export function ScrapModal({
            <div className="space-y-6">
               <div className="space-y-2">
                  <div className="flex justify-between items-end px-1">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Quantity to Scrap</label>
+                    <label className="text-xs font-black text-muted-foreground uppercase tracking-widest">Quantity to Scrap</label>
                     <span className="badge badge-error">Available: {totalStock}</span>
                  </div>
                  <div className="relative">
@@ -131,7 +131,7 @@ export function ScrapModal({
               </div>
 
               <div className="space-y-3">
-                 <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest px-1">Reason for Scrapping</label>
+                 <label className="text-xs font-black text-muted-foreground uppercase tracking-widest px-1">Reason for Scrapping</label>
                  <div className="grid grid-cols-2 gap-3">
                    {reasons.map((r) => (
                      <button
@@ -139,7 +139,7 @@ export function ScrapModal({
                        type="button"
                        onClick={() => setReason(r)}
                        className={cn(
-                         "h-12 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all",
+                         "h-12 px-4 rounded-xl text-xs font-black uppercase tracking-widest border transition-all",
                          reason === r 
                          ? "bg-error/5 border-error/30 text-error shadow-sm" 
                          : "bg-white border-border-ghost text-muted-foreground hover:bg-surface-low"
@@ -182,4 +182,5 @@ export function ScrapModal({
     document.body
   );
 }
+
 

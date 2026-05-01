@@ -62,7 +62,7 @@ export default function InventoryPagination({
   return (
     <div className="p-6 bg-surface-lowest rounded-[2rem] shadow-ambient border border-border-ghost flex flex-col sm:flex-row items-center justify-between gap-4">
       <span className={cn(
-        "text-[10px] font-black uppercase tracking-widest text-muted-foreground transition-opacity",
+        "text-xs font-black uppercase tracking-widest text-muted-foreground transition-opacity",
         isPending && "opacity-50"
       )}>
         Showing <span className="text-foreground">{startItem} to {endItem}</span> of {totalItems} SKUs
@@ -84,7 +84,7 @@ export default function InventoryPagination({
             onClick={() => typeof page === 'number' ? goToPage(page) : null}
             disabled={page === "..." || isPending}
             className={cn(
-              "btn h-9 w-9 !p-0 rounded-xl text-[10px] font-black uppercase tracking-widest",
+              "btn h-9 w-9 !p-0 rounded-xl text-xs font-black uppercase tracking-widest",
               page === currentPage 
                 ? "btn-primary" 
                 : page === "..." 
@@ -109,3 +109,4 @@ export default function InventoryPagination({
     </div>
   );
 }
+

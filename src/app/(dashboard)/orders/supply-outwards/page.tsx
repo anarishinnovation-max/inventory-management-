@@ -174,7 +174,7 @@ export default async function SupplyOutwardsPage({
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Inventory</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Supply Outwards</span>
@@ -191,7 +191,7 @@ export default async function SupplyOutwardsPage({
                 <Package className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Booked Items</p>
+              <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Booked Items</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
             </div>
         </div>
@@ -201,7 +201,7 @@ export default async function SupplyOutwardsPage({
                 <Clock className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Units Pending Delivery</p>
+              <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Units Pending Delivery</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{totalPendingUnits}</h2>
             </div>
         </div>
@@ -211,7 +211,7 @@ export default async function SupplyOutwardsPage({
                 <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Recent Dispatches</p>
+              <p className="text-xs font-black text-success uppercase tracking-[0.15em]">Recent Dispatches</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{transactions.length}</h2>
             </div>
         </div>
@@ -221,7 +221,7 @@ export default async function SupplyOutwardsPage({
                 <Users className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.15em]">Active Customers</p>
+              <p className="text-xs font-black text-indigo-500 uppercase tracking-[0.15em]">Active Customers</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">
                 {new Set([...pendingItems.map(i => i.customer.id), ...transactions.map(t => t.customerId)]).size}
               </h2>
@@ -243,4 +243,5 @@ export default async function SupplyOutwardsPage({
     </div>
   );
 }
+
 

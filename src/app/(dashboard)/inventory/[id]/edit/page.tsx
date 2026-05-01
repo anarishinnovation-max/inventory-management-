@@ -107,7 +107,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
-        <p className="text-muted-foreground font-black animate-pulse uppercase tracking-widest text-[10px]">Retrieving Item Specification...</p>
+        <p className="text-muted-foreground font-black animate-pulse uppercase tracking-widest text-xs">Retrieving Item Specification...</p>
       </div>
     );
   }
@@ -133,7 +133,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
     <form onSubmit={handleSubmit} className="max-w-7xl mx-auto space-y-12 pb-20 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-border-ghost pb-10">
         <div>
-          <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">
+          <nav className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">
             <Link href="/inventory" className="hover:text-primary transition-colors">Inventory</Link>
             <div className="w-1 h-1 rounded-full bg-primary/40" />
             <span className="text-primary/80">Refining Record</span>
@@ -159,7 +159,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
       </div>
 
       {error && (
-        <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
+        <div className="p-4 rounded-2xl bg-error/10 border border-error/20 text-error text-xs font-black uppercase tracking-widest flex items-center gap-3">
           <ShieldCheck className="w-5 h-5 shrink-0" />
           {error}
         </div>
@@ -177,7 +177,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Item Name</label>
+                <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Item Name</label>
                 {isEmployee ? (
                   <div className="text-xl font-black text-foreground py-1">{itemData?.name}</div>
                 ) : (
@@ -187,7 +187,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Unique SKU Identifier</label>
+                  <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Unique SKU Identifier</label>
                   {isEmployee ? (
                     <div className="text-lg font-black font-mono text-primary py-1">{itemData?.sku}</div>
                   ) : (
@@ -198,7 +198,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Measurement Unit</label>
+                  <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Measurement Unit</label>
                   <div className={cn(
                     "text-lg font-black text-foreground py-1",
                     !isEmployee && "input-field h-14 flex items-center bg-surface-low/30 border-dashed"
@@ -210,10 +210,10 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
               </div>
 
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Operational Category</label>
+                <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Operational Category</label>
                 <div className="flex flex-wrap gap-2">
                   {isEmployee ? (
-                    <div className="px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary/10 text-primary border border-primary/10">
+                    <div className="px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest bg-primary/10 text-primary border border-primary/10">
                       {categories.find(cat => cat.id === selectedCategoryId)?.name || "Uncategorized"}
                     </div>
                   ) : (
@@ -223,7 +223,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                         type="button"
                         onClick={() => setSelectedCategoryId(cat.id)}
                         className={cn(
-                          "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                          "px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all border",
                           selectedCategoryId === cat.id
                             ? "border-primary bg-primary/10 text-primary shadow-sm"
                             : "border-border-ghost text-muted-foreground hover:bg-surface-low"
@@ -251,7 +251,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
             <div className="space-y-8">
               <div className="space-y-2">
                 <div className="flex justify-between items-end px-1">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Buffer Threshold</label>
+                  <label className="text-xs font-black text-muted-foreground uppercase tracking-widest">Buffer Threshold</label>
                   <span className="badge badge-error uppercase">Refill Level</span>
                 </div>
                 {isEmployee ? (
@@ -261,7 +261,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                     <input required name="minStockLevel" defaultValue={itemData?.minStockLevel} className="input-field h-20 text-3xl font-black font-mono text-center" type="number" min="0" />
                   </div>
                 )}
-                {!isEmployee && <p className="text-[10px] text-muted-foreground px-1 font-bold italic leading-relaxed">Automated alerts will be triggered when available stock drops below this specific count.</p>}
+                {!isEmployee && <p className="text-xs text-muted-foreground px-1 font-bold italic leading-relaxed">Automated alerts will be triggered when available stock drops below this specific count.</p>}
               </div>
 
               <div className="flex items-center justify-between p-6 bg-surface-low/30 rounded-[1.5rem] border border-border-ghost">
@@ -270,7 +270,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
                     <p className="text-sm font-black text-foreground">Critical Status</p>
                     {isCritical && <span className="badge badge-error !px-2 !py-0.5">CRITICAL</span>}
                   </div>
-                  <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Priority Flagging</p>
+                  <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-widest">Priority Flagging</p>
                 </div>
                 {!isEmployee && (
                   <button
@@ -302,11 +302,11 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
           </div>
           <div>
             <p className="text-sm font-black text-foreground">Real-time Synchronization Active</p>
-            <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">Changes propagate across global modules instantly</p>
+            <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-widest">Changes propagate across global modules instantly</p>
           </div>
         </div>
         <div className="h-px w-full md:w-px md:h-12 bg-border-ghost" />
-        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] italic">Last synchronized: {new Date().toLocaleTimeString()}</p>
+        <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] italic">Last synchronized: {new Date().toLocaleTimeString()}</p>
       </div>
     </form>
   );

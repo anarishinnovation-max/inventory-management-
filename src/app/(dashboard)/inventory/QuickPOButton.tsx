@@ -43,8 +43,8 @@ export default function QuickPOButton({ items }: { items: Item[] }) {
       <div className="flex items-center gap-2">
         <ShoppingCart className="w-4 h-4" />
         <div className="flex flex-col items-start leading-tight">
-          <span className="font-black text-[11px] uppercase tracking-widest">Quick Reorder</span>
-          <span className="text-[9px] font-bold text-muted-foreground opacity-60">
+          <span className="font-black text-xs uppercase tracking-widest">Quick Reorder</span>
+          <span className="text-xs font-bold text-muted-foreground opacity-60">
             {lowStockItems.length} items low
           </span>
         </div>
@@ -52,3 +52,4 @@ export default function QuickPOButton({ items }: { items: Item[] }) {
     </button>
   );
 }
+

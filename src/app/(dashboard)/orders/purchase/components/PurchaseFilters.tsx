@@ -43,8 +43,8 @@ export default function PurchaseFilters({
   return (
     <div className="card-premium flex flex-col justify-center gap-4 border-primary/5">
       <div className="flex items-center justify-between px-2">
-        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Filter by Status</label>
-        {isPending && <span className="text-[10px] font-bold text-primary animate-pulse tracking-widest uppercase">Syncing...</span>}
+        <label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Filter by Status</label>
+        {isPending && <span className="text-xs font-bold text-primary animate-pulse tracking-widest uppercase">Syncing...</span>}
       </div>
       <div className="flex flex-wrap gap-3">
         {statusOptions.map((opt) => {
@@ -56,7 +56,7 @@ export default function PurchaseFilters({
               key={opt.value}
               onClick={() => setFilter("status", opt.value)}
               className={cn(
-                "flex items-center gap-2.5 py-2.5 px-5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all  border",
+                "flex items-center gap-2.5 py-2.5 px-5 rounded-xl text-xs font-black uppercase tracking-widest transition-all  border",
                 isActive 
                   ? opt.color === "primary" ? "bg-primary text-white border-primary shadow-glow" :
                     opt.color === "warning" ? "bg-warning text-white border-warning shadow-md shadow-warning/20" :
@@ -74,4 +74,5 @@ export default function PurchaseFilters({
     </div>
   );
 }
+
 

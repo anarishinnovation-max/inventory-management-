@@ -148,7 +148,7 @@ export default function NewItemPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Item Name */}
               <div className="md:col-span-2 group">
-                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Item Name</label>
+                <label className="text-xs font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Item Name</label>
                 <input
                   name="name"
                   type="text"
@@ -162,7 +162,7 @@ export default function NewItemPage() {
               <div className="group">
                 <div className="flex items-center gap-2 mb-3">
                   <QrCode className="w-3.5 h-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                  <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">SKU / Code</label>
+                  <label className="text-xs font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest transition-colors">SKU / Code</label>
                 </div>
                 <input
                   name="sku"
@@ -178,12 +178,12 @@ export default function NewItemPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Settings className="w-3.5 h-3.5 text-muted-foreground" />
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest transition-colors">Category</label>
+                    <label className="text-xs font-black text-muted-foreground uppercase tracking-widest transition-colors">Category</label>
                   </div>
                   <button
                     type="button"
                     onClick={() => setShowCategoryInput(!showCategoryInput)}
-                    className="flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
+                    className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
                   >
                     <Plus className="w-3 h-3" />
                     New Category
@@ -213,7 +213,7 @@ export default function NewItemPage() {
                     <button
                       type="button"
                       onClick={() => { setShowCategoryInput(false); setNewCategoryName(""); }}
-                      className="h-12 px-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-low transition-all text-[10px] font-black uppercase tracking-widest"
+                      className="h-12 px-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-low transition-all text-xs font-black uppercase tracking-widest"
                     >
                       Cancel
                     </button>
@@ -230,7 +230,7 @@ export default function NewItemPage() {
 
               {/* Unit of Measurement */}
               <div className="group">
-                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Unit of Measurement</label>
+                <label className="text-xs font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Unit of Measurement</label>
                 <select 
                   name="unit"
                   value={unit}
@@ -263,7 +263,7 @@ export default function NewItemPage() {
             <div className="space-y-8">
               {/* Rack Assignment */}
               <div className="group">
-                <label className="text-[10px] font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Initial Rack Assignment</label>
+                <label className="text-xs font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Initial Rack Assignment</label>
                 <SearchableSelect 
                   items={racks.map(r => ({ id: r.id, name: `Rack ${r.rackNumber}` }))}
                   value={selectedRackId}
@@ -291,7 +291,7 @@ export default function NewItemPage() {
                   </div>
                   <div>
                     <p className="text-xs font-black uppercase tracking-widest">Mark as Critical</p>
-                    <p className="text-[10px] font-medium opacity-60">High priority monitoring</p>
+                    <p className="text-xs font-medium opacity-60">High priority monitoring</p>
                   </div>
                 </div>
                 <div className={cn(
@@ -338,3 +338,4 @@ export default function NewItemPage() {
     </div>
   );
 }
+

@@ -126,7 +126,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
         <div className="space-y-6">
-          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit">
+          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit">
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dispatch Registry</span>
           </Link>
@@ -174,17 +174,17 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                           </div>
                           <div>
                              <p className="font-black text-foreground text-lg group-hover:text-primary transition-colors">{item.item.name}</p>
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">{item.item.sku}</p>
+                             <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">{item.item.sku}</p>
                           </div>
                        </div>
                        
                        <div className="flex items-center gap-16 text-center">
                           <div>
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Target Quantity</p>
+                             <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Target Quantity</p>
                              <p className="text-xl font-black text-foreground tabular-nums">{item.quantity} <span className="text-xs font-bold opacity-40 uppercase tracking-widest ml-1">{item.item.unit}</span></p>
                           </div>
                           <div>
-                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Unit Price</p>
+                             <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Unit Price</p>
                              <p className="text-xl font-black text-primary tabular-nums">₹{item.sellingPrice.toLocaleString()}</p>
                           </div>
                        </div>
@@ -201,13 +201,13 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
               
               <div className="space-y-6">
                  <div className="p-8 rounded-[2rem] bg-indigo-50 border border-indigo-100 shadow-sm">
-                    <p className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mb-3">Recipient Entity</p>
+                    <p className="text-xs font-black text-indigo-600 uppercase tracking-[0.2em] mb-3">Recipient Entity</p>
                     <p className="text-xl font-black text-indigo-900 tracking-tight">{order.customer.name}</p>
                     <p className="text-xs font-bold text-indigo-700/60 mt-2 uppercase tracking-tight">{order.customer.email || "Verification Pending"}</p>
                  </div>
 
                  <div className="p-8 rounded-[2rem] bg-blue-50 border border-blue-100 shadow-sm">
-                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-3">Mode of Payment</p>
+                    <p className="text-xs font-black text-blue-600 uppercase tracking-[0.2em] mb-3">Mode of Payment</p>
                     <p className="text-xl font-black text-blue-900 tracking-tight">{order.paymentMode || "Cash"}</p>
                  </div>
 
@@ -222,21 +222,21 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
 
                         {shippingDetails.collectedBy && (
                           <div className="p-8 rounded-[2rem] bg-purple-50 border border-purple-100 shadow-sm">
-                             <p className="text-[10px] font-black text-purple-600 uppercase tracking-[0.2em] mb-3">Collected By (Customer)</p>
+                             <p className="text-xs font-black text-purple-600 uppercase tracking-[0.2em] mb-3">Collected By (Customer)</p>
                              <p className="text-xl font-black text-purple-900 tracking-tight">{shippingDetails.collectedBy}</p>
                           </div>
                         )}
 
                         {shippingDetails.dispatchedBy && (
                           <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 shadow-sm">
-                             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] mb-3">Dispatched By (Our Staff)</p>
+                             <p className="text-xs font-black text-slate-600 uppercase tracking-[0.2em] mb-3">Dispatched By (Our Staff)</p>
                              <p className="text-xl font-black text-slate-900 tracking-tight">{shippingDetails.dispatchedBy}</p>
                           </div>
                         )}
 
                         {shippingDetails.transportMode && (
                           <div className="p-8 rounded-[2rem] bg-amber-50 border border-amber-100 shadow-sm">
-                             <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">Transport Mode</p>
+                             <p className="text-xs font-black text-amber-600 uppercase tracking-[0.2em] mb-3">Transport Mode</p>
                              <p className="text-xl font-black text-amber-900 tracking-tight">{shippingDetails.transportMode}</p>
                           </div>
                         )}
@@ -245,7 +245,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                      <div className="space-y-6 pt-4">
                         <div className="space-y-4 mb-8">
                            <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Collected By (Pick-up Person)</label>
+                              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Collected By (Pick-up Person)</label>
                               <input 
                                 type="text"
                                 placeholder="Enter name..."
@@ -256,7 +256,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                            </div>
 
                            <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Dispatched By</label>
+                              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Dispatched By</label>
                               <input 
                                 type="text"
                                 placeholder="System Admin"
@@ -267,7 +267,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                            </div>
 
                            <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Transport Mode</label>
+                              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Transport Mode</label>
                               <select 
                                 className="w-full px-5 py-4 bg-surface-low border border-border-ghost rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none appearance-none transition-all"
                                 value={shippingDetails.transportMode}
@@ -291,7 +291,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                           {submitting ? "Processing..." : <Send className="w-6 h-6" />}
                           {submitting ? "Processing..." : "Complete Customer Delivery"}
                         </button>
-                        <p className="text-[10px] text-center text-muted-foreground font-black uppercase tracking-[0.2em] px-4 leading-relaxed opacity-70">
+                        <p className="text-xs text-center text-muted-foreground font-black uppercase tracking-[0.2em] px-4 leading-relaxed opacity-70">
                            Final action: This will permanently deduct stock from active inventory batches.
                         </p>
                      </div>
@@ -304,7 +304,7 @@ export default function DispatchDetailPage({ params }: { params: Promise<{ id: s
                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                     <ShieldCheck className="w-4 h-4" />
                  </div>
-                 <h4 className="text-[10px] font-black text-foreground uppercase tracking-[0.2em]">Integrity Check</h4>
+                 <h4 className="text-xs font-black text-foreground uppercase tracking-[0.2em]">Integrity Check</h4>
               </div>
               <p className="text-xs font-medium text-muted-foreground leading-relaxed">
                  All items in this consignment have been pre-reserved at the time of order booking. Confirmation will finalize the decrement from the physical ledger.

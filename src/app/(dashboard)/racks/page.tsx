@@ -98,7 +98,7 @@ export default async function RacksPage({
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Home</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Inventory Room</span>
@@ -115,41 +115,41 @@ export default async function RacksPage({
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card-premium group">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Rack Status</span>
+            <span className="text-xs uppercase font-black tracking-widest text-muted-foreground">Rack Status</span>
             <TrendingUp className="w-3 h-3 text-success" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black tracking-tighter text-foreground">Active</span>
           </div>
-          <p className="text-[10px] text-muted-foreground mt-4 font-bold uppercase tracking-widest leading-none">Ready for operations.</p>
+          <p className="text-xs text-muted-foreground mt-4 font-bold uppercase tracking-widest leading-none">Ready for operations.</p>
         </div>
 
         <div className="card-premium group">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Total Racks</span>
+            <span className="text-xs uppercase font-black tracking-widest text-muted-foreground">Total Racks</span>
           </div>
           <span className="text-3xl font-black tracking-tighter text-foreground">{racks.length}</span>
-          <p className="text-[10px] text-muted-foreground mt-4 font-bold uppercase tracking-widest">Racks in use</p>
+          <p className="text-xs text-muted-foreground mt-4 font-bold uppercase tracking-widest">Racks in use</p>
         </div>
 
         <div className="card-premium group border-warning/5 bg-warning/[0.01]">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Empty Spots</span>
+            <span className="text-xs uppercase font-black tracking-widest text-muted-foreground">Empty Spots</span>
             <div className="w-2 h-2 rounded-full bg-warning animate-pulse"></div>
           </div>
           <span className="text-3xl font-black tracking-tighter text-foreground">12</span>
-          <p className="text-[10px] text-warning/70 mt-4 font-bold uppercase tracking-widest leading-none">Space available for use.</p>
+          <p className="text-xs text-warning/70 mt-4 font-bold uppercase tracking-widest leading-none">Space available for use.</p>
         </div>
 
         <div className="card-premium group border-primary/10 bg-primary/[0.02]">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-primary">Storage Rating</span>
+            <span className="text-xs uppercase font-black tracking-widest text-primary">Storage Rating</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-3xl font-black tracking-tighter text-primary">A++</span>
-            <div className="badge bg-primary text-white text-[9px] border-none shadow-glow py-0 px-2 h-5">GOOD</div>
+            <div className="badge bg-primary text-white text-xs border-none shadow-glow py-0 px-2 h-5">GOOD</div>
           </div>
-          <p className="text-[10px] text-primary/60 mt-4 font-bold uppercase tracking-widest leading-none">Everything in the right place.</p>
+          <p className="text-xs text-primary/60 mt-4 font-bold uppercase tracking-widest leading-none">Everything in the right place.</p>
         </div>
       </div>
 
@@ -198,12 +198,12 @@ export default async function RacksPage({
                         </div>
                         <div>
                           <p className="text-sm font-black text-foreground group-hover:text-primary transition-all">Rack {row.rackNumber}</p>
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Main Spot</p>
+                          <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Main Spot</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-8 py-5">
-                      <span className="bg-surface-low border border-border-ghost px-3 py-1.5 rounded-lg text-[10px] font-black text-foreground uppercase tracking-widest">
+                      <span className="bg-surface-low border border-border-ghost px-3 py-1.5 rounded-lg text-xs font-black text-foreground uppercase tracking-widest">
                         {row.zone || "Main Hall"}
                       </span>
                     </td>
@@ -215,7 +215,7 @@ export default async function RacksPage({
                     <td className="px-8 py-5 text-right">
                       <div className="flex flex-col items-end gap-1">
                         <span className="text-sm font-black text-foreground tabular-nums">{totalQty}</span>
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Total Units</span>
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Units</span>
                       </div>
                     </td>
                     <td className="px-8 py-5 text-right">
@@ -238,7 +238,7 @@ export default async function RacksPage({
         </div>
 
         <div className="px-8 py-5 bg-surface-low/30 border-t border-border-ghost flex items-center justify-between">
-          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Showing {racks.length} Racks</span>
+          <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Showing {racks.length} Racks</span>
           <div className="flex gap-1.5">
             <button className="w-9 h-9 flex items-center justify-center rounded-xl bg-surface-low text-muted-foreground hover:bg-surface-high transition-colors" disabled>
               <ChevronLeft className="w-4 h-4" />
@@ -254,3 +254,4 @@ export default async function RacksPage({
     </div>
   );
 }
+

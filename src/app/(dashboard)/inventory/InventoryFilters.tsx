@@ -90,7 +90,7 @@ export default function InventoryFilters({
             placeholder="Search items, SKU, or Rack..."
           />
           <div className="px-4 transition-all duration-300 animate-in fade-in slide-in-from-left-2">
-            <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
+            <p className="text-xs font-bold text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
               {hasActiveFilters ? (
                 <>
                   Showing Inventory:<span className="text-foreground">{filteredCount}</span> out of <span className="text-foreground">{totalCount}</span>
@@ -100,7 +100,7 @@ export default function InventoryFilters({
                         onClick={() => updateFilter('status', 'all')}
                         className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 text-primary border border-primary/20 hover:bg-primary/10 transition-all group animate-in zoom-in-95 duration-300"
                       >
-                        <span className="text-[9px] font-black uppercase tracking-widest">
+                        <span className="text-xs font-black uppercase tracking-widest">
                           {statuses.find(s => s.value === currentStatus)?.label || 
                            activityOptions.find(o => o.id === currentStatus)?.name}
                         </span>
@@ -112,7 +112,7 @@ export default function InventoryFilters({
                         onClick={() => updateFilter('category', 'all')}
                         className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/5 text-blue-600 border border-blue-500/20 hover:bg-blue-500/10 transition-all group animate-in zoom-in-95 duration-300"
                       >
-                        <span className="text-[9px] font-black uppercase tracking-widest">{currentCategory}</span>
+                        <span className="text-xs font-black uppercase tracking-widest">{currentCategory}</span>
                         <X className="w-3 h-3 text-blue-600/40 group-hover:text-blue-600 transition-colors" />
                       </button>
                     )}
@@ -121,13 +121,13 @@ export default function InventoryFilters({
                         onClick={() => updateFilter('q', '')}
                         className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/5 text-amber-600 border border-amber-500/20 hover:bg-amber-500/10 transition-all group animate-in zoom-in-95 duration-300"
                       >
-                        <span className="text-[9px] font-black uppercase tracking-widest">Search: {searchQuery}</span>
+                        <span className="text-xs font-black uppercase tracking-widest">Search: {searchQuery}</span>
                         <X className="w-3 h-3 text-amber-600/40 group-hover:text-amber-600 transition-colors" />
                       </button>
                     )}
                     <button 
                       onClick={clearFilters}
-                      className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors underline decoration-dotted underline-offset-4 ml-2"
+                      className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors underline decoration-dotted underline-offset-4 ml-2"
                     >
                       Clear All
                     </button>
@@ -183,7 +183,7 @@ export default function InventoryFilters({
           {hasActiveFilters && (
             <button
               onClick={clearFilters}
-              className="btn btn-error h-11 px-6 text-[10px] bg-error/5 text-error border-error/10"
+              className="btn btn-error h-11 px-6 text-xs bg-error/5 text-error border-error/10"
             >
               <X className="w-3.5 h-3.5" />
               Reset
@@ -194,3 +194,4 @@ export default function InventoryFilters({
     </div>
   );
 }
+

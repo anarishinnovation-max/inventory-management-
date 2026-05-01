@@ -40,7 +40,7 @@ export default function DiffViewer({ oldValue, newValue, changedFields }: DiffVi
         return (
           <div key={field} className="flex flex-col md:flex-row md:items-center gap-4 group/diff">
             <div className="w-full md:w-48 shrink-0">
-               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover/diff:text-primary transition-colors">{field}</span>
+               <span className="text-xs font-black uppercase tracking-widest text-muted-foreground group-hover/diff:text-primary transition-colors">{field}</span>
             </div>
             
             <div className="flex flex-1 items-center gap-3 min-w-0">
@@ -58,3 +58,4 @@ export default function DiffViewer({ oldValue, newValue, changedFields }: DiffVi
     </div>
   );
 }
+

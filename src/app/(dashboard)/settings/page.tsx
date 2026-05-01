@@ -68,7 +68,7 @@ export default async function SettingsPage() {
     <div className="max-w-6xl mx-auto space-y-12 pb-20">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
              <span>System control</span>
              <span className="opacity-30">/</span>
              <span className="text-primary">Personal profile</span>
@@ -76,7 +76,7 @@ export default async function SettingsPage() {
           <h1 className="heading-xl tracking-tight text-4xl">Control Center</h1>
           <p className="text-muted-foreground mt-2 font-medium">Manage your digital identity and operational preferences.</p>
         </div>
-        <div className="badge border-none bg-success/10 text-success text-[10px] h-8 px-4 font-black tracking-widest">
+        <div className="badge border-none bg-success/10 text-success text-xs h-8 px-4 font-black tracking-widest">
             <ShieldCheck className="w-3.5 h-3.5 mr-2" />
             IDENTITY VERIFIED
         </div>
@@ -133,10 +133,10 @@ export default async function SettingsPage() {
                         {section.fields.map((field, idx) => (
                             <div key={idx} className="flex items-center justify-between py-5 border-b border-border-ghost/50 last:border-none group/row transition-all hover:bg-primary/[0.01] -mx-8 px-8">
                                 <div className="space-y-1">
-                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">{field.label}</p>
+                                    <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">{field.label}</p>
                                     <div className="text-sm font-bold text-foreground">
                                         {field.type === 'badge' ? (
-                                            <span className="badge border-none bg-primary/10 text-primary text-[10px] h-6 px-3">
+                                            <span className="badge border-none bg-primary/10 text-primary text-xs h-6 px-3">
                                                 {field.value}
                                             </span>
                                         ) : (
@@ -153,7 +153,7 @@ export default async function SettingsPage() {
                                         />
                                     )}
                                     {field.type === 'password_action' && (
-                                        <button className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary-dark transition-colors px-3 py-1.5 rounded-lg border border-primary/20 hover:bg-primary/5">Revise auth</button>
+                                        <button className="text-xs font-black uppercase tracking-widest text-primary hover:text-primary-dark transition-colors px-3 py-1.5 rounded-lg border border-primary/20 hover:bg-primary/5">Revise auth</button>
                                     )}
                                     {field.type === 'text' && (
                                         <button className="p-2 rounded-xl hover:bg-primary/10 text-primary transition-all opacity-0 group-hover/row:opacity-100">
@@ -171,3 +171,4 @@ export default async function SettingsPage() {
     </div>
   );
 }
+

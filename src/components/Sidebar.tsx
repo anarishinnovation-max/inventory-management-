@@ -121,7 +121,7 @@ export default function Sidebar() {
             <span className="font-black text-lg tracking-tighter text-foreground leading-none">
               {userData?.companyName || "SS Cutting Tools"}
             </span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mt-1">Enterprise</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-primary mt-1">Enterprise</span>
           </div>
         )}
       </div>
@@ -154,7 +154,7 @@ export default function Sidebar() {
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "group flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 relative",
+                        "group flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 relative",
                         isActive
                           ? "bg-primary/5 text-primary shadow-sm"
                           : "text-muted-foreground hover:bg-surface-low hover:text-foreground"
@@ -167,11 +167,11 @@ export default function Sidebar() {
 
                       {!collapsed && (
                         <>
-                          <span className={cn("font-bold text-sm flex-1", isActive ? "text-foreground" : "")}>
+                          <span className={cn("font-bold text-[11px] flex-1", isActive ? "text-foreground" : "")}>
                             {item.name}
                           </span>
                           <span className={cn(
-                            "text-[8px] font-black opacity-0 group-hover:opacity-40 transition-opacity uppercase tracking-widest mr-2",
+                            "text-[9px] font-black opacity-0 group-hover:opacity-40 transition-opacity uppercase tracking-wider mr-1",
                             isActive ? "text-primary opacity-30" : "text-muted-foreground"
                           )}>
                             ALT + {
@@ -190,7 +190,7 @@ export default function Sidebar() {
                             }
                           </span>
                           {item.badge && (
-                            <span className="px-1.5 py-0.5 rounded-md bg-success/10 text-success text-[8px] font-black uppercase tracking-wider border border-success/20">
+                            <span className="px-1.5 py-0.5 rounded-md bg-success/10 text-success text-xs font-black uppercase tracking-wider border border-success/20">
                               {item.badge}
                             </span>
                           )}
@@ -200,7 +200,7 @@ export default function Sidebar() {
 
                       {/* Tooltip for collapsed mode */}
                       {collapsed && (
-                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-foreground text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-[60]">
+                        <div className="absolute left-full ml-4 px-3 py-1.5 bg-foreground text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-[60]">
                           {item.name}
                         </div>
                       )}
@@ -221,7 +221,7 @@ export default function Sidebar() {
               {userData?.name?.charAt(0) || "U"}
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-xs font-bold truncate">{userData?.name || "User"}</span>
+              <span className="text-[11px] font-bold truncate">{userData?.name || "User"}</span>
               <span className={cn(
                 "text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg w-fit mt-0.5 transition-all shadow-sm",
                 userData?.role === "OWNER" ? "bg-primary text-white shadow-primary/20" : 
@@ -240,7 +240,7 @@ export default function Sidebar() {
           suppressHydrationWarning
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 rotate-90" />}
-          {!collapsed && <span className="text-xs font-bold">Collapse Sidebar</span>}
+          {!collapsed && <span className="text-[11px] font-bold">Collapse Sidebar</span>}
         </button>
 
         <button
@@ -252,7 +252,7 @@ export default function Sidebar() {
           )}
         >
           <LogOut className="w-4 h-4" />
-          {!collapsed && <span className="text-xs font-bold flex-1 text-left">Logout</span>}
+          {!collapsed && <span className="text-[11px] font-bold flex-1 text-left">Logout</span>}
         </button>
       </div>
     </aside>

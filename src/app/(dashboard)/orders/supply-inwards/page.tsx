@@ -189,7 +189,7 @@ export default async function SupplyInwardsPage({
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
             <span>Inventory</span>
             <span className="opacity-30">/</span>
             <span className="text-primary">Supply Inwards</span>
@@ -206,7 +206,7 @@ export default async function SupplyInwardsPage({
                 <Package className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Pending Orders</p>
+              <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Pending Orders</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingPOs.length}</h2>
             </div>
         </div>
@@ -216,7 +216,7 @@ export default async function SupplyInwardsPage({
                 <Truck className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Items in Transit</p>
+              <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Items in Transit</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
             </div>
         </div>
@@ -226,7 +226,7 @@ export default async function SupplyInwardsPage({
                 <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Recent Receipts</p>
+              <p className="text-xs font-black text-success uppercase tracking-[0.15em]">Recent Receipts</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{recentTransactions.length}</h2>
             </div>
         </div>
@@ -236,7 +236,7 @@ export default async function SupplyInwardsPage({
                 <Users className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.15em]">Active Vendors</p>
+              <p className="text-xs font-black text-indigo-500 uppercase tracking-[0.15em]">Active Vendors</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">
                 {new Set([...pendingPOs.map(po => po.vendorId), ...recentTransactions.map(t => t.vendorId)]).size}
               </h2>
@@ -259,3 +259,4 @@ export default async function SupplyInwardsPage({
     </div>
   );
 }
+

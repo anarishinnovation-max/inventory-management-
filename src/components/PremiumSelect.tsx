@@ -117,7 +117,7 @@ export default function PremiumSelect({
                 setSearchQuery("");
               }}
               className={cn(
-                "w-full flex items-center justify-between px-5 py-3.5 text-[11px] font-black uppercase tracking-widest text-left transition-all relative group",
+                "w-full flex items-center justify-between px-5 py-3.5 text-xs font-black uppercase tracking-widest text-left transition-all relative group",
                 (value === "all" || !value) ? "bg-primary/5 text-primary" : "text-muted-foreground hover:bg-surface-low hover:text-foreground"
               )}
             >
@@ -138,7 +138,7 @@ export default function PremiumSelect({
                     setSearchQuery("");
                   }}
                   className={cn(
-                    "w-full flex items-center justify-between px-5 py-3.5 text-[11px] font-black uppercase tracking-widest text-left transition-all relative group",
+                    "w-full flex items-center justify-between px-5 py-3.5 text-xs font-black uppercase tracking-widest text-left transition-all relative group",
                     value === option ? "bg-primary/5 text-primary" : "text-foreground hover:bg-surface-low"
                   )}
                 >
@@ -149,7 +149,7 @@ export default function PremiumSelect({
               ))
             ) : (
               <div className="px-5 py-8 text-center">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">No results found</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">No results found</p>
               </div>
             )}
           </div>
@@ -158,3 +158,4 @@ export default function PremiumSelect({
     </div>
   );
 }
+

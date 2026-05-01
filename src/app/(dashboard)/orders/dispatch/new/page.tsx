@@ -87,7 +87,7 @@ function ShortagePopup({
             </div>
             <div>
                <h2 className="text-3xl font-black text-foreground tracking-tighter leading-none">Items Running Low</h2>
-               <p className="text-muted-foreground font-bold mt-2 uppercase text-[10px] tracking-widest">Need more items to finish this.</p>
+               <p className="text-muted-foreground font-bold mt-2 uppercase text-xs tracking-widest">Need more items to finish this.</p>
             </div>
           </div>
 
@@ -398,7 +398,7 @@ export default function NewDispatchOrderPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
         <div className="space-y-6">
-          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit">
+          <Link href="/orders/dispatch" className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit">
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Sales List</span>
           </Link>
@@ -434,7 +434,7 @@ export default function NewDispatchOrderPage() {
                <button 
                  onClick={addLineItem}
                  type="button" 
-                 className="btn btn-primary h-10 px-6 !text-[10px] !rounded-xl"
+                 className="btn btn-primary h-10 px-6 !text-xs !rounded-xl"
                >
                  <Plus className="w-4 h-4" /> Add Item
                </button>
@@ -448,7 +448,7 @@ export default function NewDispatchOrderPage() {
                 return (
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end" key={index}>
                     <div className="md:col-span-6 relative">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Item Details</label>
+                      <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Item Details</label>
                       <SearchableSelect 
                         items={items}
                         value={item.itemId}
@@ -460,10 +460,10 @@ export default function NewDispatchOrderPage() {
                         renderItem={(i) => (
                           <div className="flex justify-between items-center w-full">
                             <div className="flex flex-col min-w-0">
-                               <span className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-0.5 truncate">{i.sku}</span>
+                               <span className="text-xs font-black uppercase tracking-widest opacity-60 mb-0.5 truncate">{i.sku}</span>
                                <span className="text-sm font-black truncate">{i.name}</span>
                             </div>
-                            <div className={`badge !text-[9px] !px-2.5 !py-1 ml-4 shrink-0 ${
+                            <div className={`badge !text-xs !px-2.5 !py-1 ml-4 shrink-0 ${
                               getAvailableStock(i.id) > 0 
                                 ? 'badge-success' 
                                 : 'badge-error'
@@ -491,7 +491,7 @@ export default function NewDispatchOrderPage() {
 
                         return (
                           <div className={cn(
-                            "mt-5 flex items-center justify-between px-6 py-3 rounded-[2rem] border text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 shadow-sm",
+                            "mt-5 flex items-center justify-between px-6 py-3 rounded-[2rem] border text-xs font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 shadow-sm",
                             isCritical ? "bg-error/5 border-error/20 text-error" :
                             isLow ? "bg-warning/5 border-warning/20 text-warning" :
                             "bg-success/5 border-success/20 text-success"
@@ -521,8 +521,8 @@ export default function NewDispatchOrderPage() {
                                 <Eye className="w-5 h-5" />
                               </button>
                               <div className="flex flex-col items-start leading-[1.1] min-w-[30px]">
-                                 <span className="opacity-60 text-[8px]">MIN:</span>
-                                 <span className="text-[11px] tabular-nums">{minStock}</span>
+                                 <span className="opacity-60 text-xs">MIN:</span>
+                                 <span className="text-xs tabular-nums">{minStock}</span>
                               </div>
                             </div>
                           </div>
@@ -530,7 +530,7 @@ export default function NewDispatchOrderPage() {
                       })()}
                     </div>
                     <div className="md:col-span-2">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Quantity</label>
+                      <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Quantity</label>
                       <input 
                         type="number" 
                         min="1"
@@ -542,11 +542,11 @@ export default function NewDispatchOrderPage() {
                         )}
                       />
                       {isExceeding && (
-                        <p className="text-[9px] text-error font-black uppercase tracking-widest mt-2">⚠️ Over-Stock</p>
+                        <p className="text-xs text-error font-black uppercase tracking-widest mt-2">⚠️ Over-Stock</p>
                       )}
                     </div>
                     <div className="md:col-span-3">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Selling Rate (₹)</label>
+                      <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Selling Rate (₹)</label>
                       <input 
                         type="number" 
                         min="0"
@@ -577,7 +577,7 @@ export default function NewDispatchOrderPage() {
               
               <div className="space-y-6">
                 <div>
-                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Customer Name</label>
+                   <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Customer Name</label>
                    <SearchableSelect 
                      items={customers}
                      value={selectedCustomer}
@@ -587,7 +587,7 @@ export default function NewDispatchOrderPage() {
                 </div>
 
                 <div>
-                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Payment Method</label>
+                   <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Payment Method</label>
                    <SearchableSelect 
                      items={["Cash", "Credit Card", "Debit Card", "Bank Transfer", "Check", "Digital Wallet", "UPI"].map(m => ({ id: m, name: m }))}
                      value={paymentMode}
@@ -597,7 +597,7 @@ export default function NewDispatchOrderPage() {
                 </div>
 
                 <div>
-                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Order Date</label>
+                   <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Order Date</label>
                    <PremiumDateTimePicker 
                      value={orderDate}
                      onChange={(val) => setOrderDate(val)}
@@ -607,7 +607,7 @@ export default function NewDispatchOrderPage() {
                 </div>
 
                 <div>
-                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Expected Delivery</label>
+                   <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Expected Delivery</label>
                    <PremiumDateTimePicker 
                      value={expectedDelivery}
                      onChange={(val) => setExpectedDelivery(val)}
@@ -618,19 +618,19 @@ export default function NewDispatchOrderPage() {
               </div>
 
               <div className="pt-8 border-t border-border-ghost space-y-6">
-                 <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                 <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-muted-foreground">
                     <span>Line Items</span>
                     <span className="text-foreground tabular-nums">{lineItems.length}</span>
                  </div>
-                 <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                 <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-muted-foreground">
                     <span>Total Units</span>
                     <span className="text-foreground tabular-nums">{lineItems.reduce((acc, curr) => acc + curr.quantity, 0)} Units</span>
                  </div>
                  <div className="pt-8 border-t border-border-ghost flex justify-between items-end">
-                    <span className="text-[11px] font-black text-foreground uppercase tracking-[0.3em]">Total Bill</span>
+                    <span className="text-xs font-black text-foreground uppercase tracking-[0.3em]">Total Bill</span>
                     <div className="text-right">
                        <span className="text-4xl font-black text-foreground tracking-tighter tabular-nums">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                       <p className="text-[9px] font-black text-muted-foreground mt-2 uppercase tracking-widest opacity-60">Excluding Taxes</p>
+                       <p className="text-xs font-black text-muted-foreground mt-2 uppercase tracking-widest opacity-60">Excluding Taxes</p>
                     </div>
                  </div>
               </div>
@@ -642,7 +642,7 @@ export default function NewDispatchOrderPage() {
                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
                     <CheckCircle2 className="w-5 h-5" />
                  </div>
-                 <p className="text-[10px] font-black uppercase tracking-[0.3em]">Selling Flow</p>
+                 <p className="text-xs font-black uppercase tracking-[0.3em]">Selling Flow</p>
               </div>
               <p className="text-sm font-medium leading-relaxed relative z-10 opacity-90">
                 Confirming this order will set aside items. Stock levels are only finalized once the order is marked as dispatched.
@@ -653,4 +653,5 @@ export default function NewDispatchOrderPage() {
     </div>
   );
 }
+
 

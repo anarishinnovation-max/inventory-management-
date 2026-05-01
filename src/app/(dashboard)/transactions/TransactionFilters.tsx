@@ -63,7 +63,7 @@ export function TransactionFilters({ users }: { users: any[] }) {
       <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {/* Search */}
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Search Item</label>
+          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Search Item</label>
           <div className="relative group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <input 
@@ -79,7 +79,7 @@ export function TransactionFilters({ users }: { users: any[] }) {
 
         {/* User Filter */}
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Performed By</label>
+          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Performed By</label>
           <SearchableSelect 
             items={users.map(u => ({ id: u.id, name: u.name }))}
             value={filters.user}
@@ -96,7 +96,7 @@ export function TransactionFilters({ users }: { users: any[] }) {
 
         {/* Action Type */}
         <div className="space-y-2">
-          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Action Type</label>
+          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Action Type</label>
           <SearchableSelect 
             items={actionTypes}
             value={filters.type}
@@ -114,7 +114,7 @@ export function TransactionFilters({ users }: { users: any[] }) {
         {/* Date Range */}
         <div className="lg:col-span-2 grid grid-cols-2 gap-4">
            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">From Date</label>
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">From Date</label>
               <div className="relative">
                 <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input 
@@ -127,7 +127,7 @@ export function TransactionFilters({ users }: { users: any[] }) {
               </div>
            </div>
            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">To Date</label>
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">To Date</label>
               <div className="relative">
                 <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input 
@@ -143,12 +143,12 @@ export function TransactionFilters({ users }: { users: any[] }) {
       </form>
 
       <div className="flex items-center justify-between mt-6 pt-6 border-t border-border-ghost">
-         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+         <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">
             {Object.values(filters).filter(Boolean).length} Filters Active
          </p>
          <button 
            onClick={clearFilters}
-           className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-error hover:opacity-70 transition-opacity"
+           className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-error hover:opacity-70 transition-opacity"
          >
             <FilterX className="w-3.5 h-3.5" />
             Clear All Filters
@@ -157,3 +157,4 @@ export function TransactionFilters({ users }: { users: any[] }) {
     </div>
   );
 }
+

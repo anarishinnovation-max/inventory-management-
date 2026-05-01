@@ -202,7 +202,7 @@ function NewPurchaseOrderForm() {
     <div className="p-8 lg:p-12 max-w-7xl mx-auto pb-24">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
         <div className="space-y-6">
-          <Link href="/orders/purchase" className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit group">
+          <Link href="/orders/purchase" className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.2em] hover:opacity-70 transition-opacity w-fit group">
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Purchase Orders</span>
           </Link>
@@ -237,7 +237,7 @@ function NewPurchaseOrderForm() {
                <button 
                  onClick={addLineItem}
                  type="button" 
-                 className="btn btn-primary h-10 px-6 !text-[10px] !rounded-xl"
+                 className="btn btn-primary h-10 px-6 !text-xs !rounded-xl"
                >
                  <Plus className="w-4 h-4" /> Add Item
                </button>
@@ -247,7 +247,7 @@ function NewPurchaseOrderForm() {
               {lineItems.map((item, index) => (
                 <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-6 p-8 bg-surface-low/30 rounded-[2rem] border border-border-ghost group">
                   <div className="md:col-span-12 lg:col-span-6 relative">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block ml-1">Item Details</label>
+                    <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block ml-1">Item Details</label>
                     <SearchableSelect 
                       items={items.filter(i => 
                         !lineItems.some((li, liIndex) => liIndex !== index && li.itemId === i.id)
@@ -268,7 +268,7 @@ function NewPurchaseOrderForm() {
                       
                       return (
                         <div className={cn(
-                          "mt-5 flex items-center justify-between px-6 py-3 rounded-[2rem] border text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 shadow-sm",
+                          "mt-5 flex items-center justify-between px-6 py-3 rounded-[2rem] border text-xs font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 shadow-sm",
                           isCritical ? "bg-error/5 border-error/20 text-error" :
                           isLow ? "bg-warning/5 border-warning/20 text-warning" :
                           "bg-success/5 border-success/20 text-success"
@@ -298,8 +298,8 @@ function NewPurchaseOrderForm() {
                               <Eye className="w-5 h-5" />
                             </button>
                             <div className="flex flex-col items-start leading-[1.1] min-w-[30px]">
-                               <span className="opacity-60 text-[8px]">MIN:</span>
-                               <span className="text-[11px] tabular-nums">{minStock}</span>
+                               <span className="opacity-60 text-xs">MIN:</span>
+                               <span className="text-xs tabular-nums">{minStock}</span>
                             </div>
                           </div>
                         </div>
@@ -307,7 +307,7 @@ function NewPurchaseOrderForm() {
                     })()}
                   </div>
                   <div className="md:col-span-2">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block ml-1">Quantity</label>
+                    <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block ml-1">Quantity</label>
                     <input 
                       type="number" 
                       min="1"
@@ -318,7 +318,7 @@ function NewPurchaseOrderForm() {
                     />
                   </div>
                   <div className="md:col-span-3">
-                    <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block ml-1">Unit Cost (₹)</label>
+                    <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block ml-1">Unit Cost (₹)</label>
                     <input 
                       type="number" 
                       min="0.01"
@@ -356,7 +356,7 @@ function NewPurchaseOrderForm() {
                 <div>
                    <div className="flex items-center gap-2 mb-3 ml-1">
                       <Building2 className="w-3.5 h-3.5 text-muted-foreground" />
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Vendor Source</label>
+                      <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Vendor Source</label>
                    </div>
                    <SearchableSelect 
                      items={vendors}
@@ -369,7 +369,7 @@ function NewPurchaseOrderForm() {
                 <div>
                    <div className="flex items-center gap-2 mb-3 ml-1">
                       <CreditCard className="w-3.5 h-3.5 text-muted-foreground" />
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Payment Method</label>
+                      <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Payment Method</label>
                    </div>
                    <SearchableSelect 
                      items={[...PAYMENT_MODE_OPTIONS, ...(!PAYMENT_MODE_OPTIONS.includes(paymentMode) ? [paymentMode] : [])].map(m => ({ id: m, name: m }))}
@@ -382,7 +382,7 @@ function NewPurchaseOrderForm() {
                 <div>
                    <div className="flex items-center gap-2 mb-3 ml-1">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Order Date</label>
+                      <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Order Date</label>
                    </div>
                    <input
                      type="datetime-local"
@@ -396,7 +396,7 @@ function NewPurchaseOrderForm() {
                 <div>
                    <div className="flex items-center gap-2 mb-3 ml-1">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Expected Delivery</label>
+                      <label className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Expected Delivery</label>
                    </div>
                    <input
                      type="datetime-local"
@@ -409,19 +409,19 @@ function NewPurchaseOrderForm() {
               </div>
 
               <div className="pt-8 border-t border-border-ghost space-y-6">
-                 <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                 <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-muted-foreground">
                     <span>Line Items</span>
                     <span className="text-foreground tabular-nums">{lineItems.length}</span>
                  </div>
-                 <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+                 <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest text-muted-foreground">
                     <span>Total Units</span>
                     <span className="text-foreground tabular-nums">{lineItems.reduce((acc, curr) => acc + curr.quantityOrdered, 0)} Units</span>
                  </div>
                  <div className="pt-8 border-t border-border-ghost flex justify-between items-end">
-                    <span className="text-[11px] font-black text-foreground uppercase tracking-[0.3em]">Total Bill</span>
+                    <span className="text-xs font-black text-foreground uppercase tracking-[0.3em]">Total Bill</span>
                     <div className="text-right">
                        <span className="text-4xl font-black text-foreground tracking-tighter tabular-nums">₹{calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-                       <p className="text-[9px] font-black text-muted-foreground mt-2 uppercase tracking-widest opacity-60">Excluding GST</p>
+                       <p className="text-xs font-black text-muted-foreground mt-2 uppercase tracking-widest opacity-60">Excluding GST</p>
                     </div>
                  </div>
               </div>
@@ -433,7 +433,7 @@ function NewPurchaseOrderForm() {
                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
                     <CheckCircle2 className="w-5 h-5 opacity-80" />
                  </div>
-                 <p className="text-[10px] font-black uppercase tracking-[0.3em]">Procurement</p>
+                 <p className="text-xs font-black uppercase tracking-[0.3em]">Procurement</p>
               </div>
               <p className="text-sm font-medium leading-relaxed relative z-10 opacity-90">
                 Confirming this order will update <strong>Items on the way</strong> values and notify the warehouse dock for incoming assets.
@@ -471,4 +471,5 @@ export default function NewPurchaseOrderPage() {
     </Suspense>
   );
 }
+
 

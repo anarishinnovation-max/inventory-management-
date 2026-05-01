@@ -231,7 +231,7 @@ export default function InventoryList({
         <div className="flex justify-end animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1.5 pr-4 pl-5">
             <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
+              <span className="text-xs font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
             </div>
 
             <div className="flex items-center gap-1">
@@ -290,7 +290,7 @@ export default function InventoryList({
                 <th className="table-cell-header">
                   <button
                     onClick={() => requestSort('name')}
-                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-xs font-black"
                   >
                     Item Name & SKU
                     <SortIcon column="name" />
@@ -299,7 +299,7 @@ export default function InventoryList({
                 <th className="table-cell-header hidden lg:table-cell">
                   <button
                     onClick={() => requestSort('category')}
-                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-xs font-black"
                   >
                     Category
                     <SortIcon column="category" />
@@ -309,7 +309,7 @@ export default function InventoryList({
                 <th className="table-cell-header text-right">
                   <button
                     onClick={() => requestSort('units')}
-                    className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                    className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-xs font-black"
                   >
                     Quantity
                     <SortIcon column="units" />
@@ -319,7 +319,7 @@ export default function InventoryList({
                 <th className="table-cell-header hidden sm:table-cell">
                   <button
                     onClick={() => requestSort('status')}
-                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-xs font-black"
                   >
                     Status
                     <SortIcon column="status" />
@@ -328,7 +328,7 @@ export default function InventoryList({
                 <th className="table-cell-header hidden xl:table-cell">
                   <button
                     onClick={() => requestSort('updatedAt')}
-                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
+                    className="flex items-center hover:text-primary transition-colors group uppercase tracking-widest text-xs font-black"
                   >
                     Last Updated
                     <SortIcon column="updatedAt" />
@@ -380,12 +380,12 @@ export default function InventoryList({
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-foreground text-sm truncate group-hover:text-primary transition-colors">{item.name}</span>
                             {item.isCritical && (
-                              <span className="badge badge-error py-0.5 px-1.5 text-[8px]">
+                              <span className="badge badge-error py-0.5 px-1.5 text-xs">
                                 Critical
                               </span>
                             )}
                           </div>
-                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{item.sku}</span>
+                          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{item.sku}</span>
                         </div>
                       </div>
                     </td>
@@ -398,16 +398,16 @@ export default function InventoryList({
                     <td className="table-cell text-right font-mono">
                       <div className="flex flex-col items-end">
                         <span className={`text-base font-black tracking-tight ${isOutOfStock ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
-                          {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{normalizeUnit(item.unit)}</span>
+                          {Math.max(0, totalStock)} <span className="text-xs font-medium text-muted-foreground ml-1">{normalizeUnit(item.unit)}</span>
                         </span>
                         <div className="flex items-center justify-end gap-1.5 mt-1.5">
                           {reservedQty > 0 && (
-                            <span className="text-[8px] font-black uppercase tracking-tighter text-yellow-900 bg-yellow-400 px-1.5 py-0.5 rounded border border-yellow-500/50 flex items-center gap-1 shadow-sm">
+                            <span className="text-xs font-black uppercase tracking-tighter text-yellow-900 bg-yellow-400 px-1.5 py-0.5 rounded border border-yellow-500/50 flex items-center gap-1 shadow-sm">
                               +{reservedQty} <ArrowLeft className="w-2.5 h-2.5" />
                             </span>
                           )}
                           {incomingQty > 0 && (
-                            <span className="text-[8px] font-black uppercase tracking-tight text-blue-950 bg-blue-400 px-1.5 py-0.5 rounded border border-blue-500/50 flex items-center gap-1 shadow-sm">
+                            <span className="text-xs font-black uppercase tracking-tight text-blue-950 bg-blue-400 px-1.5 py-0.5 rounded border border-blue-500/50 flex items-center gap-1 shadow-sm">
                               +{incomingQty} <ArrowRight className="w-2.5 h-2.5" />
                             </span>
                           )}
@@ -415,14 +415,14 @@ export default function InventoryList({
                       </div>
                     </td>
                     <td className="table-cell hidden md:table-cell">
-                      <span className="text-[10px] font-black text-muted-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost uppercase tracking-widest">
+                      <span className="text-xs font-black text-muted-foreground bg-surface-low px-2 py-1 rounded-md border border-border-ghost uppercase tracking-widest">
                         {rackLocations || "N/A"}
                       </span>
                     </td>
                     <td className="table-cell hidden sm:table-cell">
                       {isOutOfStock ? (
                         <span className="badge badge-error">
-                          Out of Stock {isUrgent && <span className="ml-1 opacity-60 text-[8px]">(Urgent)</span>}
+                          Out of Stock {isUrgent && <span className="ml-1 opacity-60 text-xs">(Urgent)</span>}
                         </span>
                       ) : isLowStock ? (
                         <span className="badge badge-warning">Low Stock</span>
@@ -432,7 +432,7 @@ export default function InventoryList({
                     </td>
                     <td className="table-cell hidden xl:table-cell">
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <span className="text-[10px] font-bold">
+                        <span className="text-xs font-bold">
                           {formatDate(item.updatedAt)}
                         </span>
                       </div>
@@ -483,4 +483,5 @@ export default function InventoryList({
     </div>
   );
 }
+
 

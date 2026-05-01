@@ -77,7 +77,7 @@ export default function EditUserModal({ user, onClose, onSuccess }: EditUserModa
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">Full Name</label>
+              <label className="text-xs font-black uppercase tracking-widest ml-1 text-muted-foreground">Full Name</label>
               <input
                 type="text"
                 required
@@ -88,7 +88,7 @@ export default function EditUserModal({ user, onClose, onSuccess }: EditUserModa
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">Username</label>
+              <label className="text-xs font-black uppercase tracking-widest ml-1 text-muted-foreground">Username</label>
               <input
                 type="text"
                 required
@@ -99,7 +99,7 @@ export default function EditUserModal({ user, onClose, onSuccess }: EditUserModa
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">Access Level (Role)</label>
+              <label className="text-xs font-black uppercase tracking-widest ml-1 text-muted-foreground">Access Level (Role)</label>
               <select
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
@@ -139,3 +139,4 @@ export default function EditUserModal({ user, onClose, onSuccess }: EditUserModa
     </div>
   );
 }
+

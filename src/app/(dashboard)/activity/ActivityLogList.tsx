@@ -96,7 +96,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                       </td>
                       <td className="table-cell">
                         <div className="flex flex-col">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">{config.label}</span>
+                          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-0.5">{config.label}</span>
                           <span className="font-black text-foreground text-sm tracking-tight">{log.actionType}</span>
                         </div>
                       </td>
@@ -107,7 +107,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                            </div>
                            <div className="flex flex-col">
                               <span className="text-xs font-black text-foreground uppercase tracking-tight">{log.entityType}</span>
-                              <span className="text-[10px] font-bold text-muted-foreground font-mono mt-0.5 opacity-50">{log.entityId || "SYSTEM"}</span>
+                              <span className="text-xs font-bold text-muted-foreground font-mono mt-0.5 opacity-50">{log.entityId || "SYSTEM"}</span>
                            </div>
                         </div>
                       </td>
@@ -120,7 +120,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                               <span className="text-sm font-black text-foreground tracking-tight">{log.performedByName}</span>
                               <div className="flex items-center gap-2 mt-0.5 opacity-40">
                                  <Monitor className="w-2.5 h-2.5" />
-                                 <span className="text-[9px] font-bold uppercase tracking-widest truncate max-w-[100px]">{log.userAgent?.split(' ')[0] || "Unknown"}</span>
+                                 <span className="text-xs font-bold uppercase tracking-widest truncate max-w-[100px]">{log.userAgent?.split(' ')[0] || "Unknown"}</span>
                               </div>
                            </div>
                         </div>
@@ -130,7 +130,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                            <span className="text-xs font-black text-foreground">
                               <TimeDisplay date={log.createdAt} format="distance" />
                            </span>
-                           <span className="text-[9px] font-bold text-muted-foreground mt-0.5 uppercase tracking-widest">
+                           <span className="text-xs font-bold text-muted-foreground mt-0.5 uppercase tracking-widest">
                               <TimeDisplay date={log.createdAt} />
                            </span>
                         </div>
@@ -151,7 +151,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                              <div className="flex flex-col md:flex-row gap-8 items-start">
                                 <div className="flex-1 space-y-6">
                                    <div className="flex items-center gap-3">
-                                      <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">State Comparison</h4>
+                                      <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em]">State Comparison</h4>
                                       <div className="h-px flex-1 bg-primary/10" />
                                    </div>
                                    <DiffViewer 
@@ -163,24 +163,24 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                                 
                                 <div className="w-full md:w-72 shrink-0 space-y-6">
                                    <div className="flex items-center gap-3">
-                                      <h4 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Metadata</h4>
+                                      <h4 className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Metadata</h4>
                                       <div className="h-px flex-1 bg-border-ghost" />
                                    </div>
                                    <div className="bg-white border border-border-ghost rounded-2xl p-6 space-y-5 shadow-sm">
                                       <div className="space-y-1.5">
-                                         <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                                         <span className="text-xs font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                                             <Globe className="w-3 h-3" /> Network Address
                                          </span>
                                          <p className="text-xs font-black text-foreground font-mono">{log.ipAddress || "Internal System"}</p>
                                       </div>
                                       <div className="space-y-1.5">
-                                         <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                                         <span className="text-xs font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                                             <Monitor className="w-3 h-3" /> Client Agent
                                          </span>
-                                         <p className="text-[10px] font-bold text-muted-foreground leading-relaxed italic">{log.userAgent || "SS-IMS Bot"}</p>
+                                         <p className="text-xs font-bold text-muted-foreground leading-relaxed italic">{log.userAgent || "SS-IMS Bot"}</p>
                                       </div>
                                       <div className="pt-4 border-t border-border-ghost">
-                                         <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">Full Event Timestamp</p>
+                                         <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Full Event Timestamp</p>
                                          <p className="text-xs font-black text-foreground mt-1"><TimeDisplay date={log.createdAt} format="full" /></p>
                                       </div>
                                    </div>
@@ -210,7 +210,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-2 pt-4">
-           <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+           <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">
               Showing page {currentPage} of {totalPages} ({total} events)
            </p>
            <div className="flex items-center gap-2">
@@ -234,3 +234,4 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
     </div>
   );
 }
+

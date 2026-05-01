@@ -86,7 +86,7 @@ export function CategoryManager() {
             <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           </div>
         ) : categories.length === 0 ? (
-          <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+          <p className="text-center py-10 text-xs font-black text-muted-foreground uppercase tracking-widest">
             No categories yet. Add one above.
           </p>
         ) : (
@@ -115,3 +115,4 @@ export function CategoryManager() {
     </div>
   );
 }
+

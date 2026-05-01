@@ -69,7 +69,7 @@ export default function ResetPasswordModal({ user, onClose }: ResetPasswordModal
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-muted-foreground">New Password</label>
+              <label className="text-xs font-black uppercase tracking-widest ml-1 text-muted-foreground">New Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -118,3 +118,4 @@ export default function ResetPasswordModal({ user, onClose }: ResetPasswordModal
     </div>
   );
 }
+

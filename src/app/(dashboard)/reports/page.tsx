@@ -127,7 +127,7 @@ export default async function ReportsPage() {
       <div className="space-y-10 pb-10">
          <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-               <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+               <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
                   <span>Analytics</span>
                   <span className="opacity-30">/</span>
                   <span className="text-primary">Operational Intelligence</span>
@@ -149,7 +149,7 @@ export default async function ReportsPage() {
                            </div>
                            <h3 className="text-lg font-black text-foreground tracking-tight">Throughput Dynamics</h3>
                         </div>
-                        <div className="badge border-none bg-surface-low text-[9px] px-2 h-6 font-black text-muted-foreground">LAST 12 DAYS</div>
+                        <div className="badge border-none bg-surface-low text-xs px-2 h-6 font-black text-muted-foreground">LAST 12 DAYS</div>
                      </div>
 
                      <div className="h-64 flex items-end justify-between gap-3 px-2 border-b border-border-ghost/50 pb-4">
@@ -161,13 +161,13 @@ export default async function ReportsPage() {
                               >
                                  <div className="absolute inset-x-0 top-0 h-1 bg-white/20" />
                               </div>
-                              <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-foreground text-surface-lowest px-2 py-1 rounded text-[9px] font-black opacity-0 group-hover/bar:opacity-100 transition-all group-hover/bar:-top-14 pointer-events-none shadow-xl">
+                              <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-foreground text-surface-lowest px-2 py-1 rounded text-xs font-black opacity-0 group-hover/bar:opacity-100 transition-all group-hover/bar:-top-14 pointer-events-none shadow-xl">
                                  {data.rawTrends[i]} TX
                               </div>
                            </div>
                         ))}
                      </div>
-                     <div className="flex justify-between text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-4 px-2">
+                     <div className="flex justify-between text-xs font-black text-muted-foreground uppercase tracking-widest mt-4 px-2">
                         <span>{new Date(Date.now() - 11 * 24 * 60 * 60 * 1000).toLocaleDateString([], { month: 'short', day: '2-digit' })}</span>
                         <span>{new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString([], { month: 'short', day: '2-digit' })}</span>
                         <span className="text-primary">Today</span>
@@ -187,7 +187,7 @@ export default async function ReportsPage() {
                         {data.topSkus.map((item, i) => (
                            <div key={i} className="flex items-center justify-between p-3 bg-white/50 rounded-xl border border-border-ghost transition-all hover:border-success/30 cursor-default group">
                               <span className="text-xs font-bold text-foreground truncate group-hover:text-success transition-colors">{item.name}</span>
-                              <span className="text-[10px] font-black text-success bg-success/5 px-2 py-0.5 rounded-md">{item.val}</span>
+                              <span className="text-xs font-black text-success bg-success/5 px-2 py-0.5 rounded-md">{item.val}</span>
                            </div>
                         ))}
                      </div>
@@ -204,7 +204,7 @@ export default async function ReportsPage() {
                         {data.vendorEfficiency.map((item, i) => (
                            <div key={i} className="flex items-center justify-between p-3 bg-white/50 rounded-xl border border-border-ghost transition-all hover:border-primary/30 cursor-default group">
                               <span className="text-xs font-bold text-foreground truncate group-hover:text-primary transition-colors">{item.name}</span>
-                              <span className="text-[10px] font-black text-primary bg-primary/5 px-2 py-0.5 rounded-md">{item.val}</span>
+                              <span className="text-xs font-black text-primary bg-primary/5 px-2 py-0.5 rounded-md">{item.val}</span>
                            </div>
                         ))}
                      </div>
@@ -228,8 +228,8 @@ export default async function ReportsPage() {
                         <div key={i} className="p-4 rounded-xl bg-white border border-error/20 shadow-sm group hover:border-error transition-all">
                            <p className="font-bold text-error text-sm">{item.name}</p>
                            <div className="flex justify-between items-center mt-2">
-                              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">STOCK: {item.stock}</p>
-                              <span className="badge bg-error/10 text-error border-none text-[8px] h-5">BELOW {item.min}</span>
+                              <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">STOCK: {item.stock}</p>
+                              <span className="badge bg-error/10 text-error border-none text-xs h-5">BELOW {item.min}</span>
                            </div>
                         </div>
                      )) : (
@@ -238,7 +238,7 @@ export default async function ReportsPage() {
                               <TrendingUp className="w-5 h-5" />
                            </div>
                            <p className="text-xs font-black text-success uppercase tracking-widest">All Stocks Optimal</p>
-                           <p className="text-[10px] text-success/60 mt-1">No pending reorders.</p>
+                           <p className="text-xs text-success/60 mt-1">No pending reorders.</p>
                         </div>
                      )}
                   </div>
@@ -252,8 +252,8 @@ export default async function ReportsPage() {
                   <div>
                      <h4 className="text-lg font-black text-foreground tracking-tight">Cubic Utilization</h4>
                      <div className="flex flex-col gap-1 mt-2">
-                        <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{data.totalStock.toLocaleString()} UNITS ACTIVE</span>
-                        <p className="text-[11px] text-muted-foreground leading-relaxed px-4">Warehouse spatial health index is currently within nominal parameters.</p>
+                        <span className="text-xs font-black text-primary uppercase tracking-[0.2em]">{data.totalStock.toLocaleString()} UNITS ACTIVE</span>
+                        <p className="text-xs text-muted-foreground leading-relaxed px-4">Warehouse spatial health index is currently within nominal parameters.</p>
                      </div>
                   </div>
                </div>
@@ -262,3 +262,4 @@ export default async function ReportsPage() {
       </div>
    );
 }
+

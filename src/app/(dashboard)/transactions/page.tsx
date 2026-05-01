@@ -100,7 +100,7 @@ export default async function TransactionsPage({
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
              <span>Records</span>
              <span className="opacity-30">/</span>
              <span className="text-primary">Activity Log</span>
@@ -180,20 +180,20 @@ export default async function TransactionsPage({
                         );
                       })()}
                       <div>
-                        <p className="font-black text-foreground text-[11px] tracking-tight group-hover:text-primary transition-all">
+                        <p className="font-black text-foreground text-xs tracking-tight group-hover:text-primary transition-all">
                           {tx.type === "INITIAL_REGISTRY" ? "REGISTRY" : 
                            tx.type === "SALE" ? "DISPATCH" : 
                            tx.type === "OUTWARD" ? "MANUAL OUT" : 
                            tx.type.replace("_", " ")}
                         </p>
-                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.1em] mt-0.5">{tx.referenceType || "GENERAL"}</p>
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.1em] mt-0.5">{tx.referenceType || "GENERAL"}</p>
                       </div>
                     </div>
                   </td>
                   <td className="table-cell">
                     <div className="flex flex-col">
                       <p className="font-bold text-foreground text-xs leading-tight">{tx.item.name}</p>
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {tx.item.sku}</p>
+                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mt-1">SKU: {tx.item.sku}</p>
                     </div>
                   </td>
                   <td className="table-cell text-right">
@@ -206,32 +206,32 @@ export default async function TransactionsPage({
                   </td>
                   <td className="table-cell text-center">
                     <div className="flex flex-col items-center">
-                       <div className="w-7 h-7 rounded-full bg-surface-low border border-border-ghost flex items-center justify-center text-[9px] font-black text-muted-foreground mb-1">
+                       <div className="w-7 h-7 rounded-full bg-surface-low border border-border-ghost flex items-center justify-center text-xs font-black text-muted-foreground mb-1">
                           {tx.user?.name[0]}
                        </div>
-                       <span className="text-[9px] font-black text-foreground uppercase tracking-tighter">{tx.user?.name}</span>
+                       <span className="text-xs font-black text-foreground uppercase tracking-tighter">{tx.user?.name}</span>
                     </div>
                   </td>
                   <td className="table-cell">
                     {tx.customer ? (
                       <div className="flex items-center gap-2">
                         <UsersIcon className="w-3.5 h-3.5 text-indigo-500 opacity-40 group-hover:opacity-100 transition-all" />
-                        <span className="text-[11px] font-bold text-foreground">{tx.customer.name}</span>
+                        <span className="text-xs font-bold text-foreground">{tx.customer.name}</span>
                       </div>
                     ) : tx.vendor ? (
                        <div className="flex items-center gap-2">
                         <Truck className="w-3.5 h-3.5 text-orange-500 opacity-40 group-hover:opacity-100 transition-all" />
-                        <span className="text-[11px] font-bold text-foreground">{tx.vendor.name}</span>
+                        <span className="text-xs font-bold text-foreground">{tx.vendor.name}</span>
                       </div>
                     ) : (
-                       <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-30 italic">Stock Change</span>
+                       <span className="text-xs font-black text-muted-foreground uppercase tracking-widest opacity-30 italic">Stock Change</span>
                     )}
                   </td>
                   <td className="table-cell text-right">
-                      <p className="text-[11px] font-black text-foreground">
+                      <p className="text-xs font-black text-foreground">
                         {new Date(tx.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </p>
-                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
+                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mt-0.5">
                         {new Date(tx.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}
                       </p>
                   </td>
@@ -258,3 +258,4 @@ export default async function TransactionsPage({
     </div>
   );
 }
+

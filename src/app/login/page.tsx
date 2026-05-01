@@ -49,7 +49,7 @@ export default function LoginPage() {
         <div className="card-premium p-8">
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-bold text-foreground/70 ml-1 tracking-wide uppercase text-[11px]">Username</label>
+              <label className="text-sm font-bold text-foreground/70 ml-1 tracking-wide uppercase text-xs">Username</label>
               <div className="relative group">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50 group-focus-within:text-primary transition-colors">
                   <User strokeWidth={2.5} className="w-full h-full" />
@@ -66,7 +66,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-foreground/70 ml-1 tracking-wide uppercase text-[11px]">Password</label>
+              <label className="text-sm font-bold text-foreground/70 ml-1 tracking-wide uppercase text-xs">Password</label>
               <div className="relative group">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50 group-focus-within:text-primary transition-colors">
                   <Lock strokeWidth={2.5} className="w-full h-full" />
@@ -126,3 +126,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

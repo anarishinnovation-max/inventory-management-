@@ -178,7 +178,7 @@ export default function GlobalSettingsPage() {
                 onChange={(e) => setCompany(prev => prev ? { ...prev, settings: { ...prev.settings, minStockThreshold: parseInt(e.target.value) } } : null)}
                 className="w-full h-2 bg-surface-muted rounded-lg appearance-none cursor-pointer accent-primary border border-border-ghost"
               />
-              <p className="text-[10px] text-muted-foreground font-medium italic">
+              <p className="text-xs text-muted-foreground font-medium italic">
                 Items will be marked as "Critical" when stock levels fall below this percentage of their individual target.
               </p>
             </div>
@@ -188,3 +188,4 @@ export default function GlobalSettingsPage() {
     </div>
   );
 }
+

@@ -84,7 +84,7 @@ export function VendorModal() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="md:col-span-2 group">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Vendor Entity Name</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Vendor Entity Name</label>
                         <div className="relative">
                             <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input 
@@ -97,7 +97,7 @@ export function VendorModal() {
                     </div>
 
                     <div className="group">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Procurement Email</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Procurement Email</label>
                         <div className="relative">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input 
@@ -110,7 +110,7 @@ export function VendorModal() {
                     </div>
 
                     <div className="group">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Direct Support</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Direct Support</label>
                         <div className="relative">
                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <input 
@@ -123,7 +123,7 @@ export function VendorModal() {
                 </div>
 
                 <div>
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-4 block">Preferred Remittance Mode</label>
+                    <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 mb-4 block">Preferred Remittance Mode</label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {PAYMENT_MODES.map((mode) => (
                             <button
@@ -141,7 +141,7 @@ export function VendorModal() {
                                     <mode.icon className="w-5 h-5" />
                                 </div>
                                 <span className={cn(
-                                    "text-[10px] font-black uppercase tracking-tight",
+                                    "text-xs font-black uppercase tracking-tight",
                                     selectedMode === mode.id ? "text-foreground" : "text-muted-foreground"
                                 )}>{mode.id}</span>
                             </button>
@@ -172,4 +172,5 @@ export function VendorModal() {
     </>
   );
 }
+
 

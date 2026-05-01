@@ -115,7 +115,7 @@ export default async function VendorsPage({
     <div className="space-y-10 pb-10">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <nav className="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <nav className="flex gap-2 text-xs font-black uppercase tracking-[0.2em] text-muted-foreground mb-3">
              <span>Home</span>
              <span className="opacity-30">/</span>
              <span className="text-primary">Vendors</span>
@@ -136,7 +136,7 @@ export default async function VendorsPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1 space-y-4">
-          <h2 className="heading-md uppercase text-[10px] tracking-[0.2em] flex items-center gap-2 mb-2">
+          <h2 className="heading-md uppercase text-xs tracking-[0.2em] flex items-center gap-2 mb-2">
             <BarChart3 className="w-4 h-4 text-primary" />
             Vendors List
           </h2>
@@ -150,7 +150,7 @@ export default async function VendorsPage({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-bold text-foreground text-sm truncate">{vendor.name}</p>
-                    <p className="text-[9px] font-black text-muted-foreground uppercase mt-1 tracking-widest truncate">{vendor.email || vendor.contactPerson || "No contact"}</p>
+                    <p className="text-xs font-black text-muted-foreground uppercase mt-1 tracking-widest truncate">{vendor.email || vendor.contactPerson || "No contact"}</p>
                   </div>
                   <div className="w-8 h-8 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center font-black text-xs text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-inner">
                     {vendor.name[0]}
@@ -164,7 +164,7 @@ export default async function VendorsPage({
                 </div>
               </Link>
             ))}
-            {vendors.length === 0 && <p className="text-center py-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest">No vendors found.</p>}
+            {vendors.length === 0 && <p className="text-center py-10 text-xs font-black text-muted-foreground uppercase tracking-widest">No vendors found.</p>}
           </div>
         </div>
 
@@ -204,7 +204,7 @@ export default async function VendorsPage({
                                 <p className="font-bold text-foreground text-sm leading-tight group-hover:text-primary transition-colors">{entry.vendorName}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
                                     <MapPin className="w-2.5 h-2.5 text-muted-foreground opacity-50" />
-                                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{entry.vendorAddress}</span>
+                                    <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">{entry.vendorAddress}</span>
                                 </div>
                             </div>
                           </div>
@@ -212,20 +212,20 @@ export default async function VendorsPage({
                         <td className="table-cell">
                           <div>
                             <p className="font-bold text-foreground text-sm">{entry.itemName}</p>
-                            <p className="text-[9px] font-black text-muted-foreground tracking-widest mt-0.5 uppercase">{entry.sku}</p>
+                            <p className="text-xs font-black text-muted-foreground tracking-widest mt-0.5 uppercase">{entry.sku}</p>
                           </div>
                         </td>
                         <td className="table-cell text-right">
                           <div className="flex flex-col items-end">
                              <div className="flex items-center gap-1">
-                                <span className="text-[9px] font-black text-muted-foreground opacity-50 uppercase">INR</span>
+                                <span className="text-xs font-black text-muted-foreground opacity-50 uppercase">INR</span>
                                 <span className="text-sm font-black text-foreground tracking-tighter">{Number(entry.price).toLocaleString()}</span>
                              </div>
-                             <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Per piece</span>
+                             <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Per piece</span>
                           </div>
                         </td>
                         <td className="table-cell">
-                          <div className="flex items-center gap-2 text-muted-foreground font-black text-[10px] uppercase tracking-widest">
+                          <div className="flex items-center gap-2 text-muted-foreground font-black text-xs uppercase tracking-widest">
                              <Clock className="w-3.5 h-3.5 opacity-50" />
                              <span>{entry.leadTime}</span>
                           </div>
@@ -233,7 +233,7 @@ export default async function VendorsPage({
                         <td className="table-cell text-right">
                           <Link 
                             href={`/vendors/${vendors.find((v: any) => v.name === entry.vendorName)?.id}`}
-                            className="btn btn-neutral h-9 px-4 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
+                            className="btn btn-neutral h-9 px-4 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
                           >
                              View History
                           </Link>
@@ -261,7 +261,7 @@ export default async function VendorsPage({
                  </div>
                  <div>
                     <p className="text-3xl font-black text-foreground tracking-tighter">{vendors.length}</p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Vendors</p>
+                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Total Vendors</p>
                  </div>
               </div>
               <div className="card-premium flex items-center gap-5 group border-success/5">
@@ -270,7 +270,7 @@ export default async function VendorsPage({
                  </div>
                  <div>
                     <p className="text-3xl font-black text-foreground tracking-tighter">{allCompetitiveItems.length}</p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Tracked SKUs</p>
+                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Tracked SKUs</p>
                  </div>
               </div>
               <div className="card-premium flex items-center gap-5 group border-warning/5">
@@ -281,7 +281,7 @@ export default async function VendorsPage({
                     <p className="text-3xl font-black text-foreground tracking-tighter">
                         {vendors.filter((v: any) => v.preferredPaymentMode === "CREDIT").length}
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">Credit Partners</p>
+                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Credit Partners</p>
                  </div>
               </div>
            </div>
@@ -290,4 +290,5 @@ export default async function VendorsPage({
     </div>
   );
 }
+
 

@@ -139,7 +139,7 @@ export default function InventoryStockManager({ itemId, userRole }: { itemId: st
           <div className="p-8 bg-primary/5 rounded-[2rem] border border-primary/10 space-y-6 animate-in fade-in slide-in-from-top-2">
              <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Select Target Rack</label>
+                   <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Select Target Rack</label>
                    <select 
                       value={newRackId}
                       onChange={(e) => setNewRackId(e.target.value)}
@@ -177,7 +177,7 @@ export default function InventoryStockManager({ itemId, userRole }: { itemId: st
                    </div>
                    <div>
                       <p className="text-sm font-black text-foreground">Rack {stock.rackNumber}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Physical Placement</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Physical Placement</p>
                    </div>
                 </div>
 
@@ -214,4 +214,5 @@ export default function InventoryStockManager({ itemId, userRole }: { itemId: st
     </div>
   );
 }
+
 

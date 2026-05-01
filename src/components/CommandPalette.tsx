@@ -87,7 +87,7 @@ export default function CommandPalette() {
             className="flex-1 bg-transparent border-none focus:ring-0 text-foreground font-bold placeholder:text-muted-foreground placeholder:font-medium text-lg"
           />
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-surface-low border border-border-ghost">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">ESC</span>
+            <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">ESC</span>
           </div>
         </div>
 
@@ -124,14 +124,14 @@ export default function CommandPalette() {
                       <div className="flex items-center gap-2">
                         <span className="font-black text-sm tracking-tight truncate">{item.name}</span>
                         <span className={cn(
-                          "px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border",
+                          "px-2 py-0.5 rounded-md text-xs font-black uppercase tracking-widest border",
                           isSelected ? "bg-white/20 border-white/20 text-white" : "bg-primary/5 border-primary/10 text-primary"
                         )}>
                           {item.category}
                         </span>
                       </div>
                       <p className={cn(
-                        "text-[10px] font-medium mt-0.5 truncate",
+                        "text-xs font-medium mt-0.5 truncate",
                         isSelected ? "text-white/70" : "text-muted-foreground"
                       )}>
                         {item.description}
@@ -141,7 +141,7 @@ export default function CommandPalette() {
                     <div className="flex items-center gap-1">
                       {item.keys.map((k, kIdx) => (
                         <kbd key={kIdx} className={cn(
-                          "px-1.5 py-1 rounded text-[9px] font-black uppercase border min-w-[24px] text-center",
+                          "px-1.5 py-1 rounded text-xs font-black uppercase border min-w-[24px] text-center",
                           isSelected ? "bg-white/20 border-white/10 text-white" : "bg-surface-low border-border-ghost text-muted-foreground"
                         )}>
                           {k === "meta" ? "CMD" : k.toUpperCase()}
@@ -166,20 +166,21 @@ export default function CommandPalette() {
         <div className="px-6 py-4 bg-surface-low/30 border-t border-border-ghost flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-1 rounded bg-white border border-border-ghost text-[9px] font-black shadow-sm">↑↓</kbd>
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Navigate</span>
+              <kbd className="px-1.5 py-1 rounded bg-white border border-border-ghost text-xs font-black shadow-sm">↑↓</kbd>
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Navigate</span>
             </div>
             <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-1 rounded bg-white border border-border-ghost text-[9px] font-black shadow-sm">ENTER</kbd>
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Select</span>
+              <kbd className="px-1.5 py-1 rounded bg-white border border-border-ghost text-xs font-black shadow-sm">ENTER</kbd>
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Select</span>
             </div>
           </div>
           <div className="flex items-center gap-1.5 opacity-50">
              <Command className="w-3 h-3" />
-             <span className="text-[10px] font-bold uppercase tracking-widest">Protocol V3</span>
+             <span className="text-xs font-bold uppercase tracking-widest">Protocol V3</span>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
