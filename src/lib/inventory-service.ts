@@ -233,6 +233,19 @@ export const InventoryService = {
           },
         },
       });
+
+      // Update Reservations if pending
+      if (status === "pending") {
+        for (const item of data.items) {
+          await tx.inventory.update({
+            where: { itemId: item.itemId },
+            data: {
+              quantityReserved: { increment: item.quantity },
+            },
+          });
+        }
+      }
+
       return order;
     });
   },
@@ -256,6 +269,7 @@ export const InventoryService = {
           where: { itemId: line.itemId },
           data: {
             quantityAvailable: { decrement: line.quantity },
+            quantityReserved: { decrement: line.quantity },
           },
         });
 
@@ -639,9 +653,32 @@ export const InventoryService = {
    * Cancels a dispatch order and releases reserved stock.
    */
   async cancelDispatchOrder(orderId: string) {
-    return await (prisma as any).dispatchOrder.update({
-      where: { id: orderId },
-      data: { status: "cancelled" },
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const order = await tx.dispatchOrder.findUnique({
+        where: { id: orderId },
+        include: { items: true },
+      });
+
+      if (!order) throw new Error("Order not found");
+      if (order.status === "cancelled") return order;
+      if (order.status === "dispatched") throw new Error("Cannot cancel a dispatched order");
+
+      // Release reservations if it was pending
+      if (order.status === "pending") {
+        for (const item of order.items) {
+          await tx.inventory.update({
+            where: { itemId: item.itemId },
+            data: {
+              quantityReserved: { decrement: item.quantity },
+            },
+          });
+        }
+      }
+
+      return await tx.dispatchOrder.update({
+        where: { id: orderId },
+        data: { status: "cancelled" },
+      });
     });
   },
 };
