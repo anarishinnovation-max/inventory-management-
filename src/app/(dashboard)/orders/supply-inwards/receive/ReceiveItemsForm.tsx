@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
   CheckCircle2, 
@@ -37,7 +37,7 @@ interface ReceiveItem {
 export default function ReceiveItemsForm({ initialItems }: { initialItems: ReceiveItem[] }) {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isPending, startTransition] = useTransition();
+
   const [values, setValues] = useState<Record<string, number>>(() => {
     const initial: Record<string, number> = {};
     initialItems.forEach(item => {
@@ -75,10 +75,8 @@ export default function ReceiveItemsForm({ initialItems }: { initialItems: Recei
 
       if (res.ok) {
         showToast(`Successfully recorded receipt for ${selections.length} items`, "success");
-        startTransition(() => {
-          router.push("/orders/supply-inwards");
-          router.refresh();
-        });
+        router.push("/orders/supply-inwards");
+        router.refresh();
       } else {
         const data = await res.json();
         showToast(data.error || "Failed to record receipt.", "error");
