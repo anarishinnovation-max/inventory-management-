@@ -207,7 +207,7 @@ export default async function SupplyInwardsPage({
             </div>
             <div>
               <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Pending Orders</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingPOs.length}</h2>
+              <h2 className="text-4xl font-black text-foreground mt-1 tracking-tighter">{pendingPOs.length}</h2>
             </div>
         </div>
 
@@ -217,7 +217,7 @@ export default async function SupplyInwardsPage({
             </div>
             <div>
               <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Items in Transit</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
+              <h2 className="text-4xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
             </div>
         </div>
 
@@ -227,7 +227,7 @@ export default async function SupplyInwardsPage({
             </div>
             <div>
               <p className="text-xs font-black text-success uppercase tracking-[0.15em]">Recent Receipts</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{recentTransactions.length}</h2>
+              <h2 className="text-4xl font-black text-foreground mt-1 tracking-tighter">{recentTransactions.length}</h2>
             </div>
         </div>
 
@@ -237,7 +237,7 @@ export default async function SupplyInwardsPage({
             </div>
             <div>
               <p className="text-xs font-black text-indigo-500 uppercase tracking-[0.15em]">Active Vendors</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">
+              <h2 className="text-4xl font-black text-foreground mt-1 tracking-tighter">
                 {new Set([...pendingPOs.map(po => po.vendorId), ...recentTransactions.map(t => t.vendorId)]).size}
               </h2>
             </div>

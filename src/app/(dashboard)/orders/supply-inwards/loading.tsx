@@ -20,7 +20,7 @@ export default function SupplyInwardsLoading() {
             </div>
             <div className="space-y-2">
               <div className="h-3 w-20 bg-surface-low rounded animate-pulse" />
-              <div className="h-8 w-12 bg-surface-low rounded animate-pulse" />
+              <div className="h-10 w-12 bg-surface-low rounded animate-pulse" />
             </div>
           </div>
         ))}

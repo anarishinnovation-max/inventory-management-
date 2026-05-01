@@ -266,7 +266,7 @@ export default async function InventoryPage({
           </div>
           <div>
             <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
-            <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{absoluteTotal}</h2>
+            <h2 className="text-4xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{absoluteTotal}</h2>
           </div>
         </div>
 
@@ -276,7 +276,7 @@ export default async function InventoryPage({
           </div>
           <div>
             <p className="text-xs font-black text-success uppercase tracking-[0.15em]">In Stock</p>
-            <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{inStockCount}</h2>
+            <h2 className="text-4xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{inStockCount}</h2>
           </div>
         </div>
 
@@ -286,7 +286,7 @@ export default async function InventoryPage({
           </div>
           <div>
             <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
-            <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{lowCount}</h2>
+            <h2 className="text-4xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{lowCount}</h2>
           </div>
         </div>
 
