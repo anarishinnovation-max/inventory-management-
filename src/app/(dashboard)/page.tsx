@@ -111,7 +111,7 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         INNER JOIN "Inventory" inv ON i.id = inv."itemId"
         WHERE (inv."quantityAvailable" + inv."incomingQty") < i."minStockLevel" AND i."companyId" = ${companyId}
         ORDER BY (inv."quantityAvailable" + inv."incomingQty") ASC
-        LIMIT 3
+        LIMIT 5
       `,
 
       // 8. FIFO Queue (Oldest Stock)
