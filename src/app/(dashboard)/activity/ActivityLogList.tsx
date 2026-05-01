@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { 
   Plus, 
@@ -84,7 +84,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                 const isExpanded = expandedId === log.id;
 
                 return (
-                  <div key={log.id} className="contents group/row">
+                  <React.Fragment key={log.id}>
                     <tr className={cn(
                       "table-row cursor-pointer transition-colors",
                       isExpanded ? "bg-primary/[0.02]" : "hover:bg-surface-low/50"
@@ -188,7 +188,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                         </td>
                       </tr>
                     )}
-                  </div>
+                  </React.Fragment>
                 );
               }) : (
                 <tr>

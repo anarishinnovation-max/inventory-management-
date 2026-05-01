@@ -136,7 +136,13 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         WHERE dord.status = 'dispatched' 
           AND dord."createdAt" > date_trunc('month', NOW())
           AND dord."companyId" = ${companyId}
-      `
+      `,
+      // 10. Recent Activity Logs
+      (prisma as any).activityLog.findMany({
+        where: { companyId },
+        take: 5,
+        orderBy: { createdAt: 'desc' }
+      })
     ]);
 
     const [
@@ -148,7 +154,8 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
       velocityResult,
       replenishItems,
       fifoQueueResult,
-      monthlyRevenueResult
+      monthlyRevenueResult,
+      recentLogs
     ] = results;
 
     const stats = (stockStatsResult as any)[0] || { total: 0, out_of_stock: 0, low_stock: 0, urgent: 0 };
@@ -176,7 +183,8 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
       })),
       velocity: velocityResult as any[] || [],
       replenish: replenishItems as any[] || [],
-      fifoQueue: fifoQueueResult as any[] || []
+      fifoQueue: fifoQueueResult as any[] || [],
+      recentLogs: recentLogs as any[] || []
     };
   },
   ["dashboard-analytics-v5", companyId],
@@ -400,29 +408,38 @@ export default async function DashboardPage() {
 
       {/* Bottom Detail Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Recent Activity Table */}
+        {/* Dual-Tab Activity Table */}
         <div className="lg:col-span-2 table-container !p-0">
-          <div className="p-6 pb-4 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <History className="w-4 h-4 text-primary" />
+          <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-ghost bg-surface-low/30">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <History className="w-4 h-4 text-primary" />
+                </div>
+                <h3 className="heading-md">Live Activity</h3>
               </div>
-              <h3 className="heading-md">Activity Log</h3>
+              
+              {/* Simple Toggle - could be expanded to real tabs */}
+              <nav className="flex items-center gap-4 border-l border-border-ghost pl-6">
+                <button className="text-[10px] font-black uppercase tracking-widest text-primary border-b-2 border-primary pb-1">Stock</button>
+                <Link href="/activity" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors pb-1 border-b-2 border-transparent">Audit</Link>
+              </nav>
             </div>
-            <button className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity" suppressHydrationWarning>View Full List</button>
+            <Link href="/activity" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity" suppressHydrationWarning>View Full Audit Log</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead className="table-header">
                 <tr>
-                  <th className="table-cell-header">Action</th>
-                  <th className="table-cell-header">Item Info</th>
-                  <th className="table-cell-header">Change</th>
-                  <th className="table-cell-header text-right">Status</th>
+                  <th className="table-cell-header">Event</th>
+                  <th className="table-cell-header">Reference</th>
+                  <th className="table-cell-header">Value</th>
+                  <th className="table-cell-header text-right">Time</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-ghost">
-                {data.recentActivity.map((tx: any) => (
+                {/* Mix of Stock and Audit logs could go here, but let's show Stock as primary */}
+                {data.recentActivity.length > 0 ? data.recentActivity.map((tx: any) => (
                   <tr key={tx.id} className="table-row">
                     <td className="table-cell">
                       <div className={cn(
@@ -443,10 +460,16 @@ export default async function DashboardPage() {
                       <span className="text-sm font-black text-foreground">{tx.type.includes('IN') || tx.type === 'PURCHASE' ? '+' : '-'}{tx.quantity}</span>
                     </td>
                     <td className="table-cell text-right">
-                      <span className="badge badge-success">DONE</span>
+                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                          {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                       </span>
                     </td>
                   </tr>
-                ))}
+                )) : (
+                  <tr>
+                    <td colSpan={4} className="py-20 text-center text-muted-foreground italic text-xs">No recent movements.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
