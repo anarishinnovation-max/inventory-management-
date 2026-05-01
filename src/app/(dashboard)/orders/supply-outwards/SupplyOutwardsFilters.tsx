@@ -79,10 +79,11 @@ export function SupplyOutwardsFilters({
           {/* Customer Dropdown */}
           <div className="w-[200px]">
             <SearchableSelect
-              items={customers}
+              items={[{ id: "all", name: "All Customers" }, ...customers]}
               value={currentCustomerId}
               onChange={(val) => updateFilter("customerId", val)}
               placeholder="All Customers"
+              label="BY CUSTOMER"
               className="!rounded-full h-11"
             />
           </div>
@@ -90,10 +91,11 @@ export function SupplyOutwardsFilters({
           {/* Item Dropdown */}
           <div className="w-[200px]">
             <SearchableSelect
-              items={items}
+              items={[{ id: "all", name: "All Items" }, ...items]}
               value={currentItemId}
               onChange={(val) => updateFilter("itemId", val)}
               placeholder="All Items"
+              label="BY ITEM"
               className="!rounded-full h-11"
             />
           </div>

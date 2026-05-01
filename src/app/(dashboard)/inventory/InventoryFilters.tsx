@@ -39,8 +39,14 @@ export default function InventoryFilters({
   ];
 
   const activityOptions = [
+    { id: "all", name: "All Actions" },
     { id: "latest_sent", name: "Latest Sent" },
     { id: "latest_received", name: "Latest Received" },
+  ];
+
+  const categoryOptions = [
+    { id: "all", name: "All Categories" },
+    ...categories.map(c => ({ id: c, name: c }))
   ];
 
   const updateFilter = (key: string, value: string) => {
@@ -79,34 +85,37 @@ export default function InventoryFilters({
         {/* Dropdowns on the Right */}
         <div className="flex flex-wrap items-center gap-4">
           {/* Stock Status Dropdown */}
-          <div className="w-[180px]">
+          <div className="w-[200px]">
              <SearchableSelect 
                items={statuses.map(s => ({ id: s.value, name: s.label }))}
                value={currentStatus.startsWith('latest_') ? 'all' : currentStatus}
                onChange={(val) => updateFilter("status", val)}
-               placeholder="Stock Status"
+               placeholder="All Items"
+               label="BY ITEM"
                className="!rounded-full h-11"
              />
           </div>
 
           {/* Activity Dropdown - Custom */}
-          <div className="w-[180px]">
+          <div className="w-[200px]">
              <SearchableSelect 
                items={activityOptions}
                value={currentStatus.startsWith('latest_') ? currentStatus : 'all'}
                onChange={(val) => updateFilter("status", val)}
-               placeholder="Activity Log"
+               placeholder="All Actions"
+               label="BY ACTION"
                className="!rounded-full h-11"
              />
           </div>
 
           {/* Category Dropdown - Custom */}
-          <div className="w-[200px]">
+          <div className="w-[220px]">
              <SearchableSelect 
-               items={categories.map(c => ({ id: c, name: c }))}
+               items={categoryOptions}
                value={currentCategory}
                onChange={(val) => updateFilter("category", val)}
                placeholder="All Categories"
+               label="BY CATEGORY"
                className="!rounded-full h-11"
              />
           </div>

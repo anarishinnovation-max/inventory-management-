@@ -100,6 +100,7 @@ export default function AdvancedPurchaseFilters({
               value={currentFilters.status || "all"}
               onChange={(val) => updateFilters({ status: val })}
               placeholder="All Status"
+              label="BY STATUS"
               className="!rounded-full h-11"
             />
           </div>
@@ -107,10 +108,11 @@ export default function AdvancedPurchaseFilters({
           {/* Vendor Dropdown */}
           <div className="w-[200px]">
             <SearchableSelect
-              items={vendors}
+              items={[{ id: "all", name: "All Vendors" }, ...vendors]}
               value={currentFilters.vendorId || "all"}
               onChange={(val) => updateFilters({ vendorId: val })}
               placeholder="All Vendors"
+              label="BY VENDOR"
               className="!rounded-full h-11"
             />
           </div>
@@ -140,7 +142,7 @@ export default function AdvancedPurchaseFilters({
               <Package className="w-3 h-3" /> Filter by Item
             </label>
             <SearchableSelect
-              items={items}
+              items={[{ id: "all", name: "All Items" }, ...items]}
               value={currentFilters.itemId || "all"}
               onChange={(val) => updateFilters({ itemId: val })}
               placeholder="All Items"

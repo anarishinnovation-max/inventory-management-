@@ -59,12 +59,13 @@ export function DispatchFilters({
       {/* Filters on the Right */}
       <div className="flex flex-wrap items-center gap-4">
         {/* Status Dropdown */}
-        <div className="w-[200px]">
+        <div className="w-[180px]">
           <SearchableSelect
             items={statusOptions}
             value={currentStatus}
             onChange={(val) => updateFilter("status", val)}
             placeholder="All Status"
+            label="BY STATUS"
             className="!rounded-full h-11"
           />
         </div>

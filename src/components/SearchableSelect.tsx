@@ -17,6 +17,7 @@ interface SearchableSelectProps {
   renderItem?: (item: any) => React.ReactNode;
   className?: string;
   icon?: React.ReactNode;
+  label?: string;
 }
 
 export function SearchableSelect({
@@ -26,7 +27,8 @@ export function SearchableSelect({
   placeholder = "Select from List",
   renderItem,
   className,
-  icon
+  icon,
+  label
 }: SearchableSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -73,11 +75,18 @@ export function SearchableSelect({
           isOpen && "border-primary/60 ring-4 ring-primary/10 shadow-glow bg-surface-lowest",
         )}
       >
-        <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
           {icon && <div className="shrink-0">{icon}</div>}
-          <span className={cn("truncate mr-2 font-bold text-[11px] uppercase tracking-widest text-foreground")}>
-            {getDisplayValue()}
-          </span>
+          <div className="flex items-center gap-1.5 min-w-0">
+            {label && (
+              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest shrink-0 opacity-60">
+                {label}
+              </span>
+            )}
+            <span className={cn("truncate font-black text-[10px] uppercase tracking-widest text-foreground")}>
+              {getDisplayValue()}
+            </span>
+          </div>
         </div>
         <ChevronDown className={cn("w-4 h-4 text-muted-foreground shrink-0 transition-colors duration-300", isOpen && "text-primary")} />
       </div>
