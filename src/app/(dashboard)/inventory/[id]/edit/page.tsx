@@ -293,7 +293,7 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         </div>
       </div>
 
-      <InventoryStockManager itemId={id} />
+      <InventoryStockManager itemId={id} userRole={userRole} />
 
       <div className="mt-12 flex flex-col md:flex-row items-center justify-between p-8 bg-surface-low/30 rounded-[2.5rem] border border-border-ghost shadow-ambient gap-6">
         <div className="flex items-center gap-4">

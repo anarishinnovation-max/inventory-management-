@@ -127,16 +127,18 @@ export default function InventoryTableActions({
             )}
           </button>
 
-          <button
-            onClick={() => {
-              setShowScrap(true);
-              setShowDropdown(false);
-            }}
-            className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-error hover:bg-error/5 transition-colors text-left"
-          >
-            <Flame className="w-3.5 h-3.5" />
-            <span>Scrap Items</span>
-          </button>
+          {userRole !== 'EMPLOYEE' && (
+            <button
+              onClick={() => {
+                setShowScrap(true);
+                setShowDropdown(false);
+              }}
+              className="flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium text-error hover:bg-error/5 transition-colors text-left"
+            >
+              <Flame className="w-3.5 h-3.5" />
+              <span>Scrap Items</span>
+            </button>
+          )}
 
           {userRole !== 'EMPLOYEE' && (
             <button

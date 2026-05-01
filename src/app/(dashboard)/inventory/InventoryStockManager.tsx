@@ -26,7 +26,7 @@ interface Rack {
   rackNumber: string;
 }
 
-export default function InventoryStockManager({ itemId }: { itemId: string }) {
+export default function InventoryStockManager({ itemId, userRole }: { itemId: string; userRole?: string }) {
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [allRacks, setAllRacks] = useState<Rack[]>([]);
   const confirm = useConfirm();
@@ -108,13 +108,15 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
           </div>
           Storage Locations
         </h3>
-        <button 
-          type="button"
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="btn btn-neutral h-10 px-4 text-xs"
-        >
-          {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Add Spot</>}
-        </button>
+        {userRole !== 'EMPLOYEE' && (
+          <button 
+            type="button"
+            onClick={() => setShowAddForm(!showAddForm)}
+            className="btn btn-neutral h-10 px-4 text-xs"
+          >
+            {showAddForm ? "Cancel" : <><Plus className="w-4 h-4" /> Add Spot</>}
+          </button>
+        )}
       </div>
 
       {error && (
@@ -179,21 +181,23 @@ export default function InventoryStockManager({ itemId }: { itemId: string }) {
                    </div>
                 </div>
 
-                <div className="flex items-center gap-6 w-full md:w-auto">
-                   <div className="h-8 w-px bg-border-ghost hidden md:block"></div>
-                   <button 
-                      type="button"
-                      title="Remove from this rack"
-                      onClick={async () => {
-                        if (await confirm("Remove from Rack", "Are you sure you want to remove this item from this rack? This will NOT delete the actual stock, just the location mapping.")) {
-                           handleUpdateStock(stock.rackId, 0, stock.id);
-                        }
-                      }}
-                      className="btn btn-ghost h-10 w-10 !p-0 rounded-xl bg-error/5 text-error hover:bg-error/10 border-error/10"
-                   >
-                      <Trash2 className="w-4 h-4" />
-                   </button>
-                </div>
+                {userRole !== 'EMPLOYEE' && (
+                  <div className="flex items-center gap-6 w-full md:w-auto">
+                    <div className="h-8 w-px bg-border-ghost hidden md:block"></div>
+                    <button 
+                        type="button"
+                        title="Remove from this rack"
+                        onClick={async () => {
+                          if (await confirm("Remove from Rack", "Are you sure you want to remove this item from this rack? This will NOT delete the actual stock, just the location mapping.")) {
+                              handleUpdateStock(stock.rackId, 0, stock.id);
+                          }
+                        }}
+                        className="btn btn-ghost h-10 w-10 !p-0 rounded-xl bg-error/5 text-error hover:bg-error/10 border-error/10"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>

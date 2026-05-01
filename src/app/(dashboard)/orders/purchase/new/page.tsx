@@ -26,7 +26,7 @@ import Link from "next/link";
 import { showToast } from "@/lib/toast";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { StockBreakdownPopup } from "./StockBreakdownPopup";
+import { ItemBreakdownModal } from "@/app/(dashboard)/inventory/ItemBreakdownModal";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -60,7 +60,7 @@ function NewPurchaseOrderForm() {
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { itemId: "", quantityOrdered: 1, costPrice: 0 }
   ]);
-  const [breakdownData, setBreakdownData] = useState<{ name: string; total: number; batches: any[] } | null>(null);
+  const [breakdownItem, setBreakdownItem] = useState<any | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -278,11 +278,7 @@ function NewPurchaseOrderForm() {
                               type="button"
                               onClick={(e) => {
                                 e.preventDefault();
-                                setBreakdownData({
-                                  name: selectedItem.name,
-                                  total: stock,
-                                  batches: selectedItem.inventory?.batches || []
-                                });
+                                  setBreakdownItem(selectedItem);
                               }}
                               className="w-8 h-8 rounded-lg bg-white/50 flex items-center justify-center hover:bg-white transition-all border border-transparent hover:border-border-ghost"
                             >
@@ -430,13 +426,18 @@ function NewPurchaseOrderForm() {
         </div>
       </div>
 
-      <StockBreakdownPopup 
-        isOpen={!!breakdownData}
-        onClose={() => setBreakdownData(null)}
-        itemName={breakdownData?.name || ""}
-        totalStock={breakdownData?.total || 0}
-        batches={breakdownData?.batches || []}
-      />
+      {breakdownItem && (
+        <ItemBreakdownModal 
+          isOpen={!!breakdownItem}
+          onClose={() => setBreakdownItem(null)}
+          itemId={breakdownItem.id}
+          itemName={breakdownItem.name}
+          totalStock={breakdownItem.inventory?.quantityAvailable || 0}
+          incomingQty={breakdownItem.inventory?.incomingQty || 0}
+          minStockLevel={breakdownItem.minStockLevel || 0}
+          unit={breakdownItem.unit}
+        />
+      )}
     </div>
   );
 }

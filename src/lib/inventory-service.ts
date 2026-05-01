@@ -525,6 +525,26 @@ export const InventoryService = {
         data: { quantityAvailable: { decrement: params.quantity } },
       });
 
+      // Also deduct from Batches (FIFO) to keep breakdown in sync
+      let batchRemaining = params.quantity;
+      const batches = await tx.inventoryBatch.findMany({
+        where: { 
+          inventory: { itemId: params.itemId },
+          remainingQty: { gt: 0 }
+        },
+        orderBy: { purchaseDate: "asc" }
+      });
+
+      for (const batch of batches) {
+        if (batchRemaining <= 0) break;
+        const deduction = Math.min(batch.remainingQty, batchRemaining);
+        await tx.inventoryBatch.update({
+          where: { id: batch.id },
+          data: { remainingQty: { decrement: deduction } }
+        });
+        batchRemaining -= deduction;
+      }
+
       return await tx.inventoryTransaction.create({
         data: {
           item: { connect: { id: params.itemId } },

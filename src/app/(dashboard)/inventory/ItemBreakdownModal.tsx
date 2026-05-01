@@ -21,6 +21,13 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+function normalizeUnit(unit: string) {
+  const u = unit?.toLowerCase().trim();
+  if (!u) return "PCS";
+  if (u === "pieces" || u === "piece" || u === "pcs") return "PCS";
+  return unit.toUpperCase();
+}
+
 interface PurchaseHistoryEntry {
   vendor: string;
   quantity: number;
@@ -69,6 +76,7 @@ export function ItemBreakdownModal({
   totalStock,
   incomingQty,
   minStockLevel,
+  unit,
   isOpen,
   onClose
 }: {
@@ -77,6 +85,7 @@ export function ItemBreakdownModal({
   totalStock: number;
   incomingQty: number;
   minStockLevel: number;
+  unit: string;
   isOpen: boolean;
   onClose: () => void;
 }) {
@@ -170,32 +179,34 @@ export function ItemBreakdownModal({
               </nav>
               <h2 className="text-2xl font-black leading-tight mb-2">{itemName}</h2>
               <div className="flex flex-wrap items-center gap-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm">
-                  <Package className="w-3.5 h-3.5" />
-                  <span className="text-[11px] font-black">{totalStock} Units In Stock</span>
-                </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 text-primary rounded-xl shadow-sm">
-                  <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>
-                  <span className="text-[11px] font-black">
-                    ₹{(() => {
-                      const stockRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
-                      const pipelineRemaining = incomingPOs.reduce((acc, p) => acc + p.quantity, 0);
-                      const totalUnits = stockRemaining + pipelineRemaining;
+                {(() => {
+                  const stockRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
+                  const pipelineRemaining = incomingPOs.reduce((acc, p) => acc + p.quantity, 0);
+                  const totalUnits = stockRemaining + pipelineRemaining;
+                  const stockValue = breakdown.reduce((acc, b) => acc + (b.quantity * b.costPerUnit), 0);
+                  const pipelineValue = incomingPOs.reduce((acc, p) => acc + (p.quantity * p.costPerUnit), 0);
+                  const totalValue = stockValue + pipelineValue;
+                  const avgPrice = totalUnits === 0 ? 0 : (totalValue / totalUnits);
 
-                      if (totalUnits === 0) return "0";
-
-                      const stockValue = breakdown.reduce((acc, b) => acc + (b.quantity * b.costPerUnit), 0);
-                      const pipelineValue = incomingPOs.reduce((acc, p) => acc + (p.quantity * p.costPerUnit), 0);
-                      const totalValue = stockValue + pipelineValue;
-
-                      return (totalValue / totalUnits).toLocaleString(undefined, { maximumFractionDigits: 0 });
-                    })()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm">
-                  <Truck className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-[11px] font-black text-muted-foreground">{incomingQty} Pipeline</span>
-                </div>
+                  return (
+                    <>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm transition-all duration-500">
+                        <Package className="w-3.5 h-3.5" />
+                        <span className="text-[11px] font-black">{loading ? "..." : stockRemaining} {normalizeUnit(unit)} In Stock</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 text-primary rounded-xl shadow-sm transition-all duration-500">
+                        <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>
+                        <span className="text-[11px] font-black">
+                          ₹{loading ? "..." : avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm transition-all duration-500">
+                        <Truck className="w-3.5 h-3.5 text-muted-foreground" />
+                        <span className="text-[11px] font-black text-muted-foreground">{loading ? "..." : pipelineRemaining} Pipeline</span>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </div>

@@ -34,6 +34,13 @@ function formatDate(date: Date) {
   });
 }
 
+function normalizeUnit(unit: string) {
+  const u = unit?.toLowerCase().trim();
+  if (!u) return "PCS";
+  if (u === "pieces" || u === "piece" || u === "pcs") return "PCS";
+  return unit.toUpperCase();
+}
+
 export default function InventoryList({
   items,
   userRole,
@@ -88,7 +95,7 @@ export default function InventoryList({
             const net = (item.totalStock + incoming) - (item.quantityReserved || 0);
             if (net < 0) return 4; // Urgent
             if (item.totalStock <= 0) return 3; // Out of stock
-            if (!incoming && item.totalStock <= item.minStockLevel) return 2; // Low stock
+            if (item.totalStock <= (item.minStockLevel || 0)) return 2; // Low stock
             if (incoming > 0) return 1; // Ordered
             return 0; // In stock
           };
@@ -309,7 +316,7 @@ export default function InventoryList({
                     onClick={() => requestSort('units')}
                     className="flex items-center justify-end w-full hover:text-primary transition-colors group uppercase tracking-widest text-[10px] font-black"
                   >
-                    Available
+                    Quantity
                     <SortIcon column="units" />
                   </button>
                 </th>
@@ -341,9 +348,9 @@ export default function InventoryList({
                 const incomingQty = item.incomingQty ?? 0;
                 const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
                 const isUrgent = netAvailable < 0;
-                const isShortage = totalStock <= 0;
-                const isOrdered = incomingQty > 0;
-                const isLowStock = !isOrdered && totalStock > 0 && totalStock <= item.minStockLevel;
+                const isOutOfStock = !isUrgent && totalStock <= 0;
+                const isLowStock = !isUrgent && !isOutOfStock && totalStock > 0 && totalStock <= item.minStockLevel;
+                const isOrdered = !isUrgent && !isOutOfStock && !isLowStock && incomingQty > 0;
                 const isSelected = selectedIds.has(item.id);
 
                 const rackLocations = (item.stocks || []).length > 0
@@ -394,8 +401,8 @@ export default function InventoryList({
 
                     <td className="table-cell text-right font-mono">
                       <div className="flex flex-col items-end">
-                        <span className={`text-base font-black tracking-tight ${isUrgent || isShortage ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
-                          {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{item.unit}</span>
+                        <span className={`text-base font-black tracking-tight ${isUrgent || isOutOfStock ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
+                          {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{normalizeUnit(item.unit)}</span>
                         </span>
                         {incomingQty > 0 && (
                           <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
@@ -412,19 +419,18 @@ export default function InventoryList({
                     <td className="table-cell hidden sm:table-cell">
                       {isUrgent ? (
                         <span className="badge badge-error">Urgent</span>
-                      ) : isShortage ? (
+                      ) : isOutOfStock ? (
                         <span className="badge badge-error">Out of Stock</span>
-                      ) : isOrdered ? (
-                        <span className="badge badge-primary">Ordered</span>
                       ) : isLowStock ? (
                         <span className="badge badge-warning">Low Stock</span>
+                      ) : isOrdered ? (
+                        <span className="badge badge-primary">Ordered</span>
                       ) : (
                         <span className="badge badge-success">In Stock</span>
                       )}
                     </td>
                     <td className="table-cell hidden xl:table-cell">
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Calendar className="w-3 h-3 opacity-40" />
                         <span className="text-[10px] font-bold">
                           {formatDate(item.updatedAt)}
                         </span>
@@ -469,6 +475,7 @@ export default function InventoryList({
           totalStock={breakdownItem.totalStock}
           incomingQty={breakdownItem.incomingQty}
           minStockLevel={breakdownItem.minStockLevel || 0}
+          unit={breakdownItem.unit}
         />
       )}
     </div>

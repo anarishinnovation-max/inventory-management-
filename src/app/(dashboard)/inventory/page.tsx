@@ -99,6 +99,13 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     const weightedSum = batches.reduce((acc: number, b: any) => acc + (b.quantity * b.costPerUnit), 0);
     const avgPrice = totalRemainingInBatches > 0 ? (weightedSum / totalRemainingInBatches) : 0;
 
+    const isUrgent = netAvailable < 0;
+    const isOutOfStock = !isUrgent && total <= 0;
+    const isLow = !isUrgent && !isOutOfStock && total > 0 && total <= (item.minStockLevel ?? 0);
+    const isPartial = total > 0 && total < reserved;
+    const isOrdered = !isUrgent && !isOutOfStock && !isLow && incoming > 0;
+    const isInStock = !isUrgent && !isOutOfStock && !isLow && !isOrdered && total > (item.minStockLevel ?? 0);
+
     return {
       id: item.id,
       name: item.name,
@@ -108,17 +115,16 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
       minStockLevel: item.minStockLevel ?? 0,
       totalStock: total,
       avgPrice,
-
       netAvailable,
-      incomingQty: item.inventory?.incomingQty ?? 0,
+      incomingQty: incoming,
       quantityReserved: reserved,
       quantityInTransit: item.inventory?.quantityInTransit ?? 0,
-      isUrgent: netAvailable < 0,
-      isLow: total > 0 && total <= (item.minStockLevel ?? 0) && netAvailable >= 0,
-      isOutOfStock: total <= 0,
-      isPartial: total > 0 && total < reserved,
-      isOrdered: incoming > 0 && netAvailable >= 0,
-      isInStock: total > (item.minStockLevel ?? 0) && total >= reserved,
+      isUrgent,
+      isLow,
+      isOutOfStock,
+      isPartial,
+      isOrdered,
+      isInStock,
       lastLogType: item.lastLogType,
       category: item.category?.name || "Uncategorized",
       updatedAt: item.inventory?.updatedAt || item.createdAt
@@ -180,7 +186,8 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
 
   return {
     items: pageWithStocks,
-    totalItems: totalItemsCount,
+    totalItems: filteredItems.length,
+    absoluteTotal: mappedAll.length,
     urgentCount,
     lowCount,
     outOfStockCount,
@@ -211,7 +218,7 @@ export default async function InventoryPage({
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const { items, totalItems, urgentCount, lowCount, outOfStockCount, reorderPool } = 
+  const { items, totalItems, absoluteTotal, urgentCount, lowCount, outOfStockCount, reorderPool } = 
     await getInventoryDataRaw(session.companyId, q, status, category, page, PAGE_SIZE);
   
   
@@ -257,7 +264,7 @@ export default async function InventoryPage({
             </div>
             <div>
               <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{totalItems}</h2>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{absoluteTotal}</h2>
             </div>
         </div>
 

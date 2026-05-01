@@ -117,7 +117,7 @@ async function getInwardData(options: {
   ]);
 
   // Flatten items for "ordered item" view
-  const pendingItems = pendingPOs.flatMap(po => 
+  let pendingItems = pendingPOs.flatMap(po => 
     po.items
       .filter(item => item.quantityReceived < item.quantityOrdered)
       .map(item => ({
@@ -128,6 +128,17 @@ async function getInwardData(options: {
         orderDate: po.orderDate
       }))
   );
+
+  // Apply row-level filtering if query exists
+  if (query) {
+    const lowerQuery = query.toLowerCase();
+    pendingItems = pendingItems.filter(item => 
+      item.item.name.toLowerCase().includes(lowerQuery) ||
+      item.item.sku.toLowerCase().includes(lowerQuery) ||
+      item.vendor.name.toLowerCase().includes(lowerQuery) ||
+      item.poId.toLowerCase().includes(lowerQuery)
+    );
+  }
 
   return { 
     pendingPOs, 
