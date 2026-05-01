@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
+import { TimeDisplay } from "@/components/TimeDisplay";
 import { 
   Plus, 
   Edit, 
@@ -126,10 +127,12 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                         </div>
                       </td>
                       <td className="table-cell">
-                        <div className="flex flex-col">
-                           <span className="text-xs font-black text-foreground">{formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}</span>
+                        <div className="flex flex-col" suppressHydrationWarning>
+                           <span className="text-xs font-black text-foreground">
+                              {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
+                           </span>
                            <span className="text-[9px] font-bold text-muted-foreground mt-0.5 uppercase tracking-widest">
-                              {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              <TimeDisplay date={log.createdAt} />
                            </span>
                         </div>
                       </td>
@@ -179,7 +182,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                                       </div>
                                       <div className="pt-4 border-t border-border-ghost">
                                          <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">Full Event Timestamp</p>
-                                         <p className="text-xs font-black text-foreground mt-1">{new Date(log.createdAt).toLocaleString()}</p>
+                                         <p className="text-xs font-black text-foreground mt-1"><TimeDisplay date={log.createdAt} format="full" /></p>
                                       </div>
                                    </div>
                                 </div>

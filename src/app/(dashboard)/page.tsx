@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import { TimeDisplay } from "@/components/TimeDisplay";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -461,7 +462,7 @@ export default async function DashboardPage() {
                     </td>
                     <td className="table-cell text-right">
                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                          {new Date(tx.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          <TimeDisplay date={tx.createdAt} />
                        </span>
                     </td>
                   </tr>
