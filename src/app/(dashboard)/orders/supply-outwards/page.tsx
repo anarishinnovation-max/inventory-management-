@@ -143,10 +143,30 @@ export default async function SupplyOutwardsPage({
 
   const { pendingItems, transactions } = await getSupplyOutwardsData(session.companyId, q, customerId, itemId, startDate, endDate);
 
-  const [customers, items] = await Promise.all([
+  const [customers, itemsRaw] = await Promise.all([
     prisma.customer.findMany({ where: { companyId: session.companyId }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
-    prisma.item.findMany({ where: { companyId: session.companyId }, select: { id: true, name: true, sku: true }, orderBy: { name: 'asc' } }),
+    prisma.item.findMany({ 
+      where: { companyId: session.companyId }, 
+      select: { 
+        id: true, 
+        name: true, 
+        unit: true,
+        inventory: {
+          select: {
+            quantityAvailable: true
+          }
+        }
+      }, 
+      orderBy: { name: 'asc' } 
+    }),
   ]);
+
+  const items = itemsRaw.map(i => ({
+    id: i.id,
+    name: i.name,
+    unit: i.unit,
+    quantity: i.inventory?.quantityAvailable ?? 0
+  }));
 
   const totalPendingUnits = pendingItems.reduce((acc, item) => acc + item.quantity, 0);
   

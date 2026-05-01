@@ -180,10 +180,34 @@ export default async function PurchaseOrdersPage({
   });
 
   // Fetch data for filters
-  const [vendors, items] = await Promise.all([
-    prisma.vendor.findMany({ where: { companyId: session.companyId }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
-    prisma.item.findMany({ where: { companyId: session.companyId }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+  const [vendors, itemsRaw] = await Promise.all([
+    prisma.vendor.findMany({ 
+      where: { companyId: session.companyId }, 
+      select: { id: true, name: true }, 
+      orderBy: { name: 'asc' } 
+    }),
+    prisma.item.findMany({ 
+      where: { companyId: session.companyId }, 
+      select: { 
+        id: true, 
+        name: true,
+        unit: true,
+        inventory: {
+          select: {
+            quantityAvailable: true
+          }
+        }
+      }, 
+      orderBy: { name: 'asc' } 
+    }),
   ]);
+
+  const items = itemsRaw.map(i => ({
+    id: i.id,
+    name: i.name,
+    unit: i.unit,
+    quantity: i.inventory?.quantityAvailable ?? 0
+  }));
 
   // Calculate stats for the KPI grid
   const allPos = await prisma.purchaseOrder.findMany({ where: { companyId: session.companyId }, select: { status: true } });

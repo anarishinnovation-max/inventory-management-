@@ -148,6 +148,8 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
   }
 
   const totalItemsCount = filteredItems.length;
+  const totalFilteredQuantity = filteredItems.reduce((acc, item) => acc + item.totalStock, 0);
+  const absoluteTotalQuantity = mappedAll.reduce((acc, item) => acc + item.totalStock, 0);
   const pageItemsSlice = filteredItems.slice((page - 1) * pageSize, page * pageSize);
 
   // Fetch rack details ONLY for current page
@@ -188,6 +190,8 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     items: pageWithStocks,
     totalItems: filteredItems.length,
     absoluteTotal: mappedAll.length,
+    totalFilteredQuantity,
+    absoluteTotalQuantity,
     urgentCount,
     lowCount,
     outOfStockCount,
@@ -218,7 +222,7 @@ export default async function InventoryPage({
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const { items, totalItems, absoluteTotal, urgentCount, lowCount, outOfStockCount, reorderPool } = 
+  const { items, totalItems, absoluteTotal, totalFilteredQuantity, absoluteTotalQuantity, urgentCount, lowCount, outOfStockCount, reorderPool } = 
     await getInventoryDataRaw(session.companyId, q, status, category, page, PAGE_SIZE);
   
   
@@ -305,6 +309,10 @@ export default async function InventoryPage({
         currentCategory={category}
         categories={categoryNames}
         searchQuery={q}
+        filteredCount={totalItems}
+        totalCount={absoluteTotal}
+        totalFilteredQuantity={totalFilteredQuantity}
+        absoluteTotalQuantity={absoluteTotalQuantity}
       />
 
       <InventoryList items={items ?? []} userRole={session.role} searchQuery={q} />

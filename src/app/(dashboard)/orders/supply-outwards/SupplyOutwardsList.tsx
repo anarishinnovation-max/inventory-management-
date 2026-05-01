@@ -29,7 +29,7 @@ interface SupplyOutwardsListProps {
   items: any[];
   searchQuery: string;
   customers: { id: string; name: string }[];
-  allItems: { id: string; name: string; sku: string }[];
+  allItems: { id: string; name: string; quantity?: number; unit?: string }[];
   currentCustomerId: string;
   currentItemId: string;
   currentStartDate?: string;

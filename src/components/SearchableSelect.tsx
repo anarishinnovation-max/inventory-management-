@@ -52,7 +52,10 @@ export function SearchableSelect({
   const getDisplayValue = () => {
     if (!selectedItem) return placeholder;
     if (typeof selectedItem === 'string') return selectedItem;
-    if (selectedItem.sku && selectedItem.name) return `${selectedItem.sku} - ${selectedItem.name}`;
+    // Show quantity in the button if available, replacing the SKU format
+    if (selectedItem.quantity !== undefined && selectedItem.name) {
+      return `${selectedItem.name} (${selectedItem.quantity} ${selectedItem.unit || ''})`;
+    }
     return selectedItem.name || selectedItem.label || selectedItem.id;
   };
 
@@ -134,7 +137,11 @@ export function SearchableSelect({
                         ) : (
                           <div className="flex flex-col">
                             <p className="text-[11px] font-black uppercase tracking-widest truncate">{item.name || item.label}</p>
-                            {item.sku && <p className="text-[9px] font-bold text-muted-foreground uppercase mt-0.5">SKU: {item.sku}</p>}
+                            {item.quantity !== undefined && (
+                              <p className="text-[9px] font-bold text-muted-foreground uppercase mt-0.5">
+                                Stock: {item.quantity} {item.unit || ''}
+                              </p>
+                            )}
                           </div>
                         )
                       )}

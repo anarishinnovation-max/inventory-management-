@@ -23,7 +23,7 @@ import SearchInput from "@/components/SearchInput";
 
 interface AdvancedPurchaseFiltersProps {
   vendors: { id: string; name: string }[];
-  items: { id: string; name: string }[];
+  items: { id: string; name: string; quantity?: number; unit?: string }[];
   currentFilters: {
     q?: string;
     vendorId?: string;

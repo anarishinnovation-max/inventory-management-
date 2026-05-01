@@ -17,6 +17,10 @@ interface InventoryFiltersProps {
   currentCategory: string;
   categories: string[];
   searchQuery: string;
+  filteredCount: number;
+  totalCount: number;
+  totalFilteredQuantity: number;
+  absoluteTotalQuantity: number;
 }
 
 export default function InventoryFilters({
@@ -24,6 +28,10 @@ export default function InventoryFilters({
   currentCategory,
   categories,
   searchQuery,
+  filteredCount,
+  totalCount,
+  totalFilteredQuantity,
+  absoluteTotalQuantity,
 }: InventoryFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -71,19 +79,56 @@ export default function InventoryFilters({
 
   const hasActiveFilters = currentStatus !== "all" || currentCategory !== "all" || searchQuery !== "";
 
+  const getActiveFilterLabel = () => {
+    const active = [];
+    if (currentStatus !== 'all') {
+      const s = statuses.find(s => s.value === currentStatus)?.label || 
+                activityOptions.find(o => o.id === currentStatus)?.name;
+      if (s) active.push(s);
+    }
+    if (currentCategory !== 'all') active.push(currentCategory);
+    if (searchQuery) active.push(`Search: ${searchQuery}`);
+    
+    return active.length > 0 ? `(${active.join(', ')})` : '';
+  };
+
   return (
     <div className="w-full">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
         {/* Search Bar on the Left */}
-        <div className="flex-1 max-w-2xl">
+        <div className="flex-1 max-w-2xl space-y-2">
           <SearchInput
             defaultValue={searchQuery}
             placeholder="Search items, SKU, or Rack..."
           />
+          <div className="px-4 transition-all duration-300 animate-in fade-in slide-in-from-left-2">
+            <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
+              {hasActiveFilters ? (
+                <>
+                  Showing <span className="text-foreground">{filteredCount}</span> out of <span className="text-foreground">{totalCount}</span>
+                  <span className="text-muted-foreground/30 mx-1">|</span>
+                  Total: <span className="text-foreground">{totalFilteredQuantity.toLocaleString()} Units</span>
+                  <span className="text-primary/60 ml-1.5">{getActiveFilterLabel()}</span>
+                  <button 
+                    onClick={clearFilters}
+                    className="ml-2 hover:text-primary transition-colors underline decoration-dotted underline-offset-4 cursor-pointer"
+                  >
+                    Clear All
+                  </button>
+                </>
+              ) : (
+                <>
+                  Showing <span className="text-foreground">{totalCount}</span> items 
+                  <span className="text-muted-foreground/30 mx-1">|</span> 
+                  Total: <span className="text-foreground">{absoluteTotalQuantity.toLocaleString()} Units</span>
+                </>
+              )}
+            </p>
+          </div>
         </div>
 
         {/* Dropdowns on the Right */}
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 mt-0.5">
           {/* Stock Status Dropdown */}
           <div className="w-[200px]">
              <SearchableSelect 

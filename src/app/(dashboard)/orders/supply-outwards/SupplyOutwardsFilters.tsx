@@ -14,7 +14,7 @@ import SearchInput from "@/components/SearchInput";
 
 interface SupplyOutwardsFiltersProps {
   customers: { id: string; name: string }[];
-  items: { id: string; name: string }[];
+  items: { id: string; name: string; quantity?: number; unit?: string }[];
   currentCustomerId: string;
   currentItemId: string;
   currentStartDate?: string;
