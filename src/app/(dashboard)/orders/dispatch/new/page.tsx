@@ -13,10 +13,16 @@ import {
   Send,
   Trash2,
   ChevronDown,
-  X
+  X,
+  Layers,
+  Building2,
+  Calendar,
+  CreditCard,
+  IndianRupee
 } from "lucide-react";
 import { SearchableSelect } from "@/components/SearchableSelect";
 import { PremiumDateTimePicker } from "@/components/DateTimePicker";
+import { ItemBreakdownModal } from "@/app/(dashboard)/inventory/ItemBreakdownModal";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -138,101 +144,7 @@ function ShortagePopup({
   );
 }
 
-function StockBreakdownPopup({ 
-  itemName, 
-  batches, 
-  onClose 
-}: { 
-  itemName: string; 
-  batches: InventoryBatch[]; 
-  onClose: () => void; 
-}) {
-  const totalQty = batches.reduce((acc, b) => acc + b.remainingQty, 0);
 
-  return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-foreground/30 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl border border-border-ghost overflow-hidden animate-in zoom-in-95 duration-300">
-        <div className="p-10">
-          <div className="flex justify-between items-start mb-10">
-            <div className="space-y-2">
-               <h2 className="heading-lg tracking-tighter leading-none">Stock Breakdown</h2>
-               <p className="text-muted-foreground font-black uppercase text-[10px] tracking-[0.2em]">{itemName}</p>
-            </div>
-            <button 
-              onClick={onClose}
-              className="w-12 h-12 rounded-2xl bg-surface-low text-muted-foreground hover:bg-surface-high hover:text-foreground transition-all flex items-center justify-center"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-8 mb-10">
-             <div className="card-premium !p-8 bg-primary/5 border-primary/10 shadow-sm">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70 mb-2">Total Available</p>
-                <p className="text-4xl font-black text-primary tracking-tighter tabular-nums">{totalQty} <span className="text-sm font-bold opacity-40 uppercase tracking-widest ml-1">Units</span></p>
-             </div>
-             <div className="card-premium !p-8 bg-surface-low border-border-ghost shadow-sm">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-2">Active Batches</p>
-                <p className="text-4xl font-black text-foreground tracking-tighter tabular-nums">{batches.length} <span className="text-sm font-bold opacity-40 uppercase tracking-widest ml-1">Sources</span></p>
-             </div>
-          </div>
-
-          <div className="table-container">
-            <div className="max-h-[350px] overflow-y-auto no-scrollbar">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="table-header">
-                    <th className="table-cell-header">Vendor & Source</th>
-                    <th className="table-cell-header">Purchase Date</th>
-                    <th className="table-cell-header">Rate</th>
-                    <th className="table-cell-header text-right">Remaining</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-ghost/50">
-                  {batches.map((batch) => (
-                    <tr key={batch.id} className="table-row">
-                      <td className="table-cell">
-                         <div className="flex flex-col">
-                            <span className="font-black text-foreground text-sm group-hover:text-primary transition-colors">{batch.vendor?.name || 'Stock Adjustment'}</span>
-                            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">#{batch.id.split('-')[0].toUpperCase()}</span>
-                         </div>
-                      </td>
-                      <td className="table-cell">
-                         <span className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
-                            {new Date(batch.purchaseDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                         </span>
-                      </td>
-                      <td className="table-cell">
-                         <div className="flex flex-col">
-                            <span className="font-mono font-black text-primary text-sm tabular-nums">₹{batch.costPerUnit}</span>
-                            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight mt-0.5">Per Unit</span>
-                         </div>
-                      </td>
-                      <td className="table-cell text-right">
-                         <span className="text-sm font-black text-foreground tabular-nums">{batch.remainingQty}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <footer className="px-10 py-8 bg-surface-low border-t border-border-ghost flex justify-between items-center">
-           <p className="text-[10px] font-bold text-muted-foreground italic max-w-[280px] leading-relaxed">
-             * Batches are processed on a First-In-First-Out (FIFO) basis during dispatch.
-           </p>
-           <button 
-             onClick={onClose} 
-             className="btn btn-neutral h-12 px-10 rounded-xl"
-           >
-             Close Details
-           </button>
-        </footer>
-      </div>
-    </div>
-  );
-}
 
 import { showToast } from "@/lib/toast";
 
@@ -256,7 +168,7 @@ export default function NewDispatchOrderPage() {
   const [openDropdowns, setOpenDropdowns] = useState<Record<number, boolean>>({});
 
   const [shortageInfo, setShortageInfo] = useState<ShortageInfo | null>(null);
-  const [activeBreakdown, setActiveBreakdown] = useState<{ itemName: string, batches: InventoryBatch[] } | null>(null);
+  const [breakdownItem, setBreakdownItem] = useState<any | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -386,8 +298,8 @@ export default function NewDispatchOrderPage() {
       showToast("Please select a customer recipient.", "info");
       return;
     }
-    if (lineItems.some(i => !i.itemId || i.quantity <= 0)) {
-      showToast("Please ensure all line items have valid specifications.", "info");
+    if (lineItems.some(i => !i.itemId || i.quantity <= 0 || i.sellingPrice <= 0)) {
+      showToast("Please ensure all items have a valid quantity and selling price.", "info");
       return;
     }
 
@@ -470,11 +382,17 @@ export default function NewDispatchOrderPage() {
           onAction={handleShortageAction}
         />
       )}
-      {activeBreakdown && (
-        <StockBreakdownPopup 
-          itemName={activeBreakdown.itemName}
-          batches={activeBreakdown.batches}
-          onClose={() => setActiveBreakdown(null)}
+      {breakdownItem && (
+        <ItemBreakdownModal 
+          isOpen={!!breakdownItem}
+          onClose={() => setBreakdownItem(null)}
+          itemId={breakdownItem.id}
+          itemName={breakdownItem.name}
+          totalStock={getAvailableStock(breakdownItem.id)}
+          incomingQty={getIncomingStock(breakdownItem.id)}
+          reservedQty={breakdownItem.reservedQty || 0}
+          minStockLevel={breakdownItem.minStockLevel || 0}
+          unit={breakdownItem.unit}
         />
       )}
       {/* Header */}
@@ -556,59 +474,56 @@ export default function NewDispatchOrderPage() {
                         )}
                       />
                       
-                      {item.itemId && (
-                        <div className="mt-4 space-y-4">
-                          <div className="grid grid-cols-3 gap-3">
-                             <div className="flex flex-col gap-1 px-4 py-3 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
-                                <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-widest">Available</span>
-                                <span className="text-xs font-black text-emerald-700 tabular-nums">{available} Units</span>
-                             </div>
-                             {(() => {
-                                const data = getInventoryData(item.itemId);
-                                const batches = data?.batches || [];
-                                const totalRemaining = batches.reduce((acc, b) => acc + b.remainingQty, 0);
-                                const avgPrice = totalRemaining > 0 
-                                  ? batches.reduce((acc, b) => acc + (b.remainingQty * b.costPerUnit), 0) / totalRemaining 
-                                  : 0;
-                                const latestPrice = batches.length > 0 ? batches[0].costPerUnit : 0;
+                      {item.itemId && (() => {
+                        const selectedItem = items.find(i => i.id === item.itemId);
+                        const stock = available;
+                        const minStock = selectedItem?.minStockLevel || 0;
+                        const isLow = stock < minStock;
+                        
+                        const invData = getInventoryData(item.itemId);
+                        const batches = invData?.batches || [];
+                        const totalRemaining = batches.reduce((acc, b) => acc + b.remainingQty, 0);
+                        const avgPrice = totalRemaining > 0 
+                          ? batches.reduce((acc, b) => acc + (b.remainingQty * b.costPerUnit), 0) / totalRemaining 
+                          : 0;
+                        const latestPrice = batches.length > 0 ? batches[0].costPerUnit : 0;
 
-                                return (
-                                  <>
-                                    <div className="flex flex-col gap-1 px-4 py-3 bg-primary/5 border border-primary/10 rounded-2xl">
-                                       <span className="text-[8px] font-black text-primary/60 uppercase tracking-widest">Avg Rate</span>
-                                       <span className="text-xs font-black text-primary tabular-nums">₹{avgPrice.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
-                                    </div>
-                                    <div className="flex flex-col gap-1 px-4 py-3 bg-indigo-500/5 border border-indigo-500/10 rounded-2xl">
-                                       <span className="text-[8px] font-black text-indigo-600/60 uppercase tracking-widest">Latest</span>
-                                       <span className="text-xs font-black text-indigo-700 tabular-nums">₹{latestPrice.toLocaleString()}</span>
-                                    </div>
-                                  </>
-                                );
-                             })()}
+                        return (
+                          <div className={cn(
+                            "mt-5 flex items-center justify-between px-6 py-3 rounded-[2rem] border text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 shadow-sm",
+                            isLow 
+                              ? "bg-error/5 border-error/20 text-error" 
+                              : "bg-success/5 border-success/20 text-success"
+                          )}>
+                            <div className="flex items-center gap-4">
+                              <div className={cn("w-3 h-3 rounded-full shadow-sm", isLow ? "bg-error" : "bg-success")} />
+                              <div className="flex flex-col leading-tight">
+                                <span className="tabular-nums">
+                                  {isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} U
+                                </span>
+                                <span className="opacity-80">Available</span>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-4 border-l border-current/10 pl-4">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setBreakdownItem(selectedItem);
+                                }}
+                                className="w-10 h-10 rounded-2xl bg-white/90 flex items-center justify-center hover:bg-white hover:scale-105 transition-all shadow-sm border border-current/5"
+                              >
+                                <Eye className="w-5 h-5" />
+                              </button>
+                              <div className="flex flex-col items-start leading-[1.1] min-w-[30px]">
+                                 <span className="opacity-60 text-[8px]">MIN:</span>
+                                 <span className="text-[11px] tabular-nums">{minStock}</span>
+                              </div>
+                            </div>
                           </div>
-                          
-                          <div className="flex items-center gap-3">
-                             {item.itemId && (
-                               <button
-                                 type="button"
-                                 onClick={() => {
-                                   const data = getInventoryData(item.itemId);
-                                   if (data && data.batches) {
-                                      setActiveBreakdown({
-                                         itemName: itemSearches[index] || "Selected Item",
-                                         batches: data.batches
-                                      });
-                                   }
-                                 }}
-                                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-low text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all text-[9px] font-black uppercase tracking-widest border border-border-ghost"
-                               >
-                                 <Eye className="w-3.5 h-3.5" />
-                                 View Breakdown
-                               </button>
-                             )}
-                          </div>
-                        </div>
-                      )}
+                        );
+                      })()}
                     </div>
                     <div className="md:col-span-2">
                       <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-3 block">Quantity</label>

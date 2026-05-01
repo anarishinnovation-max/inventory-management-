@@ -75,8 +75,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Expected delivery date cannot be in the past." }, { status: 400 });
     }
 
-    if (items.some(item => Number(item.costPrice) <= 0)) {
-      return NextResponse.json({ error: "Cost price must be greater than zero for all items." }, { status: 400 });
+    if (items.some(item => Number(item.costPrice) <= 0 || Number(item.quantityOrdered) <= 0)) {
+      return NextResponse.json({ error: "Quantity and cost price must be greater than zero for all items." }, { status: 400 });
     }
 
     const order = await prisma.$transaction(async (tx) => {

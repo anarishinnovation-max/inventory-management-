@@ -260,32 +260,42 @@ function NewPurchaseOrderForm() {
                     {item.itemId && (() => {
                       const selectedItem = items.find(i => i.id === item.itemId);
                       const stock = selectedItem?.inventory?.quantityAvailable || 0;
-                      const isLow = stock < (selectedItem?.minStockLevel || 0);
+                      const minStock = selectedItem?.minStockLevel || 0;
+                      const isLow = stock < minStock;
                       
                       return (
                         <div className={cn(
-                          "mt-4 flex items-center gap-3 px-4 py-2.5 rounded-xl border text-[9px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2",
+                          "mt-5 flex items-center justify-between px-6 py-3 rounded-[2rem] border text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 shadow-sm",
                           isLow 
                             ? "bg-error/5 border-error/20 text-error" 
                             : "bg-success/5 border-success/20 text-success"
                         )}>
-                          <div className={cn("w-2 h-2 rounded-full", isLow ? "bg-error" : "bg-success")} />
-                          <div className="flex items-center gap-3">
-                            <span className="tabular-nums">
-                              {isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} U Available
-                            </span>
+                          <div className="flex items-center gap-4">
+                            <div className={cn("w-3 h-3 rounded-full shadow-sm", isLow ? "bg-error" : "bg-success")} />
+                            <div className="flex flex-col leading-tight">
+                              <span className="tabular-nums">
+                                {isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} U
+                              </span>
+                              <span className="opacity-80">Available</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4 border-l border-current/10 pl-4">
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.preventDefault();
-                                  setBreakdownItem(selectedItem);
+                                setBreakdownItem(selectedItem);
                               }}
-                              className="w-8 h-8 rounded-lg bg-white/50 flex items-center justify-center hover:bg-white transition-all border border-transparent hover:border-border-ghost"
+                              className="w-10 h-10 rounded-2xl bg-white/90 flex items-center justify-center hover:bg-white hover:scale-105 transition-all shadow-sm border border-current/5"
                             >
-                              <Eye className="w-4 h-4" />
+                              <Eye className="w-5 h-5" />
                             </button>
+                            <div className="flex flex-col items-start leading-[1.1] min-w-[30px]">
+                               <span className="opacity-60 text-[8px]">MIN:</span>
+                               <span className="text-[11px] tabular-nums">{minStock}</span>
+                            </div>
                           </div>
-                          <span className="opacity-40 ml-auto tabular-nums">Min: {selectedItem?.minStockLevel || 0}</span>
                         </div>
                       );
                     })()}

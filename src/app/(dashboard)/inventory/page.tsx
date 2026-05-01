@@ -1,14 +1,10 @@
 import InventoryFilters from "@/app/(dashboard)/inventory/InventoryFilters";
 import InventoryPagination from "@/app/(dashboard)/inventory/InventoryPagination";
-import SearchInput from "@/components/SearchInput";
-import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableActions";
-import InventoryList from "./InventoryList";
-import { Prisma } from "@/generated/client";
-import prisma from "@/lib/prisma";
-import { Package, PlusCircle, TrendingUp, CheckCircle2, AlertCircle } from "lucide-react";
-import Link from "next/link";
-import QuickPOButton from "./QuickPOButton";
 import { cacheQuery } from "@/lib/cache";
+import prisma from "@/lib/prisma";
+import { CheckCircle2, Package, PlusCircle, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import InventoryList from "./InventoryList";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +26,7 @@ export interface MappedItem {
   minStockLevel: number;
   isCritical: boolean;
   totalStock: number;
-  avgPrice: number;  incomingQty: number;
+  avgPrice: number; incomingQty: number;
   quantityReserved: number;
   quantityInTransit: number;
   stocks: MappedStock[];
@@ -92,7 +88,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     const incoming = item.inventory?.incomingQty ?? 0;
     const reserved = item.inventory?.quantityReserved ?? 0;
     const netAvailable = (total + incoming) - reserved;
-    
+
     // Calculate Weighted Average Price
     const batches = item.inventory?.batches || [];
     const totalRemainingInBatches = batches.reduce((acc: number, b: any) => acc + b.quantity, 0);
@@ -104,7 +100,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     const isLow = !isUrgent && !isOutOfStock && total > 0 && total <= (item.minStockLevel ?? 0);
     const isPartial = total > 0 && total < reserved;
     const isOrdered = !isUrgent && !isOutOfStock && !isLow && incoming > 0;
-    const isInStock = !isUrgent && !isOutOfStock && !isLow && !isOrdered && total > (item.minStockLevel ?? 0);
+    const isInStock = !isUrgent && !isOutOfStock && !isLow && total > (item.minStockLevel ?? 0);
 
     return {
       id: item.id,
@@ -224,14 +220,14 @@ export default async function InventoryPage({
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const { items, totalItems, absoluteTotal, totalFilteredQuantity, absoluteTotalQuantity, inStockCount, lowCount, outOfStockCount, urgentCount, reorderPool } = 
+  const { items, totalItems, absoluteTotal, totalFilteredQuantity, absoluteTotalQuantity, inStockCount, lowCount, outOfStockCount, urgentCount, reorderPool } =
     await getInventoryDataRaw(session.companyId, q, status, category, page, PAGE_SIZE);
-  
-  
-  const allCategories = await prisma.category.findMany({ 
+
+
+  const allCategories = await prisma.category.findMany({
     where: { companyId: session.companyId },
-    select: { name: true }, 
-    orderBy: { name: 'asc' } 
+    select: { name: true },
+    orderBy: { name: 'asc' }
   });
   const categoryNames = allCategories.map((c: { name: string }) => c.name);
 
@@ -250,62 +246,70 @@ export default async function InventoryPage({
           <p className="text-muted-foreground mt-2 font-medium">See all your items and how many are left.</p>
         </div>
         <div className="flex items-center gap-3">
-            {(session.role === 'OWNER' || session.role === 'MANAGER') && (
-              <Link href="/inventory/new" className="btn btn-primary h-12 group/btn">
-                <PlusCircle className="w-4 h-4" />
-                <span>Add New Item</span>
-                <span className="text-[10px] font-black opacity-40 ml-2 group-hover/btn:opacity-100 transition-opacity uppercase tracking-widest hidden md:inline-block">
-                  ALT + N
-                </span>
-              </Link>
-            )}
+          {(session.role === 'OWNER' || session.role === 'MANAGER') && (
+            <Link href="/inventory/new" className="btn btn-primary h-12 group/btn">
+              <PlusCircle className="w-4 h-4" />
+              <span>Add New Item</span>
+              <span className="text-[10px] font-black opacity-40 ml-2 group-hover/btn:opacity-100 transition-opacity uppercase tracking-widest hidden md:inline-block">
+                ALT + N
+              </span>
+            </Link>
+          )}
         </div>
       </header>
 
       {/* Stats Row - 4 Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="card-premium h-[130px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
-            <div className="p-2 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
-                <Package className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
-              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{absoluteTotal}</h2>
-            </div>
+          <div className="p-2 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
+            <Package className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
+            <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{absoluteTotal}</h2>
+          </div>
         </div>
 
         <div className="card-premium h-[130px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
-            <div className="p-2 w-fit rounded-xl bg-success/5 text-success border border-success/10">
-                <CheckCircle2 className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">In Stock</p>
-              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{inStockCount}</h2>
-            </div>
+          <div className="p-2 w-fit rounded-xl bg-success/5 text-success border border-success/10">
+            <CheckCircle2 className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">In Stock</p>
+            <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{inStockCount}</h2>
+          </div>
         </div>
 
         <div className="card-premium h-[130px] flex flex-col justify-between group border-warning/10 bg-white shadow-ambient">
-            <div className="p-2 w-fit rounded-xl bg-warning/5 text-warning border border-warning/10">
-                <TrendingUp className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
-              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{lowCount}</h2>
-            </div>
+          <div className="p-2 w-fit rounded-xl bg-warning/5 text-warning border border-warning/10">
+            <TrendingUp className="w-4 h-4" />
+          </div>
+          <div>
+            <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
+            <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{lowCount}</h2>
+          </div>
         </div>
 
-        <div className="card-premium h-[130px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient">
-            <div className="p-2 w-fit rounded-xl bg-error/5 text-error border border-error/10">
-                <Package className="w-4 h-4" />
+        <div className="card-premium h-[130px] flex items-center group border-error/10 bg-white shadow-ambient p-0 overflow-hidden">
+          <div className="flex-1 h-full p-6 flex flex-col justify-between">
+            <div className="p-2 w-fit rounded-full bg-error/5 text-error border border-error/10 shadow-sm">
+              <Package className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">
-                Out of Stock {urgentCount > 0 && <span className="opacity-70 font-bold ml-1 text-[8px]">/ Urgent ({urgentCount})</span>}
-              </p>
-              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">
-                {outOfStockCount + urgentCount}
-              </h2>
+              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Out of Stock</p>
+              <h2 className="text-3xl font-black text-foreground mt-0.5 tracking-tighter tabular-nums">{outOfStockCount + urgentCount}</h2>
             </div>
+          </div>
+
+          {/* Vertical Divider */}
+          <div className="w-px h-16 bg-border-ghost opacity-40" />
+
+          <div className="flex-1 h-full p-6 flex flex-col justify-center">
+            <div>
+              <p className="text-[9px] font-black text-error/40 uppercase tracking-[0.15em]">Urgent</p>
+              <h2 className="text-3xl font-black text-foreground mt-0.5 tracking-tighter tabular-nums">{urgentCount}</h2>
+            </div>
+          </div>
         </div>
       </div>
 

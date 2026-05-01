@@ -114,8 +114,9 @@ export default function SupplyInwardsList({
 
       if (res.ok) {
         showToast(`Successfully received ${selectedIds.size} items`, "success");
+        setSelectedIds(new Set());
         startTransition(() => {
-          router.push("/inventory");
+          router.refresh();
         });
       } else {
         const data = await res.json();
@@ -149,10 +150,10 @@ export default function SupplyInwardsList({
       });
 
       if (res.ok) {
-        showToast(`Partial receipt recorded successfully`, "success");
+        showToast(`Receipt recorded successfully`, "success");
         setShowReview(false);
         startTransition(() => {
-          router.push("/inventory");
+          router.refresh();
         });
       } else {
         const data = await res.json();
@@ -387,21 +388,7 @@ export default function SupplyInwardsList({
                   <h2 className="heading-lg">Asset Receipt Review</h2>
                   <div className="flex items-center gap-4 mt-2">
                     <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Adjusting {Object.keys(reviewValues).length} line items</p>
-                    <div className="w-1.5 h-1.5 rounded-full bg-border-ghost"></div>
-                    <button
-                      onClick={() => {
-                        const initial: Record<string, number> = { ...reviewValues };
-                        Object.keys(reviewValues).forEach(id => {
-                          const [poId, itemId] = id.split('|');
-                          const item = items.find(i => i.poId === poId && i.itemId === itemId);
-                          initial[id] = item ? (item.quantityOrdered - item.quantityReceived) : 0;
-                        });
-                        setReviewValues(initial);
-                      }}
-                      className="text-[10px] font-black text-primary hover:underline uppercase tracking-widest"
-                    >
-                      Reset to Pending
-                    </button>
+
                   </div>
                 </div>
               </div>

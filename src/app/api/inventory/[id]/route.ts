@@ -97,7 +97,8 @@ export async function GET(
       customer: item.dispatchOrder.customer.name,
       quantity: item.quantity,
       status: item.dispatchOrder.status,
-      orderDate: item.dispatchOrder.orderDate
+      orderDate: item.dispatchOrder.orderDate,
+      price: Number(item.sellingPrice || 0)
     }));
 
     // Fetch full selling history (dispatched orders)

@@ -2,6 +2,8 @@
 
 import SearchInput from "@/components/SearchInput";
 import {
+  ArrowLeft,
+  ArrowRight,
   ArrowUpDown,
   Calendar,
   CheckSquare,
@@ -398,15 +400,15 @@ export default function InventoryList({
                         <span className={`text-base font-black tracking-tight ${isOutOfStock ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
                           {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{normalizeUnit(item.unit)}</span>
                         </span>
-                        <div className="flex flex-col items-end gap-1 mt-1">
+                        <div className="flex items-center justify-end gap-1.5 mt-1.5">
                           {reservedQty > 0 && (
-                            <span className="text-[8px] font-black uppercase tracking-tighter text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 animate-pulse">
-                              +{reservedQty} Booked
+                            <span className="text-[8px] font-black uppercase tracking-tighter text-yellow-900 bg-yellow-400 px-1.5 py-0.5 rounded border border-yellow-500/50 flex items-center gap-1 shadow-sm">
+                              +{reservedQty} <ArrowLeft className="w-2.5 h-2.5" />
                             </span>
                           )}
                           {incomingQty > 0 && (
-                            <span className="text-[8px] font-black uppercase tracking-tight text-primary bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">
-                              +{incomingQty} Incoming
+                            <span className="text-[8px] font-black uppercase tracking-tight text-blue-950 bg-blue-400 px-1.5 py-0.5 rounded border border-blue-500/50 flex items-center gap-1 shadow-sm">
+                              +{incomingQty} <ArrowRight className="w-2.5 h-2.5" />
                             </span>
                           )}
                         </div>
@@ -424,8 +426,6 @@ export default function InventoryList({
                         </span>
                       ) : isLowStock ? (
                         <span className="badge badge-warning">Low Stock</span>
-                      ) : isOrdered ? (
-                        <span className="badge badge-primary">Ordered</span>
                       ) : (
                         <span className="badge badge-success">In Stock</span>
                       )}

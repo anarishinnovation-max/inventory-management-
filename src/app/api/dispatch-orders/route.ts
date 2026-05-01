@@ -60,6 +60,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    if (items.some((item: any) => parseFloat(item.quantity) <= 0 || parseFloat(item.sellingPrice) <= 0)) {
+      return NextResponse.json({ error: "Quantity and selling price must be greater than zero for all items." }, { status: 400 });
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 

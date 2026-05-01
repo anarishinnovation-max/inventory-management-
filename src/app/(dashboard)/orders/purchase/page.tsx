@@ -324,7 +324,7 @@ export default async function PurchaseOrdersPage({
                       <td className="table-cell">
                         <span className={cn(
                           "badge !text-[9px] !px-3 !py-1",
-                          statusLabel === "PENDING" ? "badge-warning" :
+                          statusLabel === "PENDING" || statusLabel === "PARTIAL" ? "badge-warning" :
                           statusLabel === "ORDERED" ? "badge-primary" :
                           "badge-success"
                         )}>

@@ -51,6 +51,7 @@ export default function AdvancedPurchaseFilters({
     { id: "all", name: "All Status" },
     { id: "pending", name: "Pending" },
     { id: "ordered", name: "Ordered" },
+    { id: "partial", name: "Partial" },
     { id: "received", name: "Received" },
   ];
 

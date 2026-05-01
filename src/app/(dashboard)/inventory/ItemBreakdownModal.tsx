@@ -3,6 +3,8 @@
 import { clsx, type ClassValue } from "clsx";
 import {
   ArrowDownLeft,
+  ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   Calendar,
   History,
@@ -69,6 +71,7 @@ interface CustomerOrderEntry {
   quantity: number;
   status: string;
   orderDate: string;
+  price: number;
 }
 
 export function ItemBreakdownModal({
@@ -151,6 +154,7 @@ export function ItemBreakdownModal({
                 quantity: order.quantity,
                 status: order.status,
                 orderDate: order.orderDate,
+                price: order.price || 0,
               }))
             );
           }
@@ -190,21 +194,22 @@ export function ItemBreakdownModal({
                   const pipelineValue = incomingPOs.reduce((acc, p) => acc + (p.quantity * p.costPerUnit), 0);
                   const totalValue = stockValue + pipelineValue;
                   const avgPrice = totalUnits === 0 ? 0 : (totalValue / totalUnits);
+                  const latestPrice = breakdown.length > 0 ? breakdown[0].costPerUnit : 0;
 
                   const netAvailable = (totalStock + pipelineRemaining) - reservedQty;
                   const isUrgent = netAvailable < 0;
 
                   return (
                     <>
-                      <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm transition-all duration-500">
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                        <span className="text-[11px] font-black">+{pipelineRemaining} Incoming</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-400 border border-blue-500/50 text-blue-950 rounded-xl shadow-sm">
+                        <ArrowRight className="w-3.5 h-3.5" />
+                        <span className="text-[11px] font-black">+{pipelineRemaining}</span>
                       </div>
                       
                       {reservedQty > 0 && (
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/5 border border-blue-500/10 text-blue-600 rounded-xl shadow-sm animate-pulse">
-                          <ShoppingCart className="w-3.5 h-3.5" />
-                          <span className="text-[11px] font-black">+{reservedQty} Booked</span>
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-400 border border-yellow-500/50 text-yellow-900 rounded-xl shadow-sm">
+                          <ArrowLeft className="w-3.5 h-3.5" />
+                          <span className="text-[11px] font-black">+{reservedQty}</span>
                         </div>
                       )}
 
@@ -218,10 +223,24 @@ export function ItemBreakdownModal({
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm transition-all duration-500">
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm">
                         <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>
-                        <span className="text-[11px] font-black">
+                        <span className="text-[11px] font-black text-foreground">
                           ₹{loading ? "..." : avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm">
+                        <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Latest</span>
+                        <span className="text-[11px] font-black text-foreground">
+                          ₹{loading ? "..." : latestPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm">
+                        <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Min Req</span>
+                        <span className="text-[11px] font-black text-foreground">
+                          {minStockLevel}
                         </span>
                       </div>
                     </>
@@ -357,8 +376,8 @@ export function ItemBreakdownModal({
                               <tr className="table-header !bg-transparent">
                                 <th className="table-cell-header !py-3">Pipeline Asset</th>
                                 <th className="table-cell-header !py-3">ETA & Status</th>
-                                <th className="table-cell-header !py-3 text-right">Expected</th>
-                                <th className="table-cell-header !py-3 text-center">Tracking</th>
+                                <th className="table-cell-header !py-3 text-right">Quantity</th>
+                                <th className="table-cell-header !py-3 text-right">Unit Cost</th>
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-border-ghost/50">
@@ -387,8 +406,8 @@ export function ItemBreakdownModal({
                                   <td className="table-cell !py-3 text-right">
                                     <span className="text-sm font-black text-emerald-600 tabular-nums">{po.quantity}</span>
                                   </td>
-                                  <td className="table-cell !py-3 text-center">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mx-auto" />
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-foreground tabular-nums">₹{Number(po.costPerUnit || 0).toLocaleString()}</span>
                                   </td>
                                 </tr>
                               )) : (
@@ -479,6 +498,7 @@ export function ItemBreakdownModal({
                                 <th className="table-cell-header !py-3">Customer Order</th>
                                 <th className="table-cell-header !py-3">Booking Date</th>
                                 <th className="table-cell-header !py-3 text-right">Reserved</th>
+                                <th className="table-cell-header !py-3 text-right">Selling Price</th>
                                 <th className="table-cell-header !py-3 text-center">Status</th>
                               </tr>
                             </thead>
@@ -505,6 +525,9 @@ export function ItemBreakdownModal({
                                   <td className="table-cell !py-3 text-right">
                                     <span className="text-sm font-black text-foreground tabular-nums">{order.quantity} Units</span>
                                   </td>
+                                  <td className="table-cell !py-3 text-right">
+                                    <span className="text-sm font-black text-foreground tabular-nums">₹{Number(order.price || 0).toLocaleString()}</span>
+                                  </td>
                                   <td className="table-cell !py-3 text-center">
                                     <span className={`badge !text-[8px] !px-2 !py-0.5 ${order.status === 'pending' ? 'badge-warning' : 'badge-primary'}`}>
                                       {order.status}
@@ -513,7 +536,7 @@ export function ItemBreakdownModal({
                                 </tr>
                               )) : (
                                 <tr>
-                                  <td colSpan={4} className="py-10 text-center">
+                                  <td colSpan={5} className="py-10 text-center">
                                     <ShoppingCart className="w-8 h-8 text-muted-foreground opacity-10 mx-auto mb-2" />
                                     <p className="text-[10px] font-bold text-muted-foreground italic tracking-tight">No pending customer deliveries.</p>
                                   </td>

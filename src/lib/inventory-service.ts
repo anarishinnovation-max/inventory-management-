@@ -79,6 +79,9 @@ export const InventoryService = {
    * Receives items from a Purchase Order.
    */
   async receiveGoods(poId: string, itemQuantities: { itemId: string; receivedQty: number }[], userId?: string) {
+    if (itemQuantities.some(i => i.receivedQty <= 0)) {
+        throw new Error("Received quantity must be greater than zero.");
+    }
     return await (prisma as any).$transaction(async (tx: any) => {
       const po = await tx.purchaseOrder.findFirst({
         where: { id: poId },
@@ -209,6 +212,9 @@ export const InventoryService = {
    * Creates a new Dispatch Order.
    */
   async createDispatchOrder(data: { customerId: string; companyId: string; paymentMode?: string; items: any[], status?: string, expectedDelivery?: string | Date, orderDate?: string | Date, collectedBy?: string, dispatchedBy?: string, transportMode?: string }) {
+    if (data.items.some((i: any) => i.quantity <= 0 || i.sellingPrice <= 0)) {
+        throw new Error("Quantity and selling price must be greater than zero.");
+    }
     const status = data.status || "pending";
 
     return await (prisma as any).$transaction(async (tx: any) => {
@@ -343,6 +349,7 @@ export const InventoryService = {
    * Records scrapped inventory.
    */
   async scrapInventory(itemId: string, companyId: string, qty: number, reason?: string, userId?: string) {
+    if (qty <= 0) throw new Error("Scrap quantity must be greater than zero.");
     return await (prisma as any).$transaction(async (tx: any) => {
       await tx.inventoryTransaction.create({
         data: {
@@ -520,6 +527,7 @@ export const InventoryService = {
     customerId?: string;
     remarks?: string;
   }) {
+    if (params.quantity <= 0) throw new Error("Dispatch quantity must be greater than zero.");
     return await (prisma as any).$transaction(async (tx: any) => {
       const stock = await tx.stock.findFirst({
         where: { itemId: params.itemId, rackId: params.rackId },

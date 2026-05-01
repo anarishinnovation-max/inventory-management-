@@ -13,8 +13,8 @@ export async function POST(request: Request) {
 
     const { itemId, quantity, reason } = await request.json();
 
-    if (!itemId || !quantity) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!itemId || !quantity || Number(quantity) <= 0) {
+      return NextResponse.json({ error: "Missing required fields or invalid quantity" }, { status: 400 });
     }
 
     const result = await InventoryService.scrapInventory(

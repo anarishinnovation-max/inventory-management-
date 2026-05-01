@@ -16,6 +16,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No items selected" }, { status: 400 });
     }
 
+    if (selections.some(s => s.receivedQty <= 0)) {
+      return NextResponse.json({ error: "Received quantity must be greater than zero for all items." }, { status: 400 });
+    }
+
     // Group by PO ID for InventoryService compatibility
     const grouped = selections.reduce((acc, curr) => {
       if (!acc[curr.poId]) acc[curr.poId] = [];
