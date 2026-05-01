@@ -79,18 +79,6 @@ export default function InventoryFilters({
 
   const hasActiveFilters = currentStatus !== "all" || currentCategory !== "all" || searchQuery !== "";
 
-  const getActiveFilterLabel = () => {
-    const active = [];
-    if (currentStatus !== 'all') {
-      const s = statuses.find(s => s.value === currentStatus)?.label || 
-                activityOptions.find(o => o.id === currentStatus)?.name;
-      if (s) active.push(s);
-    }
-    if (currentCategory !== 'all') active.push(currentCategory);
-    if (searchQuery) active.push(`Search: ${searchQuery}`);
-    
-    return active.length > 0 ? `(${active.join(', ')})` : '';
-  };
 
   return (
     <div className="w-full">
@@ -105,22 +93,49 @@ export default function InventoryFilters({
             <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5">
               {hasActiveFilters ? (
                 <>
-                  Showing <span className="text-foreground">{filteredCount}</span> out of <span className="text-foreground">{totalCount}</span>
-                  <span className="text-muted-foreground/30 mx-1">|</span>
-                  Total: <span className="text-foreground">{totalFilteredQuantity.toLocaleString()} Units</span>
-                  <span className="text-primary/60 ml-1.5">{getActiveFilterLabel()}</span>
-                  <button 
-                    onClick={clearFilters}
-                    className="ml-2 hover:text-primary transition-colors underline decoration-dotted underline-offset-4 cursor-pointer"
-                  >
-                    Clear All
-                  </button>
+                  Showing Inventory:<span className="text-foreground">{filteredCount}</span> out of <span className="text-foreground">{totalCount}</span>
+                  <div className="flex flex-wrap items-center gap-2 ml-2">
+                    {currentStatus !== 'all' && (
+                      <button 
+                        onClick={() => updateFilter('status', 'all')}
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 text-primary border border-primary/20 hover:bg-primary/10 transition-all group animate-in zoom-in-95 duration-300"
+                      >
+                        <span className="text-[9px] font-black uppercase tracking-widest">
+                          {statuses.find(s => s.value === currentStatus)?.label || 
+                           activityOptions.find(o => o.id === currentStatus)?.name}
+                        </span>
+                        <X className="w-3 h-3 text-primary/40 group-hover:text-primary transition-colors" />
+                      </button>
+                    )}
+                    {currentCategory !== 'all' && (
+                      <button 
+                        onClick={() => updateFilter('category', 'all')}
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/5 text-blue-600 border border-blue-500/20 hover:bg-blue-500/10 transition-all group animate-in zoom-in-95 duration-300"
+                      >
+                        <span className="text-[9px] font-black uppercase tracking-widest">{currentCategory}</span>
+                        <X className="w-3 h-3 text-blue-600/40 group-hover:text-blue-600 transition-colors" />
+                      </button>
+                    )}
+                    {searchQuery && (
+                      <button 
+                        onClick={() => updateFilter('q', '')}
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/5 text-amber-600 border border-amber-500/20 hover:bg-amber-500/10 transition-all group animate-in zoom-in-95 duration-300"
+                      >
+                        <span className="text-[9px] font-black uppercase tracking-widest">Search: {searchQuery}</span>
+                        <X className="w-3 h-3 text-amber-600/40 group-hover:text-amber-600 transition-colors" />
+                      </button>
+                    )}
+                    <button 
+                      onClick={clearFilters}
+                      className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors underline decoration-dotted underline-offset-4 ml-2"
+                    >
+                      Clear All
+                    </button>
+                  </div>
                 </>
               ) : (
                 <>
-                  Showing <span className="text-foreground">{totalCount}</span> items 
-                  <span className="text-muted-foreground/30 mx-1">|</span> 
-                  Total: <span className="text-foreground">{absoluteTotalQuantity.toLocaleString()} Units</span>
+                  Showing Inventory:<span className="text-foreground">{totalCount}</span> items 
                 </>
               )}
             </p>

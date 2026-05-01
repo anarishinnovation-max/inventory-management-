@@ -106,7 +106,8 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         SELECT 
           i.id, i.name, i.sku, i."minStockLevel",
           inv."quantityAvailable"::int as current_qty,
-          inv."incomingQty"::int as incoming_qty
+          inv."incomingQty"::int as incoming_qty,
+          inv."quantityReserved"::int as reserved_qty
         FROM "Item" i
         INNER JOIN "Inventory" inv ON i.id = inv."itemId"
         WHERE (inv."quantityAvailable" + inv."incomingQty") < i."minStockLevel" AND i."companyId" = ${companyId}
@@ -259,21 +260,20 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="mt-6">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Alerts</p>
-            <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.urgentCount + data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Alerts</p>             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.urgentCount + data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
             <div className="flex flex-wrap items-center gap-2 mt-2">
-               <Link href="/inventory?status=urgent" className="text-[10px] text-indigo-500 font-black tracking-tight hover:underline bg-indigo-500/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-indigo-500/10">
-                 {data.kpis.urgentCount} Urgent
-               </Link>
-               <span className="w-1 h-1 rounded-full bg-border-ghost"></span>
                <Link href="/inventory?status=outofstock" className="text-[10px] text-error font-black tracking-tight hover:underline bg-error/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-error/10">
-                 {data.kpis.outOfStockCount} Out of Stock
+                 {data.kpis.urgentCount + data.kpis.outOfStockCount} Out of Stock
+                 {data.kpis.urgentCount > 0 && (
+                   <span className="ml-1.5 opacity-60 font-medium">({data.kpis.urgentCount} Urgent)</span>
+                 )}
                </Link>
                <span className="w-1 h-1 rounded-full bg-border-ghost"></span>
                <Link href="/inventory?status=low" className="text-[10px] text-warning font-black tracking-tight hover:underline bg-warning/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-warning/10">
                  {data.kpis.lowStockCount} Low Stock
                </Link>
             </div>
+
           </div>
         </div>
 
@@ -351,16 +351,23 @@ export default async function DashboardPage() {
             <h3 className="heading-md uppercase tracking-tight">Need to Buy Soon</h3>
           </div>
           <div className="space-y-3 flex-1">
-            {data.replenish.length > 0 ? data.replenish.map((item: { id: string; name: string; sku: string; minStockLevel: number; current_qty: number; incoming_qty: number }, idx: number) => (
+             {data.replenish.length > 0 ? data.replenish.map((item: { id: string; name: string; sku: string; minStockLevel: number; current_qty: number; incoming_qty: number; reserved_qty: number }, idx: number) => (
               <div key={idx} className="bg-white p-4 rounded-xl border border-error/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-error/20 transition-all shadow-sm">
-                <div className="flex items-center gap-4">
+                 <div className="flex items-center gap-4">
                     <div 
                       className="w-10 h-10 shrink-0 rounded-xl bg-error/5 text-error flex items-center justify-center shadow-inner"
                     >
                         <ShoppingCart className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
-                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
+                          {item.reserved_qty > 0 && (
+                            <span className="px-1.5 py-0.5 bg-blue-500/10 text-blue-600 rounded text-[8px] font-black tracking-tighter animate-pulse">
+                              +{item.reserved_qty} ORDERED
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs font-bold text-foreground mt-0.5 truncate max-w-[150px]">{item.name}</p>
                     </div>
                 </div>

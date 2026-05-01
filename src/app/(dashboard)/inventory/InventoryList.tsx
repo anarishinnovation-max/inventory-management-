@@ -339,11 +339,12 @@ export default function InventoryList({
               {sortedItems.length > 0 ? sortedItems.map((item) => {
                 const totalStock = item.totalStock;
                 const incomingQty = item.incomingQty ?? 0;
-                const netAvailable = (totalStock + incomingQty) - (item.quantityReserved || 0);
+                const reservedQty = item.quantityReserved ?? 0;
+                const netAvailable = (totalStock + incomingQty) - reservedQty;
                 const isUrgent = netAvailable < 0;
-                const isOutOfStock = !isUrgent && totalStock <= 0;
-                const isLowStock = !isUrgent && !isOutOfStock && totalStock > 0 && totalStock <= item.minStockLevel;
-                const isOrdered = !isUrgent && !isOutOfStock && !isLowStock && incomingQty > 0;
+                const isOutOfStock = (totalStock <= 0) || isUrgent;
+                const isLowStock = !isOutOfStock && totalStock > 0 && totalStock <= item.minStockLevel;
+                const isOrdered = !isOutOfStock && !isLowStock && incomingQty > 0;
                 const isSelected = selectedIds.has(item.id);
 
                 const rackLocations = (item.stocks || []).length > 0
@@ -394,14 +395,21 @@ export default function InventoryList({
 
                     <td className="table-cell text-right font-mono">
                       <div className="flex flex-col items-end">
-                        <span className={`text-base font-black tracking-tight ${isUrgent || isOutOfStock ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
+                        <span className={`text-base font-black tracking-tight ${isOutOfStock ? "text-error" : isLowStock ? "text-warning" : "text-success"}`}>
                           {Math.max(0, totalStock)} <span className="text-[10px] font-medium text-muted-foreground ml-1">{normalizeUnit(item.unit)}</span>
                         </span>
-                        {incomingQty > 0 && (
-                          <span className="text-[9px] font-black uppercase tracking-tight text-primary mt-1">
-                            +{incomingQty} Ordered
-                          </span>
-                        )}
+                        <div className="flex flex-col items-end gap-1 mt-1">
+                          {reservedQty > 0 && (
+                            <span className="text-[8px] font-black uppercase tracking-tighter text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 animate-pulse">
+                              +{reservedQty} Ordered
+                            </span>
+                          )}
+                          {incomingQty > 0 && (
+                            <span className="text-[8px] font-black uppercase tracking-tight text-primary bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">
+                              +{incomingQty} Inbound
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="table-cell hidden md:table-cell">
@@ -410,10 +418,10 @@ export default function InventoryList({
                       </span>
                     </td>
                     <td className="table-cell hidden sm:table-cell">
-                      {isUrgent ? (
-                        <span className="badge badge-error">Urgent</span>
-                      ) : isOutOfStock ? (
-                        <span className="badge badge-error">Out of Stock</span>
+                      {isOutOfStock ? (
+                        <span className="badge badge-error">
+                          Out of Stock {isUrgent && <span className="ml-1 opacity-60 text-[8px]">(Urgent)</span>}
+                        </span>
                       ) : isLowStock ? (
                         <span className="badge badge-warning">Low Stock</span>
                       ) : isOrdered ? (

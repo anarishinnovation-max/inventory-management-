@@ -139,7 +139,7 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
       if (status === 'partial') return item.isPartial;
       if (status === 'low') return item.isLow;
       if (status === 'instock') return item.isInStock;
-      if (status === 'outofstock') return item.isOutOfStock;
+      if (status === 'outofstock') return item.isOutOfStock || item.isUrgent;
       if (status === 'ordered') return item.isOrdered;
       if (status === 'latest_sent') return item.lastLogType === 'SALE';
       if (status === 'latest_received') return item.lastLogType === 'PURCHASE';
@@ -262,8 +262,8 @@ export default async function InventoryPage({
         </div>
       </header>
 
-      {/* Stats Row - 5 Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      {/* Stats Row - 4 Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="card-premium h-[130px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
             <div className="p-2 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
                 <Package className="w-4 h-4" />
@@ -294,23 +294,17 @@ export default async function InventoryPage({
             </div>
         </div>
 
-        <div className="card-premium h-[130px] flex flex-col justify-between group border-indigo-500/10 bg-white shadow-ambient">
-            <div className="p-2 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 border border-indigo-500/10">
-                <AlertCircle className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.15em]">Urgent Stock</p>
-              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{urgentCount}</h2>
-            </div>
-        </div>
-
         <div className="card-premium h-[130px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient">
             <div className="p-2 w-fit rounded-xl bg-error/5 text-error border border-error/10">
                 <Package className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Out of Stock</p>
-              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{outOfStockCount}</h2>
+              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">
+                Out of Stock {urgentCount > 0 && <span className="opacity-70 font-bold ml-1 text-[8px]">/ Urgent ({urgentCount})</span>}
+              </p>
+              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">
+                {outOfStockCount + urgentCount}
+              </h2>
             </div>
         </div>
       </div>

@@ -57,15 +57,6 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      <div className="p-10 bg-surface-lowest border border-border-ghost rounded-[3rem] shadow-ambient flex flex-col gap-6">
-          <div className="flex items-center gap-3">
-              <Activity className="w-6 h-6 text-primary" />
-              <h2 className="heading-lg">System Integrity Audit</h2>
-          </div>
-          <div className="h-64 flex items-center justify-center border-2 border-dashed border-border-ghost rounded-[2rem] text-muted-foreground font-medium italic">
-              Live audit logs and security telemetry will appear here...
-          </div>
-      </div>
     </div>
   );
 }

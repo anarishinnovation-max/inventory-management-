@@ -36,6 +36,7 @@ export default async function SettingsPage() {
         { label: "Organization Role", value: session?.role || "OWNER", type: "badge" },
       ]
     },
+    /*
     {
       id: "security",
       title: "Security & Authentication",
@@ -60,7 +61,8 @@ export default async function SettingsPage() {
         { label: "Push Notifications", value: "Off", type: "toggle" },
       ]
     }
-  ].filter(s => !s.roles || (session?.role && s.roles.includes(session.role.toUpperCase())));
+    */
+  ].filter((s: any) => s && (!s.roles || (session?.role && s.roles.includes(session.role.toUpperCase()))));
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-20">
