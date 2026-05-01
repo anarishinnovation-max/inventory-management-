@@ -14,9 +14,21 @@ export async function updateUserSettings(data: { emailAlerts?: boolean, twoFacto
     throw new Error("Unauthorized");
   }
 
-  await (prisma as any).user.update({
+  const oldUser = await (prisma as any).user.findUnique({ where: { id: session.id } });
+  const newUser = await (prisma as any).user.update({
     where: { id: session.id },
     data: data,
+  });
+
+  await createActivityLog({
+    actionType: "UPDATE",
+    entityType: "USER",
+    entityId: session.id,
+    performedBy: session.id,
+    performedByName: session.username,
+    companyId: session.companyId || "GLOBAL",
+    oldValue: oldUser,
+    newValue: newUser
   });
 
   revalidatePath("/settings");
@@ -28,17 +40,46 @@ export async function updateUserRole(userId: string, newRole: UserRole) {
     throw new Error("Unauthorized: Only an OWNER can change roles.");
   }
 
-  await prisma.user.update({
+  const oldUser = await prisma.user.findUnique({ where: { id: userId } });
+  const newUser = await prisma.user.update({
     where: { id: userId },
     data: { role: newRole },
+  });
+
+  const session = await getSession();
+  await createActivityLog({
+    actionType: "UPDATE",
+    entityType: "USER",
+    entityId: userId,
+    performedBy: session?.id || "SYSTEM",
+    performedByName: session?.username || "SYSTEM",
+    companyId: session?.companyId || "GLOBAL",
+    oldValue: oldUser,
+    newValue: newUser
   });
 
   revalidatePath("/admin");
 }
 
 export async function createCustomer(data: { name: string, contact?: string, email?: string, address?: string }) {
+  const session = await getSession();
+  if (!session || !session.companyId) throw new Error("Unauthorized");
+
   const customer = await (prisma as any).customer.create({
-    data: data
+    data: {
+      ...data,
+      companyId: session.companyId
+    }
+  });
+
+  await createActivityLog({
+    actionType: "CREATE",
+    entityType: "CUSTOMER",
+    entityId: customer.id,
+    performedBy: session.id,
+    performedByName: session.username,
+    companyId: session.companyId,
+    newValue: customer
   });
 
   revalidatePath("/customers");
@@ -46,8 +87,24 @@ export async function createCustomer(data: { name: string, contact?: string, ema
 }
 
 export async function createVendor(data: { name: string, contact?: string, email?: string, preferredPaymentMode?: string }) {
+  const session = await getSession();
+  if (!session || !session.companyId) throw new Error("Unauthorized");
+
   const vendor = await (prisma as any).vendor.create({
-    data: data
+    data: {
+      ...data,
+      companyId: session.companyId
+    }
+  });
+
+  await createActivityLog({
+    actionType: "CREATE",
+    entityType: "VENDOR",
+    entityId: vendor.id,
+    performedBy: session.id,
+    performedByName: session.username,
+    companyId: session.companyId,
+    newValue: vendor
   });
 
   revalidatePath("/vendors");
