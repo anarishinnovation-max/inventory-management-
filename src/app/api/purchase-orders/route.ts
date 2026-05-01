@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { revalidateTag, revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
+import { createActivityLog } from "@/lib/logger";
 
 export async function GET(request: Request) {
   try {
@@ -131,6 +132,26 @@ export async function POST(request: Request) {
       }
 
       return po;
+    });
+
+    // Log the PO creation
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const userAgent = request.headers.get("user-agent") || "unknown";
+
+    await createActivityLog({
+      actionType: "CREATE",
+      entityType: "PURCHASE_ORDER",
+      entityId: order.id,
+      performedBy: session.userId,
+      performedByName: session.name,
+      newValue: {
+        vendorId: order.vendorId,
+        itemCount: items.length,
+        status: order.status
+      },
+      companyId: session.companyId,
+      ipAddress: ip,
+      userAgent: userAgent
     });
 
     revalidatePath("/orders/purchase", "page");

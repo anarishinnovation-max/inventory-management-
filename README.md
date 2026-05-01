@@ -19,6 +19,7 @@ The IMS is a centralized platform for managing complex inventory across multiple
 ### 🛠️ Inventory Management
 - **Item Registry**: Comprehensive item metadata (SKU, Category, Units, Critical Levels).
 - **Critical Stock Alerts**: Visual indicators for items falling below minimum stock levels.
+- **Strict Data Integrity**: Enforced non-zero quantity and price validation across all order types and stock movements.
 - **Bulk Actions**: Multi-select support for scrapping inventory or deleting items.
 
 ### 📥 Stock Inwards (Purchase Orders)
@@ -289,6 +290,11 @@ The system uses a hybrid approach with **Server Actions** for form submissions a
 - `updateStock()`: Performs manual adjustments with inventory synchronization.
 - `bulkScrapInventory()`: Efficiently scraps multiple items in a single transaction.
 
+### 🛡️ Data Integrity Guards
+Every transaction pipeline (Sales, Procurement, Scrap) is protected by a dual-layer validation system:
+- **Client-Side**: Forms reject zero/negative values for quantities and prices.
+- **Service-Side**: `InventoryService` enforces strictly positive constraints on all database transactions to prevent ghost entries and financial discrepancies.
+
 ---
 
 ## 11. 📱 UI/UX Notes
@@ -296,6 +302,7 @@ The system uses a hybrid approach with **Server Actions** for form submissions a
 - **Glassmorphism Panels**: Modern UI aesthetics using semi-transparent cards.
 - **Supply-Outwards Panel**: A unified command center for tracking both "Booked Items" (pending orders) and "Recent Dispatches" (sales transactions). Features a real-time Bento-style stats grid for quick KPIs.
 - **Supply-Inwards Panel**: Streamlined interface for receiving goods and managing incoming inventory batches.
+- **Pill-shaped Status Indicators**: High-detail inventory bars with tri-state color coding (Red for Out of Stock, Amber for Warning/Low, Green for Stable).
 - **Keyboard Shortcuts**: Global command palette (Cmd/Ctrl + K) for rapid navigation.
 
 ---

@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
 
 import { getSession } from "@/lib/auth";
+import { createActivityLog } from "@/lib/logger";
 
 export async function GET(request: Request) {
   try {
@@ -96,6 +97,26 @@ export async function POST(request: Request) {
         quantity: parseFloat(item.quantity),
         sellingPrice: parseFloat(item.sellingPrice),
       })),
+    });
+    
+    // Log the Dispatch Order creation
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const userAgent = request.headers.get("user-agent") || "unknown";
+
+    await createActivityLog({
+      actionType: "CREATE",
+      entityType: "DISPATCH_ORDER",
+      entityId: order.id,
+      performedBy: session.userId,
+      performedByName: session.name,
+      newValue: {
+        customerId: order.customerId,
+        itemCount: items.length,
+        status: order.status
+      },
+      companyId: session.companyId,
+      ipAddress: ip,
+      userAgent: userAgent
     });
 
     return NextResponse.json(order, { status: 201 });
