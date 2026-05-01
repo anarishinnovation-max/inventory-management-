@@ -434,6 +434,7 @@ function NewPurchaseOrderForm() {
           itemName={breakdownItem.name}
           totalStock={breakdownItem.inventory?.quantityAvailable || 0}
           incomingQty={breakdownItem.inventory?.incomingQty || 0}
+          reservedQty={breakdownItem.inventory?.quantityReserved || 0}
           minStockLevel={breakdownItem.minStockLevel || 0}
           unit={breakdownItem.unit}
         />
