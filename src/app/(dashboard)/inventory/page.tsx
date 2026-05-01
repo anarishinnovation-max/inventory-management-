@@ -304,6 +304,7 @@ export default async function InventoryPage({
         currentStatus={status}
         currentCategory={category}
         categories={categoryNames}
+        searchQuery={q}
       />
 
       <InventoryList items={items ?? []} userRole={session.role} searchQuery={q} />

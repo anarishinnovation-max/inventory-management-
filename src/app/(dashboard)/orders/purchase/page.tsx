@@ -237,21 +237,11 @@ export default async function PurchaseOrdersPage({
         </div>
       </div>
 
-      <div className="flex flex-col gap-8 pt-4">
-        <div className="flex flex-wrap items-center justify-between gap-8">
-          <div className="flex-1 max-w-3xl">
-            <SearchInput 
-              defaultValue={filters.q} 
-              placeholder="Search by Order ID or Vendor Name..."
-            />
-          </div>
-          <AdvancedPurchaseFilters 
-            vendors={vendors}
-            items={items}
-            currentFilters={filters}
-          />
-        </div>
-      </div>
+      <AdvancedPurchaseFilters 
+        vendors={vendors}
+        items={items}
+        currentFilters={filters}
+      />
 
       <div className="space-y-8">
 

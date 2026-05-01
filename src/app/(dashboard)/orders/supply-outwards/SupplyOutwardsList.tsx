@@ -1,6 +1,5 @@
 "use client";
 
-import SearchInput from "@/components/SearchInput";
 
 import { clsx, type ClassValue } from "clsx";
 import {
@@ -127,18 +126,20 @@ export default function SupplyOutwardsList({
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="flex-1 max-w-3xl">
-          <div className="relative group">
-            <SearchInput
-              defaultValue={searchQuery}
-              placeholder="Search Item, Customer or Order..."
-            />
-          </div>
-        </div>
+      <div className="relative">
+        <SupplyOutwardsFilters
+          customers={customers}
+          items={allItems}
+          currentCustomerId={currentCustomerId}
+          currentItemId={currentItemId}
+          currentStartDate={currentStartDate}
+          currentEndDate={currentEndDate}
+          searchQuery={searchQuery}
+        />
 
+        {/* Floating Bulk Actions Bar */}
         {selectedIds.size > 0 && (
-          <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="absolute -top-14 right-0 animate-in fade-in slide-in-from-top-2 duration-300 z-10">
             <div className="bg-white border border-border-ghost rounded-2xl shadow-premium flex items-center gap-1 p-1 pr-4 pl-5">
               <div className="flex flex-col pr-4 border-r border-border-ghost mr-2">
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary">{selectedIds.size} Selected</span>
@@ -168,17 +169,6 @@ export default function SupplyOutwardsList({
             </div>
           </div>
         )}
-
-        <div className="ml-auto">
-          <SupplyOutwardsFilters
-            customers={customers}
-            items={allItems}
-            currentCustomerId={currentCustomerId}
-            currentItemId={currentItemId}
-            currentStartDate={currentStartDate}
-            currentEndDate={currentEndDate}
-          />
-        </div>
       </div>
 
       <div className="flex flex-col gap-8">

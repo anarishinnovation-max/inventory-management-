@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
-import SearchInput from "@/components/SearchInput";
+import { DispatchFilters } from "./DispatchFilters";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -130,45 +130,10 @@ export default async function DispatchPage({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-8">
-        <div className="flex-1 max-w-3xl">
-            <SearchInput 
-                defaultValue={q}
-                placeholder="Search Customer or Order ID..."
-            />
-        </div>
-
-        {/* Quick Tabs - Locally handled via search params */}
-        <div className="flex bg-surface-low p-1.5 rounded-[1.5rem] border border-border-ghost shadow-sm">
-           <Link
-              href="/orders/dispatch"
-              className={cn(
-                "px-8 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
-                !sParams.status || sParams.status === 'all' ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              All Bills
-            </Link>
-            <Link
-              href="/orders/dispatch?status=pending"
-              className={cn(
-                "px-8 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
-                sParams.status === 'pending' ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Pending
-            </Link>
-            <Link
-              href="/orders/dispatch?status=dispatched"
-              className={cn(
-                "px-8 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all",
-                sParams.status === 'dispatched' ? "bg-white text-primary shadow-premium" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Sent
-            </Link>
-        </div>
-      </div>
+      <DispatchFilters 
+        searchQuery={q}
+        currentStatus={typeof sParams.status === 'string' ? sParams.status : 'all'}
+      />
 
       <div className="space-y-8">
 

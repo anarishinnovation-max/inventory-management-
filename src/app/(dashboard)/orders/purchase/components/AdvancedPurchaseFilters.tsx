@@ -14,16 +14,18 @@ import {
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import PremiumSelect from "@/components/PremiumSelect";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+import { SearchableSelect } from "@/components/SearchableSelect";
+import SearchInput from "@/components/SearchInput";
 
 interface AdvancedPurchaseFiltersProps {
   vendors: { id: string; name: string }[];
   items: { id: string; name: string }[];
   currentFilters: {
+    q?: string;
     vendorId?: string;
     itemId?: string;
     status?: string;
@@ -44,6 +46,13 @@ export default function AdvancedPurchaseFilters({
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const statuses = [
+    { id: "all", name: "All Status" },
+    { id: "pending", name: "Pending" },
+    { id: "ordered", name: "Ordered" },
+    { id: "received", name: "Received" },
+  ];
 
   const updateFilters = (updates: Record<string, string | undefined>) => {
     const params = new URLSearchParams(searchParams);
@@ -69,92 +78,78 @@ export default function AdvancedPurchaseFilters({
     });
   };
 
-  const hasActiveFilters = Object.keys(currentFilters).some(k => currentFilters[k as keyof typeof currentFilters]);
+  const hasActiveFilters = Object.keys(currentFilters).some(k => k !== 'q' && currentFilters[k as keyof typeof currentFilters]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-4">
-        {/* Quick Status Filters */}
-        <div className="flex bg-surface-low p-1.5 rounded-full border border-border-ghost">
-          {["all", "pending", "ordered", "received"].map((s) => (
-            <button
-              key={s}
-              onClick={() => updateFilters({ status: s })}
-              className={cn(
-                "px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
-                (currentFilters.status || "all") === s
-                  ? "bg-white text-primary shadow-premium"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {s}
-            </button>
-          ))}
+    <div className="w-full space-y-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        {/* Search Bar on the Left */}
+        <div className="flex-1 max-w-2xl">
+          <SearchInput 
+            defaultValue={currentFilters.q} 
+            placeholder="Search by Order ID or Vendor Name..."
+          />
         </div>
 
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className={cn(
-            "ml-auto flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border shadow-sm",
-            isExpanded || hasActiveFilters
-              ? "bg-primary/10 text-primary border-primary/20"
-              : "bg-primary/[0.03] text-primary border-primary/10 hover:bg-primary/10"
-          )}
-        >
-          <Filter className="w-3.5 h-3.5" />
-          <span>{isExpanded ? "Hide Filters" : "More Filters"}</span>
-          <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", isExpanded && "rotate-180")} />
-        </button>
-
-        {hasActiveFilters && (
-          <button
-            onClick={clearFilters}
-            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-error/[0.03] text-error border border-error/10 font-black text-[10px] uppercase tracking-widest hover:bg-error/10 transition-all shadow-sm"
-          >
-            <X className="w-3.5 h-3.5" />
-            Reset
-          </button>
-        )}
-      </div>
-
-      {isExpanded && (
-        <div className="card-premium grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
-          {/* Vendor Filter */}
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-              <User className="w-3 h-3" /> Filter by Vendor
-            </label>
-            <PremiumSelect
-              options={vendors.map(v => v.name)}
-              value={vendors.find(v => v.id === currentFilters.vendorId)?.name || "all"}
-              onChange={(val) => {
-                const vendor = vendors.find(v => v.name === val);
-                updateFilters({ vendorId: vendor?.id || "all" });
-              }}
-              placeholder="All Vendors"
-              icon={<User className="w-3.5 h-3.5" />}
+        {/* Filters on the Right */}
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Status Dropdown */}
+          <div className="w-[180px]">
+            <SearchableSelect
+              items={statuses}
+              value={currentFilters.status || "all"}
+              onChange={(val) => updateFilters({ status: val })}
+              placeholder="All Status"
+              className="!rounded-full h-11"
             />
           </div>
 
+          {/* Vendor Dropdown */}
+          <div className="w-[200px]">
+            <SearchableSelect
+              items={vendors}
+              value={currentFilters.vendorId || "all"}
+              onChange={(val) => updateFilters({ vendorId: val })}
+              placeholder="All Vendors"
+              className="!rounded-full h-11"
+            />
+          </div>
+
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={cn(
+              "flex items-center gap-2 px-6 h-11 rounded-full font-bold text-[11px] uppercase tracking-widest transition-all border shadow-sm",
+              isExpanded
+                ? "bg-primary/10 text-primary border-primary/20"
+                : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/20"
+            )}
+          >
+            <Filter className="w-3.5 h-3.5" />
+            <span>{isExpanded ? "Hide" : "More"}</span>
+            <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", isExpanded && "rotate-180")} />
+          </button>
+
+        </div>
+      </div>
+
+      {isExpanded && (
+        <div className="card-premium grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
           {/* Item Filter */}
           <div className="space-y-3">
             <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Package className="w-3 h-3" /> Filter by Item
             </label>
-            <PremiumSelect
-              options={items.map(i => i.name)}
-              value={items.find(i => i.id === currentFilters.itemId)?.name || "all"}
-              onChange={(val) => {
-                const item = items.find(i => i.name === val);
-                updateFilters({ itemId: item?.id || "all" });
-              }}
+            <SearchableSelect
+              items={items}
+              value={currentFilters.itemId || "all"}
+              onChange={(val) => updateFilters({ itemId: val })}
               placeholder="All Items"
-              icon={<Package className="w-3.5 h-3.5" />}
+              className="h-12"
             />
           </div>
 
           {/* Date Range */}
-          <div className="space-y-3 lg:col-span-1">
+          <div className="space-y-3">
             <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <Calendar className="w-3 h-3" /> Date Range
             </label>
@@ -163,14 +158,14 @@ export default function AdvancedPurchaseFilters({
                 type="date"
                 value={currentFilters.startDate || ""}
                 onChange={(e) => updateFilters({ startDate: e.target.value })}
-                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none"
+                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none h-12"
               />
               <span className="text-muted-foreground text-[10px] font-black">TO</span>
               <input
                 type="date"
                 value={currentFilters.endDate || ""}
                 onChange={(e) => updateFilters({ endDate: e.target.value })}
-                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none"
+                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none h-12"
               />
             </div>
           </div>
@@ -186,16 +181,36 @@ export default function AdvancedPurchaseFilters({
                 placeholder="Min"
                 value={currentFilters.minAmount || ""}
                 onChange={(e) => updateFilters({ minAmount: e.target.value })}
-                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none"
+                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none h-12"
               />
               <input
                 type="number"
                 placeholder="Max"
                 value={currentFilters.maxAmount || ""}
                 onChange={(e) => updateFilters({ maxAmount: e.target.value })}
-                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none"
+                className="w-full bg-surface-low border border-border-ghost rounded-xl px-3 py-2 text-xs font-bold focus:ring-1 focus:ring-primary outline-none h-12"
               />
             </div>
+          </div>
+
+          <div className="space-y-3 flex flex-col justify-end">
+            <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+              Actions
+            </label>
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="btn btn-error h-12 w-full text-[10px] bg-error/5 text-error border-error/10 font-black uppercase tracking-widest hover:bg-error/10 transition-all"
+              >
+                <X className="w-3.5 h-3.5" />
+                Reset All Filters
+              </button>
+            )}
+            {!hasActiveFilters && (
+               <div className="h-12 flex items-center justify-center border border-dashed border-border-ghost rounded-xl text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-50">
+                  No Active Filters
+               </div>
+            )}
           </div>
         </div>
       )}

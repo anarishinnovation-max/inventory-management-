@@ -222,14 +222,7 @@ export default function InventoryList({
 
   return (
     <div className="space-y-6 relative">
-      <div className="flex flex-col md:flex-row gap-4 items-center">
-        <div className="flex-1 w-full max-w-2xl">
-          <SearchInput
-            defaultValue={searchQuery}
-            placeholder="Search items, SKU, or Rack..."
-          />
-        </div>
-      </div>
+      <div className="hidden lg:block h-2" />
 
       {/* Bulk Action Bar - Moved below search and right-aligned */}
       {selectedIds.size > 0 && userRole !== 'EMPLOYEE' && (

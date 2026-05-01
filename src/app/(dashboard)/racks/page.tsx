@@ -168,10 +168,6 @@ export default async function RacksPage({
         <div className="px-8 py-4 flex items-center justify-between border-b border-border-ghost bg-surface-low/30">
           <div className="flex items-center gap-4">
             <span className="text-[13px] font-black text-foreground uppercase tracking-wider">Rack Items</span>
-            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-border-ghost text-[9px] font-black text-muted-foreground uppercase tracking-widest shadow-sm hover:border-primary/20 transition-all cursor-pointer">
-              <Filter className="w-3 h-3 text-primary" />
-              Filter
-            </div>
           </div>
           <div className="flex gap-1">
             <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Download className="w-3.5 h-3.5" /></button>

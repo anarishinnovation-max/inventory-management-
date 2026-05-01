@@ -75,7 +75,7 @@ export function SearchableSelect({
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {icon && <div className="shrink-0">{icon}</div>}
-          <span className={cn("truncate mr-2", !selectedItem && "text-muted-foreground font-medium", selectedItem && "font-black")}>
+          <span className={cn("truncate mr-2 font-bold text-[11px] uppercase tracking-widest text-foreground")}>
             {getDisplayValue()}
           </span>
         </div>
