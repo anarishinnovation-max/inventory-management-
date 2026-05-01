@@ -175,7 +175,8 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
   // Simplified stats for cards and reorder
   const inStockCount = mappedAll.filter(i => i.isInStock || i.isOrdered).length;
   const lowCount = mappedAll.filter(i => i.isLow).length;
-  const criticalCount = mappedAll.filter(i => i.isOutOfStock || i.isUrgent).length;
+  const outOfStockCount = mappedAll.filter(i => i.isOutOfStock).length;
+  const urgentCount = mappedAll.filter(i => i.isUrgent).length;
 
   const reorderPool = mappedAll
     .filter(i => i.isLow || i.isUrgent || i.isOutOfStock)
@@ -194,7 +195,8 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     absoluteTotalQuantity,
     inStockCount,
     lowCount,
-    criticalCount,
+    outOfStockCount,
+    urgentCount,
     reorderPool
   };
 }
@@ -222,7 +224,7 @@ export default async function InventoryPage({
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const { items, totalItems, absoluteTotal, totalFilteredQuantity, absoluteTotalQuantity, inStockCount, lowCount, criticalCount, reorderPool } = 
+  const { items, totalItems, absoluteTotal, totalFilteredQuantity, absoluteTotalQuantity, inStockCount, lowCount, outOfStockCount, urgentCount, reorderPool } = 
     await getInventoryDataRaw(session.companyId, q, status, category, page, PAGE_SIZE);
   
   
@@ -260,45 +262,55 @@ export default async function InventoryPage({
         </div>
       </header>
 
-      {/* Updated Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-colors border border-primary/10">
-                <Package className="w-5 h-5" />
+      {/* Stats Row - 5 Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="card-premium h-[130px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
+            <div className="p-2 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
+                <Package className="w-4 h-4" />
             </div>
             <div>
               <p className="text-[9px] font-black text-primary uppercase tracking-[0.15em]">Total SKU's</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{absoluteTotal}</h2>
+              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{absoluteTotal}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-colors border border-success/10">
-                <CheckCircle2 className="w-5 h-5" />
+        <div className="card-premium h-[130px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
+            <div className="p-2 w-fit rounded-xl bg-success/5 text-success border border-success/10">
+                <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
               <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">In Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{inStockCount}</h2>
+              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{inStockCount}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/10 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning transition-colors border border-warning/10">
-                <TrendingUp className="w-5 h-5" />
+        <div className="card-premium h-[130px] flex flex-col justify-between group border-warning/10 bg-white shadow-ambient">
+            <div className="p-2 w-fit rounded-xl bg-warning/5 text-warning border border-warning/10">
+                <TrendingUp className="w-4 h-4" />
             </div>
             <div>
               <p className="text-[9px] font-black text-warning uppercase tracking-[0.15em]">Low Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{lowCount}</h2>
+              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{lowCount}</h2>
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-error/5 text-error transition-colors border border-error/10">
-                <AlertCircle className="w-5 h-5" />
+        <div className="card-premium h-[130px] flex flex-col justify-between group border-indigo-500/10 bg-white shadow-ambient">
+            <div className="p-2 w-fit rounded-xl bg-indigo-500/5 text-indigo-500 border border-indigo-500/10">
+                <AlertCircle className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Out of Stock + Urgent</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{criticalCount}</h2>
+              <p className="text-[9px] font-black text-indigo-500 uppercase tracking-[0.15em]">Urgent Stock</p>
+              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{urgentCount}</h2>
+            </div>
+        </div>
+
+        <div className="card-premium h-[130px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient">
+            <div className="p-2 w-fit rounded-xl bg-error/5 text-error border border-error/10">
+                <Package className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Out of Stock</p>
+              <h2 className="text-2xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{outOfStockCount}</h2>
             </div>
         </div>
       </div>

@@ -75,6 +75,7 @@ export function ItemBreakdownModal({
   itemName,
   totalStock,
   incomingQty,
+  reservedQty,
   minStockLevel,
   unit,
   isOpen,
@@ -84,6 +85,7 @@ export function ItemBreakdownModal({
   itemName: string;
   totalStock: number;
   incomingQty: number;
+  reservedQty: number;
   minStockLevel: number;
   unit: string;
   isOpen: boolean;
@@ -180,7 +182,7 @@ export function ItemBreakdownModal({
               <h2 className="text-2xl font-black leading-tight mb-2">{itemName}</h2>
               <div className="flex flex-wrap items-center gap-2">
                 {(() => {
-                  const stockRemaining = breakdown.reduce((acc, b) => acc + b.quantity, 0);
+                  const stockRemaining = Math.max(0, totalStock);
                   const pipelineRemaining = incomingPOs.reduce((acc, p) => acc + p.quantity, 0);
                   const totalUnits = stockRemaining + pipelineRemaining;
                   const stockValue = breakdown.reduce((acc, b) => acc + (b.quantity * b.costPerUnit), 0);
@@ -188,21 +190,38 @@ export function ItemBreakdownModal({
                   const totalValue = stockValue + pipelineValue;
                   const avgPrice = totalUnits === 0 ? 0 : (totalValue / totalUnits);
 
+                  const netAvailable = (totalStock + pipelineRemaining) - reservedQty;
+                  const isUrgent = netAvailable < 0;
+
                   return (
                     <>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm transition-all duration-500">
                         <Package className="w-3.5 h-3.5" />
                         <span className="text-[11px] font-black">{loading ? "..." : stockRemaining} {normalizeUnit(unit)} In Stock</span>
                       </div>
-                      <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 text-primary rounded-xl shadow-sm transition-all duration-500">
+                      
+                      {reservedQty > 0 && (
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/5 border border-amber-500/10 text-amber-600 rounded-xl shadow-sm transition-all duration-500">
+                          <ShoppingCart className="w-3.5 h-3.5" />
+                          <span className="text-[11px] font-black">{reservedQty} Reserved</span>
+                        </div>
+                      )}
+
+                      <div className={cn(
+                        "flex items-center gap-2 px-3 py-1.5 rounded-xl shadow-sm border transition-all duration-500",
+                        isUrgent 
+                          ? "bg-error/5 border-error/20 text-error animate-pulse" 
+                          : "bg-primary/5 border-primary/10 text-primary"
+                      )}>
+                        <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Net Available</span>
+                        <span className="text-[11px] font-black">{loading ? "..." : netAvailable} {normalizeUnit(unit)}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm transition-all duration-500">
                         <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Avg Price</span>
                         <span className="text-[11px] font-black">
                           ₹{loading ? "..." : avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </span>
-                      </div>
-                      <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm transition-all duration-500">
-                        <Truck className="w-3.5 h-3.5 text-muted-foreground" />
-                        <span className="text-[11px] font-black text-muted-foreground">{loading ? "..." : pipelineRemaining} Pipeline</span>
                       </div>
                     </>
                   );
@@ -279,7 +298,7 @@ export function ItemBreakdownModal({
                                 <th className="table-cell-header !py-3">Vendor</th>
                                 <th className="table-cell-header !py-3">Date & Time</th>
                                 <th className="table-cell-header !py-3">Logistics</th>
-                                <th className="table-cell-header !py-3 text-right">Remaining</th>
+                                <th className="table-cell-header !py-3 text-right">Quantity</th>
                                 <th className="table-cell-header !py-3 text-right">Unit Cost</th>
                               </tr>
                             </thead>
@@ -307,7 +326,7 @@ export function ItemBreakdownModal({
                                     </div>
                                   </td>
                                   <td className="table-cell !py-3 text-right">
-                                    <span className="text-sm font-black text-primary tabular-nums">+{entry.quantity}</span>
+                                    <span className="text-sm font-black text-primary tabular-nums">{entry.quantity}</span>
                                   </td>
                                   <td className="table-cell !py-3 text-right">
                                     <span className="text-sm font-black text-foreground tabular-nums">₹{Number(entry.costPerUnit || 0).toLocaleString()}</span>
@@ -365,7 +384,7 @@ export function ItemBreakdownModal({
                                     </div>
                                   </td>
                                   <td className="table-cell !py-3 text-right">
-                                    <span className="text-sm font-black text-emerald-600 tabular-nums">+{po.quantity}</span>
+                                    <span className="text-sm font-black text-emerald-600 tabular-nums">{po.quantity}</span>
                                   </td>
                                   <td className="table-cell !py-3 text-center">
                                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mx-auto" />
@@ -425,7 +444,7 @@ export function ItemBreakdownModal({
                                     </div>
                                   </td>
                                   <td className="table-cell !py-3 text-right">
-                                    <span className="text-sm font-black text-error tabular-nums">-{entry.quantity}</span>
+                                    <span className="text-sm font-black text-error tabular-nums">{entry.quantity}</span>
                                   </td>
                                   <td className="table-cell !py-3 text-right">
                                     <span className="text-sm font-black text-foreground tabular-nums">₹{Number(entry.price || 0).toLocaleString()}</span>

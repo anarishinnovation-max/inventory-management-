@@ -36,12 +36,13 @@ import { DashboardActions } from "./components/DashboardActions";
 const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
   async () => {
     const results = await Promise.all([
-      // 1. Consolidated Stock Stats (Total, Low, Out of Stock)
+      // 1. Consolidated Stock Stats (Total, Low, Out of Stock, Urgent)
       prisma.$queryRaw<any[]>`
         SELECT 
           COUNT(*)::int as total,
-          COUNT(CASE WHEN inv."quantityAvailable" <= 0 OR inv.id IS NULL THEN 1 END)::int as out_of_stock,
-          COUNT(CASE WHEN inv."quantityAvailable" > 0 AND inv."quantityAvailable" <= i."minStockLevel" THEN 1 END)::int as low_stock
+          COUNT(CASE WHEN (COALESCE(inv."quantityAvailable", 0) + COALESCE(inv."incomingQty", 0) - COALESCE(inv."quantityReserved", 0)) < 0 THEN 1 END)::int as urgent,
+          COUNT(CASE WHEN NOT ((COALESCE(inv."quantityAvailable", 0) + COALESCE(inv."incomingQty", 0) - COALESCE(inv."quantityReserved", 0)) < 0) AND (COALESCE(inv."quantityAvailable", 0) <= 0 OR inv.id IS NULL) THEN 1 END)::int as out_of_stock,
+          COUNT(CASE WHEN NOT ((COALESCE(inv."quantityAvailable", 0) + COALESCE(inv."incomingQty", 0) - COALESCE(inv."quantityReserved", 0)) < 0) AND COALESCE(inv."quantityAvailable", 0) > 0 AND COALESCE(inv."quantityAvailable", 0) <= i."minStockLevel" THEN 1 END)::int as low_stock
         FROM "Item" i
         LEFT JOIN "Inventory" inv ON i.id = inv."itemId"
         WHERE i."companyId" = ${companyId}
@@ -149,7 +150,7 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
       monthlyRevenueResult
     ] = results;
 
-    const stats = (stockStatsResult as any)[0] || { total: 0, out_of_stock: 0, low_stock: 0 };
+    const stats = (stockStatsResult as any)[0] || { total: 0, out_of_stock: 0, low_stock: 0, urgent: 0 };
     const stockValue = Number((stockValueResult as any)[0]?.total || 0);
     const monthlyRevenue = Number((monthlyRevenueResult as any)[0]?.total || 0);
 
@@ -159,6 +160,7 @@ const getCachedDashboardAnalytics = (companyId: string) => cacheQuery(
         stockValue: stockValue,
         lowStockCount: stats.low_stock,
         outOfStockCount: stats.out_of_stock,
+        urgentCount: stats.urgent,
         vendorsCount: vendorsCount,
         monthlyRevenue: monthlyRevenue,
       },
@@ -192,7 +194,7 @@ export default async function DashboardPage() {
   const data = await getCachedDashboardAnalytics(session.companyId).catch((e) => {
     console.error("Dashboard data fetch error:", e);
     return {
-      kpis: { totalItems: 0, stockValue: 0, lowStockCount: 0, outOfStockCount: 0, vendorsCount: 0, monthlyRevenue: 0 },
+      kpis: { totalItems: 0, stockValue: 0, lowStockCount: 0, outOfStockCount: 0, urgentCount: 0, vendorsCount: 0, monthlyRevenue: 0 },
       aging: [],
       recentActivity: [],
       velocity: [],
@@ -258,8 +260,12 @@ export default async function DashboardPage() {
           </div>
           <div className="mt-6">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Alerts</p>
-            <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
-            <div className="flex items-center gap-2 mt-2">
+            <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.urgentCount + data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+               <Link href="/inventory?status=urgent" className="text-[10px] text-indigo-500 font-black tracking-tight hover:underline bg-indigo-500/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-indigo-500/10">
+                 {data.kpis.urgentCount} Urgent
+               </Link>
+               <span className="w-1 h-1 rounded-full bg-border-ghost"></span>
                <Link href="/inventory?status=outofstock" className="text-[10px] text-error font-black tracking-tight hover:underline bg-error/5 px-2 py-0.5 rounded cursor-pointer transition-colors hover:bg-error/10">
                  {data.kpis.outOfStockCount} Out of Stock
                </Link>

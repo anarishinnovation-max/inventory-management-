@@ -41,8 +41,8 @@ export default function InventoryFilters({
     { label: "All Items", value: "all" },
     { label: "In Stock", value: "instock" },
     { label: "Low Stock", value: "low" },
-    { label: "Out of Stock", value: "outofstock" },
     { label: "Urgent", value: "urgent" },
+    { label: "Out of Stock", value: "outofstock" },
     { label: "Ordered", value: "ordered" },
   ];
 

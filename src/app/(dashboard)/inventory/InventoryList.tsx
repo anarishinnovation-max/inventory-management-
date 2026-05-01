@@ -467,6 +467,7 @@ export default function InventoryList({
           itemName={breakdownItem.name}
           totalStock={breakdownItem.totalStock}
           incomingQty={breakdownItem.incomingQty}
+          reservedQty={breakdownItem.quantityReserved}
           minStockLevel={breakdownItem.minStockLevel || 0}
           unit={breakdownItem.unit}
         />
