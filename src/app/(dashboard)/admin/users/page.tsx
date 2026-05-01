@@ -138,7 +138,6 @@ export default function UsersPage() {
                   <th className="table-cell-header">Member</th>
                   <th className="table-cell-header">Role</th>
                   <th className="table-cell-header">Joined</th>
-                  <th className="table-cell-header text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-ghost">
@@ -173,50 +172,6 @@ export default function UsersPage() {
                           day: 'numeric' 
                         })}
                       </span>
-                    </td>
-                    <td className="table-cell text-right">
-                      <div className="relative inline-block text-left">
-                        <button 
-                          onClick={() => setActiveMenu(activeMenu === user.id ? null : user.id)}
-                          className="p-3 hover:bg-surface-muted rounded-xl transition-colors disabled:opacity-50"
-                          disabled={currentUserRole !== UserRole.SUPER_ADMIN}
-                        >
-                          <MoreVertical className="w-5 h-5 text-muted-foreground" />
-                        </button>
-
-                        {activeMenu === user.id && (
-                          <div className="absolute right-0 mt-2 w-56 bg-surface-lowest border border-border-ghost rounded-2xl shadow-ambient z-50 p-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                            <button 
-                              onClick={() => {
-                                setResetUser(user);
-                                setActiveMenu(null);
-                              }}
-                              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-surface-muted rounded-xl transition-colors"
-                            >
-                              <Key className="w-4 h-4 text-primary" />
-                              Reset Password
-                            </button>
-                            <button 
-                              onClick={() => {
-                                setEditUser(user);
-                                setActiveMenu(null);
-                              }}
-                              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-surface-muted rounded-xl transition-colors"
-                            >
-                              <Settings2 className="w-4 h-4 text-amber-500" />
-                              Edit Member Info
-                            </button>
-                            <div className="h-px bg-border-ghost my-1" />
-                            <button 
-                              onClick={() => deleteUser(user.id, user.name)}
-                              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-red-500/10 text-red-500 rounded-xl transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                              Remove Member
-                            </button>
-                          </div>
-                        )}
-                      </div>
                     </td>
                   </tr>
                 ))}
