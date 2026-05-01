@@ -1,42 +1,58 @@
-import "dotenv/config";
-import prisma from "../src/lib/prisma";
+
+import { PrismaClient } from '../src/generated/client';
+const prisma = new PrismaClient();
 
 async function syncReservations() {
-  console.log("Starting Inventory Reservation Sync...");
-
-  // 1. Reset all quantityReserved to 0 first
-  await prisma.inventory.updateMany({
-    data: { quantityReserved: 0 }
+  console.log("Starting Reservation Sync...");
+  
+  // Get all items
+  const items = await prisma.item.findMany({
+    include: { inventory: true }
   });
 
-  // 2. Fetch all pending orders
-  const pendingOrders = await prisma.dispatchOrder.findMany({
-    where: { status: "pending" },
-    include: { items: true }
-  });
-
-  console.log(`Found ${pendingOrders.length} pending orders to sync.`);
-
-  // 3. Sum up quantities per item
-  const reservations: Record<string, number> = {};
-  for (const order of pendingOrders) {
-    for (const item of order.items) {
-      reservations[item.itemId] = (reservations[item.itemId] || 0) + item.quantity;
-    }
-  }
-
-  // 4. Update the inventory table
-  for (const [itemId, qty] of Object.entries(reservations)) {
-    await prisma.inventory.update({
-      where: { itemId },
-      data: { quantityReserved: qty }
+  for (const item of items) {
+    // Calculate actual reserved quantity from pending dispatch orders
+    // The correct model is dispatchItem (from DispatchItem model)
+    const dispatchItems = await prisma.dispatchItem.findMany({
+      where: {
+        itemId: item.id,
+        dispatchOrder: {
+          status: {
+            in: ['pending', 'partially_dispatched'] as any
+          }
+        }
+      },
+      select: {
+        quantity: true
+      }
     });
-    console.log(`Synced Item ID ${itemId}: Reserved ${qty} units.`);
+
+    const actualReserved = dispatchItems.reduce((acc: number, di: any) => {
+      return acc + di.quantity;
+    }, 0);
+
+    if (item.inventory) {
+      if (item.inventory.quantityReserved !== actualReserved) {
+        console.log(`Syncing ${item.sku}: ${item.inventory.quantityReserved} -> ${actualReserved}`);
+        await prisma.inventory.update({
+          where: { id: item.inventory.id },
+          data: { quantityReserved: actualReserved }
+        });
+      }
+    } else {
+       // Create inventory record if missing
+       await prisma.inventory.create({
+         data: {
+           itemId: item.id,
+           companyId: item.companyId,
+           quantityAvailable: 0,
+           quantityReserved: actualReserved
+         }
+       });
+    }
   }
 
   console.log("Sync Complete!");
 }
 
-syncReservations()
-  .catch(e => console.error(e))
-  .finally(() => process.exit());
+syncReservations().catch(console.error).finally(() => prisma.$disconnect());

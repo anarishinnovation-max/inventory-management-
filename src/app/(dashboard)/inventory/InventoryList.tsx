@@ -401,12 +401,12 @@ export default function InventoryList({
                         <div className="flex flex-col items-end gap-1 mt-1">
                           {reservedQty > 0 && (
                             <span className="text-[8px] font-black uppercase tracking-tighter text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 animate-pulse">
-                              +{reservedQty} Ordered
+                              +{reservedQty} Booked
                             </span>
                           )}
                           {incomingQty > 0 && (
                             <span className="text-[8px] font-black uppercase tracking-tight text-primary bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">
-                              +{incomingQty} Inbound
+                              +{incomingQty} Incoming
                             </span>
                           )}
                         </div>

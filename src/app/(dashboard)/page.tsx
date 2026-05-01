@@ -364,7 +364,7 @@ export default async function DashboardPage() {
                           <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{item.sku}</p>
                           {item.reserved_qty > 0 && (
                             <span className="px-1.5 py-0.5 bg-blue-500/10 text-blue-600 rounded text-[8px] font-black tracking-tighter animate-pulse">
-                              +{item.reserved_qty} ORDERED
+                              +{item.reserved_qty} BOOKED
                             </span>
                           )}
                         </div>

@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   ShoppingCart,
   Truck,
+  TrendingUp,
   X
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -196,25 +197,25 @@ export function ItemBreakdownModal({
                   return (
                     <>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 text-emerald-600 rounded-xl shadow-sm transition-all duration-500">
-                        <Package className="w-3.5 h-3.5" />
-                        <span className="text-[11px] font-black">{loading ? "..." : stockRemaining} {normalizeUnit(unit)} In Stock</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                        <span className="text-[11px] font-black">+{pipelineRemaining} Incoming</span>
                       </div>
                       
                       {reservedQty > 0 && (
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/5 border border-amber-500/10 text-amber-600 rounded-xl shadow-sm transition-all duration-500">
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/5 border border-blue-500/10 text-blue-600 rounded-xl shadow-sm animate-pulse">
                           <ShoppingCart className="w-3.5 h-3.5" />
-                          <span className="text-[11px] font-black">{reservedQty} Reserved</span>
+                          <span className="text-[11px] font-black">+{reservedQty} Booked</span>
                         </div>
                       )}
 
                       <div className={cn(
-                        "flex items-center gap-2 px-3 py-1.5 rounded-xl shadow-sm border transition-all duration-500",
-                        isUrgent 
-                          ? "bg-error/5 border-error/20 text-error animate-pulse" 
-                          : "bg-primary/5 border-primary/10 text-primary"
+                        "flex items-center gap-2 px-3 py-1.5 rounded-xl shadow-sm",
+                        isUrgent ? "bg-error/5 border border-error/10 text-error animate-bounce" : "bg-primary/5 border border-primary/10 text-primary"
                       )}>
-                        <span className="text-[9px] font-black opacity-40 uppercase tracking-widest">Net Available</span>
-                        <span className="text-[11px] font-black">{loading ? "..." : netAvailable} {normalizeUnit(unit)}</span>
+                        <TrendingUp className="w-3.5 h-3.5" />
+                        <span className="text-[11px] font-black">
+                          {loading ? "..." : netAvailable} Net {isUrgent ? "(Urgent)" : "Available"}
+                        </span>
                       </div>
 
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm transition-all duration-500">
