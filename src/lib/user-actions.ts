@@ -4,6 +4,7 @@ import prisma from "./prisma";
 import { revalidatePath } from "next/cache";
 import { getSession, logout } from "./auth";
 import { UserRole } from "./types";
+import { createActivityLog } from "./logger";
 import { isOwner } from "./rbac-utils";
 import { redirect } from "next/navigation";
 
@@ -57,6 +58,17 @@ import bcrypt from "bcryptjs";
 import { login } from "./auth";
 
 export async function handleLogout() {
+  const session = await getSession();
+  if (session) {
+    await createActivityLog({
+      actionType: "LOGOUT",
+      entityType: "USER",
+      entityId: session.id,
+      performedBy: session.id,
+      performedByName: session.username,
+      companyId: session.companyId || "GLOBAL",
+    });
+  }
   await logout();
   redirect("/login");
 }
@@ -84,6 +96,17 @@ export async function handleLoginAction(formData: FormData) {
   }
 
   await login(user.id, user.username, user.role as UserRole, user.companyId);
+
+  // Log successful login
+  await createActivityLog({
+    actionType: "LOGIN",
+    entityType: "USER",
+    entityId: user.id,
+    performedBy: user.id,
+    performedByName: user.username,
+    companyId: user.companyId || "GLOBAL",
+  });
+
   if (user.role === "SUPER_ADMIN") {
     redirect("/super-admin");
   } else {

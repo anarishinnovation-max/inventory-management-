@@ -107,8 +107,8 @@ export async function POST(request: Request) {
       actionType: "CREATE",
       entityType: "DISPATCH_ORDER",
       entityId: order.id,
-      performedBy: session.userId,
-      performedByName: session.name,
+      performedBy: session.id,
+      performedByName: session.username,
       newValue: {
         customerId: order.customerId,
         itemCount: items.length,

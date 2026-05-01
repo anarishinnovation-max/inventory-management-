@@ -142,8 +142,8 @@ export async function POST(request: Request) {
       actionType: "CREATE",
       entityType: "PURCHASE_ORDER",
       entityId: order.id,
-      performedBy: session.userId,
-      performedByName: session.name,
+      performedBy: session.id,
+      performedByName: session.username,
       newValue: {
         vendorId: order.vendorId,
         itemCount: items.length,
