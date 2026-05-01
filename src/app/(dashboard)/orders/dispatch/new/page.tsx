@@ -478,7 +478,8 @@ export default function NewDispatchOrderPage() {
                         const selectedItem = items.find(i => i.id === item.itemId);
                         const stock = available;
                         const minStock = selectedItem?.minStockLevel || 0;
-                        const isLow = stock < minStock;
+                        const isCritical = stock <= 0;
+                        const isLow = !isCritical && stock < minStock;
                         
                         const invData = getInventoryData(item.itemId);
                         const batches = invData?.batches || [];
@@ -491,15 +492,18 @@ export default function NewDispatchOrderPage() {
                         return (
                           <div className={cn(
                             "mt-5 flex items-center justify-between px-6 py-3 rounded-[2rem] border text-[10px] font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 shadow-sm",
-                            isLow 
-                              ? "bg-error/5 border-error/20 text-error" 
-                              : "bg-success/5 border-success/20 text-success"
+                            isCritical ? "bg-error/5 border-error/20 text-error" :
+                            isLow ? "bg-warning/5 border-warning/20 text-warning" :
+                            "bg-success/5 border-success/20 text-success"
                           )}>
                             <div className="flex items-center gap-4">
-                              <div className={cn("w-3 h-3 rounded-full shadow-sm", isLow ? "bg-error" : "bg-success")} />
+                              <div className={cn(
+                                "w-3 h-3 rounded-full shadow-sm",
+                                isCritical ? "bg-error" : isLow ? "bg-warning" : "bg-success"
+                              )} />
                               <div className="flex flex-col leading-tight">
                                 <span className="tabular-nums">
-                                  {isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} U
+                                  {isCritical ? "Out of Stock" : isLow ? "Low Stock Alert" : "Stable Stock"}: {stock.toLocaleString()} U
                                 </span>
                                 <span className="opacity-80">Available</span>
                               </div>
