@@ -115,16 +115,13 @@ export default async function RacksPage({
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card-premium group">
           <div className="flex justify-between items-start mb-4">
-            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">How Full</span>
+            <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Rack Status</span>
             <TrendingUp className="w-3 h-3 text-success" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black tracking-tighter text-foreground">72.4%</span>
-            <span className="text-[10px] font-bold text-success">+2.1%</span>
+            <span className="text-3xl font-black tracking-tighter text-foreground">Active</span>
           </div>
-          <div className="w-full bg-surface-low h-1.5 rounded-full mt-4 overflow-hidden shadow-inner">
-            <div className="bg-primary h-full w-[72%] shadow-[0_0_8px_oklch(0.55_0.18_250)]"></div>
-          </div>
+          <p className="text-[10px] text-muted-foreground mt-4 font-bold uppercase tracking-widest leading-none">Ready for operations.</p>
         </div>
 
         <div className="card-premium group">
@@ -182,7 +179,7 @@ export default async function RacksPage({
                 <th className="table-cell-header">Rack Number</th>
                 <th className="table-cell-header">Area</th>
                 <th className="table-cell-header">Items in Rack</th>
-                <th className="table-cell-header text-right">How Full</th>
+                <th className="table-cell-header text-right">Items Count</th>
                 <th className="table-cell-header text-right">Actions</th>
               </tr>
             </thead>
@@ -216,14 +213,9 @@ export default async function RacksPage({
                       </p>
                     </td>
                     <td className="px-8 py-5 text-right">
-                      <div className="flex flex-col items-end gap-2">
-                        <span className="text-[10px] font-black text-foreground uppercase tracking-widest">{Math.round(fillPercent)}% Full</span>
-                        <div className="w-20 bg-surface-low border border-border-ghost h-1 rounded-full overflow-hidden shadow-inner">
-                          <div className={cn(
-                            "h-full transition-all duration-700 ease-out shadow-[0_0_8px_currentColor]",
-                            fillPercent > 90 ? "bg-error" : fillPercent > 50 ? "bg-primary" : "bg-success"
-                          )} style={{ width: `${fillPercent}%` }}></div>
-                        </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="text-sm font-black text-foreground tabular-nums">{totalQty}</span>
+                        <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Total Units</span>
                       </div>
                     </td>
                     <td className="px-8 py-5 text-right">
