@@ -290,25 +290,38 @@ export default async function InventoryPage({
           </div>
         </div>
 
-        <div className="card-premium h-[130px] flex items-center group border-error/10 bg-white shadow-ambient p-0 overflow-hidden">
-          <div className="flex-1 h-full p-6 flex flex-col justify-between">
+        <div className="card-premium h-[130px] flex items-center border-error/10 bg-white shadow-ambient overflow-hidden p-0">
+          {/* LEFT */}
+          <div className="flex-1 h-full p-6 flex flex-col justify-center gap-2">
             <div className="p-2 w-fit rounded-full bg-error/5 text-error border border-error/10 shadow-sm">
               <Package className="w-4 h-4" />
             </div>
-            <div>
-              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Out of Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-0.5 tracking-tighter tabular-nums">{outOfStockCount + urgentCount}</h2>
-            </div>
+
+            <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">
+              Out of Stock
+            </p>
+
+            <h2 className="text-4xl font-black text-foreground tracking-tighter tabular-nums">
+              {outOfStockCount + urgentCount}
+            </h2>
           </div>
 
-          {/* Vertical Divider */}
-          <div className="w-px h-16 bg-border-ghost opacity-40" />
+          {/* Divider */}
+          <div className="w-px h-full bg-border-ghost opacity-40" />
 
-          <div className="flex-1 h-full p-6 flex flex-col justify-center">
-            <div>
-              <p className="text-[9px] font-black text-error/40 uppercase tracking-[0.15em]">Urgent</p>
-              <h2 className="text-3xl font-black text-foreground mt-0.5 tracking-tighter tabular-nums">{urgentCount}</h2>
+          {/* RIGHT */}
+          <div className="flex-1 h-full p-6 flex flex-col justify-center gap-2">
+            <div className="p-2 w-fit rounded-full opacity-0">
+              <Package className="w-4 h-4" />
             </div>
+
+            <p className="text-[9px] font-black text-error/40 uppercase tracking-[0.15em]">
+              Urgent
+            </p>
+
+            <h2 className="text-2xl font-black text-foreground tracking-tighter tabular-nums opacity-60">
+              {urgentCount}
+            </h2>
           </div>
         </div>
       </div>
