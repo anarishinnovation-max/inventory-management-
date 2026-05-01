@@ -5,7 +5,7 @@ import InventoryTableActions from "@/app/(dashboard)/inventory/InventoryTableAct
 import InventoryList from "./InventoryList";
 import { Prisma } from "@/generated/client";
 import prisma from "@/lib/prisma";
-import { Package, PlusCircle, TrendingUp } from "lucide-react";
+import { Package, PlusCircle, TrendingUp, CheckCircle2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import QuickPOButton from "./QuickPOButton";
 import { cacheQuery } from "@/lib/cache";
@@ -173,9 +173,9 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
   }));
 
   // Simplified stats for cards and reorder
-  const urgentCount = mappedAll.filter(i => i.isUrgent).length;
+  const inStockCount = mappedAll.filter(i => i.isInStock || i.isOrdered).length;
   const lowCount = mappedAll.filter(i => i.isLow).length;
-  const outOfStockCount = mappedAll.filter(i => i.isOutOfStock).length;
+  const criticalCount = mappedAll.filter(i => i.isOutOfStock || i.isUrgent).length;
 
   const reorderPool = mappedAll
     .filter(i => i.isLow || i.isUrgent || i.isOutOfStock)
@@ -192,9 +192,9 @@ async function getInventoryDataRaw(companyId: string, q: string, status: string,
     absoluteTotal: mappedAll.length,
     totalFilteredQuantity,
     absoluteTotalQuantity,
-    urgentCount,
+    inStockCount,
     lowCount,
-    outOfStockCount,
+    criticalCount,
     reorderPool
   };
 }
@@ -222,7 +222,7 @@ export default async function InventoryPage({
   const category = typeof sParams.category === 'string' ? sParams.category : 'all';
   const page = typeof sParams.page === 'string' ? parseInt(sParams.page) : 1;
 
-  const { items, totalItems, absoluteTotal, totalFilteredQuantity, absoluteTotalQuantity, urgentCount, lowCount, outOfStockCount, reorderPool } = 
+  const { items, totalItems, absoluteTotal, totalFilteredQuantity, absoluteTotalQuantity, inStockCount, lowCount, criticalCount, reorderPool } = 
     await getInventoryDataRaw(session.companyId, q, status, category, page, PAGE_SIZE);
   
   
@@ -260,7 +260,7 @@ export default async function InventoryPage({
         </div>
       </header>
 
-      {/* Stats row matched with Purchase Bills */}
+      {/* Updated Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
             <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-colors border border-primary/10">
@@ -272,13 +272,13 @@ export default async function InventoryPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-error/5 text-error transition-colors border border-error/10">
-                <TrendingUp className="w-5 h-5 rotate-180" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-colors border border-success/10">
+                <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Urgent Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{urgentCount}</h2>
+              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">In Stock</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{inStockCount}</h2>
             </div>
         </div>
 
@@ -292,13 +292,13 @@ export default async function InventoryPage({
             </div>
         </div>
 
-        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success transition-colors border border-success/10">
-                <PlusCircle className="w-5 h-5" />
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient">
+            <div className="p-2.5 w-fit rounded-xl bg-error/5 text-error transition-colors border border-error/10">
+                <AlertCircle className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-[9px] font-black text-success uppercase tracking-[0.15em]">Out of Stock</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{outOfStockCount}</h2>
+              <p className="text-[9px] font-black text-error uppercase tracking-[0.15em]">Out of Stock + Urgent</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{criticalCount}</h2>
             </div>
         </div>
       </div>
