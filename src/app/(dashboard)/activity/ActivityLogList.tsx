@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { formatDistanceToNow } from "date-fns";
 import { TimeDisplay } from "@/components/TimeDisplay";
 import { 
   Plus, 
@@ -129,7 +128,7 @@ export default function ActivityLogList({ logs, total, currentPage, pageSize }: 
                       <td className="table-cell">
                         <div className="flex flex-col" suppressHydrationWarning>
                            <span className="text-xs font-black text-foreground">
-                              {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}
+                              <TimeDisplay date={log.createdAt} format="distance" />
                            </span>
                            <span className="text-[9px] font-bold text-muted-foreground mt-0.5 uppercase tracking-widest">
                               <TimeDisplay date={log.createdAt} />

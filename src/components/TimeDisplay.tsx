@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { formatDistanceToNow } from "date-fns";
 
 export function TimeDisplay({ date, format = "time" }: { date: string | Date, format?: "time" | "full" | "distance" }) {
   const [mounted, setMounted] = useState(false);
@@ -17,6 +18,10 @@ export function TimeDisplay({ date, format = "time" }: { date: string | Date, fo
   
   if (format === "full") {
     return <>{d.toLocaleString()}</>;
+  }
+  
+  if (format === "distance") {
+    return <>{formatDistanceToNow(d, { addSuffix: true })}</>;
   }
   
   return <>{d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</>;
