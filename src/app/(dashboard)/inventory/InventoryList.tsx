@@ -404,16 +404,38 @@ export default function InventoryList({
                         </span>
                         <div className="flex items-center justify-end gap-1.5 mt-1.5">
                           {reservedQty > 0 && (
-                            <span className="text-xs font-black uppercase tracking-tighter text-yellow-900 bg-yellow-400 px-1.5 py-0.5 rounded border border-yellow-500/50 flex items-center gap-1 shadow-sm">
-                              +{reservedQty} <ArrowLeft className="w-2.5 h-2.5" />
-                            </span>
+                            <InfoTooltip 
+                              content={
+                                <div className="space-y-1">
+                                  <p className="font-black text-yellow-700 uppercase tracking-widest text-[10px]">Reserved Stock</p>
+                                  <p className="text-[10px] leading-tight text-muted-foreground">This amount is currently booked for pending customer orders and is not available for new sales.</p>
+                                </div>
+                              }
+                              position="top"
+                            >
+                              <span className="text-xs font-black uppercase tracking-tighter text-yellow-900 bg-yellow-400 px-1.5 py-0.5 rounded border border-yellow-500/50 flex items-center gap-1 shadow-sm">
+                                +{reservedQty} <ArrowLeft className="w-2.5 h-2.5" />
+                              </span>
+                            </InfoTooltip>
                           )}
                           {incomingQty > 0 && (
-                            <span className="text-xs font-black uppercase tracking-tight text-blue-950 bg-blue-400 px-1.5 py-0.5 rounded border border-blue-500/50 flex items-center gap-1 shadow-sm">
-                              +{incomingQty} <ArrowRight className="w-2.5 h-2.5" />
-                            </span>
+                            <InfoTooltip 
+                              content={
+                                <div className="space-y-1">
+                                  <p className="font-black text-blue-700 uppercase tracking-widest text-[10px]">Incoming Supply</p>
+                                  <p className="text-[10px] leading-tight text-muted-foreground">This stock is expected to arrive soon from confirmed purchase orders.</p>
+                                </div>
+                              }
+                              position="top"
+                            >
+                              <span className="text-xs font-black uppercase tracking-tight text-blue-950 bg-blue-400 px-1.5 py-0.5 rounded border border-blue-500/50 flex items-center gap-1 shadow-sm">
+                                +{incomingQty} <ArrowRight className="w-2.5 h-2.5" />
+                              </span>
+                            </InfoTooltip>
                           )}
+
                         </div>
+
                       </div>
                     </td>
                     <td className="table-cell hidden md:table-cell">

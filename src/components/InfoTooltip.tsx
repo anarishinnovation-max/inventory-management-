@@ -11,12 +11,13 @@ function cn(...inputs: ClassValue[]) {
 
 interface InfoTooltipProps {
   content: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   iconClassName?: string;
   position?: "top" | "bottom" | "left" | "right";
 }
 
-export function InfoTooltip({ content, className, iconClassName, position = "top" }: InfoTooltipProps) {
+export function InfoTooltip({ content, children, className, iconClassName, position = "top" }: InfoTooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   const positionClasses = {
@@ -41,13 +42,19 @@ export function InfoTooltip({ content, className, iconClassName, position = "top
       onFocus={() => setIsVisible(true)}
       onBlur={() => setIsVisible(false)}
     >
-      <Info 
-        className={cn(
-          "w-4 h-4 cursor-help transition-colors", 
-          isVisible ? "text-primary" : "text-muted-foreground/60 hover:text-primary",
-          iconClassName
-        )} 
-      />
+      {children ? (
+        <div className="cursor-help">
+          {children}
+        </div>
+      ) : (
+        <Info 
+          className={cn(
+            "w-4 h-4 cursor-help transition-colors", 
+            isVisible ? "text-primary" : "text-muted-foreground/60 hover:text-primary",
+            iconClassName
+          )} 
+        />
+      )}
       
       {isVisible && (
         <div 
@@ -72,3 +79,4 @@ export function InfoTooltip({ content, className, iconClassName, position = "top
     </div>
   );
 }
+
