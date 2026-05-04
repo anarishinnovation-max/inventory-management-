@@ -24,6 +24,8 @@ import { useConfirm } from "@/hooks/use-confirm";
 import InventoryTableActions from "./InventoryTableActions";
 import { MappedItem } from "./page";
 import { ItemBreakdownModal } from "./ItemBreakdownModal";
+import { InfoTooltip } from "@/components/InfoTooltip";
+
 
 function formatDate(date: Date) {
   return new Date(date).toLocaleString('en-IN', {
@@ -421,15 +423,69 @@ export default function InventoryList({
                     </td>
                     <td className="table-cell hidden sm:table-cell">
                       {isOutOfStock ? (
-                        <span className="badge badge-error">
-                          Out of Stock {isUrgent && <span className="ml-1 opacity-60 text-xs">(Urgent)</span>}
+                        <span className="badge badge-error gap-1.5">
+                          Out of Stock
+                          {isUrgent ? (
+                            <InfoTooltip 
+                              content={
+                                <div className="space-y-1">
+                                  <p className="font-black text-error uppercase tracking-widest text-[10px]">Urgent Requirement</p>
+                                  <p className="text-xs font-bold text-foreground">Net Available: <span className="text-error">{netAvailable}</span></p>
+                                  <div className="text-[10px] leading-tight text-muted-foreground mt-1 border-t border-error/10 pt-1">
+                                    <span className="whitespace-nowrap">(Physical + <span className="inline-flex items-center text-blue-500"><ArrowRight className="w-2 h-2 mr-0.5" />Incoming</span>)</span>
+                                    <div className="mt-0.5">
+                                      - <span className="inline-flex items-center text-yellow-500"><ArrowLeft className="w-2 h-2 mr-0.5" />Reserved</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              }
+                              iconClassName="w-3 h-3 text-error/60 hover:text-error"
+                              position="top"
+                            />
+                          ) : (
+                            <InfoTooltip 
+                              content={
+                                <div className="space-y-1">
+                                  <p className="font-black text-error uppercase tracking-widest text-[10px]">Out of Stock</p>
+                                  <p className="text-[10px] leading-tight text-muted-foreground">This item has zero physical stock remaining.</p>
+                                </div>
+                              }
+                              iconClassName="w-3 h-3 text-error/60 hover:text-error"
+                              position="top"
+                            />
+                          )}
                         </span>
                       ) : isLowStock ? (
-                        <span className="badge badge-warning">Low Stock</span>
+                        <span className="badge badge-warning gap-1.5">
+                          Low Stock
+                          <InfoTooltip 
+                            content={
+                              <div className="space-y-1">
+                                <p className="font-black text-warning uppercase tracking-widest text-[10px]">Low Stock Alert</p>
+                                <p className="text-[10px] leading-tight text-muted-foreground">Current stock is below your minimum level of <strong>{item.minStockLevel}</strong>.</p>
+                              </div>
+                            }
+                            iconClassName="w-3 h-3 text-warning/60 hover:text-warning"
+                            position="top"
+                          />
+                        </span>
                       ) : (
-                        <span className="badge badge-success">In Stock</span>
+                        <span className="badge badge-success gap-1.5">
+                          In Stock
+                          <InfoTooltip 
+                            content={
+                              <div className="space-y-1">
+                                <p className="font-black text-success uppercase tracking-widest text-[10px]">Stock Healthy</p>
+                                <p className="text-[10px] leading-tight text-muted-foreground">Current stock is well above your minimum levels.</p>
+                              </div>
+                            }
+                            iconClassName="w-3 h-3 text-success/60 hover:text-success"
+                            position="top"
+                          />
+                        </span>
                       )}
                     </td>
+
                     <td className="table-cell hidden xl:table-cell">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <span className="text-xs font-bold">

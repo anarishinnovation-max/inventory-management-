@@ -19,6 +19,8 @@ import {
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
+import { InfoTooltip } from "@/components/InfoTooltip";
+
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -221,7 +223,22 @@ export function ItemBreakdownModal({
                         <span className="text-xs font-black">
                           {loading ? "..." : netAvailable} Net {isUrgent ? "(Urgent)" : "Available"}
                         </span>
+                        <InfoTooltip 
+                          content={
+                            <div className="space-y-1">
+                              <p className="font-black uppercase tracking-widest text-[10px]">Net Visibility</p>
+                              <div className="text-[10px] leading-tight text-muted-foreground mt-1">
+                                <span className="whitespace-nowrap">(Physical + <span className="inline-flex items-center text-blue-500"><ArrowRight className="w-2 h-2 mr-0.5" />Incoming</span>)</span>
+                                <div className="mt-0.5">
+                                  - <span className="inline-flex items-center text-yellow-500"><ArrowLeft className="w-2 h-2 mr-0.5" />Reserved</span>
+                                </div>
+                              </div>
+                            </div>
+                          }
+                          iconClassName={cn("w-3 h-3", isUrgent ? "text-error/60" : "text-primary/60")}
+                        />
                       </div>
+
 
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-low rounded-xl border border-border-ghost shadow-sm">
                         <span className="text-xs font-black opacity-40 uppercase tracking-widest">Avg Price</span>

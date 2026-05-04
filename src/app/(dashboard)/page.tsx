@@ -6,7 +6,10 @@ import {
     AlertTriangle,
     ArrowDownLeft,
     ArrowUpRight,
+    ArrowLeft,
+    ArrowRight,
     BellRing,
+
     ChevronRight,
     FileDown,
     History,
@@ -22,6 +25,8 @@ import {
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { TimeDisplay } from "@/components/TimeDisplay";
+import { InfoTooltip } from "@/components/InfoTooltip";
+
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -231,10 +236,46 @@ export default async function DashboardPage() {
             <div className="p-3 bg-primary/10 text-primary rounded-xl transition-colors">
               <Package className="w-5 h-5" />
             </div>
-            <div className="badge badge-success">
-              <TrendingUp className="w-3 h-3 mr-1" />
-              12%
+            <div className="flex items-center gap-2">
+              <InfoTooltip 
+                content={
+                  <div className="space-y-2">
+                    <p className="font-black uppercase tracking-widest text-[10px] text-primary">Status Definitions</p>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <span className="badge badge-success w-24 justify-center">In Stock</span>
+                        <span className="text-xs text-muted-foreground">Healthy inventory levels above minimum.</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="badge badge-warning w-24 justify-center">Low Stock</span>
+                        <span className="text-xs text-muted-foreground">Inventory at or below minimum level.</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="badge badge-error w-24 justify-center">Out of Stock</span>
+                        <span className="text-xs text-muted-foreground">Items with zero physical stock remaining.</span>
+                      </div>
+                      <div className="flex items-center gap-3 pt-1 border-t border-error/10">
+                        <div className="flex items-center gap-1.5 badge badge-error w-24 justify-center shrink-0">
+                          Urgent <InfoTooltip content="Calculated" iconClassName="w-2.5 h-2.5" />
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
+                          <span className="text-[10px] text-muted-foreground leading-tight">
+                            Net Available (Physical + <span className="inline-flex items-center text-blue-500"><ArrowRight className="w-2 h-2 mr-0.5" />In</span> - <span className="inline-flex items-center text-yellow-500"><ArrowLeft className="w-2 h-2 mr-0.5" />Res</span>) &lt; 0
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                }
+                position="bottom"
+              />
+              <div className="badge badge-success">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                12%
+              </div>
             </div>
+
           </div>
           <div className="mt-6">
             <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Total Items</p>
@@ -264,9 +305,34 @@ export default async function DashboardPage() {
             <div className="p-3 bg-error/10 text-error rounded-xl transition-colors">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <Link href="/inventory?status=low" className="badge badge-error hover:bg-error hover:text-white transition-colors cursor-pointer">
-              View All
-            </Link>
+            <div className="flex items-center gap-3">
+              <InfoTooltip 
+                content={
+                  <div className="space-y-2">
+                    <p className="font-black uppercase tracking-widest text-[10px] text-error">Urgent Reorder Needed</p>
+                    <p>Some items are marked as <strong className="text-error">Urgent</strong> because your commitments (<span className="text-yellow-600 inline-flex items-center gap-0.5 font-bold"><ArrowLeft className="w-2.5 h-2.5" /> Reserved</span>) exceed your available stock.</p>
+                    <div className="p-3 bg-error/5 rounded-xl border border-error/10 text-[11px] font-mono leading-relaxed mt-2">
+                      <div className="flex items-center gap-1 flex-wrap">
+                        <span className="text-foreground font-bold">Net</span> = (Physical + <span className="inline-flex items-center text-blue-500"><ArrowRight className="w-2.5 h-2.5 mr-0.5" />Incoming</span>)
+                      </div>
+                      <div className="flex items-center gap-1 ml-10">
+                        - <span className="inline-flex items-center text-yellow-500"><ArrowLeft className="w-2.5 h-2.5 mr-0.5" />Reserved</span>
+                      </div>
+                      <div className="mt-1 pt-1 border-t border-error/10 text-error font-bold">
+                        Urgent if Net &lt; 0
+                      </div>
+                    </div>
+
+
+                  </div>
+                }
+                position="bottom"
+              />
+              <Link href="/inventory?status=low" className="badge badge-error hover:bg-error hover:text-white transition-colors cursor-pointer">
+                View All
+              </Link>
+            </div>
+
           </div>
           <div className="mt-6">
             <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">Inventory Alerts</p>             <h2 className="text-3xl font-black tracking-tighter text-foreground mt-1">{data.kpis.urgentCount + data.kpis.outOfStockCount + data.kpis.lowStockCount} Items</h2>
