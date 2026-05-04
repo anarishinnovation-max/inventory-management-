@@ -445,9 +445,11 @@ export default function InventoryList({
                     </td>
                     <td className="table-cell hidden sm:table-cell">
                       {isOutOfStock ? (
-                        <span className="badge badge-error gap-1.5">
-                          Out of Stock
+                        <span className="badge badge-error gap-1.5 text-[10px]">
+                          Out of Stock {isUrgent && <span className="opacity-70 font-black">(Urgent)</span>}
                           {isUrgent ? (
+
+
                             <InfoTooltip 
                               content={
                                 <div className="space-y-1">
