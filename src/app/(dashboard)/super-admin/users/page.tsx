@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import toast from "react-hot-toast";
 import GlobalUserModal from "../components/GlobalUserModal";
+import ResetPasswordModal from "../components/ResetPasswordModal";
 import { useConfirm } from "@/hooks/use-confirm";
 import { UserRole } from "@/lib/types";
 
@@ -39,6 +40,7 @@ export default function GlobalUsersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
@@ -252,6 +254,18 @@ export default function GlobalUsersPage() {
                             </button>
                             <div className="h-px bg-border-ghost my-1" />
                             <button 
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setIsResetModalOpen(true);
+                                setActiveMenu(null);
+                              }}
+                              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-surface-muted rounded-xl transition-colors"
+                            >
+                              <Key className="w-4 h-4 text-primary" />
+                              Force Reset Password
+                            </button>
+                            <div className="h-px bg-border-ghost my-1" />
+                            <button 
                               onClick={() => deleteUser(user)}
                               className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-red-500/10 text-red-500 rounded-xl transition-colors"
                             >
@@ -276,6 +290,16 @@ export default function GlobalUsersPage() {
         onClose={() => setIsModalOpen(false)}
         onSuccess={() => {
           setIsModalOpen(false);
+          fetchUsers();
+        }}
+      />
+
+      <ResetPasswordModal
+        isOpen={isResetModalOpen}
+        user={selectedUser}
+        onClose={() => setIsResetModalOpen(false)}
+        onSuccess={() => {
+          setIsResetModalOpen(false);
           fetchUsers();
         }}
       />
