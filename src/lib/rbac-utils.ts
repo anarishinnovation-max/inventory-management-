@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 export async function hasPermission(permission: Permission): Promise<boolean> {
   const session = await getSession();
   if (!session) return false;
-  return checkPermission(session.role as UserRole, permission);
+  return checkPermission(session.role as UserRole, permission, session.customPermissions || []);
 }
 
 export async function isSuperAdmin(): Promise<boolean> {

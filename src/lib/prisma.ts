@@ -3,7 +3,13 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 // Reverted to a standard single-tenant client
-let connectionString = process.env.DATABASE_URL || "";
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "FATAL: DATABASE_URL environment variable is not set. " +
+    "Database connection is required for the application to function."
+  );
+}
+let connectionString = process.env.DATABASE_URL;
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

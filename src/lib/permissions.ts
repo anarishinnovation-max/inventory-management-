@@ -48,14 +48,33 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   ],
 };
 
-export function hasPermission(userRole: UserRole, permission: Permission): boolean {
-  const permissions = ROLE_PERMISSIONS[userRole];
+export const AVAILABLE_PERMISSIONS: Permission[] = [
+  "items:view", "items:create", "items:update", "items:delete", "items:update-limited",
+  "stock:view", "stock:adjust",
+  "vendors:view", "vendors:create", "vendors:update", "vendors:delete",
+  "po:view", "po:create", "po:update", "po:delete",
+  "grn:view", "grn:create",
+  "rack:view", "rack:create", "rack:update", "rack:delete",
+  "reports:view",
+  "company:manage",
+  "users:view", "users:manage",
+  "billing:access"
+];
+
+export function hasPermission(userRole: UserRole, permission: Permission, customPermissions: string[] = []): boolean {
+  // 1. Check custom overrides first
+  if (customPermissions.includes("*")) return true;
+  if (customPermissions.includes(permission)) return true;
+  
+  const [resource] = permission.split(":");
+  if (customPermissions.includes(`${resource}:*` as Permission)) return true;
+
+  // 2. Fallback to Role Default Permissions
+  const permissions = ROLE_PERMISSIONS[userRole] || [];
   
   if (permissions.includes("*")) return true;
   if (permissions.includes(permission)) return true;
 
-  // Handle wildcard checks (e.g., if user has 'items:*' and asks for 'items:view')
-  const [resource] = permission.split(":");
   if (permissions.includes(`${resource}:*` as Permission)) return true;
 
   return false;

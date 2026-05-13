@@ -28,5 +28,6 @@ export async function GET() {
     role: user.role,
     companyId: user.companyId,
     companyName: user.company?.name || "Platform Admin",
+    customPermissions: user.customPermissions || []
   });
 }

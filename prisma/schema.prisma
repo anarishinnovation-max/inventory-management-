@@ -37,6 +37,7 @@ model User {
   createdAt        DateTime               @default(now())
   companyId        String?
   role             UserRole               @default(EMPLOYEE)
+  customPermissions String[]              @default([])
   batches          InventoryBatch[]
   transactions     InventoryTransaction[]
   company          Company?               @relation(fields: [companyId], references: [id])

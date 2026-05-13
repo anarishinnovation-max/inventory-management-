@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { rackSchema } from "@/lib/schemas/inventory";
 
 export async function GET(request: Request) {
   try {
@@ -47,11 +48,14 @@ export async function POST(request: Request) {
       // Allow during development or specific roles
     }
 
-    const { rackNumber, zone } = await request.json();
-    
-    if (!rackNumber) {
-        return NextResponse.json({ error: "Missing rack number" }, { status: 400 });
+    const body = await request.json();
+    const result = rackSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.flatten().fieldErrors }, { status: 400 });
     }
+
+    const { rackNumber, zone } = result.data;
 
     const rack = await prisma.rack.create({
       data: { 

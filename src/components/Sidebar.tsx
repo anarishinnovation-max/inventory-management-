@@ -130,11 +130,14 @@ export default function Sidebar() {
       <nav className="flex-1 px-4 py-4 space-y-8 overflow-y-auto no-scrollbar scroll-smooth">
         {menuSections.map((section, idx) => {
           const visibleItems = section.items.filter(item => {
-            const isSuperAdmin = userData?.role?.toUpperCase() === "SUPER_ADMIN";
-            if (isSuperAdmin) {
-              return item.roles?.includes("SUPER_ADMIN");
-            }
-            return !item.roles || (userData?.role && item.roles.includes(userData.role.toUpperCase()));
+            const userRole = userData?.role?.toUpperCase();
+            const isSuperAdmin = userRole === "SUPER_ADMIN";
+            
+            // Super Admin sees everything by default
+            if (isSuperAdmin) return true;
+            
+            // For other roles, check specific permissions
+            return !item.roles || (userRole && item.roles.includes(userRole));
           });
 
           if (visibleItems.length === 0) return null;

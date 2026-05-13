@@ -32,9 +32,9 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     await checkSuperAdmin();
-    const { username, password, name, role, companyId } = await req.json();
+    const { username, password, name, role, companyId, customPermissions } = await req.json();
 
-    if (!username || !password || !name || !role || !companyId) {
+    if (!username || !password || !name || !role) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -46,7 +46,8 @@ export async function POST(req: Request) {
         password: hashedPassword,
         name,
         role,
-        companyId
+        companyId: role === UserRole.SUPER_ADMIN ? null : companyId,
+        customPermissions: customPermissions || []
       }
     });
 

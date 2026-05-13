@@ -3,11 +3,13 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { UserRole } from "./types";
 
-const secretKey = "secret";
-if (!process.env.JWT_SECRET && process.env.NODE_ENV === "production") {
-  console.warn("⚠️  [SECURITY WARNING]: Falling back to default JWT secret in production. Ensure JWT_SECRET is set in your environment variables.");
+if (!process.env.JWT_SECRET) {
+  throw new Error(
+    "FATAL: JWT_SECRET environment variable is not set. " +
+    "Authentication cannot function without a secure secret key."
+  );
 }
-const key = new TextEncoder().encode(process.env.JWT_SECRET || secretKey);
+const key = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)
@@ -24,9 +26,9 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
-export async function login(id: string, username: string, role: UserRole, companyId: string | null) {
+export async function login(id: string, username: string, role: UserRole, companyId: string | null, customPermissions: string[] = []) {
   const expires = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
-  const session = await encrypt({ id, username, role, companyId, expires });
+  const session = await encrypt({ id, username, role, companyId, customPermissions, expires });
 
   // Save the session in a cookie
   (await cookies()).set("session", session, { 

@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
 import { getSession } from "@/lib/auth";
 import { requirePermission } from "@/lib/rbac-utils";
+import { itemSchema } from "@/lib/schemas/inventory";
 
 export async function GET(request: Request) {
   try {
@@ -82,12 +83,14 @@ export async function POST(request: Request) {
     const ip = request.headers.get("x-forwarded-for") || "unknown";
     const userAgent = request.headers.get("user-agent") || "unknown";
 
-    const data = await request.json();
-    const { name, sku, categoryId, unit, minStockLevel, isCritical, rackId } = data;
-    
-    if (!name || !sku || !categoryId || !unit) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const body = await request.json();
+    const result = itemSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.flatten().fieldErrors }, { status: 400 });
     }
+
+    const { name, sku, categoryId, unit, minStockLevel, isCritical, rackId } = result.data;
 
     const item = await InventoryService.addItem({
       name,
@@ -95,8 +98,8 @@ export async function POST(request: Request) {
       categoryId,
       unit,
       companyId: session.companyId,
-      minStockLevel: minStockLevel !== undefined ? parseFloat(minStockLevel) : undefined,
-      isCritical: !!isCritical,
+      minStockLevel,
+      isCritical,
       rackId
     });
 

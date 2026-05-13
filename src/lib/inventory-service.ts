@@ -160,30 +160,39 @@ export const InventoryService = {
         });
 
         // 3b. Update Stock table (per-rack) - Fixed scoping to company
-        const defaultRack = await tx.rack.findFirst({
+        let defaultRack = await tx.rack.findFirst({
           where: { companyId: po.companyId },
           orderBy: { rackNumber: "asc" }
         });
         
-        if (defaultRack) {
-          const existingStock = await tx.stock.findFirst({
-            where: { itemId: update.itemId, rackId: defaultRack.id },
+        if (!defaultRack) {
+          // If no rack found, create a Default Zone rack automatically to prevent sync drift
+          defaultRack = await tx.rack.create({
+            data: {
+              rackNumber: "DEF-01",
+              zone: "Default Zone",
+              companyId: po.companyId
+            }
           });
-          if (existingStock) {
-            await tx.stock.update({
-              where: { id: existingStock.id },
-              data: { quantity: { increment: update.receivedQty } },
-            });
-          } else {
-            await tx.stock.create({
-              data: { 
-                itemId: update.itemId, 
-                rackId: defaultRack.id, 
-                quantity: update.receivedQty,
-                companyId: po.companyId
-              },
-            });
-          }
+        }
+
+        const existingStock = await tx.stock.findFirst({
+          where: { itemId: update.itemId, rackId: defaultRack.id },
+        });
+        if (existingStock) {
+          await tx.stock.update({
+            where: { id: existingStock.id },
+            data: { quantity: { increment: update.receivedQty } },
+          });
+        } else {
+          await tx.stock.create({
+            data: { 
+              itemId: update.itemId, 
+              rackId: defaultRack.id, 
+              quantity: update.receivedQty,
+              companyId: po.companyId
+            },
+          });
         }
       }
 
@@ -418,6 +427,8 @@ export const InventoryService = {
    */
   async updateStock(itemId: string, rackId: string, quantity: number, userId: string, companyId: string, remarks?: string) {
     return await (prisma as any).$transaction(async (tx: any) => {
+      // ATOMIC FIX: Re-read the current stock inside the transaction to calculate the exact adjustment diff.
+      // This prevents inventory summary drift during simultaneous adjustments.
       const currentStock = await tx.stock.findFirst({
         where: { itemId, rackId },
       });

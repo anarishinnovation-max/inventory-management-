@@ -16,13 +16,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   try {
     await checkSuperAdmin();
     const { id } = await params;
-    const { username, password, name, role, companyId } = await req.json();
+    const { username, password, name, role, companyId, customPermissions } = await req.json();
+    console.log("Updating user:", id, { username, name, role, companyId, customPermissions });
 
     const data: any = {
       username,
       name,
       role,
-      companyId
+      companyId,
+      customPermissions
     };
 
     if (password) {

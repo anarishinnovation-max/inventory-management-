@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
 
 export async function GET() {
   try {
+    const session = await getSession();
+    if (!session || !session.companyId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const inventory = await prisma.inventory.findMany({
+      where: {
+        item: {
+          companyId: session.companyId
+        }
+      },
       include: {
         item: {
           include: {

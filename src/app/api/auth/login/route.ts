@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     // Login with company context and Role enum
-    await login(user.id, user.username, user.role as UserRole, user.companyId);
+    await login(user.id, user.username, user.role as UserRole, user.companyId, user.customPermissions);
 
     // Log action (if not super admin)
     if (user.companyId) {
@@ -57,7 +57,8 @@ export async function POST(request: Request) {
         id: user.id,
         username: user.username,
         role: user.role,
-        companyId: user.companyId
+        companyId: user.companyId,
+        customPermissions: user.customPermissions
       }
     });
   } catch (error: any) {

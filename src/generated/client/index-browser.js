@@ -136,7 +136,8 @@ exports.Prisma.UserScalarFieldEnum = {
   twoFactorEnabled: 'twoFactorEnabled',
   createdAt: 'createdAt',
   companyId: 'companyId',
-  role: 'role'
+  role: 'role',
+  customPermissions: 'customPermissions'
 };
 
 exports.Prisma.CategoryScalarFieldEnum = {

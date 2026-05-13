@@ -4149,6 +4149,7 @@ export namespace Prisma {
     createdAt: number
     companyId: number
     role: number
+    customPermissions: number
     _all: number
   }
 
@@ -4187,6 +4188,7 @@ export namespace Prisma {
     createdAt?: true
     companyId?: true
     role?: true
+    customPermissions?: true
     _all?: true
   }
 
@@ -4272,6 +4274,7 @@ export namespace Prisma {
     createdAt: Date
     companyId: string | null
     role: $Enums.UserRole
+    customPermissions: string[]
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -4301,6 +4304,7 @@ export namespace Prisma {
     createdAt?: boolean
     companyId?: boolean
     role?: boolean
+    customPermissions?: boolean
     batches?: boolean | User$batchesArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
     company?: boolean | User$companyArgs<ExtArgs>
@@ -4317,6 +4321,7 @@ export namespace Prisma {
     createdAt?: boolean
     companyId?: boolean
     role?: boolean
+    customPermissions?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4330,6 +4335,7 @@ export namespace Prisma {
     createdAt?: boolean
     companyId?: boolean
     role?: boolean
+    customPermissions?: boolean
     company?: boolean | User$companyArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4343,9 +4349,10 @@ export namespace Prisma {
     createdAt?: boolean
     companyId?: boolean
     role?: boolean
+    customPermissions?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "name" | "emailAlerts" | "twoFactorEnabled" | "createdAt" | "companyId" | "role", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "name" | "emailAlerts" | "twoFactorEnabled" | "createdAt" | "companyId" | "role" | "customPermissions", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     batches?: boolean | User$batchesArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
@@ -4376,6 +4383,7 @@ export namespace Prisma {
       createdAt: Date
       companyId: string | null
       role: $Enums.UserRole
+      customPermissions: string[]
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -4811,6 +4819,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly companyId: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
+    readonly customPermissions: FieldRef<"User", 'String[]'>
   }
     
 
@@ -21706,7 +21715,8 @@ export namespace Prisma {
     twoFactorEnabled: 'twoFactorEnabled',
     createdAt: 'createdAt',
     companyId: 'companyId',
-    role: 'role'
+    role: 'role',
+    customPermissions: 'customPermissions'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -22141,6 +22151,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     companyId?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    customPermissions?: StringNullableListFilter<"User">
     batches?: InventoryBatchListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -22156,6 +22167,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     companyId?: SortOrderInput | SortOrder
     role?: SortOrder
+    customPermissions?: SortOrder
     batches?: InventoryBatchOrderByRelationAggregateInput
     transactions?: InventoryTransactionOrderByRelationAggregateInput
     company?: CompanyOrderByWithRelationInput
@@ -22174,6 +22186,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     companyId?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    customPermissions?: StringNullableListFilter<"User">
     batches?: InventoryBatchListRelationFilter
     transactions?: InventoryTransactionListRelationFilter
     company?: XOR<CompanyNullableScalarRelationFilter, CompanyWhereInput> | null
@@ -22189,6 +22202,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     companyId?: SortOrderInput | SortOrder
     role?: SortOrder
+    customPermissions?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -22207,6 +22221,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     companyId?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    customPermissions?: StringNullableListFilter<"User">
   }
 
   export type CategoryWhereInput = {
@@ -23398,6 +23413,7 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     batches?: InventoryBatchCreateNestedManyWithoutReceivedByInput
     transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
     company?: CompanyCreateNestedOneWithoutUsersInput
@@ -23413,6 +23429,7 @@ export namespace Prisma {
     createdAt?: Date | string
     companyId?: string | null
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutReceivedByInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
   }
@@ -23426,6 +23443,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     batches?: InventoryBatchUpdateManyWithoutReceivedByNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
     company?: CompanyUpdateOneWithoutUsersNestedInput
@@ -23441,6 +23459,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     batches?: InventoryBatchUncheckedUpdateManyWithoutReceivedByNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -23455,6 +23474,7 @@ export namespace Prisma {
     createdAt?: Date | string
     companyId?: string | null
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
   }
 
   export type UserUpdateManyMutationInput = {
@@ -23466,6 +23486,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -23478,6 +23499,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
   }
 
   export type CategoryCreateInput = {
@@ -24853,6 +24875,14 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type InventoryBatchListRelationFilter = {
     every?: InventoryBatchWhereInput
     some?: InventoryBatchWhereInput
@@ -24878,6 +24908,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     companyId?: SortOrder
     role?: SortOrder
+    customPermissions?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -26143,6 +26174,10 @@ export namespace Prisma {
     deleteMany?: VendorScalarWhereInput | VendorScalarWhereInput[]
   }
 
+  export type UserCreatecustomPermissionsInput = {
+    set: string[]
+  }
+
   export type InventoryBatchCreateNestedManyWithoutReceivedByInput = {
     create?: XOR<InventoryBatchCreateWithoutReceivedByInput, InventoryBatchUncheckedCreateWithoutReceivedByInput> | InventoryBatchCreateWithoutReceivedByInput[] | InventoryBatchUncheckedCreateWithoutReceivedByInput[]
     connectOrCreate?: InventoryBatchCreateOrConnectWithoutReceivedByInput | InventoryBatchCreateOrConnectWithoutReceivedByInput[]
@@ -26183,6 +26218,11 @@ export namespace Prisma {
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
     set?: $Enums.UserRole
+  }
+
+  export type UserUpdatecustomPermissionsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type InventoryBatchUpdateManyWithoutReceivedByNestedInput = {
@@ -27958,6 +27998,7 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     batches?: InventoryBatchCreateNestedManyWithoutReceivedByInput
     transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
   }
@@ -27971,6 +28012,7 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutReceivedByInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
   }
@@ -28348,6 +28390,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     companyId?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    customPermissions?: StringNullableListFilter<"User">
   }
 
   export type VendorUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -30290,6 +30333,7 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     transactions?: InventoryTransactionCreateNestedManyWithoutUserInput
     company?: CompanyCreateNestedOneWithoutUsersInput
   }
@@ -30304,6 +30348,7 @@ export namespace Prisma {
     createdAt?: Date | string
     companyId?: string | null
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -30429,6 +30474,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
     company?: CompanyUpdateOneWithoutUsersNestedInput
   }
@@ -30443,6 +30489,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -31298,6 +31345,7 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     batches?: InventoryBatchCreateNestedManyWithoutReceivedByInput
     company?: CompanyCreateNestedOneWithoutUsersInput
   }
@@ -31312,6 +31360,7 @@ export namespace Prisma {
     createdAt?: Date | string
     companyId?: string | null
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutReceivedByInput
   }
 
@@ -31517,6 +31566,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     batches?: InventoryBatchUpdateManyWithoutReceivedByNestedInput
     company?: CompanyUpdateOneWithoutUsersNestedInput
   }
@@ -31531,6 +31581,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     batches?: InventoryBatchUncheckedUpdateManyWithoutReceivedByNestedInput
   }
 
@@ -31766,6 +31817,7 @@ export namespace Prisma {
     twoFactorEnabled?: boolean
     createdAt?: Date | string
     role?: $Enums.UserRole
+    customPermissions?: UserCreatecustomPermissionsInput | string[]
   }
 
   export type VendorCreateManyCompanyInput = {
@@ -32119,6 +32171,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     batches?: InventoryBatchUpdateManyWithoutReceivedByNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutUserNestedInput
   }
@@ -32132,6 +32185,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
     batches?: InventoryBatchUncheckedUpdateManyWithoutReceivedByNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -32145,6 +32199,7 @@ export namespace Prisma {
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    customPermissions?: UserUpdatecustomPermissionsInput | string[]
   }
 
   export type VendorUpdateWithoutCompanyInput = {
