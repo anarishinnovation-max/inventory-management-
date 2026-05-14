@@ -125,9 +125,13 @@ async function main() {
 
   // 5. Create Items for SS Cuttings
   const itemsData = [
-    { name: "ETJNL 2525 M16", sku: "ETJNL-2525", category: "Tool Holders" },
-    { name: "ECLNL 2525 M12", sku: "ECLNL-2525", category: "Tool Holders" },
-    { name: "TNMG 160408 PM", sku: "TNMG-160408", category: "Inserts" },
+    { name: "BTJNR 2525 M16", sku: "BTJNR-2525-M16", category: "Tool Holders", qty: 150 },
+    { name: "ETJNL 2525 M16", sku: "ETJNL-2525-M16", category: "Tool Holders", qty: 50 },
+    { name: "ECLNL 2525 M12", sku: "ECLNL-2525-M12", category: "Tool Holders", qty: 80 },
+    { name: "MGEHR 2525 2T15", sku: "MGEHR-2525-2T15", category: "Tool Holders", qty: -20 },
+    { name: "TNMG B TOP CLAMP", sku: "TNMG-B-TOP-CLAMP", category: "Spare Parts", qty: 0 },
+    { name: "BVJNR 2525 M16", sku: "BVJNR-2525-M16", category: "Tool Holders", qty: 10 },
+    { name: "TNMG 160408 PM", sku: "TNMG-160408", category: "Inserts", qty: 200 },
   ];
 
   for (const item of itemsData) {
@@ -138,18 +142,21 @@ async function main() {
         name: item.name,
         sku: item.sku,
         unit: "PCS",
-        categoryId: categoryMap[item.category],
+        categoryId: categoryMap[item.category] || categoryMap["Spare Parts"],
         companyId: ssCompanyId,
       },
     });
 
-    // Initialize Inventory for each item
+    // Initialize Inventory for each item with specific quantities from screenshot
     await prisma.inventory.upsert({
       where: { itemId: createdItem.id },
-      update: { companyId: ssCompanyId },
+      update: { 
+        quantityAvailable: item.qty,
+        companyId: ssCompanyId 
+      },
       create: {
         itemId: createdItem.id,
-        quantityAvailable: 100,
+        quantityAvailable: item.qty,
         companyId: ssCompanyId,
       }
     });
