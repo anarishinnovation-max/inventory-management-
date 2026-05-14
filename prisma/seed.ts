@@ -1,22 +1,29 @@
 import { PrismaClient } from "../src/generated/client";
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
-import { UserRole } from "../src/lib/types";
 
-if (!process.env.DATABASE_URL) {
+// Inlined to reduce dependency on src/ during build
+enum UserRole {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  OWNER = 'OWNER',
+  MANAGER = 'MANAGER',
+  EMPLOYEE = 'EMPLOYEE'
+}
+
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
   console.error("❌ ERROR: DATABASE_URL is not set in the environment.");
   process.exit(1);
 }
 
-const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ 
-  connectionString,
-  ssl: connectionString.includes("sslmode=disable") ? false : { rejectUnauthorized: false }
+// Log connection attempt (masked)
+console.log(`Connecting to database: ${connectionString.split('@')[1] || 'URL masked'}`);
+
+// Use standard PrismaClient for seeding (optimized for db.prisma.io)
+const prisma = new PrismaClient({
+  log: ['error', 'warn'],
 });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding database (Multi-Tenant: SS Cuttings Tool & Aniket Industries)...");
@@ -204,10 +211,13 @@ async function main() {
 
 main()
   .catch((e) => {
+    console.error("❌ SEED ERROR:");
     console.error(e);
+    if (e.cause) {
+      console.error("❌ CAUSE:", e.cause);
+    }
     process.exit(1);
   })
   .finally(async () => {
     await prisma.$disconnect();
-    await pool.end();
   });
