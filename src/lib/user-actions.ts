@@ -163,14 +163,17 @@ export async function handleLoginAction(formData: FormData) {
     );
 
     // Log successful login
+    // Log login activity (Wrap in try/catch to prevent login failure if GLOBAL company is missing)
     try {
-      await createActivityLog({
-        actionType: "LOGIN",
-        entityType: "USER",
-        entityId: user.id,
-        performedBy: user.id,
-        performedByName: user.username,
-        companyId: user.companyId || "GLOBAL",
+      await prisma.activityLog.create({
+        data: {
+          actionType: "LOGIN",
+          entityType: "USER",
+          entityId: user.id,
+          performedBy: user.id,
+          performedByName: user.name,
+          companyId: user.companyId || "GLOBAL",
+        },
       });
     } catch (logError) {
       console.error("Failed to log login activity:", logError);

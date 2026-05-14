@@ -61,6 +61,7 @@ export default function LoginPage() {
                   onChange={(e) => setUsername(e.target.value)}
                   className="input-field input-with-icon"
                   placeholder="Enter your username"
+                  autoComplete="username"
                 />
               </div>
             </div>
@@ -78,6 +79,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="input-field input-with-icon pr-12"
                   placeholder="••••••••"
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
