@@ -4,10 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { UserRole } from "./types";
 
 if (!process.env.JWT_SECRET) {
-  throw new Error(
-    "FATAL: JWT_SECRET environment variable is not set. " +
-    "Authentication cannot function without a secure secret key."
-  );
+  const errorMsg = "FATAL: JWT_SECRET environment variable is not set. Authentication cannot function without a secure secret key.";
+  console.error(errorMsg);
+  throw new Error(errorMsg);
 }
 const key = new TextEncoder().encode(process.env.JWT_SECRET);
 

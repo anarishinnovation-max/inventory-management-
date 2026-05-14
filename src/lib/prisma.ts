@@ -4,10 +4,9 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 // Reverted to a standard single-tenant client
 if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "FATAL: DATABASE_URL environment variable is not set. " +
-    "Database connection is required for the application to function."
-  );
+  const errorMsg = "FATAL: DATABASE_URL environment variable is not set. Database connection is required for the application to function.";
+  console.error(errorMsg);
+  throw new Error(errorMsg);
 }
 let connectionString = process.env.DATABASE_URL;
 

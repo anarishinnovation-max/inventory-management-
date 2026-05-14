@@ -131,42 +131,70 @@ export async function handleLogout() {
 }
 
 export async function handleLoginAction(formData: FormData) {
-  const username = formData.get("username") as string;
-  const password = formData.get("password") as string;
+  try {
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
 
-  if (!username || !password) {
-    return { error: "Missing fields" };
-  }
+    if (!username || !password) {
+      return { error: "Missing fields" };
+    }
 
-  const user = await prisma.user.findUnique({
-    where: { username }
-  });
+    const user = await prisma.user.findUnique({
+      where: { username }
+    });
 
-  if (!user) {
-    return { error: "Invalid credentials" };
-  }
+    if (!user) {
+      return { error: "Invalid credentials" };
+    }
 
-  const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-  if (!passwordMatch) {
-    return { error: "Invalid credentials" };
-  }
+    if (!passwordMatch) {
+      return { error: "Invalid credentials" };
+    }
 
-  await login(user.id, user.username, user.role as UserRole, user.companyId);
+    // Pass customPermissions from the user record
+    await login(
+      user.id, 
+      user.username, 
+      user.role as UserRole, 
+      user.companyId, 
+      user.customPermissions
+    );
 
-  // Log successful login
-  await createActivityLog({
-    actionType: "LOGIN",
-    entityType: "USER",
-    entityId: user.id,
-    performedBy: user.id,
-    performedByName: user.username,
-    companyId: user.companyId || "GLOBAL",
-  });
+    // Log successful login
+    try {
+      await createActivityLog({
+        actionType: "LOGIN",
+        entityType: "USER",
+        entityId: user.id,
+        performedBy: user.id,
+        performedByName: user.username,
+        companyId: user.companyId || "GLOBAL",
+      });
+    } catch (logError) {
+      console.error("Failed to log login activity:", logError);
+      // Don't fail the login if logging fails
+    }
 
-  if (user.role === "SUPER_ADMIN") {
-    redirect("/super-admin");
-  } else {
-    redirect("/");
+    if (user.role === "SUPER_ADMIN") {
+      redirect("/super-admin");
+    } else {
+      redirect("/");
+    }
+  } catch (error: any) {
+    // Check if it's a Next.js redirect error and re-throw it
+    if (error.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error;
+    }
+
+    console.error("Critical Login Action Error:", error);
+    
+    // Check for common Prisma errors
+    if (error.code === "P2024") {
+      return { error: "Database connection timeout. Please try again." };
+    }
+    
+    return { error: "An unexpected error occurred. Please contact support." };
   }
 }

@@ -13,6 +13,16 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("Seeding database (Multi-Tenant: SS Cuttings Tool & Aniket Industries)...");
 
+  // 0. Create Global System Company (for Super Admin logs)
+  await prisma.company.upsert({
+    where: { id: "GLOBAL" },
+    update: { name: "System Global Scope" },
+    create: {
+      id: "GLOBAL",
+      name: "System Global Scope",
+    },
+  });
+
   // 1. Create Companies
   const ssCuttings = await prisma.company.upsert({
     where: { id: "ss-cuttings-id" },
