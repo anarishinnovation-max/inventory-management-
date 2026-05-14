@@ -1,4 +1,6 @@
 import { PrismaClient } from "../src/generated/client";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 import { UserRole } from "../src/lib/types";
@@ -8,10 +10,13 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// Use standard PrismaClient for seeding (no adapter needed for CLI)
-const prisma = new PrismaClient({
-  log: ['error', 'warn'],
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ 
+  connectionString,
+  ssl: connectionString.includes("sslmode=disable") ? false : { rejectUnauthorized: false }
 });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding database (Multi-Tenant: SS Cuttings Tool & Aniket Industries)...");
@@ -204,4 +209,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });
