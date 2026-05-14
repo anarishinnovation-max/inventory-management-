@@ -1,24 +1,17 @@
 import { PrismaClient } from "../src/generated/client";
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 import { UserRole } from "../src/lib/types";
 
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
+if (!process.env.DATABASE_URL) {
   console.error("❌ ERROR: DATABASE_URL is not set in the environment.");
-  console.error("If this is running on Vercel, ensure the environment variable is configured for the 'Production' environment.");
   process.exit(1);
 }
 
-const pool = new Pool({ 
-  connectionString,
-  ssl: connectionString.includes("sslmode=disable") ? false : { rejectUnauthorized: false }
+// Use standard PrismaClient for seeding (no adapter needed for CLI)
+const prisma = new PrismaClient({
+  log: ['error', 'warn'],
 });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding database (Multi-Tenant: SS Cuttings Tool & Aniket Industries)...");
