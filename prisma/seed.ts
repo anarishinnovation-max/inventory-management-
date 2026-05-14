@@ -111,7 +111,14 @@ async function main() {
   }
 
   // 4. Create Vendors for SS Cuttings
-  const vendorsData = ["SANDVIK", "KENNAMETAL", "WIDIA", "LOCAL_SUPPLIER"];
+  const vendorsData = [
+    "SOHAM ENTERPRISES", 
+    "K K TOOLS", 
+    "V V TOOLS", 
+    "CNC TOOLS", 
+    "A K MACHINE", 
+    "YASH ENTERPRISES"
+  ];
   const vendorMap: Record<string, string> = {};
 
   for (const name of vendorsData) {
@@ -121,6 +128,16 @@ async function main() {
       create: { name, companyId: ssCompanyId },
     });
     vendorMap[name] = v.id;
+  }
+
+  // 4.1 Create Customers for SS Cuttings
+  const customersData = ["CNC TOOLS", "A K MACHINE", "YASH ENTERPRISES"];
+  for (const name of customersData) {
+    await prisma.customer.upsert({
+      where: { name_companyId: { name, companyId: ssCompanyId } },
+      update: {},
+      create: { name, companyId: ssCompanyId },
+    });
   }
 
   // 5. Create Items for SS Cuttings
