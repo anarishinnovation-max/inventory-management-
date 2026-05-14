@@ -10,6 +10,9 @@ if (!process.env.DATABASE_URL) {
 }
 let connectionString = process.env.DATABASE_URL;
 
+// Diagnostic Log (Masked)
+console.log(`[PRISMA] Initializing with DB: ${connectionString.split('@')[1] || 'URL masked'}`);
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
   pool: Pool | undefined;

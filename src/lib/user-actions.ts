@@ -191,13 +191,18 @@ export async function handleLoginAction(formData: FormData) {
       throw error;
     }
 
-    console.error("Critical Login Action Error:", error);
+    console.error("❌ LOGIN ACTION CRITICAL FAILURE:");
+    console.error("Message:", error.message);
+    console.error("Code:", error.code);
+    console.error("Stack:", error.stack);
     
     // Check for common Prisma errors
     if (error.code === "P2024") {
       return { error: "Database connection timeout. Please try again." };
     }
     
-    return { error: "An unexpected error occurred. Please contact support." };
+    return { 
+      error: `An unexpected error occurred (${error.message || 'Unknown'}). Please contact support.` 
+    };
   }
 }
