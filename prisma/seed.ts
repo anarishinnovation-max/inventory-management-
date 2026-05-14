@@ -226,9 +226,9 @@ async function main() {
 main()
   .catch((e) => {
     console.error("❌ SEED ERROR:");
-    console.error(e);
+    console.error(JSON.stringify(e, Object.getOwnPropertyNames(e), 2));
     if (e.cause) {
-      console.error("❌ CAUSE:", e.cause);
+      console.error("❌ CAUSE:", JSON.stringify(e.cause, Object.getOwnPropertyNames(e.cause), 2));
     }
     process.exit(1);
   })
