@@ -39,224 +39,196 @@ const pool = new Pool(poolConfig);
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
-  console.log("Seeding database (Multi-Tenant: SS Cuttings Tool & Aniket Industries)...");
+// --- DATE HELPERS ---
+function getHistoricalDate() {
+  const date = new Date();
+  date.setMonth(date.getMonth() - Math.floor(Math.random() * 5) - 1);
+  date.setDate(Math.floor(Math.random() * 28) + 1);
+  return date;
+}
+function getRecentDate() {
+  const date = new Date();
+  date.setDate(date.getDate() - Math.floor(Math.random() * 3));
+  return date;
+}
+function getFutureDate() {
+  const date = new Date();
+  date.setDate(date.getDate() + Math.floor(Math.random() * 10) + 2);
+  return date;
+}
 
-  // 0. Create Global System Company (for Super Admin logs)
+async function main() {
+  console.log("🚀 INITIALIZING ULTIMATE BUSINESS SIMULATION (All Modules)...");
+
+  // 0. Base Company
   await prisma.company.upsert({
     where: { id: "GLOBAL" },
     update: { name: "System Global Scope" },
-    create: {
-      id: "GLOBAL",
-      name: "System Global Scope",
-    },
+    create: { id: "GLOBAL", name: "System Global Scope" },
   });
 
-  // 1. Create Companies
   const ssCuttings = await prisma.company.upsert({
     where: { id: "ss-cuttings-id" },
     update: { name: "SS Cuttings Tool" },
-    create: {
-      id: "ss-cuttings-id",
-      name: "SS Cuttings Tool",
-    },
+    create: { id: "ss-cuttings-id", name: "SS Cuttings Tool" },
   });
+  const companyId = ssCuttings.id;
 
-  const aniketIndustries = await prisma.company.upsert({
-    where: { id: "aniket-industries-id" },
-    update: { name: "Aniket Industries" },
-    create: {
-      id: "aniket-industries-id",
-      name: "Aniket Industries",
-    },
-  });
-
-  const charuIndustries = await prisma.company.upsert({
-    where: { id: "charu-industries-id" },
-    update: { name: "Charu Industries" },
-    create: {
-      id: "charu-industries-id",
-      name: "Charu Industries",
-    },
-  });
-
-  const ssCompanyId = ssCuttings.id;
-  const aniketCompanyId = aniketIndustries.id;
-  const charuCompanyId = charuIndustries.id;
-
-  // 2. Create Categories for SS Cuttings
-  const categories = ["Inserts", "Tool Holders", "Drills", "Milling", "Spare Parts"];
-  const categoryMap: Record<string, string> = {};
-
-  for (const name of categories) {
+  // 1. Categories & Racks (with Zones)
+  const categoriesList = ["B Clamp Tool Holder", "E Clamp Tool Holder", "CNC Boring Bar", "OD Grooving Tools", "Tool Spares B Clamp", "Carbide Inserts", "Milling Cutters", "Drilling Tools"];
+  const categoryIds: string[] = [];
+  for (const name of categoriesList) {
     const cat = await prisma.category.upsert({
-      where: { name_companyId: { name, companyId: ssCompanyId } },
+      where: { name_companyId: { name, companyId } },
       update: {},
-      create: { name, companyId: ssCompanyId },
+      create: { name, companyId },
     });
-    categoryMap[name] = cat.id;
+    categoryIds.push(cat.id);
   }
 
-  // 3. Create Racks for SS Cuttings
-  const racks = ["A1", "A2", "B1", "B2", "C1"];
-  const rackMap: Record<string, string> = {};
-
-  for (const rackNumber of racks) {
-    const r = await prisma.rack.upsert({
-      where: { rackNumber_companyId: { rackNumber, companyId: ssCompanyId } },
-      update: {},
-      create: { rackNumber, companyId: ssCompanyId },
-    });
-    rackMap[rackNumber] = r.id;
-  }
-
-  // 4. Create Vendors for SS Cuttings
-  const vendorsData = [
-    "SOHAM ENTERPRISES", 
-    "K K TOOLS", 
-    "V V TOOLS", 
-    "CNC TOOLS", 
-    "A K MACHINE", 
-    "YASH ENTERPRISES"
+  const racksList = [
+    { num: "A1", zone: "MAIN HALL" }, { num: "A2", zone: "MAIN HALL" },
+    { num: "B1", zone: "SHELF-B" }, { num: "B2", zone: "SHELF-B" },
+    { num: "C1", zone: "BIN-C" }, { num: "AN1", zone: "SECURE" }
   ];
-  const vendorMap: Record<string, string> = {};
+  const rackIds: string[] = [];
+  for (const r of racksList) {
+    const rack = await prisma.rack.upsert({
+      where: { rackNumber_companyId: { rackNumber: r.num, companyId } },
+      update: { zone: r.zone },
+      create: { rackNumber: r.num, zone: r.zone, companyId },
+    });
+    rackIds.push(rack.id);
+  }
 
-  for (const name of vendorsData) {
+  // 2. Vendors & Customers
+  const vendors = ["SOHAM ENTERPRISES", "K K TOOLS", "V V TOOLS", "CNC TOOLS", "A K MACHINE", "YASH ENTERPRISES", "BHARAT PRECISION"];
+  const vendorIds: string[] = [];
+  for (const name of vendors) {
     const v = await prisma.vendor.upsert({
-      where: { name_companyId: { name, companyId: ssCompanyId } },
+      where: { name_companyId: { name, companyId } },
       update: {},
-      create: { name, companyId: ssCompanyId },
+      create: { name, companyId },
     });
-    vendorMap[name] = v.id;
+    vendorIds.push(v.id);
   }
 
-  // 4.1 Create Customers for SS Cuttings
-  const customersData = ["CNC TOOLS", "A K MACHINE", "YASH ENTERPRISES"];
-  for (const name of customersData) {
-    await prisma.customer.upsert({
-      where: { name_companyId: { name, companyId: ssCompanyId } },
+  const customers = ["TATA MOTORS PUNE", "MAHINDRA & MAHINDRA", "BAJAJ AUTO LTD", "KIRLOSKAR ENGINES", "GODREJ PRECISION", "LARSEN & TOUBRO"];
+  const customerIds: string[] = [];
+  for (const name of customers) {
+    const c = await prisma.customer.upsert({
+      where: { name_companyId: { name, companyId } },
       update: {},
-      create: { name, companyId: ssCompanyId },
+      create: { name, companyId },
     });
+    customerIds.push(c.id);
   }
 
-  // 5. Create Items for SS Cuttings
-  const itemsData = [
-    { name: "BTJNR 2525 M16", sku: "BTJNR-2525-M16", category: "Tool Holders", qty: 150 },
-    { name: "ETJNL 2525 M16", sku: "ETJNL-2525-M16", category: "Tool Holders", qty: 50 },
-    { name: "ECLNL 2525 M12", sku: "ECLNL-2525-M12", category: "Tool Holders", qty: 80 },
-    { name: "MGEHR 2525 2T15", sku: "MGEHR-2525-2T15", category: "Tool Holders", qty: -20 },
-    { name: "TNMG B TOP CLAMP", sku: "TNMG-B-TOP-CLAMP", category: "Spare Parts", qty: 0 },
-    { name: "BVJNR 2525 M16", sku: "BVJNR-2525-M16", category: "Tool Holders", qty: 10 },
-    { name: "TNMG 160408 PM", sku: "TNMG-160408", category: "Inserts", qty: 200 },
-  ];
-
-  for (const item of itemsData) {
-    const createdItem = await prisma.item.upsert({
-      where: { sku_companyId: { sku: item.sku, companyId: ssCompanyId } },
-      update: { name: item.name },
-      create: {
-        name: item.name,
-        sku: item.sku,
-        unit: "PCS",
-        categoryId: categoryMap[item.category] || categoryMap["Spare Parts"],
-        companyId: ssCompanyId,
-      },
-    });
-
-    // Initialize Inventory for each item with specific quantities from screenshot
-    await prisma.inventory.upsert({
-      where: { itemId: createdItem.id },
-      update: { 
-        quantityAvailable: item.qty,
-        companyId: ssCompanyId 
-      },
-      create: {
-        itemId: createdItem.id,
-        quantityAvailable: item.qty,
-        companyId: ssCompanyId,
-      }
-    });
-  }
-
-  // 6. Create Users
+  // 3. Users
   const hashedPassword = await bcrypt.hash("admin123", 10);
+  const admin = await prisma.user.upsert({
+    where: { username: "admin" },
+    update: { companyId, name: "System Admin" },
+    create: { username: "admin", password: hashedPassword, name: "System Admin", role: UserRole.OWNER, companyId }
+  });
+  const manager = await prisma.user.upsert({
+    where: { username: "manager" },
+    update: { companyId, name: "Operations Manager" },
+    create: { username: "manager", password: hashedPassword, name: "Operations Manager", role: UserRole.MANAGER, companyId }
+  });
 
-  // SS Cuttings Users
-  const ssUsers = [
-    { username: "ss_admin", name: "SS Admin", role: UserRole.OWNER },
-    { username: "ss_manager", name: "SS Manager", role: UserRole.MANAGER },
-    { username: "ss_employee", name: "SS Employee", role: UserRole.EMPLOYEE },
-    { username: "admin", name: "System Admin", role: UserRole.OWNER },
-  ];
+  // 4. Items (Generating 100+ for massive feel)
+  console.log("📦 Generating 100+ Professional Industrial Items...");
+  const itemIds: string[] = [];
+  const itemPrices: Record<string, number> = {};
+  for (let i = 1; i <= 100; i++) {
+    const sku = `TOOL-${i.toString().padStart(3, '0')}`;
+    const name = `${categoriesList[i % categoriesList.length]} Model-${i}`;
+    const price = Math.floor(Math.random() * 2000) + 300;
+    const isCritical = i % 10 === 0; // 10% items are critical
 
-  for (const u of ssUsers) {
-    await prisma.user.upsert({
-      where: { username: u.username },
-      update: { password: hashedPassword, role: u.role, companyId: ssCompanyId },
-      create: {
-        username: u.username,
-        password: hashedPassword,
-        name: u.name,
-        role: u.role,
-        companyId: ssCompanyId
-      }
+    const item = await prisma.item.upsert({
+      where: { sku_companyId: { sku, companyId } },
+      update: { isCritical, minStockLevel: 40 },
+      create: { name, sku, unit: "PCS", categoryId: categoryIds[i % categoryIds.length], companyId, isCritical, minStockLevel: 40 }
+    });
+    itemIds.push(item.id);
+    itemPrices[item.id] = price;
+
+    await prisma.inventory.upsert({
+      where: { itemId: item.id },
+      update: {},
+      create: { itemId: item.id, quantityAvailable: 0, companyId }
     });
   }
 
-  // Aniket Industries Users
-  const aniketUsers = [
-    { username: "aniket", name: "Aniket Gupta", role: UserRole.OWNER },
-    { username: "aniket_manager", name: "Aniket Manager", role: UserRole.MANAGER },
-    { username: "aniket_employee", name: "Aniket Employee", role: UserRole.EMPLOYEE },
-  ];
+  // 5. TRANSACTIONAL ENGINE (500+ records across all types)
+  console.log("⚡ Building Deep Transactional History (PO, SO, Batches, Activity)...");
+  for (let i = 0; i < 500; i++) {
+    const itemId = itemIds[Math.floor(Math.random() * itemIds.length)];
+    const date = i < 450 ? getHistoricalDate() : getRecentDate();
+    const isPurchase = Math.random() > 0.45;
+    const qty = Math.floor(Math.random() * 60) + 10;
+    const rackId = rackIds[Math.floor(Math.random() * rackIds.length)];
 
-  for (const u of aniketUsers) {
-    await prisma.user.upsert({
-      where: { username: u.username },
-      update: { password: hashedPassword, role: u.role, companyId: aniketCompanyId },
-      create: {
-        username: u.username,
-        password: hashedPassword,
-        name: u.name,
-        role: u.role,
-        companyId: aniketCompanyId
+    if (isPurchase) {
+      const vendorId = vendorIds[Math.floor(Math.random() * vendorIds.length)];
+      const status = i < 480 ? "COMPLETED" : "ORDERED"; // Most completed, some active
+      
+      const po = await prisma.purchaseOrder.create({
+        data: {
+          vendorId, status, companyId, createdAt: date,
+          expectedDelivery: status === "ORDERED" ? getFutureDate() : null,
+          items: { create: { itemId, quantityOrdered: qty, quantityReceived: status === "COMPLETED" ? qty : 0, costPrice: itemPrices[itemId] } }
+        }
+      });
+
+      if (status === "COMPLETED") {
+        const inv = await prisma.inventory.update({ where: { itemId }, data: { quantityAvailable: { increment: qty } } });
+        await prisma.inventoryBatch.create({ data: { inventoryId: inv.id, vendorId, quantity: qty, remainingQty: qty, costPerUnit: itemPrices[itemId], purchaseDate: date, purchaseOrderId: po.id } });
+        await prisma.inventoryTransaction.create({ data: { type: "PURCHASE", quantity: qty, itemId, vendorId, rackId, userId: admin.id, companyId, createdAt: date, referenceType: "PURCHASE_ORDER", referenceId: po.id } });
+      } else {
+        // Active Orders Card Logic
+        await prisma.inventory.update({ where: { itemId }, data: { incomingQty: { increment: qty }, quantityInTransit: { increment: qty } } });
       }
-    });
+    } else {
+      // SALES
+      const customerId = customerIds[Math.floor(Math.random() * customerIds.length)];
+      const status = i < 480 ? "DISPATCHED" : "pending";
+
+      const current = await prisma.inventory.findUnique({ where: { itemId } });
+      if (current && current.quantityAvailable >= qty) {
+        const so = await prisma.dispatchOrder.create({
+          data: { customerId, status, companyId, createdAt: date, items: { create: { itemId, quantity: qty, sellingPrice: itemPrices[itemId] * 1.4 } } }
+        });
+
+        if (status === "DISPATCHED") {
+          await prisma.inventory.update({ where: { itemId }, data: { quantityAvailable: { decrement: qty } } });
+          await prisma.inventoryTransaction.create({ data: { type: "SALE", quantity: qty, itemId, customerId, rackId, userId: manager.id, companyId, createdAt: date, referenceType: "DISPATCH_ORDER", referenceId: so.id } });
+        }
+      }
+    }
+
+    // 6. ACTIVITY LOGS (Simulate user actions)
+    if (i % 20 === 0) {
+      await prisma.activityLog.create({
+        data: {
+          actionType: i % 3 === 0 ? "CREATE" : "UPDATE",
+          entityType: i % 2 === 0 ? "ITEM" : "PURCHASE_ORDER",
+          performedBy: admin.id,
+          performedByName: admin.name,
+          companyId,
+          createdAt: date,
+          newValue: { detail: `System automated activity log entry #${i}` }
+        }
+      });
+    }
+    if (i % 100 === 0) console.log(`Processed ${i} events...`);
   }
 
-  // Charu Industries Users
-  const charuUsers = [
-    { username: "charu_admin", name: "Charu Admin", role: UserRole.OWNER },
-  ];
-
-  for (const u of charuUsers) {
-    await prisma.user.upsert({
-      where: { username: u.username },
-      update: { password: hashedPassword, role: u.role, companyId: charuCompanyId },
-      create: {
-        username: u.username,
-        password: hashedPassword,
-        name: u.name,
-        role: u.role,
-        companyId: charuCompanyId
-      }
-    });
-  }
-
-  console.log("✅ Seed database (Multi-Company) completed successfully!");
+  console.log("💎 ULTIMATE SYSTEM SEED COMPLETED SUCCESSFULLY!");
 }
 
 main()
-  .catch((e) => {
-    console.error("❌ SEED ERROR:");
-    console.error(JSON.stringify(e, Object.getOwnPropertyNames(e), 2));
-    if (e.cause) {
-      console.error("❌ CAUSE:", JSON.stringify(e.cause, Object.getOwnPropertyNames(e.cause), 2));
-    }
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-    await pool.end();
-  });
+  .catch((e) => { console.error("❌ SEED ERROR:", e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); await pool.end(); });
