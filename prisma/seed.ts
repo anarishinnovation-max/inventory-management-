@@ -1,4 +1,6 @@
 import { PrismaClient } from "../src/generated/client";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 
@@ -20,10 +22,22 @@ if (!connectionString) {
 // Log connection attempt (masked)
 console.log(`Connecting to database: ${connectionString.split('@')[1] || 'URL masked'}`);
 
-// Use standard PrismaClient for seeding (optimized for db.prisma.io)
-const prisma = new PrismaClient({
-  log: ['error', 'warn'],
-});
+const isProduction = process.env.NODE_ENV === "production";
+const poolConfig: any = {
+  connectionString,
+  max: 2, // Low limit for seeding
+  idleTimeoutMillis: 30000,
+};
+
+if (isProduction || connectionString.includes("sslmode=")) {
+  poolConfig.ssl = {
+    rejectUnauthorized: false,
+  };
+}
+
+const pool = new Pool(poolConfig);
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding database (Multi-Tenant: SS Cuttings Tool & Aniket Industries)...");
@@ -220,4 +234,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });
