@@ -55,7 +55,7 @@ export default function PurchaseOrdersTable({ pos, currentPage, totalPages }: Pu
             </thead>
             <tbody className="divide-y divide-border-ghost">
               {pos.length > 0 ? pos.map((po: any) => {
-                const totalValue = po.items.reduce((acc: number, curr: any) => acc + (Number(curr.costPrice) * curr.quantityOrdered), 0);
+                const totalValue = po.items.reduce((acc: number, curr: any) => acc + (Number(curr.costPrice) * Number(curr.quantityOrdered)), 0);
                 const statusLabel = po.status.toUpperCase();
                 
                 return (

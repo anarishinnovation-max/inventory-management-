@@ -86,7 +86,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
 
   // Calculate Stats
   const totalPurchasedValue = vendor.purchaseOrders.reduce((acc, order) => {
-    return acc + order.items.reduce((sum, item) => sum + (item.costPrice * item.quantityOrdered), 0);
+    return acc + order.items.reduce((sum, item) => sum + (Number(item.costPrice) * Number(item.quantityOrdered)), 0);
   }, 0);
 
   const totalBatchesReceived = vendor.batches.length;
@@ -259,7 +259,7 @@ export default async function VendorHistoryPage({ params }: { params: Promise<{ 
                                 </span>
                              </td>
                              <td className="px-8 py-6 text-right">
-                                <span className="text-sm font-black text-foreground tabular-nums tracking-tighter">₹{order.items.reduce((acc: number, item: any) => acc + (item.costPrice * item.quantityOrdered), 0).toLocaleString()}</span>
+                                <span className="text-sm font-black text-foreground tabular-nums tracking-tighter">₹{order.items.reduce((acc: number, item: any) => acc + (Number(item.costPrice) * Number(item.quantityOrdered)), 0).toLocaleString()}</span>
                              </td>
                              <td className="px-8 py-6 text-right">
                                 <Link 

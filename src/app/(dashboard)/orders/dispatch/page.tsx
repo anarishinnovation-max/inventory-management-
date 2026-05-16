@@ -185,7 +185,7 @@ export default async function DispatchPage({
                     </td>
                     <td className="table-cell">
                        <span className="text-sm font-black text-foreground tabular-nums">
-                         ₹{order.items.reduce((acc: number, curr: any) => acc + (Number(curr.sellingPrice) * curr.quantity), 0).toLocaleString('en-IN')}
+                         ₹{order.items.reduce((acc: number, curr: any) => acc + (Number(curr.sellingPrice) * Number(curr.quantity)), 0).toLocaleString('en-IN')}
                        </span>
                     </td>
                     <td className="table-cell">

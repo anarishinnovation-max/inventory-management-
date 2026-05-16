@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { InventoryService } from "@/lib/inventory-service";
+import { hasPermission } from "@/lib/permissions";
 
 function computeInventoryStatus(params: {
   totalQty: number;
@@ -26,6 +27,10 @@ export async function GET(request: Request) {
     const session = await getSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!hasPermission(session.role as any, "stock:view", session.customPermissions)) {
+      return NextResponse.json({ error: "Forbidden: You do not have permission to view inventory." }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -79,6 +84,10 @@ export async function POST(request: Request) {
     const { getSession } = await import("@/lib/auth");
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    if (!hasPermission(session.role as any, "stock:adjust", session.customPermissions)) {
+      return NextResponse.json({ error: "Forbidden: You do not have permission to perform inventory adjustments." }, { status: 403 });
+    }
 
     const { itemId, quantity, reason } = await request.json();
     if (!itemId || !quantity) return NextResponse.json({ error: "Missing fields" }, { status: 400 });

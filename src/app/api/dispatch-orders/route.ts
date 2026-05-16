@@ -6,11 +6,18 @@ import { InventoryService } from "@/lib/inventory-service";
 
 import { getSession } from "@/lib/auth";
 import { createActivityLog } from "@/lib/logger";
+import { hasPermission } from "@/lib/permissions";
+import { dispatchOrderSchema } from "@/lib/schemas/orders";
+import { logger } from "@/lib/structured-logger";
 
 export async function GET(request: Request) {
   try {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    if (!hasPermission(session.role as any, "dispatch:view", session.customPermissions)) {
+      return NextResponse.json({ error: "Forbidden: You do not have permission to view dispatch orders." }, { status: 403 });
+    }
 
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
@@ -55,15 +62,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { customerId, items, paymentMode, status, expectedDelivery, orderDate, collectedBy, dispatchedBy, transportMode } = await request.json(); // items: { itemId, quantity, sellingPrice }[]
-
-    if (!customerId || !items || !items.length) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!hasPermission(session.role as any, "dispatch:create", session.customPermissions)) {
+      return NextResponse.json({ error: "Forbidden: You do not have permission to create dispatch orders." }, { status: 403 });
     }
 
-    if (items.some((item: any) => parseFloat(item.quantity) <= 0 || parseFloat(item.sellingPrice) <= 0)) {
-      return NextResponse.json({ error: "Quantity and selling price must be greater than zero for all items." }, { status: 400 });
+    const body = await request.json();
+    const result = dispatchOrderSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.flatten().fieldErrors }, { status: 400 });
     }
+
+    const { customerId, items, paymentMode, status, expectedDelivery, orderDate, collectedBy, dispatchedBy, transportMode } = result.data;
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -87,11 +97,11 @@ export async function POST(request: Request) {
       companyId: session.companyId,
       paymentMode: paymentMode || "Cash",
       status: status || "pending",
-      expectedDelivery: expectedDelivery,
-      orderDate: orderDate,
-      collectedBy: collectedBy,
-      dispatchedBy: dispatchedBy,
-      transportMode: transportMode,
+      expectedDelivery: expectedDelivery ?? undefined,
+      orderDate: orderDate ?? undefined,
+      collectedBy: collectedBy ?? undefined,
+      dispatchedBy: dispatchedBy ?? undefined,
+      transportMode: transportMode ?? undefined,
       items: items.map((item: any) => ({
         itemId: item.itemId,
         quantity: parseFloat(item.quantity),
@@ -121,6 +131,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(order, { status: 201 });
   } catch (error: any) {
+    logger.error("[api/dispatch-orders] POST error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

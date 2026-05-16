@@ -6386,11 +6386,11 @@ export namespace Prisma {
   }
 
   export type ItemAvgAggregateOutputType = {
-    minStockLevel: number | null
+    minStockLevel: Decimal | null
   }
 
   export type ItemSumAggregateOutputType = {
-    minStockLevel: number | null
+    minStockLevel: Decimal | null
   }
 
   export type ItemMinAggregateOutputType = {
@@ -6401,7 +6401,7 @@ export namespace Prisma {
     unit: string | null
     createdAt: Date | null
     isCritical: boolean | null
-    minStockLevel: number | null
+    minStockLevel: Decimal | null
     companyId: string | null
   }
 
@@ -6413,7 +6413,7 @@ export namespace Prisma {
     unit: string | null
     createdAt: Date | null
     isCritical: boolean | null
-    minStockLevel: number | null
+    minStockLevel: Decimal | null
     companyId: string | null
   }
 
@@ -6570,7 +6570,7 @@ export namespace Prisma {
     unit: string
     createdAt: Date
     isCritical: boolean
-    minStockLevel: number
+    minStockLevel: Decimal
     companyId: string
     _count: ItemCountAggregateOutputType | null
     _avg: ItemAvgAggregateOutputType | null
@@ -6692,7 +6692,7 @@ export namespace Prisma {
       unit: string
       createdAt: Date
       isCritical: boolean
-      minStockLevel: number
+      minStockLevel: Prisma.Decimal
       companyId: string
     }, ExtArgs["result"]["item"]>
     composites: {}
@@ -7131,7 +7131,7 @@ export namespace Prisma {
     readonly unit: FieldRef<"Item", 'String'>
     readonly createdAt: FieldRef<"Item", 'DateTime'>
     readonly isCritical: FieldRef<"Item", 'Boolean'>
-    readonly minStockLevel: FieldRef<"Item", 'Float'>
+    readonly minStockLevel: FieldRef<"Item", 'Decimal'>
     readonly companyId: FieldRef<"Item", 'String'>
   }
     
@@ -8788,18 +8788,18 @@ export namespace Prisma {
   }
 
   export type StockAvgAggregateOutputType = {
-    quantity: number | null
+    quantity: Decimal | null
   }
 
   export type StockSumAggregateOutputType = {
-    quantity: number | null
+    quantity: Decimal | null
   }
 
   export type StockMinAggregateOutputType = {
     id: string | null
     itemId: string | null
     rackId: string | null
-    quantity: number | null
+    quantity: Decimal | null
     updatedAt: Date | null
     companyId: string | null
   }
@@ -8808,7 +8808,7 @@ export namespace Prisma {
     id: string | null
     itemId: string | null
     rackId: string | null
-    quantity: number | null
+    quantity: Decimal | null
     updatedAt: Date | null
     companyId: string | null
   }
@@ -8950,7 +8950,7 @@ export namespace Prisma {
     id: string
     itemId: string
     rackId: string
-    quantity: number
+    quantity: Decimal
     updatedAt: Date
     companyId: string
     _count: StockCountAggregateOutputType | null
@@ -9047,7 +9047,7 @@ export namespace Prisma {
       id: string
       itemId: string
       rackId: string
-      quantity: number
+      quantity: Prisma.Decimal
       updatedAt: Date
       companyId: string
     }, ExtArgs["result"]["stock"]>
@@ -9479,7 +9479,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Stock", 'String'>
     readonly itemId: FieldRef<"Stock", 'String'>
     readonly rackId: FieldRef<"Stock", 'String'>
-    readonly quantity: FieldRef<"Stock", 'Float'>
+    readonly quantity: FieldRef<"Stock", 'Decimal'>
     readonly updatedAt: FieldRef<"Stock", 'DateTime'>
     readonly companyId: FieldRef<"Stock", 'String'>
   }
@@ -9914,26 +9914,29 @@ export namespace Prisma {
   }
 
   export type InventoryAvgAggregateOutputType = {
-    quantityAvailable: number | null
-    incomingQty: number | null
-    quantityReserved: number | null
-    quantityInTransit: number | null
+    quantityAvailable: Decimal | null
+    incomingQty: Decimal | null
+    quantityReserved: Decimal | null
+    quantityInTransit: Decimal | null
+    quantityQC: Decimal | null
   }
 
   export type InventorySumAggregateOutputType = {
-    quantityAvailable: number | null
-    incomingQty: number | null
-    quantityReserved: number | null
-    quantityInTransit: number | null
+    quantityAvailable: Decimal | null
+    incomingQty: Decimal | null
+    quantityReserved: Decimal | null
+    quantityInTransit: Decimal | null
+    quantityQC: Decimal | null
   }
 
   export type InventoryMinAggregateOutputType = {
     id: string | null
     itemId: string | null
-    quantityAvailable: number | null
-    incomingQty: number | null
-    quantityReserved: number | null
-    quantityInTransit: number | null
+    quantityAvailable: Decimal | null
+    incomingQty: Decimal | null
+    quantityReserved: Decimal | null
+    quantityInTransit: Decimal | null
+    quantityQC: Decimal | null
     updatedAt: Date | null
     companyId: string | null
   }
@@ -9941,10 +9944,11 @@ export namespace Prisma {
   export type InventoryMaxAggregateOutputType = {
     id: string | null
     itemId: string | null
-    quantityAvailable: number | null
-    incomingQty: number | null
-    quantityReserved: number | null
-    quantityInTransit: number | null
+    quantityAvailable: Decimal | null
+    incomingQty: Decimal | null
+    quantityReserved: Decimal | null
+    quantityInTransit: Decimal | null
+    quantityQC: Decimal | null
     updatedAt: Date | null
     companyId: string | null
   }
@@ -9956,6 +9960,7 @@ export namespace Prisma {
     incomingQty: number
     quantityReserved: number
     quantityInTransit: number
+    quantityQC: number
     updatedAt: number
     companyId: number
     _all: number
@@ -9967,6 +9972,7 @@ export namespace Prisma {
     incomingQty?: true
     quantityReserved?: true
     quantityInTransit?: true
+    quantityQC?: true
   }
 
   export type InventorySumAggregateInputType = {
@@ -9974,6 +9980,7 @@ export namespace Prisma {
     incomingQty?: true
     quantityReserved?: true
     quantityInTransit?: true
+    quantityQC?: true
   }
 
   export type InventoryMinAggregateInputType = {
@@ -9983,6 +9990,7 @@ export namespace Prisma {
     incomingQty?: true
     quantityReserved?: true
     quantityInTransit?: true
+    quantityQC?: true
     updatedAt?: true
     companyId?: true
   }
@@ -9994,6 +10002,7 @@ export namespace Prisma {
     incomingQty?: true
     quantityReserved?: true
     quantityInTransit?: true
+    quantityQC?: true
     updatedAt?: true
     companyId?: true
   }
@@ -10005,6 +10014,7 @@ export namespace Prisma {
     incomingQty?: true
     quantityReserved?: true
     quantityInTransit?: true
+    quantityQC?: true
     updatedAt?: true
     companyId?: true
     _all?: true
@@ -10099,10 +10109,11 @@ export namespace Prisma {
   export type InventoryGroupByOutputType = {
     id: string
     itemId: string
-    quantityAvailable: number
-    incomingQty: number
-    quantityReserved: number
-    quantityInTransit: number
+    quantityAvailable: Decimal
+    incomingQty: Decimal
+    quantityReserved: Decimal
+    quantityInTransit: Decimal
+    quantityQC: Decimal
     updatedAt: Date
     companyId: string
     _count: InventoryCountAggregateOutputType | null
@@ -10133,6 +10144,7 @@ export namespace Prisma {
     incomingQty?: boolean
     quantityReserved?: boolean
     quantityInTransit?: boolean
+    quantityQC?: boolean
     updatedAt?: boolean
     companyId?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -10148,6 +10160,7 @@ export namespace Prisma {
     incomingQty?: boolean
     quantityReserved?: boolean
     quantityInTransit?: boolean
+    quantityQC?: boolean
     updatedAt?: boolean
     companyId?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -10161,6 +10174,7 @@ export namespace Prisma {
     incomingQty?: boolean
     quantityReserved?: boolean
     quantityInTransit?: boolean
+    quantityQC?: boolean
     updatedAt?: boolean
     companyId?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -10174,11 +10188,12 @@ export namespace Prisma {
     incomingQty?: boolean
     quantityReserved?: boolean
     quantityInTransit?: boolean
+    quantityQC?: boolean
     updatedAt?: boolean
     companyId?: boolean
   }
 
-  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantityAvailable" | "incomingQty" | "quantityReserved" | "quantityInTransit" | "updatedAt" | "companyId", ExtArgs["result"]["inventory"]>
+  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantityAvailable" | "incomingQty" | "quantityReserved" | "quantityInTransit" | "quantityQC" | "updatedAt" | "companyId", ExtArgs["result"]["inventory"]>
   export type InventoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     item?: boolean | ItemDefaultArgs<ExtArgs>
@@ -10204,10 +10219,11 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       itemId: string
-      quantityAvailable: number
-      incomingQty: number
-      quantityReserved: number
-      quantityInTransit: number
+      quantityAvailable: Prisma.Decimal
+      incomingQty: Prisma.Decimal
+      quantityReserved: Prisma.Decimal
+      quantityInTransit: Prisma.Decimal
+      quantityQC: Prisma.Decimal
       updatedAt: Date
       companyId: string
     }, ExtArgs["result"]["inventory"]>
@@ -10638,10 +10654,11 @@ export namespace Prisma {
   interface InventoryFieldRefs {
     readonly id: FieldRef<"Inventory", 'String'>
     readonly itemId: FieldRef<"Inventory", 'String'>
-    readonly quantityAvailable: FieldRef<"Inventory", 'Float'>
-    readonly incomingQty: FieldRef<"Inventory", 'Float'>
-    readonly quantityReserved: FieldRef<"Inventory", 'Float'>
-    readonly quantityInTransit: FieldRef<"Inventory", 'Float'>
+    readonly quantityAvailable: FieldRef<"Inventory", 'Decimal'>
+    readonly incomingQty: FieldRef<"Inventory", 'Decimal'>
+    readonly quantityReserved: FieldRef<"Inventory", 'Decimal'>
+    readonly quantityInTransit: FieldRef<"Inventory", 'Decimal'>
+    readonly quantityQC: FieldRef<"Inventory", 'Decimal'>
     readonly updatedAt: FieldRef<"Inventory", 'DateTime'>
     readonly companyId: FieldRef<"Inventory", 'String'>
   }
@@ -13443,24 +13460,24 @@ export namespace Prisma {
   }
 
   export type InventoryBatchAvgAggregateOutputType = {
-    quantity: number | null
-    remainingQty: number | null
-    costPerUnit: number | null
+    quantity: Decimal | null
+    remainingQty: Decimal | null
+    costPerUnit: Decimal | null
   }
 
   export type InventoryBatchSumAggregateOutputType = {
-    quantity: number | null
-    remainingQty: number | null
-    costPerUnit: number | null
+    quantity: Decimal | null
+    remainingQty: Decimal | null
+    costPerUnit: Decimal | null
   }
 
   export type InventoryBatchMinAggregateOutputType = {
     id: string | null
     inventoryId: string | null
     vendorId: string | null
-    quantity: number | null
-    remainingQty: number | null
-    costPerUnit: number | null
+    quantity: Decimal | null
+    remainingQty: Decimal | null
+    costPerUnit: Decimal | null
     purchaseDate: Date | null
     purchaseOrderId: string | null
     createdAt: Date | null
@@ -13471,9 +13488,9 @@ export namespace Prisma {
     id: string | null
     inventoryId: string | null
     vendorId: string | null
-    quantity: number | null
-    remainingQty: number | null
-    costPerUnit: number | null
+    quantity: Decimal | null
+    remainingQty: Decimal | null
+    costPerUnit: Decimal | null
     purchaseDate: Date | null
     purchaseOrderId: string | null
     createdAt: Date | null
@@ -13637,9 +13654,9 @@ export namespace Prisma {
     id: string
     inventoryId: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal
+    remainingQty: Decimal
+    costPerUnit: Decimal
     purchaseDate: Date
     purchaseOrderId: string | null
     createdAt: Date
@@ -13761,9 +13778,9 @@ export namespace Prisma {
       id: string
       inventoryId: string
       vendorId: string
-      quantity: number
-      remainingQty: number
-      costPerUnit: number
+      quantity: Prisma.Decimal
+      remainingQty: Prisma.Decimal
+      costPerUnit: Prisma.Decimal
       purchaseDate: Date
       purchaseOrderId: string | null
       createdAt: Date
@@ -14198,9 +14215,9 @@ export namespace Prisma {
     readonly id: FieldRef<"InventoryBatch", 'String'>
     readonly inventoryId: FieldRef<"InventoryBatch", 'String'>
     readonly vendorId: FieldRef<"InventoryBatch", 'String'>
-    readonly quantity: FieldRef<"InventoryBatch", 'Float'>
-    readonly remainingQty: FieldRef<"InventoryBatch", 'Float'>
-    readonly costPerUnit: FieldRef<"InventoryBatch", 'Float'>
+    readonly quantity: FieldRef<"InventoryBatch", 'Decimal'>
+    readonly remainingQty: FieldRef<"InventoryBatch", 'Decimal'>
+    readonly costPerUnit: FieldRef<"InventoryBatch", 'Decimal'>
     readonly purchaseDate: FieldRef<"InventoryBatch", 'DateTime'>
     readonly purchaseOrderId: FieldRef<"InventoryBatch", 'String'>
     readonly createdAt: FieldRef<"InventoryBatch", 'DateTime'>
@@ -14675,33 +14692,33 @@ export namespace Prisma {
   }
 
   export type POLineItemAvgAggregateOutputType = {
-    quantityOrdered: number | null
-    quantityReceived: number | null
-    costPrice: number | null
+    quantityOrdered: Decimal | null
+    quantityReceived: Decimal | null
+    costPrice: Decimal | null
   }
 
   export type POLineItemSumAggregateOutputType = {
-    quantityOrdered: number | null
-    quantityReceived: number | null
-    costPrice: number | null
+    quantityOrdered: Decimal | null
+    quantityReceived: Decimal | null
+    costPrice: Decimal | null
   }
 
   export type POLineItemMinAggregateOutputType = {
     id: string | null
     purchaseOrderId: string | null
     itemId: string | null
-    quantityOrdered: number | null
-    quantityReceived: number | null
-    costPrice: number | null
+    quantityOrdered: Decimal | null
+    quantityReceived: Decimal | null
+    costPrice: Decimal | null
   }
 
   export type POLineItemMaxAggregateOutputType = {
     id: string | null
     purchaseOrderId: string | null
     itemId: string | null
-    quantityOrdered: number | null
-    quantityReceived: number | null
-    costPrice: number | null
+    quantityOrdered: Decimal | null
+    quantityReceived: Decimal | null
+    costPrice: Decimal | null
   }
 
   export type POLineItemCountAggregateOutputType = {
@@ -14845,9 +14862,9 @@ export namespace Prisma {
     id: string
     purchaseOrderId: string
     itemId: string
-    quantityOrdered: number
-    quantityReceived: number
-    costPrice: number
+    quantityOrdered: Decimal
+    quantityReceived: Decimal
+    costPrice: Decimal
     _count: POLineItemCountAggregateOutputType | null
     _avg: POLineItemAvgAggregateOutputType | null
     _sum: POLineItemSumAggregateOutputType | null
@@ -14935,9 +14952,9 @@ export namespace Prisma {
       id: string
       purchaseOrderId: string
       itemId: string
-      quantityOrdered: number
-      quantityReceived: number
-      costPrice: number
+      quantityOrdered: Prisma.Decimal
+      quantityReceived: Prisma.Decimal
+      costPrice: Prisma.Decimal
     }, ExtArgs["result"]["pOLineItem"]>
     composites: {}
   }
@@ -15366,9 +15383,9 @@ export namespace Prisma {
     readonly id: FieldRef<"POLineItem", 'String'>
     readonly purchaseOrderId: FieldRef<"POLineItem", 'String'>
     readonly itemId: FieldRef<"POLineItem", 'String'>
-    readonly quantityOrdered: FieldRef<"POLineItem", 'Float'>
-    readonly quantityReceived: FieldRef<"POLineItem", 'Float'>
-    readonly costPrice: FieldRef<"POLineItem", 'Float'>
+    readonly quantityOrdered: FieldRef<"POLineItem", 'Decimal'>
+    readonly quantityReceived: FieldRef<"POLineItem", 'Decimal'>
+    readonly costPrice: FieldRef<"POLineItem", 'Decimal'>
   }
     
 
@@ -18127,29 +18144,29 @@ export namespace Prisma {
   }
 
   export type DispatchItemAvgAggregateOutputType = {
-    quantity: number | null
-    sellingPrice: number | null
+    quantity: Decimal | null
+    sellingPrice: Decimal | null
   }
 
   export type DispatchItemSumAggregateOutputType = {
-    quantity: number | null
-    sellingPrice: number | null
+    quantity: Decimal | null
+    sellingPrice: Decimal | null
   }
 
   export type DispatchItemMinAggregateOutputType = {
     id: string | null
     dispatchOrderId: string | null
     itemId: string | null
-    quantity: number | null
-    sellingPrice: number | null
+    quantity: Decimal | null
+    sellingPrice: Decimal | null
   }
 
   export type DispatchItemMaxAggregateOutputType = {
     id: string | null
     dispatchOrderId: string | null
     itemId: string | null
-    quantity: number | null
-    sellingPrice: number | null
+    quantity: Decimal | null
+    sellingPrice: Decimal | null
   }
 
   export type DispatchItemCountAggregateOutputType = {
@@ -18287,8 +18304,8 @@ export namespace Prisma {
     id: string
     dispatchOrderId: string
     itemId: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal
+    sellingPrice: Decimal
     _count: DispatchItemCountAggregateOutputType | null
     _avg: DispatchItemAvgAggregateOutputType | null
     _sum: DispatchItemSumAggregateOutputType | null
@@ -18372,8 +18389,8 @@ export namespace Prisma {
       id: string
       dispatchOrderId: string
       itemId: string
-      quantity: number
-      sellingPrice: number
+      quantity: Prisma.Decimal
+      sellingPrice: Prisma.Decimal
     }, ExtArgs["result"]["dispatchItem"]>
     composites: {}
   }
@@ -18802,8 +18819,8 @@ export namespace Prisma {
     readonly id: FieldRef<"DispatchItem", 'String'>
     readonly dispatchOrderId: FieldRef<"DispatchItem", 'String'>
     readonly itemId: FieldRef<"DispatchItem", 'String'>
-    readonly quantity: FieldRef<"DispatchItem", 'Float'>
-    readonly sellingPrice: FieldRef<"DispatchItem", 'Float'>
+    readonly quantity: FieldRef<"DispatchItem", 'Decimal'>
+    readonly sellingPrice: FieldRef<"DispatchItem", 'Decimal'>
   }
     
 
@@ -19236,11 +19253,11 @@ export namespace Prisma {
   }
 
   export type InventoryTransactionAvgAggregateOutputType = {
-    quantity: number | null
+    quantity: Decimal | null
   }
 
   export type InventoryTransactionSumAggregateOutputType = {
-    quantity: number | null
+    quantity: Decimal | null
   }
 
   export type InventoryTransactionMinAggregateOutputType = {
@@ -19251,7 +19268,7 @@ export namespace Prisma {
     customerId: string | null
     vendorId: string | null
     type: string | null
-    quantity: number | null
+    quantity: Decimal | null
     referenceType: string | null
     referenceId: string | null
     createdAt: Date | null
@@ -19266,7 +19283,7 @@ export namespace Prisma {
     customerId: string | null
     vendorId: string | null
     type: string | null
-    quantity: number | null
+    quantity: Decimal | null
     referenceType: string | null
     referenceId: string | null
     createdAt: Date | null
@@ -19438,7 +19455,7 @@ export namespace Prisma {
     customerId: string | null
     vendorId: string | null
     type: string
-    quantity: number
+    quantity: Decimal
     referenceType: string | null
     referenceId: string | null
     createdAt: Date
@@ -19586,7 +19603,7 @@ export namespace Prisma {
       customerId: string | null
       vendorId: string | null
       type: string
-      quantity: number
+      quantity: Prisma.Decimal
       referenceType: string | null
       referenceId: string | null
       createdAt: Date
@@ -20027,7 +20044,7 @@ export namespace Prisma {
     readonly customerId: FieldRef<"InventoryTransaction", 'String'>
     readonly vendorId: FieldRef<"InventoryTransaction", 'String'>
     readonly type: FieldRef<"InventoryTransaction", 'String'>
-    readonly quantity: FieldRef<"InventoryTransaction", 'Float'>
+    readonly quantity: FieldRef<"InventoryTransaction", 'Decimal'>
     readonly referenceType: FieldRef<"InventoryTransaction", 'String'>
     readonly referenceId: FieldRef<"InventoryTransaction", 'String'>
     readonly createdAt: FieldRef<"InventoryTransaction", 'DateTime'>
@@ -21775,6 +21792,7 @@ export namespace Prisma {
     incomingQty: 'incomingQty',
     quantityReserved: 'quantityReserved',
     quantityInTransit: 'quantityInTransit',
+    quantityQC: 'quantityQC',
     updatedAt: 'updatedAt',
     companyId: 'companyId'
   };
@@ -22025,16 +22043,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
+   * Reference to a field of type 'Decimal'
    */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
     
 
 
   /**
-   * Reference to a field of type 'Float[]'
+   * Reference to a field of type 'Decimal[]'
    */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -22284,7 +22302,7 @@ export namespace Prisma {
     unit?: StringFilter<"Item"> | string
     createdAt?: DateTimeFilter<"Item"> | Date | string
     isCritical?: BoolFilter<"Item"> | boolean
-    minStockLevel?: FloatFilter<"Item"> | number
+    minStockLevel?: DecimalFilter<"Item"> | Decimal | DecimalJsLike | number | string
     companyId?: StringFilter<"Item"> | string
     dispatchItems?: DispatchItemListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
@@ -22326,7 +22344,7 @@ export namespace Prisma {
     unit?: StringFilter<"Item"> | string
     createdAt?: DateTimeFilter<"Item"> | Date | string
     isCritical?: BoolFilter<"Item"> | boolean
-    minStockLevel?: FloatFilter<"Item"> | number
+    minStockLevel?: DecimalFilter<"Item"> | Decimal | DecimalJsLike | number | string
     companyId?: StringFilter<"Item"> | string
     dispatchItems?: DispatchItemListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
@@ -22365,7 +22383,7 @@ export namespace Prisma {
     unit?: StringWithAggregatesFilter<"Item"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Item"> | Date | string
     isCritical?: BoolWithAggregatesFilter<"Item"> | boolean
-    minStockLevel?: FloatWithAggregatesFilter<"Item"> | number
+    minStockLevel?: DecimalWithAggregatesFilter<"Item"> | Decimal | DecimalJsLike | number | string
     companyId?: StringWithAggregatesFilter<"Item"> | string
   }
 
@@ -22433,7 +22451,7 @@ export namespace Prisma {
     id?: StringFilter<"Stock"> | string
     itemId?: StringFilter<"Stock"> | string
     rackId?: StringFilter<"Stock"> | string
-    quantity?: FloatFilter<"Stock"> | number
+    quantity?: DecimalFilter<"Stock"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"Stock"> | Date | string
     companyId?: StringFilter<"Stock"> | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
@@ -22460,7 +22478,7 @@ export namespace Prisma {
     NOT?: StockWhereInput | StockWhereInput[]
     itemId?: StringFilter<"Stock"> | string
     rackId?: StringFilter<"Stock"> | string
-    quantity?: FloatFilter<"Stock"> | number
+    quantity?: DecimalFilter<"Stock"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"Stock"> | Date | string
     companyId?: StringFilter<"Stock"> | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
@@ -22489,7 +22507,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Stock"> | string
     itemId?: StringWithAggregatesFilter<"Stock"> | string
     rackId?: StringWithAggregatesFilter<"Stock"> | string
-    quantity?: FloatWithAggregatesFilter<"Stock"> | number
+    quantity?: DecimalWithAggregatesFilter<"Stock"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeWithAggregatesFilter<"Stock"> | Date | string
     companyId?: StringWithAggregatesFilter<"Stock"> | string
   }
@@ -22500,10 +22518,11 @@ export namespace Prisma {
     NOT?: InventoryWhereInput | InventoryWhereInput[]
     id?: StringFilter<"Inventory"> | string
     itemId?: StringFilter<"Inventory"> | string
-    quantityAvailable?: FloatFilter<"Inventory"> | number
-    incomingQty?: FloatFilter<"Inventory"> | number
-    quantityReserved?: FloatFilter<"Inventory"> | number
-    quantityInTransit?: FloatFilter<"Inventory"> | number
+    quantityAvailable?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
     companyId?: StringFilter<"Inventory"> | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
@@ -22518,6 +22537,7 @@ export namespace Prisma {
     incomingQty?: SortOrder
     quantityReserved?: SortOrder
     quantityInTransit?: SortOrder
+    quantityQC?: SortOrder
     updatedAt?: SortOrder
     companyId?: SortOrder
     company?: CompanyOrderByWithRelationInput
@@ -22531,10 +22551,11 @@ export namespace Prisma {
     AND?: InventoryWhereInput | InventoryWhereInput[]
     OR?: InventoryWhereInput[]
     NOT?: InventoryWhereInput | InventoryWhereInput[]
-    quantityAvailable?: FloatFilter<"Inventory"> | number
-    incomingQty?: FloatFilter<"Inventory"> | number
-    quantityReserved?: FloatFilter<"Inventory"> | number
-    quantityInTransit?: FloatFilter<"Inventory"> | number
+    quantityAvailable?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
     companyId?: StringFilter<"Inventory"> | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
@@ -22549,6 +22570,7 @@ export namespace Prisma {
     incomingQty?: SortOrder
     quantityReserved?: SortOrder
     quantityInTransit?: SortOrder
+    quantityQC?: SortOrder
     updatedAt?: SortOrder
     companyId?: SortOrder
     _count?: InventoryCountOrderByAggregateInput
@@ -22564,10 +22586,11 @@ export namespace Prisma {
     NOT?: InventoryScalarWhereWithAggregatesInput | InventoryScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Inventory"> | string
     itemId?: StringWithAggregatesFilter<"Inventory"> | string
-    quantityAvailable?: FloatWithAggregatesFilter<"Inventory"> | number
-    incomingQty?: FloatWithAggregatesFilter<"Inventory"> | number
-    quantityReserved?: FloatWithAggregatesFilter<"Inventory"> | number
-    quantityInTransit?: FloatWithAggregatesFilter<"Inventory"> | number
+    quantityAvailable?: DecimalWithAggregatesFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalWithAggregatesFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalWithAggregatesFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalWithAggregatesFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalWithAggregatesFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeWithAggregatesFilter<"Inventory"> | Date | string
     companyId?: StringWithAggregatesFilter<"Inventory"> | string
   }
@@ -22733,9 +22756,9 @@ export namespace Prisma {
     id?: StringFilter<"InventoryBatch"> | string
     inventoryId?: StringFilter<"InventoryBatch"> | string
     vendorId?: StringFilter<"InventoryBatch"> | string
-    quantity?: FloatFilter<"InventoryBatch"> | number
-    remainingQty?: FloatFilter<"InventoryBatch"> | number
-    costPerUnit?: FloatFilter<"InventoryBatch"> | number
+    quantity?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
@@ -22770,9 +22793,9 @@ export namespace Prisma {
     NOT?: InventoryBatchWhereInput | InventoryBatchWhereInput[]
     inventoryId?: StringFilter<"InventoryBatch"> | string
     vendorId?: StringFilter<"InventoryBatch"> | string
-    quantity?: FloatFilter<"InventoryBatch"> | number
-    remainingQty?: FloatFilter<"InventoryBatch"> | number
-    costPerUnit?: FloatFilter<"InventoryBatch"> | number
+    quantity?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
@@ -22808,9 +22831,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"InventoryBatch"> | string
     inventoryId?: StringWithAggregatesFilter<"InventoryBatch"> | string
     vendorId?: StringWithAggregatesFilter<"InventoryBatch"> | string
-    quantity?: FloatWithAggregatesFilter<"InventoryBatch"> | number
-    remainingQty?: FloatWithAggregatesFilter<"InventoryBatch"> | number
-    costPerUnit?: FloatWithAggregatesFilter<"InventoryBatch"> | number
+    quantity?: DecimalWithAggregatesFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalWithAggregatesFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalWithAggregatesFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeWithAggregatesFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableWithAggregatesFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"InventoryBatch"> | Date | string
@@ -22824,9 +22847,9 @@ export namespace Prisma {
     id?: StringFilter<"POLineItem"> | string
     purchaseOrderId?: StringFilter<"POLineItem"> | string
     itemId?: StringFilter<"POLineItem"> | string
-    quantityOrdered?: FloatFilter<"POLineItem"> | number
-    quantityReceived?: FloatFilter<"POLineItem"> | number
-    costPrice?: FloatFilter<"POLineItem"> | number
+    quantityOrdered?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     purchaseOrder?: XOR<PurchaseOrderScalarRelationFilter, PurchaseOrderWhereInput>
   }
@@ -22849,9 +22872,9 @@ export namespace Prisma {
     NOT?: POLineItemWhereInput | POLineItemWhereInput[]
     purchaseOrderId?: StringFilter<"POLineItem"> | string
     itemId?: StringFilter<"POLineItem"> | string
-    quantityOrdered?: FloatFilter<"POLineItem"> | number
-    quantityReceived?: FloatFilter<"POLineItem"> | number
-    costPrice?: FloatFilter<"POLineItem"> | number
+    quantityOrdered?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
     purchaseOrder?: XOR<PurchaseOrderScalarRelationFilter, PurchaseOrderWhereInput>
   }, "id">
@@ -22877,9 +22900,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"POLineItem"> | string
     purchaseOrderId?: StringWithAggregatesFilter<"POLineItem"> | string
     itemId?: StringWithAggregatesFilter<"POLineItem"> | string
-    quantityOrdered?: FloatWithAggregatesFilter<"POLineItem"> | number
-    quantityReceived?: FloatWithAggregatesFilter<"POLineItem"> | number
-    costPrice?: FloatWithAggregatesFilter<"POLineItem"> | number
+    quantityOrdered?: DecimalWithAggregatesFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalWithAggregatesFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalWithAggregatesFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
   }
 
   export type CustomerWhereInput = {
@@ -23052,8 +23075,8 @@ export namespace Prisma {
     id?: StringFilter<"DispatchItem"> | string
     dispatchOrderId?: StringFilter<"DispatchItem"> | string
     itemId?: StringFilter<"DispatchItem"> | string
-    quantity?: FloatFilter<"DispatchItem"> | number
-    sellingPrice?: FloatFilter<"DispatchItem"> | number
+    quantity?: DecimalFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
     dispatchOrder?: XOR<DispatchOrderScalarRelationFilter, DispatchOrderWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
   }
@@ -23075,8 +23098,8 @@ export namespace Prisma {
     NOT?: DispatchItemWhereInput | DispatchItemWhereInput[]
     dispatchOrderId?: StringFilter<"DispatchItem"> | string
     itemId?: StringFilter<"DispatchItem"> | string
-    quantity?: FloatFilter<"DispatchItem"> | number
-    sellingPrice?: FloatFilter<"DispatchItem"> | number
+    quantity?: DecimalFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
     dispatchOrder?: XOR<DispatchOrderScalarRelationFilter, DispatchOrderWhereInput>
     item?: XOR<ItemScalarRelationFilter, ItemWhereInput>
   }, "id">
@@ -23101,8 +23124,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DispatchItem"> | string
     dispatchOrderId?: StringWithAggregatesFilter<"DispatchItem"> | string
     itemId?: StringWithAggregatesFilter<"DispatchItem"> | string
-    quantity?: FloatWithAggregatesFilter<"DispatchItem"> | number
-    sellingPrice?: FloatWithAggregatesFilter<"DispatchItem"> | number
+    quantity?: DecimalWithAggregatesFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalWithAggregatesFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
   }
 
   export type InventoryTransactionWhereInput = {
@@ -23116,7 +23139,7 @@ export namespace Prisma {
     customerId?: StringNullableFilter<"InventoryTransaction"> | string | null
     vendorId?: StringNullableFilter<"InventoryTransaction"> | string | null
     type?: StringFilter<"InventoryTransaction"> | string
-    quantity?: FloatFilter<"InventoryTransaction"> | number
+    quantity?: DecimalFilter<"InventoryTransaction"> | Decimal | DecimalJsLike | number | string
     referenceType?: StringNullableFilter<"InventoryTransaction"> | string | null
     referenceId?: StringNullableFilter<"InventoryTransaction"> | string | null
     createdAt?: DateTimeFilter<"InventoryTransaction"> | Date | string
@@ -23161,7 +23184,7 @@ export namespace Prisma {
     customerId?: StringNullableFilter<"InventoryTransaction"> | string | null
     vendorId?: StringNullableFilter<"InventoryTransaction"> | string | null
     type?: StringFilter<"InventoryTransaction"> | string
-    quantity?: FloatFilter<"InventoryTransaction"> | number
+    quantity?: DecimalFilter<"InventoryTransaction"> | Decimal | DecimalJsLike | number | string
     referenceType?: StringNullableFilter<"InventoryTransaction"> | string | null
     referenceId?: StringNullableFilter<"InventoryTransaction"> | string | null
     createdAt?: DateTimeFilter<"InventoryTransaction"> | Date | string
@@ -23205,7 +23228,7 @@ export namespace Prisma {
     customerId?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
     vendorId?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
     type?: StringWithAggregatesFilter<"InventoryTransaction"> | string
-    quantity?: FloatWithAggregatesFilter<"InventoryTransaction"> | number
+    quantity?: DecimalWithAggregatesFilter<"InventoryTransaction"> | Decimal | DecimalJsLike | number | string
     referenceType?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
     referenceId?: StringNullableWithAggregatesFilter<"InventoryTransaction"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"InventoryTransaction"> | Date | string
@@ -23554,7 +23577,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
@@ -23572,7 +23595,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
     dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -23588,7 +23611,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
@@ -23606,7 +23629,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
     dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -23623,7 +23646,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
   }
 
@@ -23634,7 +23657,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type ItemUncheckedUpdateManyInput = {
@@ -23645,7 +23668,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -23707,7 +23730,7 @@ export namespace Prisma {
 
   export type StockCreateInput = {
     id?: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutStocksInput
     item: ItemCreateNestedOneWithoutStocksInput
@@ -23718,14 +23741,14 @@ export namespace Prisma {
     id?: string
     itemId: string
     rackId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
 
   export type StockUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutStocksNestedInput
     item?: ItemUpdateOneRequiredWithoutStocksNestedInput
@@ -23736,7 +23759,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
@@ -23745,14 +23768,14 @@ export namespace Prisma {
     id?: string
     itemId: string
     rackId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
 
   export type StockUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -23760,17 +23783,18 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
 
   export type InventoryCreateInput = {
     id?: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutInventoryInput
     item: ItemCreateNestedOneWithoutInventoryInput
@@ -23780,10 +23804,11 @@ export namespace Prisma {
   export type InventoryUncheckedCreateInput = {
     id?: string
     itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput
@@ -23791,10 +23816,11 @@ export namespace Prisma {
 
   export type InventoryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutInventoryNestedInput
     item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
@@ -23804,10 +23830,11 @@ export namespace Prisma {
   export type InventoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
     batches?: InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput
@@ -23816,30 +23843,33 @@ export namespace Prisma {
   export type InventoryCreateManyInput = {
     id?: string
     itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
 
   export type InventoryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
@@ -24010,9 +24040,9 @@ export namespace Prisma {
 
   export type InventoryBatchCreateInput = {
     id?: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
@@ -24025,9 +24055,9 @@ export namespace Prisma {
     id?: string
     inventoryId: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -24036,9 +24066,9 @@ export namespace Prisma {
 
   export type InventoryBatchUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
@@ -24051,9 +24081,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24064,9 +24094,9 @@ export namespace Prisma {
     id?: string
     inventoryId: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -24075,9 +24105,9 @@ export namespace Prisma {
 
   export type InventoryBatchUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24086,9 +24116,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24097,9 +24127,9 @@ export namespace Prisma {
 
   export type POLineItemCreateInput = {
     id?: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
     item: ItemCreateNestedOneWithoutPoItemsInput
     purchaseOrder: PurchaseOrderCreateNestedOneWithoutItemsInput
   }
@@ -24108,16 +24138,16 @@ export namespace Prisma {
     id?: string
     purchaseOrderId: string
     itemId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     item?: ItemUpdateOneRequiredWithoutPoItemsNestedInput
     purchaseOrder?: PurchaseOrderUpdateOneRequiredWithoutItemsNestedInput
   }
@@ -24126,34 +24156,34 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemCreateManyInput = {
     id?: string
     purchaseOrderId: string
     itemId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CustomerCreateInput = {
@@ -24335,8 +24365,8 @@ export namespace Prisma {
 
   export type DispatchItemCreateInput = {
     id?: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
     dispatchOrder: DispatchOrderCreateNestedOneWithoutItemsInput
     item: ItemCreateNestedOneWithoutDispatchItemsInput
   }
@@ -24345,14 +24375,14 @@ export namespace Prisma {
     id?: string
     dispatchOrderId: string
     itemId: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchOrder?: DispatchOrderUpdateOneRequiredWithoutItemsNestedInput
     item?: ItemUpdateOneRequiredWithoutDispatchItemsNestedInput
   }
@@ -24361,36 +24391,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemCreateManyInput = {
     id?: string
     dispatchOrderId: string
     itemId: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InventoryTransactionCreateInput = {
     id?: string
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -24410,7 +24440,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -24420,7 +24450,7 @@ export namespace Prisma {
   export type InventoryTransactionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24440,7 +24470,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24455,7 +24485,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -24465,7 +24495,7 @@ export namespace Prisma {
   export type InventoryTransactionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24479,7 +24509,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24999,15 +25029,15 @@ export namespace Prisma {
     companyId?: SortOrder
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemListRelationFilter = {
@@ -25089,20 +25119,20 @@ export namespace Prisma {
     minStockLevel?: SortOrder
   }
 
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
     _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type RackRackNumberCompanyIdCompoundUniqueInput = {
@@ -25183,6 +25213,7 @@ export namespace Prisma {
     incomingQty?: SortOrder
     quantityReserved?: SortOrder
     quantityInTransit?: SortOrder
+    quantityQC?: SortOrder
     updatedAt?: SortOrder
     companyId?: SortOrder
   }
@@ -25192,6 +25223,7 @@ export namespace Prisma {
     incomingQty?: SortOrder
     quantityReserved?: SortOrder
     quantityInTransit?: SortOrder
+    quantityQC?: SortOrder
   }
 
   export type InventoryMaxOrderByAggregateInput = {
@@ -25201,6 +25233,7 @@ export namespace Prisma {
     incomingQty?: SortOrder
     quantityReserved?: SortOrder
     quantityInTransit?: SortOrder
+    quantityQC?: SortOrder
     updatedAt?: SortOrder
     companyId?: SortOrder
   }
@@ -25212,6 +25245,7 @@ export namespace Prisma {
     incomingQty?: SortOrder
     quantityReserved?: SortOrder
     quantityInTransit?: SortOrder
+    quantityQC?: SortOrder
     updatedAt?: SortOrder
     companyId?: SortOrder
   }
@@ -25221,6 +25255,7 @@ export namespace Prisma {
     incomingQty?: SortOrder
     quantityReserved?: SortOrder
     quantityInTransit?: SortOrder
+    quantityQC?: SortOrder
   }
 
   export type VendorNameCompanyIdCompoundUniqueInput = {
@@ -26431,12 +26466,12 @@ export namespace Prisma {
     connect?: StockWhereUniqueInput | StockWhereUniqueInput[]
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemUpdateManyWithoutItemNestedInput = {
@@ -27605,31 +27640,31 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
     _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -27751,10 +27786,11 @@ export namespace Prisma {
 
   export type InventoryCreateWithoutCompanyInput = {
     id?: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutInventoryInput
     batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
@@ -27763,10 +27799,11 @@ export namespace Prisma {
   export type InventoryUncheckedCreateWithoutCompanyInput = {
     id?: string
     itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput
   }
@@ -27784,7 +27821,7 @@ export namespace Prisma {
   export type InventoryTransactionCreateWithoutCompanyInput = {
     id?: string
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -27803,7 +27840,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -27866,7 +27903,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
@@ -27883,7 +27920,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutItemInput
@@ -27965,7 +28002,7 @@ export namespace Prisma {
 
   export type StockCreateWithoutCompanyInput = {
     id?: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     item: ItemCreateNestedOneWithoutStocksInput
     rack: RackCreateNestedOneWithoutStocksInput
@@ -27975,7 +28012,7 @@ export namespace Prisma {
     id?: string
     itemId: string
     rackId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
   }
 
@@ -28168,10 +28205,11 @@ export namespace Prisma {
     NOT?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
     id?: StringFilter<"Inventory"> | string
     itemId?: StringFilter<"Inventory"> | string
-    quantityAvailable?: FloatFilter<"Inventory"> | number
-    incomingQty?: FloatFilter<"Inventory"> | number
-    quantityReserved?: FloatFilter<"Inventory"> | number
-    quantityInTransit?: FloatFilter<"Inventory"> | number
+    quantityAvailable?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
     companyId?: StringFilter<"Inventory"> | string
   }
@@ -28203,7 +28241,7 @@ export namespace Prisma {
     customerId?: StringNullableFilter<"InventoryTransaction"> | string | null
     vendorId?: StringNullableFilter<"InventoryTransaction"> | string | null
     type?: StringFilter<"InventoryTransaction"> | string
-    quantity?: FloatFilter<"InventoryTransaction"> | number
+    quantity?: DecimalFilter<"InventoryTransaction"> | Decimal | DecimalJsLike | number | string
     referenceType?: StringNullableFilter<"InventoryTransaction"> | string | null
     referenceId?: StringNullableFilter<"InventoryTransaction"> | string | null
     createdAt?: DateTimeFilter<"InventoryTransaction"> | Date | string
@@ -28272,7 +28310,7 @@ export namespace Prisma {
     unit?: StringFilter<"Item"> | string
     createdAt?: DateTimeFilter<"Item"> | Date | string
     isCritical?: BoolFilter<"Item"> | boolean
-    minStockLevel?: FloatFilter<"Item"> | number
+    minStockLevel?: DecimalFilter<"Item"> | Decimal | DecimalJsLike | number | string
     companyId?: StringFilter<"Item"> | string
   }
 
@@ -28356,7 +28394,7 @@ export namespace Prisma {
     id?: StringFilter<"Stock"> | string
     itemId?: StringFilter<"Stock"> | string
     rackId?: StringFilter<"Stock"> | string
-    quantity?: FloatFilter<"Stock"> | number
+    quantity?: DecimalFilter<"Stock"> | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFilter<"Stock"> | Date | string
     companyId?: StringFilter<"Stock"> | string
   }
@@ -28423,9 +28461,9 @@ export namespace Prisma {
 
   export type InventoryBatchCreateWithoutReceivedByInput = {
     id?: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
@@ -28437,9 +28475,9 @@ export namespace Prisma {
     id?: string
     inventoryId: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -28458,7 +28496,7 @@ export namespace Prisma {
   export type InventoryTransactionCreateWithoutUserInput = {
     id?: string
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -28476,7 +28514,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -28557,9 +28595,9 @@ export namespace Prisma {
     id?: StringFilter<"InventoryBatch"> | string
     inventoryId?: StringFilter<"InventoryBatch"> | string
     vendorId?: StringFilter<"InventoryBatch"> | string
-    quantity?: FloatFilter<"InventoryBatch"> | number
-    remainingQty?: FloatFilter<"InventoryBatch"> | number
-    costPerUnit?: FloatFilter<"InventoryBatch"> | number
+    quantity?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFilter<"InventoryBatch"> | Date | string
     purchaseOrderId?: StringNullableFilter<"InventoryBatch"> | string | null
     createdAt?: DateTimeFilter<"InventoryBatch"> | Date | string
@@ -28677,7 +28715,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
@@ -28693,7 +28731,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
     dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -28777,16 +28815,16 @@ export namespace Prisma {
 
   export type DispatchItemCreateWithoutItemInput = {
     id?: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
     dispatchOrder: DispatchOrderCreateNestedOneWithoutItemsInput
   }
 
   export type DispatchItemUncheckedCreateWithoutItemInput = {
     id?: string
     dispatchOrderId: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemCreateOrConnectWithoutItemInput = {
@@ -28801,10 +28839,11 @@ export namespace Prisma {
 
   export type InventoryCreateWithoutItemInput = {
     id?: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutInventoryInput
     batches?: InventoryBatchCreateNestedManyWithoutInventoryInput
@@ -28812,10 +28851,11 @@ export namespace Prisma {
 
   export type InventoryUncheckedCreateWithoutItemInput = {
     id?: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
     batches?: InventoryBatchUncheckedCreateNestedManyWithoutInventoryInput
@@ -28829,7 +28869,7 @@ export namespace Prisma {
   export type InventoryTransactionCreateWithoutItemInput = {
     id?: string
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -28847,7 +28887,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -28924,18 +28964,18 @@ export namespace Prisma {
 
   export type POLineItemCreateWithoutItemInput = {
     id?: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
     purchaseOrder: PurchaseOrderCreateNestedOneWithoutItemsInput
   }
 
   export type POLineItemUncheckedCreateWithoutItemInput = {
     id?: string
     purchaseOrderId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemCreateOrConnectWithoutItemInput = {
@@ -28950,7 +28990,7 @@ export namespace Prisma {
 
   export type StockCreateWithoutItemInput = {
     id?: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutStocksInput
     rack: RackCreateNestedOneWithoutStocksInput
@@ -28959,7 +28999,7 @@ export namespace Prisma {
   export type StockUncheckedCreateWithoutItemInput = {
     id?: string
     rackId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
@@ -28997,8 +29037,8 @@ export namespace Prisma {
     id?: StringFilter<"DispatchItem"> | string
     dispatchOrderId?: StringFilter<"DispatchItem"> | string
     itemId?: StringFilter<"DispatchItem"> | string
-    quantity?: FloatFilter<"DispatchItem"> | number
-    sellingPrice?: FloatFilter<"DispatchItem"> | number
+    quantity?: DecimalFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFilter<"DispatchItem"> | Decimal | DecimalJsLike | number | string
   }
 
   export type InventoryUpsertWithoutItemInput = {
@@ -29014,10 +29054,11 @@ export namespace Prisma {
 
   export type InventoryUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutInventoryNestedInput
     batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
@@ -29025,10 +29066,11 @@ export namespace Prisma {
 
   export type InventoryUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
     batches?: InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput
@@ -29143,9 +29185,9 @@ export namespace Prisma {
     id?: StringFilter<"POLineItem"> | string
     purchaseOrderId?: StringFilter<"POLineItem"> | string
     itemId?: StringFilter<"POLineItem"> | string
-    quantityOrdered?: FloatFilter<"POLineItem"> | number
-    quantityReceived?: FloatFilter<"POLineItem"> | number
-    costPrice?: FloatFilter<"POLineItem"> | number
+    quantityOrdered?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFilter<"POLineItem"> | Decimal | DecimalJsLike | number | string
   }
 
   export type StockUpsertWithWhereUniqueWithoutItemInput = {
@@ -29167,7 +29209,7 @@ export namespace Prisma {
   export type InventoryTransactionCreateWithoutRackInput = {
     id?: string
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -29185,7 +29227,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -29245,7 +29287,7 @@ export namespace Prisma {
 
   export type StockCreateWithoutRackInput = {
     id?: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutStocksInput
     item: ItemCreateNestedOneWithoutStocksInput
@@ -29254,7 +29296,7 @@ export namespace Prisma {
   export type StockUncheckedCreateWithoutRackInput = {
     id?: string
     itemId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
@@ -29396,7 +29438,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
@@ -29413,7 +29455,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
     dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -29512,7 +29554,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
@@ -29529,7 +29571,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
     dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -29612,7 +29654,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
     category: CategoryCreateNestedOneWithoutItemsInput
@@ -29629,7 +29671,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
     dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutItemInput
@@ -29644,9 +29686,9 @@ export namespace Prisma {
 
   export type InventoryBatchCreateWithoutInventoryInput = {
     id?: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     createdAt?: Date | string
     purchaseOrder?: PurchaseOrderCreateNestedOneWithoutBatchesInput
@@ -29657,9 +29699,9 @@ export namespace Prisma {
   export type InventoryBatchUncheckedCreateWithoutInventoryInput = {
     id?: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -29741,7 +29783,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
@@ -29758,7 +29800,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
     dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutItemNestedInput
@@ -29784,9 +29826,9 @@ export namespace Prisma {
 
   export type InventoryBatchCreateWithoutVendorInput = {
     id?: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
@@ -29797,9 +29839,9 @@ export namespace Prisma {
   export type InventoryBatchUncheckedCreateWithoutVendorInput = {
     id?: string
     inventoryId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -29819,7 +29861,7 @@ export namespace Prisma {
   export type InventoryTransactionCreateWithoutVendorInput = {
     id?: string
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -29837,7 +29879,7 @@ export namespace Prisma {
     userId?: string | null
     customerId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -30028,9 +30070,9 @@ export namespace Prisma {
 
   export type InventoryBatchCreateWithoutPurchaseOrderInput = {
     id?: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     createdAt?: Date | string
     inventory: InventoryCreateNestedOneWithoutBatchesInput
@@ -30042,9 +30084,9 @@ export namespace Prisma {
     id?: string
     inventoryId: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     createdAt?: Date | string
     receivedById?: string | null
@@ -30062,18 +30104,18 @@ export namespace Prisma {
 
   export type POLineItemCreateWithoutPurchaseOrderInput = {
     id?: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
     item: ItemCreateNestedOneWithoutPoItemsInput
   }
 
   export type POLineItemUncheckedCreateWithoutPurchaseOrderInput = {
     id?: string
     itemId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemCreateOrConnectWithoutPurchaseOrderInput = {
@@ -30268,10 +30310,11 @@ export namespace Prisma {
 
   export type InventoryCreateWithoutBatchesInput = {
     id?: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutInventoryInput
     item: ItemCreateNestedOneWithoutInventoryInput
@@ -30280,10 +30323,11 @@ export namespace Prisma {
   export type InventoryUncheckedCreateWithoutBatchesInput = {
     id?: string
     itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
@@ -30397,10 +30441,11 @@ export namespace Prisma {
 
   export type InventoryUpdateWithoutBatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutInventoryNestedInput
     item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
@@ -30409,10 +30454,11 @@ export namespace Prisma {
   export type InventoryUncheckedUpdateWithoutBatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
@@ -30533,7 +30579,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
@@ -30550,7 +30596,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
     dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -30612,7 +30658,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
@@ -30629,7 +30675,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
     dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -30756,7 +30802,7 @@ export namespace Prisma {
   export type InventoryTransactionCreateWithoutCustomerInput = {
     id?: string
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -30774,7 +30820,7 @@ export namespace Prisma {
     userId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -30872,16 +30918,16 @@ export namespace Prisma {
 
   export type DispatchItemCreateWithoutDispatchOrderInput = {
     id?: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
     item: ItemCreateNestedOneWithoutDispatchItemsInput
   }
 
   export type DispatchItemUncheckedCreateWithoutDispatchOrderInput = {
     id?: string
     itemId: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemCreateOrConnectWithoutDispatchOrderInput = {
@@ -31098,7 +31144,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     inventory?: InventoryCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionCreateNestedManyWithoutItemInput
     category: CategoryCreateNestedOneWithoutItemsInput
@@ -31115,7 +31161,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     transactions?: InventoryTransactionUncheckedCreateNestedManyWithoutItemInput
@@ -31185,7 +31231,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
@@ -31202,7 +31248,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutItemNestedInput
@@ -31285,7 +31331,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     category: CategoryCreateNestedOneWithoutItemsInput
@@ -31302,7 +31348,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
     dispatchItems?: DispatchItemUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -31494,7 +31540,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     category?: CategoryUpdateOneRequiredWithoutItemsNestedInput
@@ -31511,7 +31557,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
     dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -31736,10 +31782,11 @@ export namespace Prisma {
   export type InventoryCreateManyCompanyInput = {
     id?: string
     itemId: string
-    quantityAvailable?: number
-    incomingQty?: number
-    quantityReserved?: number
-    quantityInTransit?: number
+    quantityAvailable?: Decimal | DecimalJsLike | number | string
+    incomingQty?: Decimal | DecimalJsLike | number | string
+    quantityReserved?: Decimal | DecimalJsLike | number | string
+    quantityInTransit?: Decimal | DecimalJsLike | number | string
+    quantityQC?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
   }
 
@@ -31751,7 +31798,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -31780,7 +31827,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
   }
 
   export type PurchaseOrderCreateManyCompanyInput = {
@@ -31804,7 +31851,7 @@ export namespace Prisma {
     id?: string
     itemId: string
     rackId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
   }
 
@@ -31919,10 +31966,11 @@ export namespace Prisma {
 
   export type InventoryUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutInventoryNestedInput
     batches?: InventoryBatchUpdateManyWithoutInventoryNestedInput
@@ -31931,10 +31979,11 @@ export namespace Prisma {
   export type InventoryUncheckedUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     batches?: InventoryBatchUncheckedUpdateManyWithoutInventoryNestedInput
   }
@@ -31942,17 +31991,18 @@ export namespace Prisma {
   export type InventoryUncheckedUpdateManyWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityAvailable?: FloatFieldUpdateOperationsInput | number
-    incomingQty?: FloatFieldUpdateOperationsInput | number
-    quantityReserved?: FloatFieldUpdateOperationsInput | number
-    quantityInTransit?: FloatFieldUpdateOperationsInput | number
+    quantityAvailable?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    incomingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReserved?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityInTransit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityQC?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryTransactionUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31971,7 +32021,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31985,7 +32035,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32043,7 +32093,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
@@ -32060,7 +32110,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUncheckedUpdateManyWithoutItemNestedInput
@@ -32076,7 +32126,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type PurchaseOrderUpdateWithoutCompanyInput = {
@@ -32140,7 +32190,7 @@ export namespace Prisma {
 
   export type StockUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: ItemUpdateOneRequiredWithoutStocksNestedInput
     rack?: RackUpdateOneRequiredWithoutStocksNestedInput
@@ -32150,7 +32200,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -32158,7 +32208,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -32236,9 +32286,9 @@ export namespace Prisma {
     id?: string
     inventoryId: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -32251,7 +32301,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -32260,9 +32310,9 @@ export namespace Prisma {
 
   export type InventoryBatchUpdateWithoutReceivedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
@@ -32274,9 +32324,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32286,9 +32336,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32297,7 +32347,7 @@ export namespace Prisma {
   export type InventoryTransactionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32315,7 +32365,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32329,7 +32379,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32343,7 +32393,7 @@ export namespace Prisma {
     unit: string
     createdAt?: Date | string
     isCritical?: boolean
-    minStockLevel?: number
+    minStockLevel?: Decimal | DecimalJsLike | number | string
     companyId: string
   }
 
@@ -32354,7 +32404,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchItems?: DispatchItemUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     transactions?: InventoryTransactionUpdateManyWithoutItemNestedInput
@@ -32370,7 +32420,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
     dispatchItems?: DispatchItemUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -32386,15 +32436,15 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isCritical?: BoolFieldUpdateOperationsInput | boolean
-    minStockLevel?: FloatFieldUpdateOperationsInput | number
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
 
   export type DispatchItemCreateManyItemInput = {
     id?: string
     dispatchOrderId: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type InventoryTransactionCreateManyItemInput = {
@@ -32404,7 +32454,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -32414,44 +32464,44 @@ export namespace Prisma {
   export type POLineItemCreateManyItemInput = {
     id?: string
     purchaseOrderId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type StockCreateManyItemInput = {
     id?: string
     rackId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
 
   export type DispatchItemUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dispatchOrder?: DispatchOrderUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type DispatchItemUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     dispatchOrderId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InventoryTransactionUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32469,7 +32519,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32483,7 +32533,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32492,31 +32542,31 @@ export namespace Prisma {
 
   export type POLineItemUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseOrder?: PurchaseOrderUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type POLineItemUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     purchaseOrderId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type StockUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutStocksNestedInput
     rack?: RackUpdateOneRequiredWithoutStocksNestedInput
@@ -32525,7 +32575,7 @@ export namespace Prisma {
   export type StockUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
@@ -32533,7 +32583,7 @@ export namespace Prisma {
   export type StockUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     rackId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
@@ -32545,7 +32595,7 @@ export namespace Prisma {
     customerId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -32555,7 +32605,7 @@ export namespace Prisma {
   export type StockCreateManyRackInput = {
     id?: string
     itemId: string
-    quantity?: number
+    quantity?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
     companyId: string
   }
@@ -32563,7 +32613,7 @@ export namespace Prisma {
   export type InventoryTransactionUpdateWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32581,7 +32631,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32595,7 +32645,7 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32604,7 +32654,7 @@ export namespace Prisma {
 
   export type StockUpdateWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutStocksNestedInput
     item?: ItemUpdateOneRequiredWithoutStocksNestedInput
@@ -32613,7 +32663,7 @@ export namespace Prisma {
   export type StockUncheckedUpdateWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
@@ -32621,7 +32671,7 @@ export namespace Prisma {
   export type StockUncheckedUpdateManyWithoutRackInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
   }
@@ -32629,9 +32679,9 @@ export namespace Prisma {
   export type InventoryBatchCreateManyInventoryInput = {
     id?: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -32640,9 +32690,9 @@ export namespace Prisma {
 
   export type InventoryBatchUpdateWithoutInventoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrder?: PurchaseOrderUpdateOneWithoutBatchesNestedInput
@@ -32653,9 +32703,9 @@ export namespace Prisma {
   export type InventoryBatchUncheckedUpdateWithoutInventoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32665,9 +32715,9 @@ export namespace Prisma {
   export type InventoryBatchUncheckedUpdateManyWithoutInventoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32677,9 +32727,9 @@ export namespace Prisma {
   export type InventoryBatchCreateManyVendorInput = {
     id?: string
     inventoryId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     purchaseOrderId?: string | null
     createdAt?: Date | string
@@ -32693,7 +32743,7 @@ export namespace Prisma {
     userId?: string | null
     customerId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -32713,9 +32763,9 @@ export namespace Prisma {
 
   export type InventoryBatchUpdateWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
@@ -32726,9 +32776,9 @@ export namespace Prisma {
   export type InventoryBatchUncheckedUpdateWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32738,9 +32788,9 @@ export namespace Prisma {
   export type InventoryBatchUncheckedUpdateManyWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     purchaseOrderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32750,7 +32800,7 @@ export namespace Prisma {
   export type InventoryTransactionUpdateWithoutVendorInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32768,7 +32818,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32782,7 +32832,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32830,9 +32880,9 @@ export namespace Prisma {
     id?: string
     inventoryId: string
     vendorId: string
-    quantity: number
-    remainingQty: number
-    costPerUnit: number
+    quantity: Decimal | DecimalJsLike | number | string
+    remainingQty: Decimal | DecimalJsLike | number | string
+    costPerUnit: Decimal | DecimalJsLike | number | string
     purchaseDate: Date | string
     createdAt?: Date | string
     receivedById?: string | null
@@ -32841,16 +32891,16 @@ export namespace Prisma {
   export type POLineItemCreateManyPurchaseOrderInput = {
     id?: string
     itemId: string
-    quantityOrdered: number
-    quantityReceived?: number
-    costPrice: number
+    quantityOrdered: Decimal | DecimalJsLike | number | string
+    quantityReceived?: Decimal | DecimalJsLike | number | string
+    costPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type InventoryBatchUpdateWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateOneRequiredWithoutBatchesNestedInput
@@ -32862,9 +32912,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     receivedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32874,9 +32924,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     inventoryId?: StringFieldUpdateOperationsInput | string
     vendorId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    remainingQty?: FloatFieldUpdateOperationsInput | number
-    costPerUnit?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remainingQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPerUnit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     purchaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     receivedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32884,26 +32934,26 @@ export namespace Prisma {
 
   export type POLineItemUpdateWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     item?: ItemUpdateOneRequiredWithoutPoItemsNestedInput
   }
 
   export type POLineItemUncheckedUpdateWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type POLineItemUncheckedUpdateManyWithoutPurchaseOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantityOrdered?: FloatFieldUpdateOperationsInput | number
-    quantityReceived?: FloatFieldUpdateOperationsInput | number
-    costPrice?: FloatFieldUpdateOperationsInput | number
+    quantityOrdered?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    quantityReceived?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchOrderCreateManyCustomerInput = {
@@ -32926,7 +32976,7 @@ export namespace Prisma {
     userId?: string | null
     vendorId?: string | null
     type: string
-    quantity: number
+    quantity: Decimal | DecimalJsLike | number | string
     referenceType?: string | null
     referenceId?: string | null
     createdAt?: Date | string
@@ -32977,7 +33027,7 @@ export namespace Prisma {
   export type InventoryTransactionUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32995,7 +33045,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33009,7 +33059,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     vendorId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33019,29 +33069,29 @@ export namespace Prisma {
   export type DispatchItemCreateManyDispatchOrderInput = {
     id?: string
     itemId: string
-    quantity: number
-    sellingPrice: number
+    quantity: Decimal | DecimalJsLike | number | string
+    sellingPrice: Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemUpdateWithoutDispatchOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     item?: ItemUpdateOneRequiredWithoutDispatchItemsNestedInput
   }
 
   export type DispatchItemUncheckedUpdateWithoutDispatchOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type DispatchItemUncheckedUpdateManyWithoutDispatchOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
-    quantity?: FloatFieldUpdateOperationsInput | number
-    sellingPrice?: FloatFieldUpdateOperationsInput | number
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    sellingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
 

@@ -70,11 +70,11 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
 
   // Calculate Stats
   const totalSpent = customer.dispatchOrders.reduce((acc, order) => {
-    return acc + order.items.reduce((sum, item) => sum + (item.sellingPrice * item.quantity), 0);
+    return acc + order.items.reduce((sum, item) => sum + (Number(item.sellingPrice) * Number(item.quantity)), 0);
   }, 0);
 
   const totalItemsBought = customer.dispatchOrders.reduce((acc, order) => {
-    return acc + order.items.reduce((sum, item) => sum + item.quantity, 0);
+    return acc + order.items.reduce((sum, item) => sum + Number(item.quantity), 0);
   }, 0);
 
   const lastOrder = customer.dispatchOrders[0];
@@ -252,7 +252,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                                 </div>
                              </td>
                              <td className="px-8 py-6 text-right">
-                                <span className="text-sm font-black text-foreground tabular-nums tracking-tighter">₹{order.items.reduce((acc: number, item: any) => acc + (item.sellingPrice * item.quantity), 0).toLocaleString()}</span>
+                                <span className="text-sm font-black text-foreground tabular-nums tracking-tighter">₹{order.items.reduce((acc: number, item: any) => acc + (Number(item.sellingPrice) * Number(item.quantity)), 0).toLocaleString()}</span>
                              </td>
                              <td className="px-8 py-6 text-right">
                                 <Link 
@@ -307,7 +307,7 @@ export default async function CustomerHistoryPage({ params }: { params: Promise<
                              </span>
                           </div>
                           <p className="text-sm font-bold text-foreground tracking-tight">
-                             {tx.type === "dispatch" ? "Deducted" : "Adjusted"} {tx.quantity} units of {tx.item.name}
+                             {tx.type === "dispatch" ? "Deducted" : "Adjusted"} {Number(tx.quantity)} units of {tx.item.name}
                           </p>
                           {tx.rack && (
                              <p className="text-xs font-bold text-muted-foreground mt-1 flex items-center gap-1">

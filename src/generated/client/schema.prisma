@@ -61,7 +61,7 @@ model Item {
   unit          String
   createdAt     DateTime               @default(now())
   isCritical    Boolean                @default(false)
-  minStockLevel Float                  @default(0)
+  minStockLevel Decimal                @default(0) @db.Decimal(18, 4)
   companyId     String
   dispatchItems DispatchItem[]
   inventory     Inventory?
@@ -90,7 +90,7 @@ model Stock {
   id        String   @id @default(uuid())
   itemId    String
   rackId    String
-  quantity  Float    @default(0)
+  quantity  Decimal  @default(0) @db.Decimal(18, 4)
   updatedAt DateTime @updatedAt
   companyId String
   company   Company  @relation("CompanyToStock", fields: [companyId], references: [id])
@@ -105,10 +105,11 @@ model Stock {
 model Inventory {
   id                String           @id @default(uuid())
   itemId            String           @unique
-  quantityAvailable Float            @default(0)
-  incomingQty       Float            @default(0)
-  quantityReserved  Float            @default(0)
-  quantityInTransit Float            @default(0)
+  quantityAvailable Decimal          @default(0) @db.Decimal(18, 4)
+  incomingQty       Decimal          @default(0) @db.Decimal(18, 4)
+  quantityReserved  Decimal          @default(0) @db.Decimal(18, 4)
+  quantityInTransit Decimal          @default(0) @db.Decimal(18, 4)
+  quantityQC        Decimal          @default(0) @db.Decimal(18, 4)
   updatedAt         DateTime         @updatedAt
   companyId         String
   company           Company          @relation("CompanyToInventory", fields: [companyId], references: [id])
@@ -157,9 +158,9 @@ model InventoryBatch {
   id              String         @id @default(uuid())
   inventoryId     String
   vendorId        String
-  quantity        Float
-  remainingQty    Float
-  costPerUnit     Float
+  quantity        Decimal        @db.Decimal(18, 4)
+  remainingQty    Decimal        @db.Decimal(18, 4)
+  costPerUnit     Decimal        @db.Decimal(18, 4)
   purchaseDate    DateTime
   purchaseOrderId String?
   createdAt       DateTime       @default(now())
@@ -178,9 +179,9 @@ model POLineItem {
   id               String        @id @default(uuid())
   purchaseOrderId  String
   itemId           String
-  quantityOrdered  Float
-  quantityReceived Float         @default(0)
-  costPrice        Float
+  quantityOrdered  Decimal       @db.Decimal(18, 4)
+  quantityReceived Decimal       @default(0) @db.Decimal(18, 4)
+  costPrice        Decimal       @db.Decimal(18, 4)
   item             Item          @relation(fields: [itemId], references: [id])
   purchaseOrder    PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
 }
@@ -225,8 +226,8 @@ model DispatchItem {
   id              String        @id @default(uuid())
   dispatchOrderId String
   itemId          String
-  quantity        Float
-  sellingPrice    Float
+  quantity        Decimal       @db.Decimal(18, 4)
+  sellingPrice    Decimal       @db.Decimal(18, 4)
   dispatchOrder   DispatchOrder @relation(fields: [dispatchOrderId], references: [id])
   item            Item          @relation(fields: [itemId], references: [id])
 }
@@ -239,7 +240,7 @@ model InventoryTransaction {
   customerId    String?
   vendorId      String?
   type          String
-  quantity      Float
+  quantity      Decimal   @db.Decimal(18, 4)
   referenceType String?
   referenceId   String?
   createdAt     DateTime  @default(now())

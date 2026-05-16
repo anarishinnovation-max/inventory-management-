@@ -165,10 +165,10 @@ export default async function SupplyOutwardsPage({
     id: i.id,
     name: i.name,
     unit: i.unit,
-    quantity: i.inventory?.quantityAvailable ?? 0
+    quantity: Number(i.inventory?.quantityAvailable ?? 0)
   }));
 
-  const totalPendingUnits = pendingItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalPendingUnits = pendingItems.reduce((acc, item) => acc + Number(item.quantity), 0);
   
   return (
     <div className="space-y-10 pb-10">

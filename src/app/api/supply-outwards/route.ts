@@ -57,7 +57,7 @@ export async function GET(request: Request) {
       date: tx.createdAt,
       itemName: tx.item.name,
       itemSku: tx.item.sku,
-      quantity: Math.abs(tx.quantity),
+      quantity: Math.abs(Number(tx.quantity)),
       customerName: tx.customer?.name || "Unknown",
       invoiceId: tx.referenceId || "N/A",
       type: tx.type,

@@ -143,10 +143,10 @@ async function getPurchaseOrdersRaw(filters: {
   let filteredOrders = orders;
   if (minAmount || maxAmount) {
     filteredOrders = orders.filter(po => {
-      const total = po.items.reduce((acc, curr) => acc + (Number(curr.costPrice) * curr.quantityOrdered), 0);
+      const totalValue = po.items.reduce((acc: number, curr: any) => acc + (Number(curr.costPrice) * Number(curr.quantityOrdered)), 0);
       const min = minAmount ? Number(minAmount) : -Infinity;
       const max = maxAmount ? Number(maxAmount) : Infinity;
-      return total >= min && total <= max;
+      return totalValue >= min && totalValue <= max;
     });
   }
 
@@ -208,13 +208,13 @@ export default async function PurchaseOrdersPage({
     id: i.id,
     name: i.name,
     unit: i.unit,
-    quantity: i.inventory?.quantityAvailable ?? 0
+    quantity: Number(i.inventory?.quantityAvailable ?? 0)
   }));
 
   // Calculate stats for the KPI grid
-  const allPos = await prisma.purchaseOrder.findMany({ where: { companyId: session.companyId }, select: { status: true } });
+  const allPos = await prisma.purchaseOrder.findMany({ where: { companyId: session.companyId }, include: { items: true } });
   const pendingCount = allPos.filter(o => o.status.toUpperCase() === "PENDING").length;
-  const orderedCount = allPos.filter(o => o.status.toUpperCase() === "ORDERED").length;
+  const orderedTotal = allPos.filter(o => o.status.toUpperCase() === "ORDERED").reduce((acc, order) => acc + order.items.reduce((sum, item) => sum + (Number(item.costPrice) * Number(item.quantityOrdered)), 0), 0);
   const unpaidCount = 0; // Removed payment tracking
 
   return (
@@ -257,8 +257,8 @@ export default async function PurchaseOrdersPage({
               <Truck className="w-5 h-5" />
            </div>
            <div>
-              <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">In Transit</p>
-              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{orderedCount}</h2>
+              <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">In Transit Value</p>
+              <span className="text-sm font-black text-foreground tabular-nums tracking-tighter">₹{orderedTotal.toLocaleString()}</span>
            </div>
         </div>
       </div>

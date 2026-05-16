@@ -1,34 +1,45 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
-// Add routes that don't require authentication
-const publicRoutes = ["/login", "/register", "/api/auth/login", "/api/auth/session"];
+// 1. Specify protected and public routes
+const protectedRoutes = ['/dashboard', '/inventory', '/orders', '/reports', '/settings', '/users'];
+const publicRoutes = ['/login', '/register', '/api/auth/login', '/api/auth/session', '/'];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.includes(pathname);
+
+  // 2. Extract session from cookie
+  const cookie = request.cookies.get('session')?.value;
+  let session = null;
   
-  // 1. Allow static assets and public routes
-  if (
-    pathname.startsWith('/_next') || 
-    pathname.startsWith('/favicon.ico') ||
-    pathname.startsWith('/public') ||
-    publicRoutes.some(route => pathname.startsWith(route))
-  ) {
-    return NextResponse.next();
+  if (cookie) {
+    try {
+      session = await decrypt(cookie);
+    } catch (e) {
+      // Invalid session
+    }
   }
 
-  // 2. Check for session cookie
-  const cookie = request.cookies.get("session")?.value;
-  const session = cookie ? await decrypt(cookie).catch(() => null) : null;
+  // 3. Redirect to /login if the user is not authenticated
+  if (isProtectedRoute && !session) {
+    return NextResponse.redirect(new URL('/login', request.nextUrl));
+  }
 
-  if (!session) {
-    if (pathname.startsWith('/api')) {
+  // 4. Redirect to /dashboard if the user is authenticated and tries to access public routes
+  if (isPublicRoute && session && !pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/dashboard', request.nextUrl));
+  }
+
+  // 5. Special handling for API routes (except auth)
+  if (pathname.startsWith('/api') && !pathname.startsWith('/api/auth')) {
+    if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // 3. Role-based routing
+  // 6. Role-based routing (Legacy preservation)
   if (pathname.startsWith("/admin") && session?.role !== "OWNER") {
     return NextResponse.redirect(new URL("/", request.url));
   }

@@ -181,6 +181,7 @@ exports.Prisma.InventoryScalarFieldEnum = {
   incomingQty: 'incomingQty',
   quantityReserved: 'quantityReserved',
   quantityInTransit: 'quantityInTransit',
+  quantityQC: 'quantityQC',
   updatedAt: 'updatedAt',
   companyId: 'companyId'
 };

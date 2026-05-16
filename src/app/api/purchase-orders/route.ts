@@ -4,11 +4,18 @@ import prisma from "@/lib/prisma";
 import { revalidateTag, revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
 import { createActivityLog } from "@/lib/logger";
+import { hasPermission } from "@/lib/permissions";
+import { purchaseOrderSchema } from "@/lib/schemas/orders";
+import { logger } from "@/lib/structured-logger";
 
 export async function GET(request: Request) {
   try {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    if (!hasPermission(session.role as any, "po:view", session.customPermissions)) {
+      return NextResponse.json({ error: "Forbidden: You do not have permission to view purchase orders." }, { status: 403 });
+    }
 
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
@@ -42,6 +49,7 @@ export async function GET(request: Request) {
     });
     return NextResponse.json(orders);
   } catch (error: unknown) {
+    logger.error("[api/purchase-orders] GET error:", error);
     const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json({ error: message }, { status: 500 });
   }
@@ -52,18 +60,18 @@ export async function POST(request: Request) {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const body = (await request.json()) as {
-      vendorId?: string;
-      items?: Array<{ itemId: string; quantityOrdered: number | string; costPrice: number | string }>;
-      paymentMode?: string;
-      orderDate?: string;
-      expectedDelivery?: string | null;
-    };
-    const { vendorId, items, paymentMode, orderDate, expectedDelivery } = body;
-
-    if (!vendorId || !items || !items.length) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!hasPermission(session.role as any, "po:create", session.customPermissions)) {
+      return NextResponse.json({ error: "Forbidden: You do not have permission to create purchase orders." }, { status: 403 });
     }
+
+    const body = await request.json();
+    const result = purchaseOrderSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error.flatten().fieldErrors }, { status: 400 });
+    }
+
+    const { vendorId, items, paymentMode, orderDate, expectedDelivery } = result.data;
 
     const now = new Date();
     now.setHours(0, 0, 0, 0); // Start of today
@@ -74,10 +82,6 @@ export async function POST(request: Request) {
 
     if (expectedDelivery && new Date(expectedDelivery) < now) {
       return NextResponse.json({ error: "Expected delivery date cannot be in the past." }, { status: 400 });
-    }
-
-    if (items.some(item => Number(item.costPrice) <= 0 || Number(item.quantityOrdered) <= 0)) {
-      return NextResponse.json({ error: "Quantity and cost price must be greater than zero for all items." }, { status: 400 });
     }
 
     const order = await prisma.$transaction(async (tx) => {
@@ -158,6 +162,7 @@ export async function POST(request: Request) {
     revalidatePath("/inventory", "page");
     return NextResponse.json(order, { status: 201 });
   } catch (error: unknown) {
+    logger.error("[api/purchase-orders] POST error:", error);
     const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json({ error: message }, { status: 500 });
   }

@@ -78,7 +78,7 @@ export const InventoryService = {
   /**
    * Receives items from a Purchase Order.
    */
-  async receiveGoods(poId: string, itemQuantities: { itemId: string; receivedQty: number }[], userId?: string) {
+  async receiveGoods(poId: string, itemQuantities: { itemId: string; receivedQty: number; rackId?: string }[], userId?: string) {
     if (itemQuantities.some(i => i.receivedQty <= 0)) {
         throw new Error("Received quantity must be greater than zero.");
     }
@@ -127,7 +127,8 @@ export const InventoryService = {
           currentInv = await tx.inventory.create({
             data: {
               itemId: update.itemId,
-              quantityAvailable: update.receivedQty,
+              quantityAvailable: 0,
+              quantityQC: update.receivedQty,
               incomingQty: 0,
               quantityReserved: 0,
               quantityInTransit: 0,
@@ -138,9 +139,9 @@ export const InventoryService = {
           await tx.inventory.update({
             where: { id: currentInv.id },
             data: {
-              quantityAvailable: { increment: update.receivedQty },
-              incomingQty: { decrement: Math.min(currentInv.incomingQty || 0, update.receivedQty) },
-              quantityInTransit: { decrement: Math.min(currentInv.quantityInTransit || 0, update.receivedQty) },
+              quantityQC: { increment: update.receivedQty },
+              incomingQty: { decrement: Math.min(Number(currentInv.incomingQty || 0), update.receivedQty) },
+              quantityInTransit: { decrement: Math.min(Number(currentInv.quantityInTransit || 0), update.receivedQty) },
             },
           });
         }
@@ -159,41 +160,8 @@ export const InventoryService = {
           },
         });
 
-        // 3b. Update Stock table (per-rack) - Fixed scoping to company
-        let defaultRack = await tx.rack.findFirst({
-          where: { companyId: po.companyId },
-          orderBy: { rackNumber: "asc" }
-        });
-        
-        if (!defaultRack) {
-          // If no rack found, create a Default Zone rack automatically to prevent sync drift
-          defaultRack = await tx.rack.create({
-            data: {
-              rackNumber: "DEF-01",
-              zone: "Default Zone",
-              companyId: po.companyId
-            }
-          });
-        }
-
-        const existingStock = await tx.stock.findFirst({
-          where: { itemId: update.itemId, rackId: defaultRack.id },
-        });
-        if (existingStock) {
-          await tx.stock.update({
-            where: { id: existingStock.id },
-            data: { quantity: { increment: update.receivedQty } },
-          });
-        } else {
-          await tx.stock.create({
-            data: { 
-              itemId: update.itemId, 
-              rackId: defaultRack.id, 
-              quantity: update.receivedQty,
-              companyId: po.companyId
-            },
-          });
-        }
+        // 3b. NOTE: Physical rack update is now deferred to approveQC step
+        // Items stay in virtual 'quantityQC' until quality check passes.
       }
 
       // 4. Update overall PO Status
@@ -203,7 +171,9 @@ export const InventoryService = {
 
       const allReceived = finalItems.every((i: any) => i.quantityReceived >= i.quantityOrdered);
       const someReceived = finalItems.some((i: any) => i.quantityReceived > 0);
-      const newStatus = allReceived ? "DELIVERED" : (someReceived ? "PARTIAL" : "ORDERED");
+      
+      // Update: If goods are received but not yet approved, status is QC_PENDING or PARTIAL
+      const newStatus = allReceived ? "QC_PENDING" : (someReceived ? "PARTIAL" : "ORDERED");
 
       await tx.purchaseOrder.update({
         where: { id: poId },
@@ -214,6 +184,67 @@ export const InventoryService = {
         where: { id: poId },
         include: { items: { include: { item: true } } },
       });
+    });
+  },
+
+  /**
+   * Approves quality control for items, moving them from QC to available stock.
+   */
+  async approveQC(poId: string, itemId: string, quantity: number, rackId: string, userId?: string) {
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const inventory = await tx.inventory.findUnique({ where: { itemId } });
+      if (!inventory || Number(inventory.quantityQC) < quantity) {
+        throw new Error("Insufficient quantity in QC for this item.");
+      }
+
+      // 1. Update Inventory summary
+      await tx.inventory.update({
+        where: { id: inventory.id },
+        data: {
+          quantityQC: { decrement: quantity },
+          quantityAvailable: { increment: quantity }
+        }
+      });
+
+      // 2. Update Physical Stock
+      const existingStock = await tx.stock.findFirst({
+        where: { itemId, rackId }
+      });
+
+      if (existingStock) {
+        await tx.stock.update({
+          where: { id: existingStock.id },
+          data: { quantity: { increment: quantity } }
+        });
+      } else {
+        await tx.stock.create({
+          data: {
+            itemId,
+            rackId,
+            quantity,
+            companyId: inventory.companyId
+          }
+        });
+      }
+
+      // 3. Update PO status if all items are approved
+      const po = await tx.purchaseOrder.findUnique({
+        where: { id: poId },
+        include: { items: true }
+      });
+
+      if (po) {
+        // Find if there's any remaining QC quantity for this PO's items
+        const allApproved = po.status === "QC_PENDING"; 
+        if (allApproved) {
+            await tx.purchaseOrder.update({
+                where: { id: poId },
+                data: { status: "DELIVERED" }
+            });
+        }
+      }
+
+      return { success: true };
     });
   },
 
@@ -252,6 +283,18 @@ export const InventoryService = {
       // Update Reservations if pending
       if (status === "pending") {
         for (const item of data.items) {
+          // CHECK AVAILABILITY BEFORE RESERVING
+          const inventory = await tx.inventory.findUnique({
+            where: { itemId: item.itemId }
+          });
+
+          if (!inventory) throw new Error(`Inventory record not found for item ${item.itemId}`);
+          
+          const availableToReserve = (inventory.quantityAvailable || 0) - (inventory.quantityReserved || 0);
+          if (availableToReserve < item.quantity) {
+            throw new Error(`INSUFFICIENT_STOCK_FOR_RESERVATION: Requested ${item.quantity}, Available ${availableToReserve}`);
+          }
+
           await tx.inventory.update({
             where: { itemId: item.itemId },
             data: {
@@ -262,6 +305,80 @@ export const InventoryService = {
       }
 
       return order;
+    });
+  },
+
+  /**
+   * Moves a dispatch order to picking status.
+   */
+  async startPicking(dispatchId: string, userId?: string) {
+    return await prisma.dispatchOrder.update({
+      where: { id: dispatchId },
+      data: { status: "picking" }
+    });
+  },
+
+  /**
+   * Generates a picking list for an order, suggesting rack locations.
+   */
+  async generatePickingList(dispatchId: string) {
+    const order = await prisma.dispatchOrder.findUnique({
+      where: { id: dispatchId },
+      include: { items: { include: { item: true } } }
+    });
+
+    if (!order) throw new Error("Order not found");
+
+    const pickingList = [];
+
+    for (const line of order.items) {
+      const stocks = await prisma.stock.findMany({
+        where: { itemId: line.itemId, companyId: order.companyId, quantity: { gt: 0 } },
+        include: { rack: true },
+        orderBy: { quantity: "desc" }
+      });
+
+      pickingList.push({
+        itemId: line.itemId,
+        sku: line.item.sku,
+        name: line.item.name,
+        quantityRequired: line.quantity,
+        suggestions: stocks.map(s => ({
+          rackId: s.rackId,
+          rackNumber: s.rack.rackNumber,
+          available: s.quantity
+        }))
+      });
+    }
+
+    return pickingList;
+  },
+
+  /**
+   * Confirms items have been packed and are ready for dispatch.
+   */
+  async confirmPacked(dispatchId: string, items: { itemId: string; quantity: number }[]) {
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const order = await tx.dispatchOrder.findUnique({
+        where: { id: dispatchId },
+        include: { items: true }
+      });
+
+      if (!order) throw new Error("Order not found");
+
+      // Validate packed items match order items
+      for (const packedItem of items) {
+        const orderItem = order.items.find((i: any) => i.itemId === packedItem.itemId);
+        if (!orderItem) throw new Error(`Item ${packedItem.itemId} is not part of this order`);
+        if (Number(packedItem.quantity) !== Number(orderItem.quantity)) {
+          throw new Error(`Quantity mismatch for item ${packedItem.itemId}. Expected ${orderItem.quantity}, got ${packedItem.quantity}`);
+        }
+      }
+
+      return await tx.dispatchOrder.update({
+        where: { id: dispatchId },
+        data: { status: "packed" }
+      });
     });
   },
 
@@ -277,9 +394,25 @@ export const InventoryService = {
 
       if (!order) throw new Error("Dispatch Order not found");
       if (order.status === "dispatched") throw new Error("Order already dispatched");
+      
+      // HARDENING: Require packed status before dispatching
+      if (order.status !== "packed") {
+        throw new Error(`Cannot dispatch order in '${order.status}' status. Order must be 'packed' first.`);
+      }
 
       for (const line of order.items) {
-        // 1. Update Inventory summary
+        // 1. Verify physical stock availability across all racks BEFORE any updates
+        const totalPhysicalStock = await tx.stock.aggregate({
+          where: { itemId: line.itemId, companyId: order.companyId },
+          _sum: { quantity: true }
+        });
+
+        const actualAvailable = totalPhysicalStock._sum.quantity || 0;
+        if (actualAvailable < line.quantity) {
+          throw new Error(`CRITICAL_SYNC_ERROR: Physical stock (${actualAvailable}) is less than required dispatch quantity (${line.quantity}) for item ${line.itemId}`);
+        }
+
+        // 2. Update Inventory summary (ONLY if physical stock is confirmed)
         await tx.inventory.update({
           where: { itemId: line.itemId },
           data: {
@@ -288,10 +421,10 @@ export const InventoryService = {
           },
         });
 
-        // 2. Deduct from Racks
+        // 3. Deduct from Racks
         let remainingToDeduct = line.quantity;
         const availableStocks = await tx.stock.findMany({
-          where: { itemId: line.itemId, quantity: { gt: 0 } },
+          where: { itemId: line.itemId, companyId: order.companyId, quantity: { gt: 0 } },
           orderBy: { quantity: "desc" },
         });
 
@@ -307,7 +440,7 @@ export const InventoryService = {
           usedRackId = stock.rackId;
         }
 
-        // 3. Deduct from Batches (FIFO)
+        // 4. Deduct from Batches (FIFO)
         let batchRemaining = line.quantity;
         const batches = await tx.inventoryBatch.findMany({
           where: { 
@@ -327,7 +460,7 @@ export const InventoryService = {
           batchRemaining -= deduction;
         }
 
-        // 4. Create Inventory Transaction
+        // 5. Create Inventory Transaction
         await tx.inventoryTransaction.create({
           data: {
             item: { connect: { id: line.itemId } },
@@ -425,13 +558,18 @@ export const InventoryService = {
   /**
    * Updates stock in a specific rack.
    */
-  async updateStock(itemId: string, rackId: string, quantity: number, userId: string, companyId: string, remarks?: string) {
+  async updateStock(itemId: string, rackId: string, quantity: number, userId: string, companyId: string, remarks?: string, unitCost?: number) {
     return await (prisma as any).$transaction(async (tx: any) => {
-      // ATOMIC FIX: Re-read the current stock inside the transaction to calculate the exact adjustment diff.
-      // This prevents inventory summary drift during simultaneous adjustments.
-      const currentStock = await tx.stock.findFirst({
-        where: { itemId, rackId },
-      });
+      // ATOMIC FIX: Use row-level locking (FOR UPDATE) to prevent race conditions.
+      // This ensures that if two users adjust the same rack, they are processed sequentially.
+      const lockedStocks = await tx.$queryRaw`
+        SELECT id, "quantity" FROM "Stock" 
+        WHERE "itemId" = ${itemId} AND "rackId" = ${rackId} 
+        LIMIT 1 
+        FOR UPDATE
+      ` as any[];
+
+      const currentStock = lockedStocks.length > 0 ? lockedStocks[0] : null;
 
       const oldQuantity = currentStock?.quantity || 0;
       const adjustmentQty = quantity - oldQuantity;
@@ -507,6 +645,17 @@ export const InventoryService = {
       } else if (adjustmentQty > 0) {
         const inventory = await tx.inventory.findUnique({ where: { itemId } });
         const firstVendor = await tx.vendor.findFirst({ where: { companyId } });
+        
+        // FIND VALUATION COST: Use provided cost, or find last known cost to prevent $0 batch drift
+        let finalCost = unitCost;
+        if (!finalCost) {
+          const lastBatch = await tx.inventoryBatch.findFirst({
+            where: { inventoryId: inventory?.id },
+            orderBy: { purchaseDate: "desc" }
+          });
+          finalCost = lastBatch?.costPerUnit || 0;
+        }
+
         if (inventory && firstVendor) {
           await tx.inventoryBatch.create({
             data: {
@@ -514,7 +663,7 @@ export const InventoryService = {
               vendorId: firstVendor.id,
               quantity: adjustmentQty,
               remainingQty: adjustmentQty,
-              costPerUnit: 0,
+              costPerUnit: finalCost,
               purchaseDate: new Date(),
               receivedById: userId,
             },
@@ -700,4 +849,84 @@ export const InventoryService = {
       });
     });
   },
+
+  /**
+   * Records a customer return.
+   */
+  async recordCustomerReturn(dispatchId: string, itemId: string, quantity: number, rackId: string, reason?: string) {
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const order = await tx.dispatchOrder.findUnique({ where: { id: dispatchId } });
+      if (!order) throw new Error("Order not found");
+
+      // 1. Increment Stock & Inventory
+      await tx.stock.update({
+        where: { itemId_rackId: { itemId, rackId } }, // Needs to be unique or use findFirst
+        data: { quantity: { increment: quantity } }
+      }).catch(async () => {
+         // If update fails (e.g. no existing stock in that rack), create it
+         await tx.stock.create({
+             data: { itemId, rackId, quantity, companyId: order.companyId }
+         });
+      });
+
+      await tx.inventory.update({
+        where: { itemId },
+        data: { quantityAvailable: { increment: quantity } }
+      });
+
+      // 2. Create Transaction
+      return await tx.inventoryTransaction.create({
+        data: {
+          itemId,
+          companyId: order.companyId,
+          customerId: order.customerId,
+          type: "RETURN_IN",
+          quantity: quantity,
+          referenceType: "CUSTOMER_RETURN",
+          referenceId: dispatchId,
+          rackId: rackId
+        }
+      });
+    });
+  },
+
+  /**
+   * Records a vendor return.
+   */
+  async recordVendorReturn(poId: string, itemId: string, quantity: number, reason?: string) {
+    return await (prisma as any).$transaction(async (tx: any) => {
+      const po = await tx.purchaseOrder.findUnique({ where: { id: poId } });
+      if (!po) throw new Error("PO not found");
+
+      // 1. Deduct Stock & Inventory
+      const stocks = await tx.stock.findMany({
+        where: { itemId, companyId: po.companyId, quantity: { gte: quantity } },
+        take: 1
+      });
+      if (stocks.length === 0) throw new Error("Insufficient stock in any single rack to return to vendor.");
+
+      await tx.stock.update({
+        where: { id: stocks[0].id },
+        data: { quantity: { decrement: quantity } }
+      });
+
+      await tx.inventory.update({
+        where: { itemId },
+        data: { quantityAvailable: { decrement: quantity } }
+      });
+
+      // 2. Create Transaction
+      return await tx.inventoryTransaction.create({
+        data: {
+          itemId,
+          companyId: po.companyId,
+          vendorId: po.vendorId,
+          type: "RETURN_OUT",
+          quantity: -quantity,
+          referenceType: "VENDOR_RETURN",
+          referenceId: poId
+        }
+      });
+    });
+  }
 };

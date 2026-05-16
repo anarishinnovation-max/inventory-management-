@@ -4,11 +4,13 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 import { getSession } from "@/lib/auth";
+import { requirePermission } from "@/lib/rbac-utils";
 
 export async function GET(request: Request) {
   try {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    await requirePermission("vendors:view");
 
     const { searchParams } = new URL(request.url);
     const minimal = searchParams.get("minimal") === "true";
@@ -40,6 +42,7 @@ export async function POST(request: Request) {
   try {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    await requirePermission("vendors:create");
 
     const data = await request.json();
     const vendor = await prisma.vendor.create({ 

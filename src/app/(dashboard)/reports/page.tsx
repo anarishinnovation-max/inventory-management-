@@ -19,7 +19,7 @@ async function getReportData() {
       });
 
       // Sort and take in-memory to avoid potential groupBy orderBy/take issues
-      salesTx.sort((a, b) => (a._sum.quantity || 0) - (b._sum.quantity || 0));
+      salesTx.sort((a, b) => (Number(b._sum.quantity) || 0) - (Number(a._sum.quantity) || 0));
       const top3Sales = salesTx.slice(0, 3);
 
       const validSalesIds = top3Sales
@@ -32,12 +32,12 @@ async function getReportData() {
 
       let topSkus = top3Sales.map((t: {
          itemId: string;
-         _sum: { quantity: number | null };
+         _sum: { quantity: any };
       }) => {
          const item = saleItems.find(i => i.id === t.itemId);
          return {
             name: item?.name || "Unknown SKU",
-            val: `${Math.abs(t._sum.quantity || 0)} units`
+            val: `${Math.abs(Number(t._sum.quantity) || 0)} units`
          };
       });
       if (topSkus.length === 0) {
@@ -47,15 +47,15 @@ async function getReportData() {
       // Reorder List
       const inventory = await prisma.inventory.findMany({ include: { item: true } });
       const reorderList = inventory
-         .filter(inv => inv.quantityAvailable <= inv.item.minStockLevel)
+         .filter(inv => Number(inv.quantityAvailable) <= Number(inv.item.minStockLevel))
          .map(inv => ({
             name: inv.item.name,
-            stock: inv.quantityAvailable,
-            min: inv.item.minStockLevel
+            stock: Number(inv.quantityAvailable),
+            min: Number(inv.item.minStockLevel)
          }));
 
       // Capacity
-      const totalStock = inventory.reduce((sum, inv) => sum + inv.quantityAvailable, 0);
+      const totalStock = inventory.reduce((sum, inv) => sum + Number(inv.quantityAvailable), 0);
       const capacityPct = Math.min(Math.round((totalStock / 5000) * 100), 100);
 
       // Vendor Efficiency

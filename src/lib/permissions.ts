@@ -7,6 +7,7 @@ export type Permission =
   | "vendors:*" | "vendors:view" | "vendors:create" | "vendors:update" | "vendors:delete"
   | "po:*" | "po:view" | "po:create" | "po:update" | "po:delete"
   | "grn:*" | "grn:view" | "grn:create"
+  | "dispatch:*" | "dispatch:view" | "dispatch:create" | "dispatch:process"
   | "rack:*" | "rack:view" | "rack:create" | "rack:update" | "rack:delete"
   | "reports:view"
   | "company:manage"
@@ -20,6 +21,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "vendors:*",
     "po:*",
     "grn:*",
+    "dispatch:*",
     "stock:*",
     "rack:*",
     "reports:view",
@@ -31,6 +33,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "vendors:*",
     "po:*",
     "grn:*",
+    "dispatch:*",
     "stock:*",
     "rack:*",
     "reports:view",
@@ -44,7 +47,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     "rack:update",
     "stock:view",
     "reports:view",
-    "po:view"
+    "po:view",
+    "dispatch:view"
   ],
 };
 
@@ -54,6 +58,7 @@ export const AVAILABLE_PERMISSIONS: Permission[] = [
   "vendors:view", "vendors:create", "vendors:update", "vendors:delete",
   "po:view", "po:create", "po:update", "po:delete",
   "grn:view", "grn:create",
+  "dispatch:view", "dispatch:create", "dispatch:process",
   "rack:view", "rack:create", "rack:update", "rack:delete",
   "reports:view",
   "company:manage",

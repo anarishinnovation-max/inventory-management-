@@ -197,7 +197,7 @@ async function main() {
       const status = i < 480 ? "DISPATCHED" : "pending";
 
       const current = await prisma.inventory.findUnique({ where: { itemId } });
-      if (current && current.quantityAvailable >= qty) {
+      if (current && Number(current.quantityAvailable) >= qty) {
         const so = await prisma.dispatchOrder.create({
           data: { customerId, status, companyId, createdAt: date, items: { create: { itemId, quantity: qty, sellingPrice: itemPrices[itemId] * 1.4 } } }
         });

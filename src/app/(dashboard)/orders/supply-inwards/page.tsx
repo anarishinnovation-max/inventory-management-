@@ -119,7 +119,7 @@ async function getInwardData(options: {
   // Flatten items for "ordered item" view
   let pendingItems = pendingPOs.flatMap(po => 
     po.items
-      .filter(item => item.quantityReceived < item.quantityOrdered)
+      .filter(item => Number(item.quantityReceived) < Number(item.quantityOrdered))
       .map(item => ({
         ...item,
         vendor: po.vendor,
@@ -176,7 +176,7 @@ export default async function SupplyInwardsPage({
     page
   }).catch(() => ({ pendingPOs: [], pendingItems: [], recentTransactions: [], totalPages: 0, totalItems: 0 }));
 
-  const totalPendingQty = pendingItems.reduce((acc, item) => acc + (item.quantityOrdered - item.quantityReceived), 0);
+  const totalPendingQty = pendingItems.reduce((acc, item) => acc + (Number(item.quantityOrdered) - Number(item.quantityReceived)), 0);
   const todayInwardCount = recentTransactions.filter(t => new Date(t.createdAt).getTime() > Date.now() - 86400000).length;
 
   const vendors = await prisma.vendor.findMany({

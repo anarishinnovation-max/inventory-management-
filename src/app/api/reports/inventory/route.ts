@@ -34,11 +34,11 @@ export async function GET() {
 
     // Add rows
     inventory.forEach(inv => {
-      const total = inv.quantityAvailable;
-      const incoming = (inv.incomingQty || 0) + (inv.quantityInTransit || 0);
-      const reserved = inv.quantityReserved;
+      const total = Number(inv.quantityAvailable || 0);
+      const incoming = Number(inv.incomingQty || 0) + Number(inv.quantityInTransit || 0);
+      const reserved = Number(inv.quantityReserved || 0);
       const netAvailable = (total + incoming) - reserved;
-      const minStock = inv.item.minStockLevel;
+      const minStock = Number(inv.item.minStockLevel || 0);
 
       let status = "In Stock";
       if (total <= 0) {
