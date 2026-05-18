@@ -6,7 +6,8 @@ import {
     Clock,
     Plus,
     Download,
-    Eye
+    Eye,
+    Package
 } from "lucide-react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
@@ -156,7 +157,7 @@ export default async function DispatchPage({
                   <tr key={order.id} className="table-row">
                     <td className="table-cell">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 shrink-0 rounded-xl bg-surface-low flex items-center justify-center border border-border-ghost text-xs font-black text-muted-foreground group-hover:border-primary/20 transition-all">SO</div>
+                            <div className="w-12 h-12 shrink-0 rounded-xl bg-surface-low flex items-center justify-center border border-border-ghost text-primary group-hover:border-primary/20 transition-all"><Package className="w-5 h-5" /></div>
                             <div className="flex flex-col">
                                 <span className="font-mono font-black text-foreground text-sm tracking-tight">#{order.id.split('-')[0].toUpperCase()}</span>
                                 <div className="flex items-center gap-2 mt-1">
