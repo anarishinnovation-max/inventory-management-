@@ -6,16 +6,13 @@ import { clsx, type ClassValue } from "clsx";
 import {
   ChevronLeft,
   ChevronRight,
-  Download,
-  Edit,
   Filter,
   MapPin,
-  MoreVertical,
-  Printer,
   TrendingUp
 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import AddRackButton from "./AddRackButton";
+import RackActions from "./RackActions";
 import { cacheQuery } from "@/lib/cache";
 
 function cn(...inputs: ClassValue[]) {
@@ -166,10 +163,6 @@ export default async function RacksPage({
           <div className="flex items-center gap-4">
             <span className="text-[13px] font-black text-foreground uppercase tracking-wider">Rack Items</span>
           </div>
-          <div className="flex gap-1">
-            <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Download className="w-3.5 h-3.5" /></button>
-            <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Printer className="w-3.5 h-3.5" /></button>
-          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -219,10 +212,7 @@ export default async function RacksPage({
                       </div>
                     </td>
                     <td className="px-8 py-5 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><Edit className="w-4 h-4" /></button>
-                        <button className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"><MoreVertical className="w-4 h-4" /></button>
-                      </div>
+                      <RackActions rackId={row.id} rackNumber={row.rackNumber} zone={row.zone || ""} />
                     </td>
                   </tr>
                 );
