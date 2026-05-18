@@ -30,9 +30,24 @@ export default async function PurchaseBillPage({
 
   const { id } = await params;
   const { iframe } = await searchParams;
-  const order = await getOrder(id, session.companyId);
+  const rawOrder = await getOrder(id, session.companyId);
 
-  if (!order) notFound();
+  if (!rawOrder) notFound();
+
+  // Sanitize all Prisma Decimal objects into plain JS numbers to prevent serialization crashes
+  const order = {
+    ...rawOrder,
+    items: rawOrder.items.map((item: any) => ({
+      ...item,
+      costPrice: Number(item.costPrice || 0),
+      quantityOrdered: Number(item.quantityOrdered || 0),
+      quantityReceived: Number(item.quantityReceived || 0),
+      item: {
+        ...item.item,
+        minStockLevel: Number(item.item?.minStockLevel || 0),
+      }
+    }))
+  };
 
   const subTotal = order.items.reduce((acc: number, item: any) => acc + (Number(item.costPrice) * item.quantityOrdered), 0);
   const tax = subTotal * 0.05; // Sample 5% tax

@@ -15,15 +15,28 @@ async function getOrder(id: string, companyId: string) {
     }
   });
 }
-
 export default async function SaleBillPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session) redirect("/login");
 
   const { id } = await params;
-  const order = await getOrder(id, session.companyId);
+  const rawOrder = await getOrder(id, session.companyId);
 
-  if (!order) notFound();
+  if (!rawOrder) notFound();
+
+  // Sanitize all Prisma Decimal objects into plain JS numbers to prevent serialization crashes
+  const order = {
+    ...rawOrder,
+    items: rawOrder.items.map((item: any) => ({
+      ...item,
+      quantity: Number(item.quantity),
+      sellingPrice: Number(item.sellingPrice),
+      item: {
+        ...item.item,
+        minStockLevel: Number(item.item.minStockLevel || 0),
+      }
+    }))
+  };
 
   const subTotal = order.items.reduce((acc: number, item: any) => acc + (item.sellingPrice * item.quantity), 0);
   const tax = subTotal * 0.12; // Sample 12% GST
