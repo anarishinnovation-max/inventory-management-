@@ -59,100 +59,88 @@ export function TransactionFilters({ users }: { users: any[] }) {
   };
 
   return (
-    <div className="card-premium !p-6 bg-white shadow-ambient mb-8">
-      <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        {/* Search */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Search Item</label>
-          <div className="relative group">
+    <div className="w-full space-y-6 mb-8">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        {/* Search Bar on the Left */}
+        <div className="flex-1 max-w-2xl">
+          <form onSubmit={handleSearch} className="relative group w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <input 
               type="text"
               name="q"
               value={filters.q}
               onChange={handleInputChange}
-              placeholder="SKU or Item Name..."
-              className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-low border border-border-ghost focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all text-sm font-bold"
+              placeholder="Search SKU or Item Name..."
+              className="w-full h-11 pl-12 pr-4 rounded-full bg-surface-low border border-border-ghost focus:border-primary focus:ring-4 focus:ring-primary/5 outline-none transition-all text-sm font-bold"
+            />
+          </form>
+        </div>
+
+        {/* Filters on the Right */}
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="w-[200px]">
+            <SearchableSelect 
+              items={users.map(u => ({ id: u.id, name: u.name }))}
+              value={filters.user}
+              onChange={(val) => {
+                const updated = { ...filters, user: val };
+                setFilters(updated);
+                updateFilters(updated);
+              }}
+              placeholder="All Users"
+              label="BY USER"
+              className="!rounded-full h-11"
             />
           </div>
-        </div>
 
-        {/* User Filter */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Performed By</label>
-          <SearchableSelect 
-            items={users.map(u => ({ id: u.id, name: u.name }))}
-            value={filters.user}
-            onChange={(val) => {
-              const updated = { ...filters, user: val };
-              setFilters(updated);
-              updateFilters(updated);
-            }}
-            placeholder="All Users"
-            className="h-12 !rounded-xl"
-            icon={<User className="w-4 h-4 text-muted-foreground" />}
-          />
-        </div>
+          <div className="w-[200px]">
+            <SearchableSelect 
+              items={actionTypes}
+              value={filters.type}
+              onChange={(val) => {
+                const updated = { ...filters, type: val };
+                setFilters(updated);
+                updateFilters(updated);
+              }}
+              placeholder="All Actions"
+              label="BY ACTION"
+              className="!rounded-full h-11"
+            />
+          </div>
 
-        {/* Action Type */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Action Type</label>
-          <SearchableSelect 
-            items={actionTypes}
-            value={filters.type}
-            onChange={(val) => {
-              const updated = { ...filters, type: val };
-              setFilters(updated);
-              updateFilters(updated);
-            }}
-            placeholder="All Actions"
-            className="h-12 !rounded-xl"
-            icon={<Activity className="w-4 h-4 text-muted-foreground" />}
-          />
-        </div>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <input 
+                type="date"
+                name="start"
+                value={filters.start}
+                onChange={handleInputChange}
+                className="w-[140px] h-11 px-4 rounded-full bg-surface-low border border-border-ghost focus:border-primary outline-none transition-all text-xs font-bold cursor-pointer"
+              />
+            </div>
+            <span className="text-xs font-black text-muted-foreground opacity-30">TO</span>
+            <div className="relative">
+              <input 
+                type="date"
+                name="end"
+                value={filters.end}
+                onChange={handleInputChange}
+                className="w-[140px] h-11 px-4 rounded-full bg-surface-low border border-border-ghost focus:border-primary outline-none transition-all text-xs font-bold cursor-pointer"
+              />
+            </div>
+          </div>
 
-        {/* Date Range */}
-        <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-           <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">From Date</label>
-              <div className="relative">
-                <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input 
-                  type="date"
-                  name="start"
-                  value={filters.start}
-                  onChange={handleInputChange}
-                  className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-low border border-border-ghost focus:border-primary outline-none transition-all text-sm font-bold cursor-pointer"
-                />
-              </div>
-           </div>
-           <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">To Date</label>
-              <div className="relative">
-                <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input 
-                  type="date"
-                  name="end"
-                  value={filters.end}
-                  onChange={handleInputChange}
-                  className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-low border border-border-ghost focus:border-primary outline-none transition-all text-sm font-bold cursor-pointer"
-                />
-              </div>
-           </div>
+          {Object.values(filters).some(v => v !== "") && (
+            <button 
+              onClick={clearFilters}
+              className="btn btn-error h-11 px-6 text-xs bg-error/5 text-error border-error/10"
+              title="Clear all filters"
+            >
+              <FilterX className="w-3.5 h-3.5" />
+              Reset
+            </button>
+          )}
         </div>
-      </form>
-
-      <div className="flex items-center justify-between mt-6 pt-6 border-t border-border-ghost">
-         <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">
-            {Object.values(filters).filter(Boolean).length} Filters Active
-         </p>
-         <button 
-           onClick={clearFilters}
-           className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-error hover:opacity-70 transition-opacity"
-         >
-            <FilterX className="w-3.5 h-3.5" />
-            Clear All Filters
-         </button>
       </div>
     </div>
   );

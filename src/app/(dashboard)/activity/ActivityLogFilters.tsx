@@ -76,81 +76,67 @@ export function ActivityLogFilters({ users }: ActivityLogFiltersProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row items-center gap-4">
-        <div className="flex-1 w-full max-w-2xl">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        {/* Search Bar on the Left */}
+        <div className="flex-1 max-w-2xl">
           <SearchInput 
             placeholder="Search activity by User or Entity ID..." 
             defaultValue={searchParams.get('q') || ''}
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={() => setIsFilterVisible(!isFilterVisible)}
-            className={cn(
-              "btn h-12 px-6 flex items-center gap-3 transition-all rounded-2xl",
-              isFilterVisible || hasActiveFilters 
-                ? "bg-primary text-white shadow-glow-primary border-primary" 
-                : "bg-white text-foreground border-border-ghost hover:border-primary/30 shadow-ambient"
-            )}
-          >
-            <FilterIcon className="w-4 h-4" />
-            <span className="text-xs font-black uppercase tracking-widest">Filters</span>
-            {hasActiveFilters && (
-              <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">
-                {Array.from(searchParams.keys()).filter(k => k !== 'q' && k !== 'page').length}
-              </span>
-            )}
-          </button>
+        {/* Filters on the Right */}
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="w-[180px]">
+            <SearchableSelect
+              items={ACTION_TYPES}
+              value={searchParams.get('actionType') || 'all'}
+              onChange={(val) => updateFilters({ actionType: val })}
+              placeholder="All Actions"
+              label="BY ACTION"
+              className="!rounded-full h-11"
+            />
+          </div>
+
+          <div className="w-[180px]">
+            <SearchableSelect
+              items={ENTITY_TYPES}
+              value={searchParams.get('entityType') || 'all'}
+              onChange={(val) => updateFilters({ entityType: val })}
+              placeholder="All Entities"
+              label="BY ENTITY"
+              className="!rounded-full h-11"
+            />
+          </div>
+
+          <div className="w-[200px]">
+            <SearchableSelect
+              items={[
+                { id: "all", name: "All Users" },
+                ...users.map(u => ({ id: u.id, name: u.name }))
+              ]}
+              value={searchParams.get('performedBy') || 'all'}
+              onChange={(val) => updateFilters({ performedBy: val })}
+              placeholder="All Users"
+              label="BY USER"
+              className="!rounded-full h-11"
+            />
+          </div>
 
           {hasActiveFilters && (
             <button 
               onClick={clearFilters}
-              className="p-3 hover:bg-error/10 text-error rounded-xl transition-all"
+              className="btn btn-error h-11 px-6 text-xs bg-error/5 text-error border-error/10"
               title="Clear all filters"
             >
-              <X className="w-5 h-5" />
+              <X className="w-3.5 h-3.5" />
+              Reset
             </button>
           )}
         </div>
       </div>
 
-      {isFilterVisible && (
-        <div className="bg-white border border-border-ghost p-8 rounded-[2.5rem] shadow-premium animate-in fade-in slide-in-from-top-4 duration-500 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="space-y-3">
-            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Action Type</label>
-            <SearchableSelect
-              items={ACTION_TYPES}
-              value={searchParams.get('actionType') || 'all'}
-              onChange={(val) => updateFilters({ actionType: val })}
-              placeholder="Select Action..."
-            />
-          </div>
 
-          <div className="space-y-3">
-            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Entity Category</label>
-            <SearchableSelect
-              items={ENTITY_TYPES}
-              value={searchParams.get('entityType') || 'all'}
-              onChange={(val) => updateFilters({ entityType: val })}
-              placeholder="Select Entity..."
-            />
-          </div>
-
-          <div className="space-y-3">
-            <label className="text-xs font-black text-muted-foreground uppercase tracking-widest ml-1">Performed By</label>
-            <SearchableSelect
-              items={[
-                { id: "all", name: "All Users", icon: <User className="w-4 h-4" /> },
-                ...users.map(u => ({ id: u.id, name: u.name, icon: <User className="w-4 h-4" /> }))
-              ]}
-              value={searchParams.get('performedBy') || 'all'}
-              onChange={(val) => updateFilters({ performedBy: val })}
-              placeholder="Select User..."
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -93,23 +93,15 @@ export default function SupplyInwardsList({
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="flex-1 max-w-3xl">
-          <SearchInput
-            defaultValue={searchQuery}
-            placeholder="Search Item, Vendor or PO..."
-          />
-        </div>
-
-        <div className="ml-auto">
-          <SupplyInwardsFilters
-            vendors={vendors}
-            currentVendorId={currentVendorId}
-            currentPONumber={currentPONumber}
-            currentStartDate={currentStartDate}
-            currentEndDate={currentEndDate}
-          />
-        </div>
+      <div className="relative">
+        <SupplyInwardsFilters
+          vendors={vendors}
+          currentVendorId={currentVendorId}
+          currentPONumber={currentPONumber}
+          currentStartDate={currentStartDate}
+          currentEndDate={currentEndDate}
+          searchQuery={searchQuery}
+        />
       </div>
 
       <div className="flex flex-col gap-8">

@@ -268,9 +268,9 @@ export default async function VendorsPage({
                         <td className="table-cell text-right">
                           <Link 
                             href={`/vendors/${vendors.find((v: any) => v.name === entry.vendorName)?.id}`}
-                            className="btn btn-neutral h-9 px-4 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
+                            className="btn btn-neutral w-9 h-9 inline-flex items-center justify-center rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
                           >
-                             View History
+                             <MoreVertical className="w-4 h-4" />
                           </Link>
                         </td>
                       </tr>
