@@ -85,7 +85,7 @@ export default async function TransactionsPage({
 
   const filters = await searchParams;
 
-  const [transactions, users] = await Promise.all([
+  const [rawTransactions, users] = await Promise.all([
     getTransactionsRaw(session.companyId, filters).catch((e) => {
         console.error("Audit log fetch error:", e);
         return [];
@@ -95,6 +95,15 @@ export default async function TransactionsPage({
       select: { id: true, name: true }
     })
   ]);
+
+  const transactions = rawTransactions.map((tx: any) => ({
+    ...tx,
+    quantity: Number(tx.quantity || 0),
+    item: {
+      ...tx.item,
+      minStockLevel: Number(tx.item?.minStockLevel || 0),
+    }
+  }));
 
   return (
     <div className="space-y-10 pb-10">

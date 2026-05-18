@@ -113,6 +113,12 @@ async function getSupplyOutwardsData(companyId: string, q?: string, customerId?:
   const pendingItems = pendingOrders.flatMap(order => 
     order.items.map(item => ({
       ...item,
+      quantity: Number(item.quantity || 0),
+      sellingPrice: Number(item.sellingPrice || 0),
+      item: {
+        ...item.item,
+        minStockLevel: Number(item.item?.minStockLevel || 0),
+      },
       customer: order.customer,
       orderId: order.id,
       createdAt: order.createdAt,

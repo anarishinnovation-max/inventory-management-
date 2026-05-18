@@ -122,6 +122,13 @@ async function getInwardData(options: {
       .filter(item => Number(item.quantityReceived) < Number(item.quantityOrdered))
       .map(item => ({
         ...item,
+        costPrice: Number(item.costPrice || 0),
+        quantityOrdered: Number(item.quantityOrdered || 0),
+        quantityReceived: Number(item.quantityReceived || 0),
+        item: {
+          ...item.item,
+          minStockLevel: Number(item.item?.minStockLevel || 0)
+        },
         vendor: po.vendor,
         poId: po.id,
         expectedDelivery: po.expectedDelivery,

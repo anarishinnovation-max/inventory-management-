@@ -135,6 +135,10 @@ export default async function DispatchPage({
             ...item,
             quantity: Number(item.quantity),
             sellingPrice: Number(item.sellingPrice),
+            item: {
+              ...item.item,
+              minStockLevel: Number(item.item?.minStockLevel || 0),
+            }
           })),
         }))}
         searchQuery={q}
