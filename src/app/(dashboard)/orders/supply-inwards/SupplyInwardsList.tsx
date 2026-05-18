@@ -5,7 +5,6 @@ import { clsx, type ClassValue } from "clsx";
 import {
   AlertCircle,
   ArrowDownToLine,
-  Calendar,
   CheckCircle2,
   CheckSquare,
   Clock,
@@ -14,8 +13,7 @@ import {
   Loader2,
   SlidersHorizontal,
   Square,
-  X,
-  Package
+  X
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -193,9 +191,6 @@ export default function SupplyInwardsList({
                       </td>
                       <td className="table-cell">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-surface-low border border-border-ghost flex items-center justify-center text-primary shrink-0 group-hover:border-primary/20 transition-all">
-                            <Package className="w-5 h-5" />
-                          </div>
                           <div className="flex flex-col min-w-0">
                             <span className="font-black text-foreground text-sm truncate">{item.item.name}</span>
                             <span className="text-xs font-black text-muted-foreground uppercase tracking-widest mt-1 font-mono">SKU: {item.item.sku}</span>
@@ -212,7 +207,6 @@ export default function SupplyInwardsList({
                       </td>
                       <td className="table-cell">
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-muted-foreground opacity-30" />
                           <span className="text-xs font-black text-foreground">{formatDate(item.orderDate)}</span>
                         </div>
                       </td>

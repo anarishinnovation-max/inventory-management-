@@ -5,7 +5,6 @@ import { clsx, type ClassValue } from "clsx";
 import {
   AlertCircle,
   ArrowUpRight,
-  Calendar,
   CheckCircle2,
   CheckSquare,
   Clock,
@@ -243,7 +242,6 @@ export default function SupplyOutwardsList({
                       </td>
                       <td className="table-cell">
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-muted-foreground opacity-30" />
                           <span className="text-xs font-black text-foreground">{formatDate(item.createdAt)}</span>
                         </div>
                       </td>
