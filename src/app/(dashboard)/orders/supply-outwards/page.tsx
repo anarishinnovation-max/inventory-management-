@@ -1,7 +1,7 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { Package, Truck, User, Calendar, Receipt, Search, AlertCircle, TrendingDown, Clock, Users, ArrowUpRight, ChevronRight, CheckCircle2 } from "lucide-react";
+import { Truck, User, Calendar, Receipt, Search, AlertCircle, TrendingDown, Clock, Users, ArrowUpRight, ChevronRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { SupplyOutwardsFilters } from "./SupplyOutwardsFilters";
 import SupplyOutwardsList from "./SupplyOutwardsList";
@@ -193,9 +193,6 @@ export default async function SupplyOutwardsPage({
       {/* Stats Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
-            <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary transition-colors border border-primary/10">
-                <Package className="w-5 h-5" />
-            </div>
             <div>
               <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Booked Items</p>
               <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter">{pendingItems.length}</h2>
