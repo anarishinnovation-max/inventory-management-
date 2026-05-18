@@ -6,7 +6,6 @@ import {
   Clock,
   Download,
   Eye,
-  Package,
   Square,
   CheckSquare,
   MinusSquare,
@@ -205,10 +204,6 @@ export default function DispatchList({
                         </button>
                       </td>
                       <td className="table-cell">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 shrink-0 rounded-xl bg-surface-low flex items-center justify-center border border-border-ghost text-primary group-hover:border-primary/20 transition-all">
-                            <Package className="w-5 h-5" />
-                          </div>
                           <div className="flex flex-col">
                             <span className="font-mono font-black text-foreground text-sm tracking-tight">
                               #{order.id.split("-")[0].toUpperCase()}
@@ -228,7 +223,6 @@ export default function DispatchList({
                               )}
                             </div>
                           </div>
-                        </div>
                       </td>
                       <td className="table-cell">
                         <div className="flex flex-col">

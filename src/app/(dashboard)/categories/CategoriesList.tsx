@@ -1,19 +1,17 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchInput from "@/components/SearchInput";
 import { useConfirm } from "@/hooks/use-confirm";
 import { showToast } from "@/lib/toast";
 import {
-  Download,
   Edit,
   FolderOpen,
   FolderPlus,
   Loader2,
   MoreVertical,
   Plus,
-  Printer,
   Tag,
   Trash2,
   TrendingUp,
@@ -62,6 +60,18 @@ export default function CategoriesList({
   const [newName, setNewName] = useState("");
   const [isPending, startTransition] = useTransition();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (activeMenuId && !document.getElementById(`menu-${activeMenuId}`)?.contains(event.target as Node)) {
+        setActiveMenuId(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [activeMenuId]);
 
   // Filtered categories
   const filteredCategories = categories.filter((c) =>
@@ -274,10 +284,6 @@ export default function CategoriesList({
           <div className="flex items-center gap-4">
             <span className="text-[13px] font-black text-foreground uppercase tracking-wider">Classification List</span>
           </div>
-          <div className="flex gap-1">
-            <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Download className="w-3.5 h-3.5" /></button>
-            <button className="p-2 hover:bg-white rounded-lg transition-all text-muted-foreground border border-transparent hover:border-border-ghost"><Printer className="w-3.5 h-3.5" /></button>
-          </div>
         </div>
 
         {/* Table */}
@@ -336,32 +342,47 @@ export default function CategoriesList({
                           </span>
                         </div>
                       </td>
-                      <td className="px-8 py-5 text-right">
-                        <div className="flex justify-end gap-2">
-                          {(session.role === "OWNER" || session.role === "MANAGER") && (
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(cat.id, cat.name, cat.itemsCount);
-                              }}
-                              disabled={deletingId === cat.id}
-                              className="text-muted-foreground hover:bg-error/10 hover:text-error rounded-xl transition-colors p-2 disabled:opacity-50"
-                              title="Delete Category"
-                            >
-                              {deletingId === cat.id ? (
-                                <Loader2 className="w-4 h-4 animate-spin text-error" />
-                              ) : (
-                                <Trash2 className="w-4 h-4" />
-                              )}
-                            </button>
-                          )}
+                      <td className="px-8 py-5 text-right relative">
+                        <div className="flex justify-end gap-2" id={`menu-${cat.id}`}>
                           <button 
                             type="button" 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveMenuId(activeMenuId === cat.id ? null : cat.id);
+                            }}
                             className="text-muted-foreground hover:bg-surface-low hover:text-primary rounded-xl transition-colors p-2"
+                            title="More Actions"
                           >
                             <MoreVertical className="w-4 h-4" />
                           </button>
+
+                          {activeMenuId === cat.id && (
+                            <div className="absolute right-8 top-12 z-40 w-48 bg-white border border-border-ghost shadow-ambient rounded-2xl py-2 overflow-hidden text-left animate-in fade-in slide-in-from-top-2 duration-200">
+                              {(session.role === "OWNER" || session.role === "MANAGER") ? (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveMenuId(null);
+                                    handleDelete(cat.id, cat.name, cat.itemsCount);
+                                  }}
+                                  disabled={deletingId === cat.id}
+                                  className="w-full px-5 py-3 text-left text-sm font-black text-error hover:bg-error/5 flex items-center gap-3 transition-colors disabled:opacity-50"
+                                >
+                                  {deletingId === cat.id ? (
+                                    <Loader2 className="w-4 h-4 animate-spin text-error" />
+                                  ) : (
+                                    <Trash2 className="w-4 h-4 text-error" />
+                                  )}
+                                  Delete Category
+                                </button>
+                              ) : (
+                                <div className="px-5 py-3 text-xs font-semibold text-slate-400">
+                                  No actions available
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>
