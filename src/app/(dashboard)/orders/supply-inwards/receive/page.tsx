@@ -61,8 +61,8 @@ export default async function ReceiveItemsPage({
         name: i.item.name,
         sku: i.item.sku,
         unit: i.item.unit,
-        ordered: i.quantityOrdered,
-        received: i.quantityReceived,
+        ordered: Number(i.quantityOrdered),
+        received: Number(i.quantityReceived),
         vendorName: i.purchaseOrder.vendor.name
       }))} />
     </div>

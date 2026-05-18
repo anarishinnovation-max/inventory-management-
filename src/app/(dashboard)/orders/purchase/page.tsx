@@ -270,7 +270,19 @@ export default async function PurchaseOrdersPage({
       />
 
       <PurchaseOrdersTable 
-        pos={pos} 
+        pos={pos.map((po: any) => ({
+          ...po,
+          items: po.items.map((item: any) => ({
+            ...item,
+            quantityOrdered: Number(item.quantityOrdered),
+            quantityReceived: Number(item.quantityReceived),
+            costPrice: Number(item.costPrice),
+            item: item.item ? {
+              ...item.item,
+              minStockLevel: Number(item.item.minStockLevel)
+            } : null
+          }))
+        }))} 
         currentPage={1} 
         totalPages={1} 
       />
