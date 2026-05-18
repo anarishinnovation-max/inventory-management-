@@ -9,7 +9,10 @@ import {
   Printer,
   Search,
   Package,
-  AlertCircle
+  AlertCircle,
+  Square,
+  CheckSquare,
+  MinusSquare
 } from "lucide-react";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
@@ -31,9 +34,19 @@ interface PurchaseOrderTableProps {
   pos: any[];
   currentPage: number;
   totalPages: number;
+  selectedIds: Set<string>;
+  toggleOne: (id: string) => void;
+  toggleAll: () => void;
 }
 
-export default function PurchaseOrdersTable({ pos, currentPage, totalPages }: PurchaseOrderTableProps) {
+export default function PurchaseOrdersTable({
+  pos,
+  currentPage,
+  totalPages,
+  selectedIds,
+  toggleOne,
+  toggleAll
+}: PurchaseOrderTableProps) {
   const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
 
   const closePortal = () => setSelectedBillId(null);
@@ -45,6 +58,17 @@ export default function PurchaseOrdersTable({ pos, currentPage, totalPages }: Pu
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="table-header">
+                <th className="table-cell-header w-12 text-center">
+                  <button type="button" onClick={toggleAll} className="p-2 hover:bg-surface-low rounded-lg transition-colors group">
+                    {selectedIds.size === pos.length && pos.length > 0 ? (
+                      <CheckSquare className="w-5 h-5 text-primary" />
+                    ) : selectedIds.size > 0 ? (
+                      <MinusSquare className="w-5 h-5 text-primary" />
+                    ) : (
+                      <Square className="w-5 h-5 text-muted-foreground opacity-30 group-hover:opacity-70 transition-opacity" />
+                    )}
+                  </button>
+                </th>
                 <th className="table-cell-header">Order ID</th>
                 <th className="table-cell-header">Vendor Details</th>
                 <th className="table-cell-header">Line Items</th>
@@ -57,9 +81,19 @@ export default function PurchaseOrdersTable({ pos, currentPage, totalPages }: Pu
               {pos.length > 0 ? pos.map((po: any) => {
                 const totalValue = po.items.reduce((acc: number, curr: any) => acc + (Number(curr.costPrice) * Number(curr.quantityOrdered)), 0);
                 const statusLabel = po.status.toUpperCase();
+                const isSelected = selectedIds.has(po.id);
                 
                 return (
-                  <tr key={po.id} className="table-row">
+                  <tr key={po.id} className={cn("table-row group", isSelected && "bg-primary/[0.03]")}>
+                    <td className="table-cell text-center">
+                      <button type="button" onClick={() => toggleOne(po.id)} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
+                        {isSelected ? (
+                          <CheckSquare className="w-5 h-5 text-primary" />
+                        ) : (
+                          <Square className="w-5 h-5 text-muted-foreground opacity-30 group-hover:opacity-75 transition-opacity" />
+                        )}
+                      </button>
+                    </td>
                     <td className="table-cell">
                       <div className="flex flex-col">
                          <span className="font-mono font-black text-foreground text-sm tracking-tighter">#{po.id.split('-')[0].toUpperCase()}</span>
@@ -119,7 +153,7 @@ export default function PurchaseOrdersTable({ pos, currentPage, totalPages }: Pu
                 );
               }) : (
                 <tr>
-                  <td colSpan={6} className="px-8 py-24 text-center">
+                  <td colSpan={7} className="px-8 py-24 text-center">
                     <div className="flex flex-col items-center gap-6 opacity-30">
                       <Search className="w-12 h-12" />
                       <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-xs">No Matching Bills Found</p>

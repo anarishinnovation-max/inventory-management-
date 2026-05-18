@@ -159,11 +159,11 @@ export default function SupplyInwardsList({
               <thead className="table-header">
                 <tr>
                   <th className="table-cell-header w-12 text-center">
-                    <button onClick={toggleAll} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
+                    <button type="button" onClick={toggleAll} className="p-2 hover:bg-surface-low rounded-lg transition-colors group">
                       {selectedIds.size === items.length && items.length > 0 ? (
                         <CheckSquare className="w-5 h-5 text-primary" />
                       ) : (
-                        <Square className="w-5 h-5 text-muted-foreground opacity-20" />
+                        <Square className="w-5 h-5 text-muted-foreground opacity-30 group-hover:opacity-70 transition-opacity" />
                       )}
                     </button>
                   </th>
@@ -181,13 +181,13 @@ export default function SupplyInwardsList({
                   const isSelected = selectedIds.has(compositeId);
 
                   return (
-                    <tr key={compositeId} className={cn("table-row", isSelected && "bg-primary/[0.03]")}>
+                    <tr key={compositeId} className={cn("table-row group", isSelected && "bg-primary/[0.03]")}>
                       <td className="table-cell text-center">
-                        <button onClick={() => toggleOne(compositeId)} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
+                        <button type="button" onClick={() => toggleOne(compositeId)} className="p-2 hover:bg-surface-low rounded-lg transition-colors">
                           {isSelected ? (
                             <CheckSquare className="w-5 h-5 text-primary" />
                           ) : (
-                            <Square className="w-5 h-5 text-muted-foreground opacity-10 group-hover:opacity-40 transition-opacity" />
+                            <Square className="w-5 h-5 text-muted-foreground opacity-30 group-hover:opacity-75 transition-opacity" />
                           )}
                         </button>
                       </td>

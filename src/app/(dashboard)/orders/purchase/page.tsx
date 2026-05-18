@@ -155,6 +155,8 @@ async function getPurchaseOrdersRaw(filters: {
 
 const getPurchaseOrders = (filters: any, companyId?: string) => getPurchaseOrdersRaw(filters, companyId);
 
+import PurchaseOrdersList from "./PurchaseOrdersList";
+
 export default async function PurchaseOrdersPage({
   searchParams,
 }: {
@@ -263,13 +265,7 @@ export default async function PurchaseOrdersPage({
         </div>
       </div>
 
-      <AdvancedPurchaseFilters 
-        vendors={vendors}
-        items={items}
-        currentFilters={filters}
-      />
-
-      <PurchaseOrdersTable 
+      <PurchaseOrdersList
         pos={pos.map((po: any) => ({
           ...po,
           items: po.items.map((item: any) => ({
@@ -282,9 +278,10 @@ export default async function PurchaseOrdersPage({
               minStockLevel: Number(item.item.minStockLevel)
             } : null
           }))
-        }))} 
-        currentPage={1} 
-        totalPages={1} 
+        }))}
+        vendors={vendors}
+        items={items}
+        filters={filters}
       />
     </div>
   );

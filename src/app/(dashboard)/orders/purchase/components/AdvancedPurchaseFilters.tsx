@@ -10,7 +10,10 @@ import {
   IndianRupee, 
   Package, 
   User, 
-  X 
+  X,
+  Loader2,
+  CheckCircle2,
+  Truck
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -34,12 +37,24 @@ interface AdvancedPurchaseFiltersProps {
     minAmount?: string;
     maxAmount?: string;
   };
+  selectedCount?: number;
+  onBulkOrdered?: () => void;
+  onBulkReceived?: () => void;
+  onBulkCancel?: () => void;
+  onClearSelection?: () => void;
+  isProcessing?: boolean;
 }
 
 export default function AdvancedPurchaseFilters({
   vendors,
   items,
   currentFilters,
+  selectedCount = 0,
+  onBulkOrdered,
+  onBulkReceived,
+  onBulkCancel,
+  onClearSelection,
+  isProcessing = false
 }: AdvancedPurchaseFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -92,47 +107,96 @@ export default function AdvancedPurchaseFilters({
           />
         </div>
 
-        {/* Filters on the Right */}
-        <div className="flex flex-wrap items-center gap-4">
-          {/* Status Dropdown */}
-          <div className="w-[180px]">
-            <SearchableSelect
-              items={statuses}
-              value={currentFilters.status || "all"}
-              onChange={(val) => updateFilters({ status: val })}
-              placeholder="All Status"
-              label="BY STATUS"
-              className="!rounded-full h-11"
-            />
+        {/* Filters or Bulk Actions on the Right */}
+        {selectedCount > 0 ? (
+          <div className="flex items-center gap-3 animate-in slide-in-from-right duration-300 bg-surface-low border border-border-ghost rounded-full px-5 h-11 shadow-sm shrink-0">
+            <span className="text-xs font-black uppercase tracking-widest text-primary mr-1">
+              {selectedCount} Selected
+            </span>
+            <div className="w-[1px] h-4 bg-border-ghost mx-1" />
+            <button
+              onClick={onBulkOrdered}
+              disabled={isProcessing}
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
+            >
+              {isProcessing ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              )}
+              <span>Ordered</span>
+            </button>
+            <button
+              onClick={onBulkReceived}
+              disabled={isProcessing}
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-success hover:text-success/80 transition-colors disabled:opacity-50"
+            >
+              {isProcessing ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Truck className="w-3.5 h-3.5" />
+              )}
+              <span>Receive</span>
+            </button>
+            <button
+              onClick={onBulkCancel}
+              disabled={isProcessing}
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-error hover:text-error/80 transition-colors disabled:opacity-50"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Cancel</span>
+            </button>
+            <div className="w-[1px] h-4 bg-border-ghost mx-1" />
+            <button
+              onClick={onClearSelection}
+              disabled={isProcessing}
+              className="text-xs font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+              title="Clear Selection"
+            >
+              Clear
+            </button>
           </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-4 shrink-0">
+            {/* Status Dropdown */}
+            <div className="w-[180px]">
+              <SearchableSelect
+                items={statuses}
+                value={currentFilters.status || "all"}
+                onChange={(val) => updateFilters({ status: val })}
+                placeholder="All Status"
+                label="BY STATUS"
+                className="!rounded-full h-11"
+              />
+            </div>
 
-          {/* Vendor Dropdown */}
-          <div className="w-[200px]">
-            <SearchableSelect
-              items={[{ id: "all", name: "All Vendors" }, ...vendors]}
-              value={currentFilters.vendorId || "all"}
-              onChange={(val) => updateFilters({ vendorId: val })}
-              placeholder="All Vendors"
-              label="BY VENDOR"
-              className="!rounded-full h-11"
-            />
+            {/* Vendor Dropdown */}
+            <div className="w-[200px]">
+              <SearchableSelect
+                items={[{ id: "all", name: "All Vendors" }, ...vendors]}
+                value={currentFilters.vendorId || "all"}
+                onChange={(val) => updateFilters({ vendorId: val })}
+                placeholder="All Vendors"
+                label="BY VENDOR"
+                className="!rounded-full h-11"
+              />
+            </div>
+
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className={cn(
+                "flex items-center gap-2 px-6 h-11 rounded-full font-bold text-xs uppercase tracking-widest transition-all border shadow-sm",
+                isExpanded
+                  ? "bg-primary/10 text-primary border-primary/20"
+                  : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/20"
+              )}
+            >
+              <Filter className="w-3.5 h-3.5" />
+              <span>{isExpanded ? "Hide" : "More"}</span>
+              <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", isExpanded && "rotate-180")} />
+            </button>
           </div>
-
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={cn(
-              "flex items-center gap-2 px-6 h-11 rounded-full font-bold text-xs uppercase tracking-widest transition-all border shadow-sm",
-              isExpanded
-                ? "bg-primary/10 text-primary border-primary/20"
-                : "bg-surface-low text-muted-foreground border-border-ghost hover:border-primary/20"
-            )}
-          >
-            <Filter className="w-3.5 h-3.5" />
-            <span>{isExpanded ? "Hide" : "More"}</span>
-            <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", isExpanded && "rotate-180")} />
-          </button>
-
-        </div>
+        )}
       </div>
 
       {isExpanded && (
