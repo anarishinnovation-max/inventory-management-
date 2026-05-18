@@ -118,7 +118,7 @@ export default function Sidebar() {
         </div>
         {!collapsed && (
           <div className="flex flex-col">
-            <span className="font-black text-lg tracking-tighter text-foreground leading-none">
+            <span className="font-bold text-lg tracking-tighter text-foreground leading-none">
               {userData?.companyName || "SS Cutting Tools"}
             </span>
             <span className="text-xs font-black uppercase tracking-[0.2em] text-primary mt-1">Enterprise</span>
@@ -170,7 +170,7 @@ export default function Sidebar() {
 
                       {!collapsed && (
                         <>
-                          <span className={cn("font-bold text-[11px] flex-1", isActive ? "text-foreground" : "")}>
+                          <span className={cn("font-bold text-[13px] flex-1", isActive ? "text-foreground" : "")}>
                             {item.name}
                           </span>
                           <span className={cn(
@@ -224,7 +224,7 @@ export default function Sidebar() {
               {userData?.name?.charAt(0) || "U"}
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-[11px] font-bold truncate">{userData?.name || "User"}</span>
+              <span className="text-[13px] font-bold truncate">{userData?.name || "User"}</span>
               <span className={cn(
                 "text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg w-fit mt-0.5 transition-all shadow-sm",
                 userData?.role === "OWNER" ? "bg-primary text-white shadow-primary/20" : 
@@ -243,7 +243,7 @@ export default function Sidebar() {
           suppressHydrationWarning
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 rotate-90" />}
-          {!collapsed && <span className="text-[11px] font-bold">Collapse Sidebar</span>}
+          {!collapsed && <span className="text-[13px] font-bold">Collapse Sidebar</span>}
         </button>
 
         <button
@@ -255,7 +255,7 @@ export default function Sidebar() {
           )}
         >
           <LogOut className="w-4 h-4" />
-          {!collapsed && <span className="text-[11px] font-bold flex-1 text-left">Logout</span>}
+          {!collapsed && <span className="text-[13px] font-bold flex-1 text-left">Logout</span>}
         </button>
       </div>
     </aside>

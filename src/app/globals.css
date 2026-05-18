@@ -50,12 +50,43 @@ body {
   letter-spacing: -0.01em;
 }
 
+h1 {
+  font-weight: 600;
+}
+
+/* Widget Metrics Styling Override */
+.card-premium .text-4xl,
+.card-premium .text-3xl,
+.card-premium .text-2xl,
+.card-premium h2 {
+  font-weight: 700 !important;
+}
+
 /* Premium Layout Utilities */
 
 .glass {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Premium Shimmer Loader Animations */
+@keyframes shimmer-loader {
+  0% {
+    left: -35%;
+    width: 35%;
+  }
+  50% {
+    width: 45%;
+  }
+  100% {
+    left: 100%;
+    width: 35%;
+  }
+}
+
+.animate-shimmer-loader {
+  animation: shimmer-loader 1.5s infinite ease-in-out;
 }
 
 .shadow-premium {
@@ -195,7 +226,7 @@ body {
 
 .heading-xl {
   font-size: 2.25rem;
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.1;
   color: var(--color-foreground);

@@ -42,7 +42,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl primary-gradient shadow-glow mb-6 transform hover:rotate-6 transition-transform duration-500">
             <Lock className="text-white w-10 h-10" />
           </div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground mb-2">IMS Portal</h1>
+          <h1 className="text-4xl font-semibold tracking-tight text-foreground mb-2">IMS Portal</h1>
           <p className="text-muted-foreground font-medium">Inventory Management System</p>
         </div>
 

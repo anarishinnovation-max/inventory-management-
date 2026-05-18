@@ -52,7 +52,7 @@ export default async function PurchaseBillPage({ params }: { params: Promise<{ i
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                  <div style={{ width: '64px', height: '64px', backgroundColor: '#2563eb', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: 900, fontSize: '30px' }}>A</div>
                  <div>
-                    <h1 style={{ fontSize: '30px', fontWeight: 900, color: '#0f172a', margin: 0, lineHeight: 1 }}>Anarish IMS</h1>
+                    <h1 style={{ fontSize: '30px', fontWeight: 600, color: '#0f172a', margin: 0, lineHeight: 1 }}>Anarish IMS</h1>
                     <p style={{ fontSize: '12px', fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.3em', margin: '4px 0 0 0' }}>Supply Chain Intelligence</p>
                  </div>
               </div>
@@ -66,7 +66,7 @@ export default async function PurchaseBillPage({ params }: { params: Promise<{ i
               <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: '9999px', backgroundColor: '#eff6ff', border: '1px solid #dbeafe', color: '#2563eb', fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
                 Official Document
               </div>
-              <h1 style={{ fontSize: '60px', fontWeight: 900, color: '#f1f5f9', textTransform: 'uppercase', margin: 0, lineHeight: 1, marginBottom: '24px' }}>Purchase</h1>
+              <h1 style={{ fontSize: '60px', fontWeight: 600, color: '#f1f5f9', textTransform: 'uppercase', margin: 0, lineHeight: 1, marginBottom: '24px' }}>Purchase</h1>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                   <span style={{ fontSize: '10px', fontWeight: 900, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2px' }}>Order Number</span>

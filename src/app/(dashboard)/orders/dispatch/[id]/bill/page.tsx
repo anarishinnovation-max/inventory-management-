@@ -45,7 +45,7 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
               <div className="flex items-center gap-3">
                  <div className="w-12 h-12 bg-success rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-glow-success">A</div>
                  <div>
-                    <h1 className="text-2xl font-black tracking-tight text-slate-900">Anarish IMS</h1>
+                    <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Anarish IMS</h1>
                     <p className="text-xs font-bold text-success uppercase tracking-[0.2em]">Tax Invoice / Sale Bill</p>
                  </div>
               </div>
@@ -55,7 +55,7 @@ export default async function SaleBillPage({ params }: { params: Promise<{ id: s
               </div>
             </div>
             <div className="text-right">
-              <h1 className="text-6xl font-black text-slate-100 uppercase mb-6">Sale Invoice</h1>
+              <h1 className="text-6xl font-semibold text-slate-100 uppercase mb-6">Sale Invoice</h1>
               <div className="space-y-1">
                 <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Bill No: <span className="text-slate-900 font-black ml-2">INV-{order.id.split('-')[0].toUpperCase()}</span></p>
                 <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Date: <span className="text-slate-900 font-black ml-2">{new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span></p>

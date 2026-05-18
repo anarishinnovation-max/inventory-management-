@@ -35,7 +35,7 @@ export default function SecurityPage() {
           <ChevronLeft className="w-4 h-4" />
           Back to Admin Center
         </Link>
-        <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-3">
+        <h1 className="text-4xl font-semibold tracking-tight text-foreground flex items-center gap-3">
           <Lock className="w-10 h-10 text-secondary" />
           Security & RBAC
         </h1>

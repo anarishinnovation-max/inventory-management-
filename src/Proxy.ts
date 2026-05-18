@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
-// 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard', '/inventory', '/orders', '/reports', '/settings', '/users'];
-const publicRoutes = ['/login', '/register', '/api/auth/login', '/api/auth/session', '/'];
+// 1. Specify public routes. Everything else is protected by default.
+const publicRoutes = ['/login', '/register', '/api/auth/login', '/api/auth/session'];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
-  const isPublicRoute = publicRoutes.includes(pathname);
+  
+  // Specific alias for /dashboard -> /
+  if (pathname === '/dashboard') {
+    return NextResponse.redirect(new URL('/', request.nextUrl));
+  }
+
+  const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'));
 
   // 2. Extract session from cookie
   const cookie = request.cookies.get('session')?.value;
@@ -22,14 +26,17 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 3. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session) {
-    return NextResponse.redirect(new URL('/login', request.nextUrl));
+  // 3. Redirect to /login if the user is not authenticated and trying to access a protected route
+  if (!isPublicRoute && !session) {
+    // Avoid redirect loop if already on login
+    if (pathname !== '/login') {
+      return NextResponse.redirect(new URL('/login', request.nextUrl));
+    }
   }
 
-  // 4. Redirect to /dashboard if the user is authenticated and tries to access public routes
-  if (isPublicRoute && session && !pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/dashboard', request.nextUrl));
+  // 4. Redirect to / (Dashboard) if the user is authenticated and tries to access login/register
+  if (isPublicRoute && session && (pathname === '/login' || pathname === '/register')) {
+    return NextResponse.redirect(new URL('/', request.nextUrl));
   }
 
   // 5. Special handling for API routes (except auth)

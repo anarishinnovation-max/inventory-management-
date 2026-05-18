@@ -85,7 +85,7 @@ export default function GlobalSettingsPage() {
             <ChevronLeft className="w-4 h-4" />
             Back to Admin Center
           </Link>
-          <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-3">
+          <h1 className="text-4xl font-semibold tracking-tight text-foreground flex items-center gap-3">
             <Settings className="w-10 h-10 text-amber-500" />
             Global Settings
           </h1>
