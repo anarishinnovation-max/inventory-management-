@@ -17,6 +17,7 @@ import {
   Settings,
   ShieldCheck,
   Store,
+  Tags,
   Truck,
   Users
 } from "lucide-react";
@@ -50,6 +51,7 @@ const menuSections: MenuSection[] = [
       { name: "Home", icon: LayoutGrid, href: "/" },
       { name: "Inventory", icon: Box, href: "/inventory" },
       { name: "Rack List", icon: Database, href: "/racks" },
+      { name: "Categories", icon: Tags, href: "/categories" },
     ]
   },
   {
@@ -181,6 +183,7 @@ export default function Sidebar() {
                               item.name === "Home" ? "H" : 
                               item.name === "Inventory" ? "I" : 
                               item.name === "Rack List" ? "R" : 
+                              item.name === "Categories" ? "T" : 
                               item.name === "Purchase Bills" ? "P" : 
                               item.name === "Supply Inwards" ? "J" : 
                               item.name === "Sell Bills" ? "S" : 

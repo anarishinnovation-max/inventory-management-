@@ -14,7 +14,8 @@ import {
   Plus,
   FileText,
   Search,
-  HelpCircle
+  HelpCircle,
+  Tags
 } from "lucide-react";
 
 export interface ShortcutItem {
@@ -56,6 +57,15 @@ export const SHORTCUT_CONFIG: ShortcutItem[] = [
     icon: Database,
     category: "Navigation",
     description: "Manage Storage Locations"
+  },
+  {
+    id: "nav-categories",
+    name: "Go to Categories",
+    keys: ["alt", "t"],
+    href: "/categories",
+    icon: Tags,
+    category: "Navigation",
+    description: "Manage Product Categories"
   },
   {
     id: "nav-purchase",

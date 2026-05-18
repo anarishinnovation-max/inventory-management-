@@ -126,6 +126,7 @@ async function getPurchaseOrdersRaw(filters: {
 
   const orders = await prisma.purchaseOrder.findMany({
     where,
+    take: 100, // Highly-efficient limit for fast page loading and browser rendering
     include: {
       vendor: true,
       items: {
@@ -195,12 +196,6 @@ export default async function PurchaseOrdersPage({
       select: { 
         id: true, 
         name: true,
-        unit: true,
-        inventory: {
-          select: {
-            quantityAvailable: true
-          }
-        }
       }, 
       orderBy: { name: 'asc' } 
     }),
@@ -209,15 +204,54 @@ export default async function PurchaseOrdersPage({
   const items = itemsRaw.map(i => ({
     id: i.id,
     name: i.name,
-    unit: i.unit,
-    quantity: Number(i.inventory?.quantityAvailable ?? 0)
+    unit: "",
+    quantity: 0
   }));
 
-  // Calculate stats for the KPI grid
-  const allPos = await prisma.purchaseOrder.findMany({ where: { companyId: session.companyId }, include: { items: true } });
-  const pendingCount = allPos.filter(o => o.status.toUpperCase() === "PENDING").length;
-  const orderedTotal = allPos.filter(o => o.status.toUpperCase() === "ORDERED").reduce((acc, order) => acc + order.items.reduce((sum, item) => sum + (Number(item.costPrice) * Number(item.quantityOrdered)), 0), 0);
-  const unpaidCount = 0; // Removed payment tracking
+  // Calculate stats for the KPI grid using high-performance targeted queries
+  const [pendingCount, orderedLineItems] = await Promise.all([
+    prisma.purchaseOrder.count({
+      where: {
+        companyId: session.companyId,
+        status: "PENDING"
+      }
+    }),
+    prisma.pOLineItem.findMany({
+      where: {
+        purchaseOrder: {
+          companyId: session.companyId,
+          status: "ORDERED"
+        }
+      },
+      select: {
+        costPrice: true,
+        quantityOrdered: true
+      }
+    })
+  ]);
+
+  const orderedTotal = orderedLineItems.reduce(
+    (sum, item) => sum + (Number(item.costPrice) * Number(item.quantityOrdered)),
+    0
+  );
+
+  const plainPos = JSON.parse(
+    JSON.stringify(
+      pos.map((po: any) => ({
+        ...po,
+        items: po.items.map((item: any) => ({
+          ...item,
+          quantityOrdered: Number(item.quantityOrdered),
+          quantityReceived: Number(item.quantityReceived),
+          costPrice: Number(item.costPrice),
+          item: item.item ? {
+            ...item.item,
+            minStockLevel: Number(item.item.minStockLevel)
+          } : null
+        }))
+      }))
+    )
+  );
 
   return (
     <div className="space-y-12 pb-12">
@@ -266,19 +300,7 @@ export default async function PurchaseOrdersPage({
       </div>
 
       <PurchaseOrdersList
-        pos={pos.map((po: any) => ({
-          ...po,
-          items: po.items.map((item: any) => ({
-            ...item,
-            quantityOrdered: Number(item.quantityOrdered),
-            quantityReceived: Number(item.quantityReceived),
-            costPrice: Number(item.costPrice),
-            item: item.item ? {
-              ...item.item,
-              minStockLevel: Number(item.item.minStockLevel)
-            } : null
-          }))
-        }))}
+        pos={plainPos}
         vendors={vendors}
         items={items}
         filters={filters}
