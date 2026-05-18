@@ -19,6 +19,7 @@ import { twMerge } from "tailwind-merge";
 
 import { VendorModal } from "./VendorModal";
 import SearchInput from "@/components/SearchInput";
+import VendorActions from "./VendorActions";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -266,12 +267,23 @@ export default async function VendorsPage({
                           </div>
                         </td>
                         <td className="table-cell text-right">
-                          <Link 
-                            href={`/vendors/${vendors.find((v: any) => v.name === entry.vendorName)?.id}`}
-                            className="btn btn-neutral w-9 h-9 inline-flex items-center justify-center rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
-                          >
-                             <MoreVertical className="w-4 h-4" />
-                          </Link>
+                          {(() => {
+                            const matchedVendor = vendors.find((v: any) => v.name === entry.vendorName);
+                            if (!matchedVendor) return null;
+                            const plainVendor = {
+                              id: matchedVendor.id,
+                              name: matchedVendor.name,
+                              email: matchedVendor.email,
+                              contact: matchedVendor.contact,
+                              preferredPaymentMode: matchedVendor.preferredPaymentMode,
+                            };
+                            return (
+                              <VendorActions 
+                                vendor={plainVendor} 
+                                sessionRole={session.role}
+                              />
+                            );
+                          })()}
                         </td>
                       </tr>
                     )) : (

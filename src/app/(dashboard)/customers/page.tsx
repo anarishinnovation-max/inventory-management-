@@ -17,6 +17,7 @@ function cn(...inputs: ClassValue[]) {
 
 import SearchInput from "@/components/SearchInput";
 import { CustomerModal } from "./CustomerModal";
+import CustomerActions from "./CustomerActions";
 
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -221,12 +222,10 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                         </div>
                       </td>
                       <td className="table-cell text-right">
-                        <Link
-                          href={`/customers/${c.id}`}
-                          className="btn btn-neutral w-9 h-9 inline-flex items-center justify-center rounded-xl hover:bg-primary/5 hover:text-primary transition-all border border-border-ghost"
-                        >
-                          <MoreVertical className="w-4 h-4" />
-                        </Link>
+                        <CustomerActions 
+                          customer={c} 
+                          sessionRole={session.role}
+                        />
                       </td>
                     </tr>
                   )) : (
