@@ -211,7 +211,7 @@ export default function PurchaseOrdersTable({
             <div className="flex-1 bg-neutral-100 overflow-hidden relative">
               <iframe 
                 id="bill-iframe"
-                src={`/orders/purchase/${selectedBillId}/bill`} 
+                src={`/orders/purchase/${selectedBillId}/bill?iframe=true`} 
                 className="w-full h-full border-0"
                 title="Bill Preview"
               />

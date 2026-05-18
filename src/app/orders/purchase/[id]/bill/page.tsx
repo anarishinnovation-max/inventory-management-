@@ -2,7 +2,8 @@
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { Download } from "lucide-react";
+import { Download, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import PrintButton from "@/components/PrintButton";
 
 async function getOrder(id: string, companyId: string) {
@@ -17,11 +18,18 @@ async function getOrder(id: string, companyId: string) {
   });
 }
 
-export default async function PurchaseBillPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PurchaseBillPage({ 
+  params,
+  searchParams
+}: { 
+  params: Promise<{ id: string }>,
+  searchParams: Promise<{ iframe?: string, download?: string }>
+}) {
   const session = await getSession();
   if (!session) redirect("/login");
 
   const { id } = await params;
+  const { iframe } = await searchParams;
   const order = await getOrder(id, session.companyId);
 
   if (!order) notFound();
@@ -32,12 +40,27 @@ export default async function PurchaseBillPage({ params }: { params: Promise<{ i
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 print:bg-white print:py-0 print:px-0">
+      {iframe !== 'true' && (
+        <div className="max-w-[950px] mx-auto mb-8 flex justify-between items-center print:hidden">
+          <Link 
+            href={`/orders/purchase/${id}`}
+            className="btn btn-neutral h-12 px-6 rounded-2xl flex items-center gap-2 bg-white shadow-sm border border-slate-200 hover:bg-slate-50 text-xs font-black uppercase tracking-widest text-slate-600 transition-all"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Purchase Order</span>
+          </Link>
+          <PrintButton 
+            label="Download Purchase Bill" 
+            className="btn btn-primary h-12 px-8 rounded-2xl flex items-center gap-2 shadow-glow-primary font-black text-xs uppercase tracking-widest"
+          />
+        </div>
+      )}
       <div 
         className="max-w-[950px] mx-auto bg-white shadow-2xl overflow-hidden print:shadow-none print:max-w-full rounded-3xl border border-slate-200"
         style={{ backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid #e2e8f0' }}
       >
         {/* Hidden internal trigger for parent modal */}
-        <div className="hidden">
+        <div style={{ position: 'absolute', width: 0, height: 0, opacity: 0, overflow: 'hidden', pointerEvents: 'none' }}>
           <PrintButton />
         </div>
 

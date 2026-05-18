@@ -2,7 +2,7 @@
 "use client";
 
 import { Download, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
@@ -113,6 +113,19 @@ export default function PrintButton({
       setIsGenerating(false);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("download") === "true") {
+        // Delay slightly to ensure browser DOM is fully stable for canvas capture
+        const timer = setTimeout(() => {
+          handleDownload();
+        }, 800);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
 
   return (
     <button 

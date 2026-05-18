@@ -119,7 +119,7 @@ export default function PODetailPage({ params }: { params: Promise<{ id: string 
 
         <div className="flex items-center gap-3">
            <Link 
-             href={`/orders/purchase/${order.id}/bill`}
+             href={`/orders/purchase/${order.id}/bill?download=true`}
              target="_blank"
              className="btn btn-neutral h-12 px-6 !rounded-xl flex items-center gap-2"
            >
