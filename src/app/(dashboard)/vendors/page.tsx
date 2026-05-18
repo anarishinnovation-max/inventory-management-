@@ -134,6 +134,41 @@ export default async function VendorsPage({
         </div>
       </header>
 
+      {/* Stats Bento Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
+           <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
+              <Users className="w-5 h-5" />
+           </div>
+           <div>
+              <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Total Vendors</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{vendors.length}</h2>
+           </div>
+        </div>
+        
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
+           <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success border border-success/10">
+              <ShieldCheck className="w-5 h-5" />
+           </div>
+           <div>
+              <p className="text-xs font-black text-success uppercase tracking-[0.15em]">Tracked SKUs</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{allCompetitiveItems.length}</h2>
+           </div>
+        </div>
+
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-warning/10 bg-white shadow-ambient bg-warning/[0.01]">
+           <div className="p-2.5 w-fit rounded-xl bg-warning/5 text-warning border border-warning/10">
+              <Star className="w-5 h-5" />
+           </div>
+           <div>
+              <p className="text-xs font-black text-warning uppercase tracking-[0.15em]">Credit Partners</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">
+                {vendors.filter((v: any) => v.preferredPaymentMode === "CREDIT").length}
+              </h2>
+           </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1 space-y-4">
           <h2 className="heading-md uppercase text-xs tracking-[0.2em] flex items-center gap-2 mb-2">
@@ -253,42 +288,8 @@ export default async function VendorsPage({
                 </table>
               </div>
            </div>
-
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="card-premium flex items-center gap-5 group border-primary/5">
-                 <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center transition-transform  shadow-inner">
-                    <BarChart3 className="w-5 h-5" />
-                 </div>
-                 <div>
-                    <p className="text-3xl font-black text-foreground tracking-tighter">{vendors.length}</p>
-                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Total Vendors</p>
-                 </div>
-              </div>
-              <div className="card-premium flex items-center gap-5 group border-success/5">
-                 <div className="w-12 h-12 rounded-xl bg-success/10 text-success flex items-center justify-center transition-transform  shadow-inner">
-                    <ShieldCheck className="w-5 h-5" />
-                 </div>
-                 <div>
-                    <p className="text-3xl font-black text-foreground tracking-tighter">{allCompetitiveItems.length}</p>
-                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Tracked SKUs</p>
-                 </div>
-              </div>
-              <div className="card-premium flex items-center gap-5 group border-warning/5">
-                 <div className="w-12 h-12 rounded-xl bg-warning/10 text-warning flex items-center justify-center transition-transform  shadow-inner">
-                    <Star className="w-5 h-5" />
-                 </div>
-                 <div>
-                    <p className="text-3xl font-black text-foreground tracking-tighter">
-                        {vendors.filter((v: any) => v.preferredPaymentMode === "CREDIT").length}
-                    </p>
-                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Credit Partners</p>
-                 </div>
-              </div>
-           </div>
         </div>
       </div>
     </div>
   );
 }
-
-

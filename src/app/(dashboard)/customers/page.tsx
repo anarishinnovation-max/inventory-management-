@@ -90,6 +90,49 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
         </div>
       </header>
 
+      {/* Stats Bento Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-primary/10 bg-white shadow-ambient">
+           <div className="p-2.5 w-fit rounded-xl bg-primary/5 text-primary border border-primary/10">
+              <Users className="w-5 h-5" />
+           </div>
+           <div>
+              <p className="text-xs font-black text-primary uppercase tracking-[0.15em]">Total Customers</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">{customers.length}</h2>
+           </div>
+        </div>
+        
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-success/10 bg-white shadow-ambient">
+           <div className="p-2.5 w-fit rounded-xl bg-success/5 text-success border border-success/10">
+              <Calendar className="w-5 h-5" />
+           </div>
+           <div>
+              <p className="text-xs font-black text-success uppercase tracking-[0.15em]">Active Customers</p>
+              <h2 className="text-3xl font-black text-foreground mt-1 tracking-tighter tabular-nums">
+                {customers.filter((c: any) => c.totalTransactions > 0).length}
+              </h2>
+           </div>
+        </div>
+
+        <div className="card-premium h-[140px] flex flex-col justify-between group border-error/10 bg-white shadow-ambient bg-error/[0.01]">
+           <div className="p-2.5 w-fit rounded-xl bg-error/5 text-error border border-error/10">
+              <Calendar className="w-5 h-5" />
+           </div>
+           <div>
+              <p className="text-xs font-black text-error uppercase tracking-[0.15em]">Not Visited Recently</p>
+              <h2 className="text-3xl font-black text-error mt-1 tracking-tighter tabular-nums">
+                {customers.filter((c: any) => {
+                  const last = c.lastInteraction ? new Date(c.lastInteraction) : null;
+                  if (!last) return false;
+                  const thirtyDaysAgo = new Date();
+                  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                  return last < thirtyDaysAgo;
+                }).length}
+              </h2>
+           </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1 space-y-4">
           <h2 className="heading-md uppercase text-xs tracking-[0.2em] flex items-center gap-2 mb-2">
@@ -198,46 +241,6 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                   )}
                 </tbody>
               </table>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="card-premium flex items-center gap-5 group border-primary/5">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center transition-transform  shadow-inner">
-                <Users className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-3xl font-black text-foreground tracking-tighter">{customers.length}</p>
-                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Total Customers</p>
-              </div>
-            </div>
-            <div className="card-premium flex items-center gap-5 group border-success/5">
-              <div className="w-12 h-12 rounded-xl bg-success/10 text-success flex items-center justify-center transition-transform  shadow-inner">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-3xl font-black text-foreground tracking-tighter">
-                  {customers.filter((c: any) => c.totalTransactions > 0).length}
-                </p>
-                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-1">Active Customers</p>
-              </div>
-            </div>
-            <div className="card-premium bg-error/[0.02] border-error/5 flex items-center gap-5 group">
-              <div className="w-12 h-12 rounded-xl bg-error text-white flex items-center justify-center transition-transform group-hover:rotate-12 shadow-lg shadow-error/10">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-3xl font-black text-error tracking-tighter">
-                  {customers.filter((c: any) => {
-                    const last = c.lastInteraction ? new Date(c.lastInteraction) : null;
-                    if (!last) return false;
-                    const thirtyDaysAgo = new Date();
-                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                    return last < thirtyDaysAgo;
-                  }).length}
-                </p>
-                <p className="text-xs font-black uppercase tracking-widest text-error/60 mt-1">Not visited recently</p>
-              </div>
             </div>
           </div>
         </div>
