@@ -21,45 +21,74 @@ export async function GET(
   try {
     const { id: itemId } = await params;
 
-    const item = await prisma.item.findUnique({
-      where: { id: itemId },
-      include: {
-        category: true,
-        inventory: {
-          include: {
-            batches: {
-              include: { 
-                vendor: true,
-                receivedBy: {
-                  select: { name: true }
-                }
+    const [item, openLines, linkedDispatchItems, sellingHistoryRaw] = await Promise.all([
+      prisma.item.findUnique({
+        where: { id: itemId },
+        include: {
+          category: true,
+          inventory: {
+            include: {
+              batches: {
+                include: { 
+                  vendor: true,
+                  receivedBy: {
+                    select: { name: true }
+                  }
+                },
+                orderBy: { purchaseDate: "desc" },
               },
-              orderBy: { purchaseDate: "desc" },
             },
           },
         },
-      },
-    });
+      }),
+      prisma.pOLineItem.findMany({
+        where: {
+          itemId,
+          purchaseOrder: {
+            status: { notIn: ["DELIVERED", "RECEIVED"] },
+          },
+        },
+        include: {
+          purchaseOrder: {
+            include: { vendor: true },
+          },
+        },
+        orderBy: { purchaseOrder: { createdAt: "desc" } },
+      }),
+      prisma.dispatchItem.findMany({
+        where: {
+          itemId,
+          dispatchOrder: {
+            status: { notIn: ["dispatched", "cancelled"] }
+          }
+        },
+        include: {
+          dispatchOrder: {
+            include: { customer: true }
+          }
+        },
+        orderBy: { dispatchOrder: { createdAt: "desc" } }
+      }),
+      prisma.dispatchItem.findMany({
+        where: {
+          itemId,
+          dispatchOrder: {
+            status: "dispatched"
+          }
+        },
+        include: {
+          dispatchOrder: {
+            include: { customer: true }
+          }
+        },
+        orderBy: { dispatchOrder: { createdAt: "desc" } },
+        take: 20
+      })
+    ]);
 
     if (!item) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
-
-    // Fetch incoming Purchase Orders
-    const openLines = await prisma.pOLineItem.findMany({
-      where: {
-        itemId,
-        purchaseOrder: {
-          status: { notIn: ["DELIVERED", "RECEIVED"] },
-        },
-      },
-      include: {
-        purchaseOrder: {
-          include: { vendor: true },
-        },
-      },
-      orderBy: { purchaseOrder: { createdAt: "desc" } },
-    });
 
     const incomingPurchaseOrders = openLines
       .map((line) => {
@@ -76,22 +105,6 @@ export async function GET(
       })
       .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
 
-    // Fetch linked Customer Orders
-    const linkedDispatchItems = await prisma.dispatchItem.findMany({
-      where: {
-        itemId,
-        dispatchOrder: {
-          status: { notIn: ["dispatched", "cancelled"] }
-        }
-      },
-      include: {
-        dispatchOrder: {
-          include: { customer: true }
-        }
-      },
-      orderBy: { dispatchOrder: { createdAt: "desc" } }
-    });
-
     const linkedCustomerOrders = linkedDispatchItems.map(item => ({
       orderId: item.dispatchOrderId,
       customer: item.dispatchOrder.customer.name,
@@ -101,22 +114,7 @@ export async function GET(
       price: Number(item.sellingPrice || 0)
     }));
 
-    // Fetch full selling history (dispatched orders)
-    const sellingHistoryRaw = await prisma.dispatchItem.findMany({
-      where: {
-        itemId,
-        dispatchOrder: {
-          status: "dispatched"
-        }
-      },
-      include: {
-        dispatchOrder: {
-          include: { customer: true }
-        }
-      },
-      orderBy: { dispatchOrder: { createdAt: "desc" } },
-      take: 20
-    });
+
 
     const sellingHistory = sellingHistoryRaw.map(di => ({
       id: di.id,

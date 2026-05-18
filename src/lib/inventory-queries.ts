@@ -21,45 +21,58 @@ export async function getInventoryDataRaw(companyId: string | null, q: string, s
     ]
   };
 
+  // 1. Fetch lightweight item summary for all items matching filters
   const allItemsSummary = await prisma.item.findMany({
     where,
-    include: {
-      category: true,
-      inventory: {
-        include: {
-          batches: true
-        }
+    select: {
+      id: true,
+      name: true,
+      sku: true,
+      unit: true,
+      isCritical: true,
+      minStockLevel: true,
+      createdAt: true,
+      category: {
+        select: { name: true }
       },
-    },
-    orderBy: [
-      { inventory: { updatedAt: 'desc' } },
-      { createdAt: 'desc' }
-    ]
+      inventory: {
+        select: {
+          quantityAvailable: true,
+          incomingQty: true,
+          quantityReserved: true,
+          quantityInTransit: true,
+          updatedAt: true
+        }
+      }
+    }
   });
 
-  const itemsWithLogs = await Promise.all(allItemsSummary.map(async (item: any) => {
-    let lastLogType = null;
-    if (status === 'latest_sent' || status === 'latest_received') {
-      const lastLog = await prisma.inventoryTransaction.findFirst({
-        where: { itemId: item.id },
-        orderBy: { createdAt: 'desc' },
-        select: { type: true }
-      });
-      lastLogType = lastLog?.type;
-    }
-    return { ...item, lastLogType };
-  }));
+  // 2. Fetch the latest transactions for all items in a single batch query (if filtering by activity log type)
+  const latestTxMap = new Map<string, string>();
+  if (status === 'latest_sent' || status === 'latest_received') {
+    const latestTransactions = await prisma.inventoryTransaction.findMany({
+      where: companyId ? { companyId } : {},
+      distinct: ['itemId'],
+      orderBy: [
+        { itemId: 'asc' },
+        { createdAt: 'desc' }
+      ],
+      select: {
+        itemId: true,
+        type: true
+      }
+    });
+    latestTransactions.forEach(tx => {
+      latestTxMap.set(tx.itemId, tx.type);
+    });
+  }
 
-  const mappedAll = itemsWithLogs.map((item: any) => {
+  // 3. Map status flags in Node.js memory
+  const mappedAll = allItemsSummary.map((item: any) => {
     const total = Number(item.inventory?.quantityAvailable ?? 0);
     const incoming = Number(item.inventory?.incomingQty ?? 0);
     const reserved = Number(item.inventory?.quantityReserved ?? 0);
     const netAvailable = (total + incoming) - reserved;
-
-    const batches = item.inventory?.batches || [];
-    const totalRemainingInBatches = batches.reduce((acc: number, b: any) => acc + Number(b.quantity), 0);
-    const weightedSum = batches.reduce((acc: number, b: any) => acc + (Number(b.quantity) * Number(b.costPerUnit)), 0);
-    const avgPrice = totalRemainingInBatches > 0 ? (weightedSum / totalRemainingInBatches) : 0;
 
     const isUrgent = netAvailable < 0;
     const isOutOfStock = !isUrgent && total <= 0;
@@ -67,6 +80,8 @@ export async function getInventoryDataRaw(companyId: string | null, q: string, s
     const isPartial = total > 0 && total < reserved;
     const isOrdered = !isUrgent && !isOutOfStock && !isLow && incoming > 0;
     const isInStock = !isUrgent && !isOutOfStock && !isLow && total > (Number(item.minStockLevel) ?? 0);
+    
+    const lastLogType = latestTxMap.get(item.id) || null;
 
     return {
       id: item.id,
@@ -76,7 +91,7 @@ export async function getInventoryDataRaw(companyId: string | null, q: string, s
       isCritical: item.isCritical,
       minStockLevel: Number(item.minStockLevel) ?? 0,
       totalStock: total,
-      avgPrice,
+      avgPrice: 0, // Calculated lazily inside the detail Modal rather than slowing down list loads
       netAvailable,
       incomingQty: incoming,
       quantityReserved: reserved,
@@ -87,12 +102,13 @@ export async function getInventoryDataRaw(companyId: string | null, q: string, s
       isPartial,
       isOrdered,
       isInStock,
-      lastLogType: item.lastLogType,
+      lastLogType,
       category: item.category?.name || "Uncategorized",
       updatedAt: item.inventory?.updatedAt || item.createdAt
     };
   }).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
+  // 4. In-Memory status filtering
   let filteredItems = mappedAll;
   if (status && status !== 'all') {
     filteredItems = mappedAll.filter(item => {
@@ -108,24 +124,33 @@ export async function getInventoryDataRaw(companyId: string | null, q: string, s
     });
   }
 
+  // 5. Slice down to page items
   const pageItemsSlice = filteredItems.slice((page - 1) * pageSize, page * pageSize);
+  const pageItemIds = pageItemsSlice.map(i => i.id);
 
-  const pageWithStocks = await Promise.all(pageItemsSlice.map(async (item) => {
-    const stocks = await prisma.stock.findMany({
-      where: { itemId: item.id },
-      include: { rack: true }
+  // 6. Batch fetch physical stocks & rack numbers for page items ONLY (1 query instead of 20 N+1 queries)
+  const allStocks = pageItemIds.length > 0 ? await prisma.stock.findMany({
+    where: { itemId: { in: pageItemIds } },
+    include: { rack: true }
+  }) : [];
+
+  const stocksByItemId = new Map<string, any[]>();
+  allStocks.forEach(s => {
+    const list = stocksByItemId.get(s.itemId) || [];
+    list.push({
+      id: s.id,
+      quantity: Number(s.quantity),
+      rack: {
+        id: s.rack?.id || "unknown",
+        rackNumber: s.rack?.rackNumber || "N/A"
+      }
     });
-    return {
-      ...item,
-      stocks: stocks.map(s => ({
-        id: s.id,
-        quantity: Number(s.quantity),
-        rack: {
-          id: s.rack?.id || "unknown",
-          rackNumber: s.rack?.rackNumber || "N/A"
-        }
-      }))
-    };
+    stocksByItemId.set(s.itemId, list);
+  });
+
+  const pageWithStocks = pageItemsSlice.map(item => ({
+    ...item,
+    stocks: stocksByItemId.get(item.id) || []
   }));
 
   return {

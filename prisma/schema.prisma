@@ -132,6 +132,7 @@ model Vendor {
   company              Company                @relation(fields: [companyId], references: [id])
 
   @@unique([name, companyId])
+  @@index([companyId])
 }
 
 model PurchaseOrder {
@@ -184,6 +185,9 @@ model POLineItem {
   costPrice        Decimal       @db.Decimal(18, 4)
   item             Item          @relation(fields: [itemId], references: [id])
   purchaseOrder    PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+
+  @@index([purchaseOrderId])
+  @@index([itemId])
 }
 
 model Customer {
@@ -199,6 +203,7 @@ model Customer {
   transactions   InventoryTransaction[]
 
   @@unique([name, companyId])
+  @@index([companyId])
 }
 
 model DispatchOrder {
@@ -230,6 +235,9 @@ model DispatchItem {
   sellingPrice    Decimal       @db.Decimal(18, 4)
   dispatchOrder   DispatchOrder @relation(fields: [dispatchOrderId], references: [id])
   item            Item          @relation(fields: [itemId], references: [id])
+
+  @@index([dispatchOrderId])
+  @@index([itemId])
 }
 
 model InventoryTransaction {

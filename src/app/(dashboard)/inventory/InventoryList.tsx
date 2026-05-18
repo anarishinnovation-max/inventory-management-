@@ -23,8 +23,13 @@ import { showToast } from "@/lib/toast";
 import { useConfirm } from "@/hooks/use-confirm";
 import InventoryTableActions from "./InventoryTableActions";
 import { MappedItem } from "./page";
-import { ItemBreakdownModal } from "./ItemBreakdownModal";
+import dynamic from "next/dynamic";
 import { InfoTooltip } from "@/components/InfoTooltip";
+
+const ItemBreakdownModal = dynamic(
+  () => import("./ItemBreakdownModal").then((mod) => mod.ItemBreakdownModal),
+  { ssr: false }
+);
 
 
 function formatDate(date: Date) {
