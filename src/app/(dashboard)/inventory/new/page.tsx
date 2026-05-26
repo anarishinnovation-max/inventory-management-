@@ -111,7 +111,14 @@ export default function NewItemPage() {
         router.refresh();
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "Could not add item");
+        if (errorData.error && typeof errorData.error === "object") {
+          const formattedError = Object.entries(errorData.error)
+            .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(", ") : String(msgs)}`)
+            .join(" | ");
+          setError(formattedError || "Could not add item");
+        } else {
+          setError(errorData.error || "Could not add item");
+        }
       }
     } catch (err) {
       setError("An unexpected error occurred.");
@@ -261,6 +268,27 @@ export default function NewItemPage() {
             </div>
 
             <div className="space-y-8">
+              {/* Buffer Threshold */}
+              <div className="space-y-2 group">
+                <div className="flex justify-between items-end px-1">
+                  <label className="text-xs font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block transition-colors">Buffer Threshold</label>
+                  <span className="badge badge-error uppercase mb-3">Refill Level</span>
+                </div>
+                <div className="relative">
+                  <input
+                    required
+                    name="minStockLevel"
+                    defaultValue="0"
+                    className="input-field h-20 text-3xl font-black font-mono text-center"
+                    type="number"
+                    min="0"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground px-1 font-medium opacity-60 leading-relaxed">
+                  Automated alerts will be triggered when available stock drops below this specific count.
+                </p>
+              </div>
+
               {/* Rack Assignment */}
               <div className="group">
                 <label className="text-xs font-black text-muted-foreground group-focus-within:text-primary uppercase tracking-widest mb-3 block ml-1 transition-colors">Initial Rack Assignment</label>

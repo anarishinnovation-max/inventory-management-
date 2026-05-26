@@ -94,7 +94,14 @@ export default function EditItemPage({ params }: { params: Promise<{ id: string 
         router.refresh();
       } else {
         const errorData = await res.json();
-        setError(errorData.error || "Could not save changes");
+        if (errorData.error && typeof errorData.error === "object") {
+          const formattedError = Object.entries(errorData.error)
+            .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(", ") : String(msgs)}`)
+            .join(" | ");
+          setError(formattedError || "Could not save changes");
+        } else {
+          setError(errorData.error || "Could not save changes");
+        }
       }
     } catch (err) {
       setError("An unexpected error occurred.");
