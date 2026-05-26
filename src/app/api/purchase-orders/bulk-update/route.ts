@@ -38,10 +38,10 @@ export async function POST(request: Request) {
           const updatedPo = await InventoryService.receiveGoods(poId, itemsToReceive, session.id);
           results.push(updatedPo);
         } else {
-          // If already fully received, just make sure status is QC_PENDING
+          // If already fully received, just make sure status is DELIVERED
           const updatedPo = await prisma.purchaseOrder.update({
             where: { id: poId },
-            data: { status: "QC_PENDING" },
+            data: { status: "DELIVERED" },
           });
           results.push(updatedPo);
         }

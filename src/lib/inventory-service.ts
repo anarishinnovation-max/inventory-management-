@@ -127,8 +127,8 @@ export const InventoryService = {
           currentInv = await tx.inventory.create({
             data: {
               itemId: update.itemId,
-              quantityAvailable: 0,
-              quantityQC: update.receivedQty,
+              quantityAvailable: update.receivedQty,
+              quantityQC: 0,
               incomingQty: 0,
               quantityReserved: 0,
               quantityInTransit: 0,
@@ -139,7 +139,7 @@ export const InventoryService = {
           await tx.inventory.update({
             where: { id: currentInv.id },
             data: {
-              quantityQC: { increment: update.receivedQty },
+              quantityAvailable: { increment: update.receivedQty },
               incomingQty: { decrement: Math.min(Number(currentInv.incomingQty || 0), update.receivedQty) },
               quantityInTransit: { decrement: Math.min(Number(currentInv.quantityInTransit || 0), update.receivedQty) },
             },
@@ -160,8 +160,47 @@ export const InventoryService = {
           },
         });
 
-        // 3b. NOTE: Physical rack update is now deferred to approveQC step
-        // Items stay in virtual 'quantityQC' until quality check passes.
+        // 3b. Update Physical Stock directly (bypassing QC)
+        let targetRackId = update.rackId;
+        if (!targetRackId) {
+          // Fallback 1: Find first rack location already registered for this item
+          const firstStock = await tx.stock.findFirst({
+            where: { itemId: update.itemId, companyId: po.companyId }
+          });
+          if (firstStock) {
+            targetRackId = firstStock.rackId;
+          } else {
+            // Fallback 2: Find any rack in the company
+            const firstCompanyRack = await tx.rack.findFirst({
+              where: { companyId: po.companyId }
+            });
+            if (firstCompanyRack) {
+              targetRackId = firstCompanyRack.id;
+            }
+          }
+        }
+
+        if (targetRackId) {
+          const existingStock = await tx.stock.findFirst({
+            where: { itemId: update.itemId, rackId: targetRackId, companyId: po.companyId }
+          });
+
+          if (existingStock) {
+            await tx.stock.update({
+              where: { id: existingStock.id },
+              data: { quantity: { increment: update.receivedQty } }
+            });
+          } else {
+            await tx.stock.create({
+              data: {
+                itemId: update.itemId,
+                rackId: targetRackId,
+                quantity: update.receivedQty,
+                companyId: po.companyId
+              }
+            });
+          }
+        }
       }
 
       // 4. Update overall PO Status
@@ -172,8 +211,8 @@ export const InventoryService = {
       const allReceived = finalItems.every((i: any) => i.quantityReceived >= i.quantityOrdered);
       const someReceived = finalItems.some((i: any) => i.quantityReceived > 0);
       
-      // Update: If goods are received but not yet approved, status is QC_PENDING or PARTIAL
-      const newStatus = allReceived ? "QC_PENDING" : (someReceived ? "PARTIAL" : "ORDERED");
+      // Update: Since QC is bypassed, status transitions directly to DELIVERED or PARTIAL
+      const newStatus = allReceived ? "DELIVERED" : (someReceived ? "PARTIAL" : "ORDERED");
 
       await tx.purchaseOrder.update({
         where: { id: poId },
